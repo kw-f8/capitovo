@@ -1,4 +1,4 @@
-/* Grund-Reset: Wir setzen Standard-Abstände zurück */
+/* Globale Definitionen und Reset */
 * {
     margin: 0;
     padding: 0;
@@ -6,67 +6,137 @@
 }
 
 body {
-    /* Helle Hintergrundfarbe für Schlichtheit */
-    background-color: #f7f7f7; 
-    font-family: Arial, sans-serif; 
-    color: #333; 
-    line-height: 1.6; 
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; /* Moderne, klare Schrift */
+    background-color: #ffffff; 
+    color: #1a1a1a; /* Dunkle Logo-Farbe für Text */
+    line-height: 1.65;
 }
 
-/* Zentriert den gesamten Inhalt */
 main {
-    max-width: 1000px; 
+    max-width: 1200px; /* Breiter für einen modernen Look */
     margin: 0 auto; 
     padding: 20px;
 }
 
+/* --- Header und Navigation --- */
 header {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px 20px 40px 20px;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    border-bottom: 1px solid #ccc; /* Trennlinie */
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-/* Styling des Hauptberichtsbereichs */
-.aktien-daten {
-    padding-top: 50px;
+/* Logo-Stil wie im Bild */
+.logo h1 {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #1a1a1a; 
 }
 
-.aktien-daten h2 {
-    font-size: 2.5em;
-    font-weight: 300;
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li {
+    margin-left: 25px;
+}
+
+.nav-link {
+    color: #555; /* Etwas heller für weniger Dominanz */
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #007bff;
+}
+
+/* --- Call-to-Action (CTA) Button --- */
+
+.cta-button {
+    text-decoration: none;
+    background-color: #007bff; /* Starkes Markenblau */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px; /* Leichte Rundung */
+    font-weight: 700;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    background-color: #0056b3;
+}
+
+.primary-cta {
+    font-size: 1.1em;
+    padding: 15px 30px;
+    margin-top: 30px;
+}
+
+/* --- Hero Sektion (Hauptbotschaft) --- */
+.hero {
+    padding: 80px 0;
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero h2 {
+    font-size: 3.5em; /* Sehr große, auffällige Überschrift */
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.hero p {
+    font-size: 1.3em;
+    color: #555;
     margin-bottom: 40px;
 }
 
-/* Anordnung der Kennzahlen in einer Reihe */
-.kennzahlen-container {
-    display: flex; 
-    gap: 30px; 
-    margin-top: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+/* --- Vorteile Sektion --- */
+.vorteile-grid {
+    padding: 50px 0 80px 0;
+    text-align: center;
 }
 
-.kennzahl h4 {
-    color: #777;
-    font-size: 0.9em;
-    margin-bottom: 5px;
+.vorteile-grid h3 {
+    font-size: 2em;
+    margin-bottom: 40px;
 }
 
-.kennzahl .wert {
-    font-size: 1.8em;
-    font-weight: bold;
+.grid-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
 }
 
-/* Footer-Styling */
+.vorteil-item {
+    flex-basis: 33%;
+    text-align: left;
+    padding: 20px;
+    border-radius: 8px;
+    /* Ein subtiler, professioneller Schatten */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+}
+
+.vorteil-item h4 {
+    color: #007bff; /* Akzentfarbe für die Titel */
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+/* --- Footer --- */
 footer {
     text-align: center;
-    padding: 20px;
-    font-size: 0.8em;
+    padding: 40px;
+    font-size: 0.9em;
     color: #999;
-    border-top: 1px solid #ccc;
-    margin-top: 50px;
+    border-top: 1px solid #e0e0e0;
 }

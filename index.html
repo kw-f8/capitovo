@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktienbericht-Seite</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>Finanz-Insight</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Berichte</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="aktien-daten">
+            <h2>Aktienbericht: <span id="aktienname">Wird geladen...</span></h2>
+            
+            <div class="kennzahlen-container">
+                <div class="kennzahl">
+                    <h4>Aktueller Kurs</h4>
+                    <p class="wert" id="kurs-wert">--</p>
+                </div>
+                <div class="kennzahl">
+                    <h4>Heutige Veränderung</h4>
+                    <p class="wert" id="change-wert">--</p>
+                </div>
+                <div class="kennzahl">
+                    <h4>Marktkapitalisierung</h4>
+                    <p class="wert" id="mcap-wert">--</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 50px;">Unsere Analyse</h3>
+            <p id="analyse-text">
+                Die tiefgreifende Analyse wird hier eingebettet.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Finanz-Insight. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <script src="script.js"></script> 
+</body>
+</html>

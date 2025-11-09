@@ -140,3 +140,17 @@ footer {
     color: #999;
     border-top: 1px solid #e0e0e0;
 }
+
+/* style.css */
+
+/* Stellt die korrekte Größe für das Logo ein */
+.header-logo {
+    height: 35px; /* Etwas größer für bessere Präsenz im dunklen Header */
+    width: auto; 
+    display: block;
+}
+
+/* Versteckt den alten Text-Platzhalter */
+.logo h1 {
+    display: none; 
+}

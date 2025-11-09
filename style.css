@@ -1,0 +1,72 @@
+/* Grund-Reset: Wir setzen Standard-Abstände zurück */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    /* Helle Hintergrundfarbe für Schlichtheit */
+    background-color: #f7f7f7; 
+    font-family: Arial, sans-serif; 
+    color: #333; 
+    line-height: 1.6; 
+}
+
+/* Zentriert den gesamten Inhalt */
+main {
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 20px;
+}
+
+header {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 20px 40px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid #ccc; /* Trennlinie */
+}
+
+/* Styling des Hauptberichtsbereichs */
+.aktien-daten {
+    padding-top: 50px;
+}
+
+.aktien-daten h2 {
+    font-size: 2.5em;
+    font-weight: 300;
+    margin-bottom: 40px;
+}
+
+/* Anordnung der Kennzahlen in einer Reihe */
+.kennzahlen-container {
+    display: flex; 
+    gap: 30px; 
+    margin-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.kennzahl h4 {
+    color: #777;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.kennzahl .wert {
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+/* Footer-Styling */
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 0.8em;
+    color: #999;
+    border-top: 1px solid #ccc;
+    margin-top: 50px;
+}

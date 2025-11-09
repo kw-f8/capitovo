@@ -3,52 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aktienbericht-Seite</title>
+    <title>capitovo – Ihre Premium Aktienanalyse</title>
     <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
         <div class="logo">
-            <h1>Finanz-Insight</h1>
+            <h1>capitovo <span style="color: #007bff;">↗</span></h1> 
         </div>
         <nav>
             <ul>
-                <li><a href="index.html">Berichte</a></li>
+                <li><a href="login.html" class="nav-link">Analysen (Login)</a></li>
+                <li><a href="#abo" class="cta-button">Jetzt Abonnieren</a></li> 
             </ul>
         </nav>
     </header>
 
     <main>
-        <section class="aktien-daten">
-            <h2>Aktienbericht: <span id="aktienname">Wird geladen...</span></h2>
-            
-            <div class="kennzahlen-container">
-                <div class="kennzahl">
-                    <h4>Aktueller Kurs</h4>
-                    <p class="wert" id="kurs-wert">--</p>
+        <section class="hero">
+            <h2>Marktführer von morgen erkennen. **Bevor** sie explodieren.</h2>
+            <p>
+                capitovo liefert Ihnen tiefgehende, datengestützte Aktienanalysen, die über das Offensichtliche hinausgehen. Holen Sie sich den entscheidenden Vorsprung.
+            </p>
+            <a href="#abo" class="cta-button primary-cta">Abo-Modelle ansehen</a>
+        </section>
+
+        <section class="vorteile-grid">
+            <h3>Warum **capitovo**?</h3>
+            <div class="grid-container">
+                <div class="vorteil-item">
+                    <h4>Datengetriebene Tiefe</h4>
+                    <p>Unsere Modelle verarbeiten Millionen von Datenpunkten, um Ihnen klare und unvoreingenommene Kauf- und Halteempfehlungen zu geben.</p>
                 </div>
-                <div class="kennzahl">
-                    <h4>Heutige Veränderung</h4>
-                    <p class="wert" id="change-wert">--</p>
+                <div class="vorteil-item">
+                    <h4>Exklusive Berichte</h4>
+                    <p>Zugang zu unseren vollständigen Berichten über Einzelaktien, veröffentlicht vor Marktöffnung, exklusiv für Abonnenten.</p>
                 </div>
-                <div class="kennzahl">
-                    <h4>Marktkapitalisierung</h4>
-                    <p class="wert" id="mcap-wert">--</p>
+                <div class="vorteil-item">
+                    <h4>Transparente Performance</h4>
+                    <p>Wir stehen zu unseren Analysen. Verfolgen Sie die Performance unserer vergangenen Empfehlungen in Echtzeit.</p>
                 </div>
             </div>
-
-            <h3 style="margin-top: 50px;">Unsere Analyse</h3>
-            <p id="analyse-text">
-                Die tiefgreifende Analyse wird hier eingebettet.
-            </p>
         </section>
     </main>
 
-    <footer>
-        <p>&copy; 2024 Finanz-Insight. Alle Rechte vorbehalten.</p>
+    <footer id="abo">
+        <p>&copy; 2024 capitovo. Wachstum durch Wissen.</p>
     </footer>
 
-    <script src="script.js"></script> 
 </body>
 </html>

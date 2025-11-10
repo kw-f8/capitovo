@@ -19,14 +19,16 @@ main {
 }
 
 /* --- Header und Navigation --- */
+/* style.css */
 header {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    /* Erhöht das Padding von 20px auf 30px */
+    padding: 30px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: none; 
 }
 
 /* Logo-Stil wie im Bild */
@@ -80,18 +82,21 @@ nav ul li {
 }
 
 /* --- Hero Sektion (Hauptbotschaft) --- */
+/* style.css */
 .hero {
-    padding: 80px 0;
-    text-align: center;
+    /* Erhöht den vertikalen Abstand drastisch von 80px auf 120px */
+    padding: 120px 0; 
+    text-align: center; 
     max-width: 900px;
     margin: 0 auto;
 }
 
+/* Um die Überschrift noch eindrucksvoller zu machen: */
 .hero h2 {
-    font-size: 3.5em; /* Sehr große, auffällige Überschrift */
+    font-size: 4em; /* Leicht vergrößert von 3.5em */
     font-weight: 700;
-    margin-bottom: 20px;
-    line-height: 1.2;
+    margin-bottom: 25px;
+    line-height: 1.1; /* Reduzierter Zeilenabstand für kompakten Block */
 }
 
 .hero p {

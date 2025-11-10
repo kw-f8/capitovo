@@ -1,4 +1,6 @@
+/* ================================================= */
 /* Globale Definitionen und Reset */
+/* ================================================= */
 * {
     margin: 0;
     padding: 0;
@@ -6,71 +8,51 @@
 }
 
 body {
-    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
-    background-color: #ffffff; 
-    color: #1a1a1a; 
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
     line-height: 1.65;
 }
 
-/* ---------------------------------------------------- */
-/* NEUE STRUKTUR: hero-wrapper für volle Breite und Hintergrund */
-/* ---------------------------------------------------- */
+/* ================================================= */
+/* Struktur: hero-wrapper für volle Breite */
+/* ================================================= */
 .hero-wrapper {
-    /* Wichtig: Läuft über die gesamte Breite */
-    background-color: #ffffff; 
-    color: #1a1a1a; 
-    padding-bottom: 100px; /* Platz unter der Hero-Sektion */
-    position: relative; 
-    overflow: hidden; 
-    /* Hier würden später Parallax/Background-Styles hinkommen */
+    background-color: #ffffff;
+    color: #1a1a1a;
+    padding-bottom: 100px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Zentriert den Inhalt der Seite, der NICHT volle Breite benötigt */
+/* Hauptinhalt */
 main {
     max-width: 1200px;
-    margin: 0 auto; 
-    padding: 0 20px; /* Horizontales Padding für Ränder */
+    margin: 0 auto;
+    padding: 0 20px;
 }
 
-/* --- Header und Navigation (Volle Breite, Inhalt zentriert) --- */
+/* ================================================= */
+/* Header und Navigation */
+/* ================================================= */
 
 header {
-    /* Keine max-width, läuft über die gesamte Breite des Wrappers */
-    margin: 0 auto; 
-    padding: 30px 20px; /* Wichtig: Padding, damit Logo und Menü nicht kleben */
-    border-bottom: none;
-    background-color: transparent; 
-    /* Header bekommt jetzt selbst die Flex-Eigenschaften */
+    margin: 0 auto;
+    padding: 30px 20px;
+    background-color: transparent;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px; /* Begrenze Header-Inhalt */
-}
-
-/* NEU: Zentriert den Header-INHALT und gibt ihm die maximale Breite */
-.header-content {
-    /* Dieser Block wird redundant und kann entfernt werden, falls er noch im HTML ist */
     max-width: 1200px;
-    width: 100%;
-    margin: 0 auto; /* Zentriert den Inhalt */
-    padding: 0 20px; /* Hält den Inhalt von den Rändern fern */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
-/* Logo Bild-Styling */
 .header-logo {
-    height: 35px; 
-    width: auto; 
+    height: 35px;
+    width: auto;
     display: block;
 }
 
-/* Versteckt den alten h1-Text */
-.logo h1 {
-    display: none; 
-}
-
+/* Navigation Desktop */
 nav ul {
     list-style: none;
     display: flex;
@@ -82,7 +64,7 @@ nav ul li {
 }
 
 .nav-link {
-    color: #555; 
+    color: #555;
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -91,14 +73,13 @@ nav ul li {
     color: #007bff;
 }
 
-/* --- Call-to-Action (CTA) Button --- */
-
+/* CTA Button */
 .cta-button {
     text-decoration: none;
-    background-color: #007bff; /* Starkes Markenblau */
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
-    border-radius: 5px; 
+    border-radius: 5px;
     font-weight: 700;
     transition: background-color 0.3s;
     display: inline-block;
@@ -114,20 +95,22 @@ nav ul li {
     margin-top: 30px;
 }
 
-/* --- Hero Sektion (Hauptbotschaft) --- */
+/* ================================================= */
+/* Hero-Sektion */
+/* ================================================= */
+
 .hero {
-    /* Hero ist bereits in MAIN, das eine max-width hat, somit zentriert */
-    padding: 120px 0; 
-    text-align: center; 
+    padding: 120px 0;
+    text-align: center;
     max-width: 900px;
     margin: 0 auto;
 }
 
 .hero h2 {
-    font-size: 4em; 
+    font-size: 4em;
     font-weight: 700;
     margin-bottom: 25px;
-    line-height: 1.1; 
+    line-height: 1.1;
 }
 
 .hero p {
@@ -136,11 +119,13 @@ nav ul li {
     margin-bottom: 40px;
 }
 
-/* --- Vorteile Sektion --- */
+/* ================================================= */
+/* Vorteile-Sektion */
+/* ================================================= */
+
 .vorteile-grid {
     padding: 50px 0 80px 0;
     text-align: center;
-    /* Der Inhalt wird durch MAIN zentral begrenzt */
 }
 
 .vorteile-grid h3 {
@@ -152,8 +137,7 @@ nav ul li {
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    /* Fügt horizontale Ränder hinzu, damit die Boxen nicht an den Seiten kleben */
-    padding: 0 20px; 
+    padding: 0 20px;
 }
 
 .vorteil-item {
@@ -161,16 +145,19 @@ nav ul li {
     text-align: left;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .vorteil-item h4 {
-    color: #007bff; 
+    color: #007bff;
     margin-bottom: 10px;
     font-size: 1.2em;
 }
 
-/* --- Footer --- */
+/* ================================================= */
+/* Footer */
+/* ================================================= */
+
 footer {
     text-align: center;
     padding: 40px;
@@ -180,79 +167,72 @@ footer {
 }
 
 /* ================================================= */
-/* RESPONSIVE MENÜ STYLES                */
+/* Responsive Menü-Styling */
 /* ================================================= */
 
-/* 1. Hamburger-Button-Standard (wird auf Desktop versteckt) */
 .menu-toggle {
-    display: none; 
+    display: none;
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
-    z-index: 100; 
+    z-index: 100;
 }
 
-/* 3. Media Query für mobile Ansicht (z.B. alles unter 768px) */
+.hamburger-icon,
+.hamburger-icon::before,
+.hamburger-icon::after {
+    content: '';
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #1a1a1a;
+    transition: all 0.3s;
+    position: relative;
+}
+
+.hamburger-icon::before {
+    position: absolute;
+    top: -8px;
+}
+
+.hamburger-icon::after {
+    position: absolute;
+    top: 8px;
+}
+
+/* ================================================= */
+/* MOBILE ANSICHT */
+/* ================================================= */
 @media (max-width: 768px) {
-    
-    /* NEUE WICHTIGE REGEL: Die Desktop-Navigation MUSS auf Mobilgeräten versteckt werden, 
-       damit der Hamburger-Button an ihre Stelle treten kann. */
-    nav {
+
+    /* Navigation standardmäßig verstecken */
+    .main-nav {
         display: none;
     }
-    
-    /* Der Hamburger-Button wird nur auf Mobilgeräten angezeigt */
+
+    /* Hamburger sichtbar */
     .menu-toggle {
-        display: block; 
-    }
-    
-    /* Hamburger-Icon Styling (drei Linien) */
-    .hamburger-icon,
-    .hamburger-icon::before,
-    .hamburger-icon::after {
-        content: '';
         display: block;
-        width: 25px;
-        height: 3px;
-        background-color: #1a1a1a; /* Dunkelgrau für den Button */
-        transition: all 0.3s;
     }
 
-    .hamburger-icon::before {
-        transform: translateY(-8px);
-    }
-
-    .hamburger-icon::after {
-        transform: translateY(5px);
-    }
-    
-    /* Navigationsmenü (auf Mobilgeräten) wird über JavaScript eingeblendet */
-    .main-nav {
-        /* Positioniert das Menü über den gesamten Bildschirm */
+    /* Sichtbarer Zustand (über JS aktiviert) */
+    .main-nav.is-open {
+        display: block !important;
         position: absolute;
-        top: 75px; /* Unterhalb des Headers */
+        top: 75px;
         left: 0;
         width: 100%;
-        height: auto; 
         background-color: #fff;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        z-index: 99;
-        
-        /* WICHTIG: Versteckt das Menü standardmäßig */
-        transform: translateY(-150%);
+        transform: translateY(0);
         transition: transform 0.4s ease-in-out;
+        z-index: 99;
     }
-    
-    /* Zustand, wenn die Klasse 'is-open' per JS hinzugefügt wird */
-    .main-nav.is-open {
-        transform: translateY(0); /* Zeigt das Menü an */
-        display: block !important; /* Wichtig: Überschreibt die 'nav { display: none; }' Regel */
-    }
-    
-    /* Navigations-Links stapeln */
+
+    /* Menü-Links vertikal anordnen */
     .main-nav ul {
-        flex-direction: column; /* Stapelt Links vertikal */
+        flex-direction: column;
         padding: 20px 0;
     }
 
@@ -260,27 +240,24 @@ footer {
         margin: 10px 0;
         text-align: center;
     }
-    
-    /* Überschreibt das Styling der CTA-Buttons im Menü, damit sie breiter sind */
+
     .main-nav .cta-button {
         width: 80%;
         max-width: 300px;
         display: block;
         margin: 15px auto;
     }
-    
-    /* Ränder in der Hero-Sektion anpassen */
+
     .hero h2 {
-        font-size: 2.5em; /* Kleinere Schrift für Mobil */
+        font-size: 2.5em;
     }
 
-    /* Grid-Container stapeln */
     .grid-container {
-        flex-direction: column; /* Stapelt die Vorteile vertikal */
+        flex-direction: column;
         gap: 20px;
     }
 
     .vorteil-item {
-        flex-basis: 100%; /* Nimmt die volle Breite ein */
+        flex-basis: 100%;
     }
 }

@@ -6,36 +6,75 @@
 }
 
 body {
-    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; /* Moderne, klare Schrift */
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
     background-color: #ffffff; 
-    color: #1a1a1a; /* Dunkle Logo-Farbe für Text */
+    color: #1a1a1a; 
     line-height: 1.65;
 }
 
-main {
-    max-width: 1200px; /* Breiter für einen modernen Look */
-    margin: 0 auto; 
-    padding: 20px;
+/* ---------------------------------------------------- */
+/* NEUE STRUKTUR: hero-wrapper für volle Breite und Hintergrund */
+/* ---------------------------------------------------- */
+.hero-wrapper {
+    /* Wichtig: Läuft über die gesamte Breite */
+    background-color: #ffffff; 
+    color: #1a1a1a; 
+    padding-bottom: 100px; /* Platz unter der Hero-Sektion */
+    position: relative; 
+    overflow: hidden; 
+    /* Hier würden später Parallax/Background-Styles hinkommen */
 }
 
-/* --- Header und Navigation --- */
-/* style.css */
-header {
+/* Zentriert den Inhalt der Seite, der NICHT volle Breite benötigt */
+main {
     max-width: 1200px;
-    margin: 0 auto;
-    /* Erhöht das Padding von 20px auf 30px */
-    padding: 30px; 
+    margin: 0 auto; 
+    padding: 0 20px; /* Horizontales Padding für Ränder */
+}
+
+/* --- Header und Navigation (Volle Breite, Inhalt zentriert) --- */
+
+header {
+    /* Keine max-width, läuft über die gesamte Breite des Wrappers */
+    margin: 0; 
+    padding: 30px 0; /* Vertikaler Abstand, 0px horizontal (wird durch .header-content gesteuert) */
+    border-bottom: none;
+    background-color: transparent; 
+    /* Header bekommt jetzt selbst die Flex-Eigenschaften */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: none; 
+    max-width: 1200px; /* Begrenze Header-Inhalt */
+    margin: 0 auto; /* Zentriere Header-Inhalt */
+    padding: 30px 20px; /* Wichtig: Padding, damit Logo und Menü nicht kleben */
 }
 
-/* Logo-Stil wie im Bild */
+/* DEINE ALTEN HEADER STILE SIND JETZT IM HEADER ELEMENT SELBST */
+/* .header-content ist nicht mehr nötig, da HEADER jetzt die max-width und Flex hat */
+/* Ich lasse den alten .header-content Block zur Info und Übersichtlichkeit drin */
+
+/* NEU: Zentriert den Header-INHALT und gibt ihm die maximale Breite */
+.header-content {
+    /* Dieser Block wird redundant, da wir die Styles in 'header' verschoben haben */
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto; /* Zentriert den Inhalt */
+    padding: 0 20px; /* Hält den Inhalt von den Rändern fern */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo Bild-Styling */
+.header-logo {
+    height: 35px; 
+    width: auto; 
+    display: block;
+}
+
+/* Versteckt den alten h1-Text */
 .logo h1 {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: #1a1a1a; 
+    display: none; 
 }
 
 nav ul {
@@ -49,7 +88,7 @@ nav ul li {
 }
 
 .nav-link {
-    color: #555; /* Etwas heller für weniger Dominanz */
+    color: #555; 
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -65,7 +104,7 @@ nav ul li {
     background-color: #007bff; /* Starkes Markenblau */
     color: white;
     padding: 10px 20px;
-    border-radius: 5px; /* Leichte Rundung */
+    border-radius: 5px; 
     font-weight: 700;
     transition: background-color 0.3s;
     display: inline-block;
@@ -82,21 +121,19 @@ nav ul li {
 }
 
 /* --- Hero Sektion (Hauptbotschaft) --- */
-/* style.css */
 .hero {
-    /* Erhöht den vertikalen Abstand drastisch von 80px auf 120px */
+    /* Hero ist bereits in MAIN, das eine max-width hat, somit zentriert */
     padding: 120px 0; 
     text-align: center; 
     max-width: 900px;
     margin: 0 auto;
 }
 
-/* Um die Überschrift noch eindrucksvoller zu machen: */
 .hero h2 {
-    font-size: 4em; /* Leicht vergrößert von 3.5em */
+    font-size: 4em; 
     font-weight: 700;
     margin-bottom: 25px;
-    line-height: 1.1; /* Reduzierter Zeilenabstand für kompakten Block */
+    line-height: 1.1; 
 }
 
 .hero p {
@@ -109,6 +146,7 @@ nav ul li {
 .vorteile-grid {
     padding: 50px 0 80px 0;
     text-align: center;
+    /* Der Inhalt wird durch MAIN zentral begrenzt */
 }
 
 .vorteile-grid h3 {
@@ -120,6 +158,8 @@ nav ul li {
     display: flex;
     justify-content: space-between;
     gap: 30px;
+    /* Fügt horizontale Ränder hinzu, damit die Boxen nicht an den Seiten kleben */
+    padding: 0 20px; 
 }
 
 .vorteil-item {
@@ -127,12 +167,11 @@ nav ul li {
     text-align: left;
     padding: 20px;
     border-radius: 8px;
-    /* Ein subtiler, professioneller Schatten */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
 }
 
 .vorteil-item h4 {
-    color: #007bff; /* Akzentfarbe für die Titel */
+    color: #007bff; 
     margin-bottom: 10px;
     font-size: 1.2em;
 }
@@ -146,16 +185,112 @@ footer {
     border-top: 1px solid #e0e0e0;
 }
 
-/* style.css */
+/* ================================================= */
+/* RESPONSIVE MENÜ STYLES                */
+/* ================================================= */
 
-/* Stellt die korrekte Größe für das Logo ein */
-.header-logo {
-    height: 35px; /* Etwas größer für bessere Präsenz im dunklen Header */
-    width: auto; 
-    display: block;
+/* 1. Hamburger-Button-Standard (wird auf Desktop versteckt) */
+.menu-toggle {
+    display: none; /* Standardmäßig im Desktop-Modus verstecken */
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 100; /* Stellt sicher, dass er über der Navigation liegt */
 }
 
-/* Versteckt den alten Text-Platzhalter */
-.logo h1 {
-    display: none; 
+/* 2. Desktop-Header-Korrektur */
+/* Da wir .header-content entfernt haben, sind die Flex-Eigenschaften im <header> selbst.
+   Wir müssen sicherstellen, dass die Navigation auch auf großen Bildschirmen korrekt angezeigt wird.
+   (Das ist bereits durch nav ul { display: flex; } gegeben) */
+
+/* 3. Media Query für mobile Ansicht (z.B. alles unter 768px) */
+@media (max-width: 768px) {
+    
+    /* Header auf Mobilgeräten */
+    header {
+        /* Kein Flex-Wrap nötig, da das Menü ausgeblendet wird */
+        padding: 20px 20px; /* Kleinerer vertikaler Abstand auf Mobil */
+    }
+
+    /* Der Hamburger-Button wird nur auf Mobilgeräten angezeigt */
+    .menu-toggle {
+        display: block; 
+    }
+    
+    /* Hamburger-Icon Styling (drei Linien) */
+    .hamburger-icon,
+    .hamburger-icon::before,
+    .hamburger-icon::after {
+        content: '';
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #1a1a1a; /* Dunkelgrau für den Button */
+        transition: all 0.3s;
+    }
+
+    .hamburger-icon::before {
+        transform: translateY(-8px);
+    }
+
+    .hamburger-icon::after {
+        transform: translateY(5px);
+    }
+    
+    /* Navigationsmenü (auf Mobilgeräten) */
+    .main-nav {
+        /* Positioniert das Menü über den gesamten Bildschirm */
+        position: absolute;
+        top: 75px; /* Unterhalb des Headers (ca. 35px Logo + 20px Padding oben/unten) */
+        left: 0;
+        width: 100%;
+        height: auto; /* Höhe passt sich dem Inhalt an */
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 99;
+        
+        /* WICHTIG: Versteckt das Menü standardmäßig */
+        transform: translateY(-150%);
+        transition: transform 0.4s ease-in-out;
+    }
+    
+    /* Zustand, wenn die Klasse 'is-open' per JS hinzugefügt wird */
+    .main-nav.is-open {
+        transform: translateY(0); /* Zeigt das Menü an */
+    }
+    
+    /* Navigations-Links stapeln */
+    .main-nav ul {
+        flex-direction: column; /* Stapelt Links vertikal */
+        padding: 20px 0;
+    }
+
+    .main-nav ul li {
+        margin: 10px 0;
+        text-align: center;
+    }
+    
+    /* Überschreibt das Styling der CTA-Buttons im Menü, damit sie breiter sind */
+    .main-nav .cta-button {
+        width: 80%;
+        max-width: 300px;
+        display: block;
+        margin: 15px auto;
+    }
+    
+    /* Ränder in der Hero-Sektion anpassen */
+    .hero h2 {
+        font-size: 2.5em; /* Kleinere Schrift für Mobil */
+    }
+
+    /* Grid-Container stapeln */
+    .grid-container {
+        flex-direction: column; /* Stapelt die Vorteile vertikal */
+        gap: 20px;
+    }
+
+    .vorteil-item {
+        flex-basis: 100%; /* Nimmt die volle Breite ein */
+    }
 }

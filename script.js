@@ -9,26 +9,27 @@
  * Schaltet die CSS-Klasse 'open' auf der Sidebar.
  */
 function initialisiereSeitenleiste() {
-    // 1. Elemente anhand ihrer korrekten IDs auswählen
+    // WICHTIG: Die IDs entsprechen den Elementen in der index.html
     const menuToggle = document.getElementById('menu-toggle'); 
-    const sidebar = document.getElementById('sidebar');       // KORRIGIERT: Muss 'sidebar' sein
+    const sidebar = document.getElementById('sidebar');      
     const closeButton = document.getElementById('close-sidebar');
 
+    // Stellt sicher, dass alle Elemente im HTML gefunden wurden
     if (menuToggle && sidebar && closeButton) {
         
         // --- Öffnungsfunktion ---
         menuToggle.addEventListener('click', () => {
-            // 2. KORRIGIERT: Schaltet die Klasse 'open'
+            // Fügt die Klasse 'open' hinzu (CSS blendet das Menü ein)
             sidebar.classList.add('open');
         });
 
         // --- Schließfunktion (X-Button) ---
         closeButton.addEventListener('click', () => {
-            // 3. KORRIGIERT: Entfernt die Klasse 'open'
+            // Entfernt die Klasse 'open' (CSS blendet das Menü aus)
             sidebar.classList.remove('open');
         });
         
-        // Optional: Menü schließen, wenn ein Link in der Leiste geklickt wird
+        // Optional: Schließen beim Klick auf einen Link
         const navLinks = sidebar.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -37,16 +38,15 @@ function initialisiereSeitenleiste() {
         });
 
     } else {
-        // Dieser Fehler wird in der Konsole sichtbar, falls Elemente fehlen
-        console.error("Fehler: Konnte Menü- oder Sidebar-Elemente nicht im DOM finden.");
+        console.error("Fehler: Konnte Menü-, Sidebar- oder Schließen-Elemente nicht im DOM finden. Bitte IDs in index.html prüfen.");
     }
 }
 
-// 4. Die Funktion aufrufen, sobald das gesamte HTML geladen ist
+// Stellt sicher, dass das Skript erst läuft, wenn das gesamte HTML geladen ist
 document.addEventListener('DOMContentLoaded', initialisiereSeitenleiste);
 
 
 // =======================================================
-// DEIN BESTEHENDER CODE FOLGT (nur zur Übersicht)
+// DEIN BESTEHENDER CODE FOLGT
+// (Hier folgen alle anderen Funktionen, z.B. Aktiendaten)
 // =======================================================
-/* Hier folgt der Rest deines Aktiendaten-Codes (const aktienDaten, function datenAktualisieren, etc.) */

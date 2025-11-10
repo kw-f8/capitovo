@@ -15,18 +15,15 @@ body {
 /* ---------------------------------------------------- */
 /* NEUE STRUKTUR: hero-wrapper für volle Breite und Hintergrund */
 /* ---------------------------------------------------- */
-/* ---------------------------------------------------- */
-/* NEUE STRUKTUR: hero-wrapper für volle Breite und Hintergrund */
-/* ---------------------------------------------------- */
 .hero-wrapper {
-    /* WICHTIG: Farbe von #ffffff auf das Dunkelblau ändern! */
-    background-color: #1a2537; /* DUNKEL: Das tiefe Dunkelblau/Grau */
-    color: #f0f0f0; /* Stellt sicher, dass der Text im Hero-Bereich hell ist */
+    /* Setzt das tiefe Dunkelblau/Grau */
+    background-color: #1a2537; 
+    /* Stellt sicher, dass der Text im Hero-Bereich hell ist */
+    color: #f0f0f0; 
     
     padding-bottom: 100px; /* Platz unter der Hero-Sektion */
     position: relative; 
     overflow: hidden; 
-    /* Hier würden später Parallax/Background-Styles hinkommen */
 }
 
 /* Zentriert den Inhalt der Seite, der NICHT volle Breite benötigt */
@@ -39,19 +36,17 @@ main {
 /* --- Header und Navigation (Volle Breite, Inhalt zentriert) --- */
 
 header {
-    /* Keine max-width, läuft über die gesamte Breite des Wrappers */
     margin: 0; 
-    padding: 30px 0; /* Vertikaler Abstand, 0px horizontal (wird durch .header-content gesteuert) */
+    padding: 30px 0; 
     border-bottom: none;
     background-color: transparent; 
 }
 
-/* NEU: Zentriert den Header-INHALT und gibt ihm die maximale Breite */
 .header-content {
     max-width: 1200px;
     width: 100%;
-    margin: 0 auto; /* Zentriert den Inhalt */
-    padding: 0 20px; /* Hält den Inhalt von den Rändern fern */
+    margin: 0 auto; 
+    padding: 0 20px; 
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -79,9 +74,9 @@ nav ul li {
     margin-left: 25px;
 }
 
-/* Vorher: Farbe #555 (zu dunkel für dunklen Hintergrund) */
+/* Helle Farbe für die Links auf dunklem Hero-Hintergrund */
 .nav-link {
-    color: #bbb; /* NEU: Helles Grau */
+    color: #bbb; 
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -94,7 +89,7 @@ nav ul li {
 
 .cta-button {
     text-decoration: none;
-    background-color: #007bff; /* Starkes Markenblau */
+    background-color: #007bff; 
     color: white;
     padding: 10px 20px;
     border-radius: 5px; 
@@ -115,7 +110,6 @@ nav ul li {
 
 /* --- Hero Sektion (Hauptbotschaft) --- */
 .hero {
-    /* Hero ist bereits in MAIN, das eine max-width hat, somit zentriert */
     padding: 120px 0; 
     text-align: center; 
     max-width: 900px;
@@ -129,10 +123,10 @@ nav ul li {
     line-height: 1.1; 
 }
 
-/* Vorher: Farbe #555 (zu dunkel für dunklen Hintergrund) */
+/* Helle Farbe für den Text auf dunklem Hero-Hintergrund */
 .hero p {
     font-size: 1.3em;
-    color: #bbb; /* NEU: Helles Grau */
+    color: #bbb; 
     margin-bottom: 40px;
 }
 
@@ -140,7 +134,6 @@ nav ul li {
 .vorteile-grid {
     padding: 50px 0 80px 0;
     text-align: center;
-    /* Der Inhalt wird durch MAIN zentral begrenzt */
 }
 
 .vorteile-grid h3 {
@@ -152,7 +145,6 @@ nav ul li {
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    /* Fügt horizontale Ränder hinzu, damit die Boxen nicht an den Seiten kleben */
     padding: 0 20px; 
 }
 
@@ -181,14 +173,16 @@ footer {
 
 /* --- Seitenleiste und Hamburger-Menü --- */
 
-/* 1. Hamburger-Button */
-/* 1. Hamburger-Button */
+/* 1. Hamburger-Button: Angepasst, falls der Hero-Wrapper weiß ist */
 .menu-toggle {
-    /* ... */
-    /* FÜR EINE WEISSE SEITE MUSS DIE FARBE DUNKEL SEIN */
-    color: #1a1a1a; /* NEU: Dunkle Farbe für den hellen Header */
-    border: 2px solid #1a1a1a; /* NEU: Dunkler Rahmen */
-    /* ... Rest bleibt gleich ... */
+    background: none;
+    border: 2px solid #bbb;
+    color: #f0f0f0; /* Helle Farbe auf dunklem Header (Standard) */
+    font-size: 1.5em;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
 }
 
 .menu-toggle:hover {
@@ -201,13 +195,13 @@ footer {
     position: fixed;
     top: 0;
     right: 0;
-    width: 300px; /* Breite der Seitenleiste */
+    width: 300px; 
     height: 100%;
-    background-color: #24354b; /* Etwas dunkler als der Header */
+    background-color: #24354b; 
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     
-    /* Wichtig für die Animation: Standardmäßig ausgeblendet */
+    /* Wichtig: Standardmäßig ausgeblendet */
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     padding: 20px;
@@ -232,12 +226,12 @@ footer {
 
 /* 4. Navigation in der Seitenleiste */
 .sidebar-nav {
-    padding-top: 50px; /* Abstand zum Schließen-Button */
+    padding-top: 50px; 
 }
 
 .sidebar-nav ul {
     list-style: none;
-    display: block; /* Listenpunkte untereinander */
+    display: block; 
 }
 
 .sidebar-nav li {
@@ -261,7 +255,7 @@ footer {
 .sidebar-cta {
     display: block;
     background-color: #007bff;
-    color: white !important; /* !important, um die hover-Farbe zu überschreiben */
+    color: white !important; 
     text-align: center;
     padding: 10px 15px;
     border-radius: 5px;

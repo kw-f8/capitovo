@@ -1,64 +1,54 @@
+// script.js
+
 // =======================================================
-// NEUER ABSCHNITT: Responsive Menü-Funktionalität
+// KORRIGIERTER ABSCHNITT: Seitenleisten-Funktionalität
 // =======================================================
 
 /**
- * Funktion zur Steuerung des mobilen Navigationsmenüs.
- * Schaltet die CSS-Klasse 'is-open' und die ARIA-Attribute um.
+ * Funktion zur Steuerung der Seitenleiste (Sidebar).
+ * Schaltet die CSS-Klasse 'open' auf der Sidebar.
  */
-function initialisiereMenueToggle() {
+function initialisiereSeitenleiste() {
     // 1. Elemente anhand ihrer ID auswählen
-    const menuToggle = document.getElementById('menu-toggle');
-    const mainNav = document.getElementById('main-nav');
+    const menuToggle = document.getElementById('menu-toggle'); // Der Hamburger-Button (ID ist korrekt)
+    const sidebar = document.getElementById('sidebar');       // KORRIGIERT: Muss 'sidebar' sein
+    const closeButton = document.getElementById('close-sidebar'); // Der X-Button zum Schließen (optional, aber gut)
 
-    if (menuToggle && mainNav) {
-        // 2. Klick-Event-Listener zum Button hinzufügen
+    if (menuToggle && sidebar && closeButton) {
+        
+        // --- Öffnungsfunktion ---
         menuToggle.addEventListener('click', () => {
-            // 3. Klasse 'is-open' auf der Navigation umschalten (hinzufügen/entfernen)
-            mainNav.classList.toggle('is-open');
+            // 2. KORRIGIERT: Klasse 'open' auf der Sidebar hinzufügen
+            sidebar.classList.add('open');
+            // ARIA-Attribute können optional hinzugefügt werden, sind aber hier nicht das Problem.
+        });
 
-            // 4. ARIA-Attribut 'aria-expanded' umschalten (für Barrierefreiheit)
-            const isExpanded = mainNav.classList.contains('is-open');
-            menuToggle.setAttribute('aria-expanded', isExpanded);
+        // --- Schließfunktion (X-Button) ---
+        closeButton.addEventListener('click', () => {
+            // 3. KORRIGIERT: Klasse 'open' auf der Sidebar entfernen
+            sidebar.classList.remove('open');
         });
         
-        // OPTIONAL: Menü schließen, wenn ein Link im Menü geklickt wird (auf Mobil)
-        // Dadurch bleibt das Menü nicht offen, nachdem der Nutzer navigiert hat.
-        const navLinks = mainNav.querySelectorAll('a');
+        // OPTIONAL: Schließen, wenn ein Link in der Leiste geklickt wird
+        const navLinks = sidebar.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                // Nur schließen, wenn das Menü tatsächlich geöffnet ist
-                if (mainNav.classList.contains('is-open')) {
-                    mainNav.classList.remove('is-open');
-                    menuToggle.setAttribute('aria-expanded', 'false');
-                }
+                sidebar.classList.remove('open');
             });
         });
 
     } else {
-        console.error("Fehler: Konnte Menü- oder Toggle-Elemente nicht im DOM finden.");
+        console.error("Fehler: Konnte Menü-, Sidebar- oder Schließen-Elemente nicht im DOM finden.");
     }
 }
 
-// 5. Die Funktion aufrufen, sobald das gesamte HTML geladen ist
-// Wir nutzen 'DOMContentLoaded', um sicherzustellen, dass die Elemente existieren.
-document.addEventListener('DOMContentLoaded', initialisiereMenueToggle);
+// 4. Die Funktion aufrufen, sobald das gesamte HTML geladen ist
+document.addEventListener('DOMContentLoaded', initialisiereSeitenleiste);
 
 
 // =======================================================
 // DEIN BESTEHENDER CODE FOLGT (nur zur Übersicht)
-// (Dieser Teil bleibt unverändert)
 // =======================================================
 
-// 1. Definition der Aktiendaten (Dummy-Daten zum Testen)
-const aktienDaten = {
-// ...
-};
-
-// 2. Funktion zum Einfügen der Daten in das HTML
-function datenAktualisieren(daten) {
-// ...
-}
-
-// 3. Ausführung der Funktion, sobald die Seite geladen ist
-// datenAktualisieren(aktienDaten); // Diesen Aufruf behältst du.
+/* Der Rest deines Aktiendaten-Codes (aktienDaten, datenAktualisieren) 
+   bleibt unberührt und kann unten angefügt werden. */

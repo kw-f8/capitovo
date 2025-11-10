@@ -1,6 +1,4 @@
-/* ================================================= */
 /* Globale Definitionen und Reset */
-/* ================================================= */
 * {
     margin: 0;
     padding: 0;
@@ -8,51 +6,69 @@
 }
 
 body {
-    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-    background-color: #ffffff;
-    color: #1a1a1a;
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
+    background-color: #ffffff; 
+    color: #1a1a1a; 
     line-height: 1.65;
 }
 
-/* ================================================= */
-/* Struktur: hero-wrapper für volle Breite */
-/* ================================================= */
+/* ---------------------------------------------------- */
+/* NEUE STRUKTUR: hero-wrapper für volle Breite und Hintergrund */
+/* ---------------------------------------------------- */
+/* ---------------------------------------------------- */
+/* NEUE STRUKTUR: hero-wrapper für volle Breite und Hintergrund */
+/* ---------------------------------------------------- */
 .hero-wrapper {
-    background-color: #ffffff;
-    color: #1a1a1a;
-    padding-bottom: 100px;
-    position: relative;
-    overflow: hidden;
+    /* WICHTIG: Farbe von #ffffff auf das Dunkelblau ändern! */
+    background-color: #1a2537; /* DUNKEL: Das tiefe Dunkelblau/Grau */
+    color: #f0f0f0; /* Stellt sicher, dass der Text im Hero-Bereich hell ist */
+    
+    padding-bottom: 100px; /* Platz unter der Hero-Sektion */
+    position: relative; 
+    overflow: hidden; 
+    /* Hier würden später Parallax/Background-Styles hinkommen */
 }
 
-/* Hauptinhalt */
+/* Zentriert den Inhalt der Seite, der NICHT volle Breite benötigt */
 main {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    margin: 0 auto; 
+    padding: 0 20px; /* Horizontales Padding für Ränder */
 }
 
-/* ================================================= */
-/* Header und Navigation */
-/* ================================================= */
+/* --- Header und Navigation (Volle Breite, Inhalt zentriert) --- */
 
 header {
-    margin: 0 auto;
-    padding: 30px 20px;
-    background-color: transparent;
+    /* Keine max-width, läuft über die gesamte Breite des Wrappers */
+    margin: 0; 
+    padding: 30px 0; /* Vertikaler Abstand, 0px horizontal (wird durch .header-content gesteuert) */
+    border-bottom: none;
+    background-color: transparent; 
+}
+
+/* NEU: Zentriert den Header-INHALT und gibt ihm die maximale Breite */
+.header-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto; /* Zentriert den Inhalt */
+    padding: 0 20px; /* Hält den Inhalt von den Rändern fern */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
 }
 
+/* Logo Bild-Styling */
 .header-logo {
-    height: 35px;
-    width: auto;
+    height: 35px; 
+    width: auto; 
     display: block;
 }
 
-/* Navigation Desktop */
+/* Versteckt den alten h1-Text */
+.logo h1 {
+    display: none; 
+}
+
 nav ul {
     list-style: none;
     display: flex;
@@ -63,8 +79,9 @@ nav ul li {
     margin-left: 25px;
 }
 
+/* Vorher: Farbe #555 (zu dunkel für dunklen Hintergrund) */
 .nav-link {
-    color: #555;
+    color: #bbb; /* NEU: Helles Grau */
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -73,13 +90,14 @@ nav ul li {
     color: #007bff;
 }
 
-/* CTA Button */
+/* --- Call-to-Action (CTA) Button --- */
+
 .cta-button {
     text-decoration: none;
-    background-color: #007bff;
+    background-color: #007bff; /* Starkes Markenblau */
     color: white;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 5px; 
     font-weight: 700;
     transition: background-color 0.3s;
     display: inline-block;
@@ -95,37 +113,34 @@ nav ul li {
     margin-top: 30px;
 }
 
-/* ================================================= */
-/* Hero-Sektion */
-/* ================================================= */
-
+/* --- Hero Sektion (Hauptbotschaft) --- */
 .hero {
-    padding: 120px 0;
-    text-align: center;
+    /* Hero ist bereits in MAIN, das eine max-width hat, somit zentriert */
+    padding: 120px 0; 
+    text-align: center; 
     max-width: 900px;
     margin: 0 auto;
 }
 
 .hero h2 {
-    font-size: 4em;
+    font-size: 4em; 
     font-weight: 700;
     margin-bottom: 25px;
-    line-height: 1.1;
+    line-height: 1.1; 
 }
 
+/* Vorher: Farbe #555 (zu dunkel für dunklen Hintergrund) */
 .hero p {
     font-size: 1.3em;
-    color: #555;
+    color: #bbb; /* NEU: Helles Grau */
     margin-bottom: 40px;
 }
 
-/* ================================================= */
-/* Vorteile-Sektion */
-/* ================================================= */
-
+/* --- Vorteile Sektion --- */
 .vorteile-grid {
     padding: 50px 0 80px 0;
     text-align: center;
+    /* Der Inhalt wird durch MAIN zentral begrenzt */
 }
 
 .vorteile-grid h3 {
@@ -137,7 +152,8 @@ nav ul li {
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    padding: 0 20px;
+    /* Fügt horizontale Ränder hinzu, damit die Boxen nicht an den Seiten kleben */
+    padding: 0 20px; 
 }
 
 .vorteil-item {
@@ -145,19 +161,16 @@ nav ul li {
     text-align: left;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
 }
 
 .vorteil-item h4 {
-    color: #007bff;
+    color: #007bff; 
     margin-bottom: 10px;
     font-size: 1.2em;
 }
 
-/* ================================================= */
-/* Footer */
-/* ================================================= */
-
+/* --- Footer --- */
 footer {
     text-align: center;
     padding: 40px;
@@ -166,98 +179,94 @@ footer {
     border-top: 1px solid #e0e0e0;
 }
 
-/* ================================================= */
-/* Responsive Menü-Styling */
-/* ================================================= */
+/* --- Seitenleiste und Hamburger-Menü --- */
 
+/* 1. Hamburger-Button */
 .menu-toggle {
-    display: none;
+    background: none;
+    border: 2px solid #bbb;
+    color: #f0f0f0; /* Helle Farbe für den dunklen Header */
+    font-size: 1.5em;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.menu-toggle:hover {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+/* 2. Seitenleisten-Container */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px; /* Breite der Seitenleiste */
+    height: 100%;
+    background-color: #24354b; /* Etwas dunkler als der Header */
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    
+    /* Wichtig für die Animation: Standardmäßig ausgeblendet */
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    padding: 20px;
+}
+
+/* Zustand, wenn die Seitenleiste geöffnet ist (wird per JS gesetzt) */
+.sidebar.open {
+    transform: translateX(0);
+}
+
+/* 3. Schließen-Button */
+.close-button {
     background: none;
     border: none;
+    color: #f0f0f0;
+    font-size: 2em;
+    position: absolute;
+    top: 10px;
+    right: 20px;
     cursor: pointer;
-    padding: 10px;
-    z-index: 100;
 }
 
-.hamburger-icon,
-.hamburger-icon::before,
-.hamburger-icon::after {
-    content: '';
+/* 4. Navigation in der Seitenleiste */
+.sidebar-nav {
+    padding-top: 50px; /* Abstand zum Schließen-Button */
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    display: block; /* Listenpunkte untereinander */
+}
+
+.sidebar-nav li {
+    margin: 20px 0;
+}
+
+.sidebar-nav a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-size: 1.2em;
     display: block;
-    width: 25px;
-    height: 3px;
-    background-color: #1a1a1a;
-    transition: all 0.3s;
-    position: relative;
+    padding: 10px 0;
+    transition: color 0.3s;
 }
 
-.hamburger-icon::before {
-    position: absolute;
-    top: -8px;
+.sidebar-nav a:hover {
+    color: #007bff;
 }
 
-.hamburger-icon::after {
-    position: absolute;
-    top: 8px;
-}
-
-/* ================================================= */
-/* MOBILE ANSICHT */
-/* ================================================= */
-@media (max-width: 768px) {
-
-    /* Navigation standardmäßig verstecken */
-    .main-nav {
-        display: none;
-    }
-
-    /* Hamburger sichtbar */
-    .menu-toggle {
-        display: block;
-    }
-
-    /* Sichtbarer Zustand (über JS aktiviert) */
-    .main-nav.is-open {
-        display: block !important;
-        position: absolute;
-        top: 75px;
-        left: 0;
-        width: 100%;
-        background-color: #fff;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transform: translateY(0);
-        transition: transform 0.4s ease-in-out;
-        z-index: 99;
-    }
-
-    /* Menü-Links vertikal anordnen */
-    .main-nav ul {
-        flex-direction: column;
-        padding: 20px 0;
-    }
-
-    .main-nav ul li {
-        margin: 10px 0;
-        text-align: center;
-    }
-
-    .main-nav .cta-button {
-        width: 80%;
-        max-width: 300px;
-        display: block;
-        margin: 15px auto;
-    }
-
-    .hero h2 {
-        font-size: 2.5em;
-    }
-
-    .grid-container {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .vorteil-item {
-        flex-basis: 100%;
-    }
+/* Styling für den CTA-Button in der Seitenleiste */
+.sidebar-cta {
+    display: block;
+    background-color: #007bff;
+    color: white !important; /* !important, um die hover-Farbe zu überschreiben */
+    text-align: center;
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-weight: 700;
+    margin-top: 15px;
 }

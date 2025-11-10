@@ -1,62 +1,75 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>capitovo – Ihre Premium Finanzmarktanalysen</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>capitovo – Ihre Premium Aktienanalyse</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <div class="logo">
-      <a href="index.html">
-        <img src="caitavo_logo_weiß.jpg" alt="capitovo Logo" class="header-logo">
-      </a>
-    </div>
 
-    <button class="menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">
-      ☰
-    </button>
+    <div class="hero-wrapper">
+        
+        <header>
+            <div class="header-content"> 
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="caitavo_logo_weiß.jpg" alt="capitovo Logo" class="header-logo">
+                    </a>
+                </div>
+                
+                <button class="menu-toggle" id="menu-toggle">
+                    &#9776; 
+                </button>
+                
+            </div> </header>
 
-    <nav class="main-nav" id="main-nav">
-      <ul>
-        <li><a href="login.html" class="nav-link">Analysen (Login)</a></li>
-        <li><a href="#abo" class="cta-button">Jetzt Abonnieren</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <section class="hero">
-      <h2>Marktführer von morgen erkennen. <span>Bevor</span> sie explodieren.</h2>
-      <p>capitovo liefert Ihnen tiefgehende, datengestützte Aktienanalysen, die über das Offensichtliche hinausgehen. Holen Sie sich den entscheidenden Vorsprung.</p>
-      <a href="#abo" class="cta-button primary-cta">Abo-Modelle ansehen</a>
+        <main>
+            <section class="hero">
+                <h2>Marktführer von morgen erkennen. <span>**Bevor**</span> sie explodieren.</h2>
+                <p>
+                    capitovo liefert Ihnen tiefgehende, datengestützte Aktienanalysen, die über das Offensichtliche hinausgehen. Holen Sie sich den entscheidenden Vorsprung.
+                </p>
+                <a href="#abo" class="cta-button primary-cta">Abo-Modelle ansehen</a>
+            </section>
+        </main>
+    
+    </div> 
+    
+    <section class="vorteile-grid">
+        <h3>Warum **capitovo**?</h3>
+        <div class="grid-container">
+            <div class="vorteil-item">
+                <h4>Datengetriebene Tiefe</h4>
+                <p>Unsere Modelle verarbeiten Millionen von Datenpunkten, um Ihnen klare und unvoreingenommene Kauf- und Halteempfehlungen zu geben.</p>
+            </div>
+            <div class="vorteil-item">
+                <h4>Exklusive Berichte</h4>
+                <p>Zugang zu unseren vollständigen Berichten über Einzelaktien, veröffentlicht vor Marktöffnung, exklusiv für Abonnenten.</p>
+                </div>
+            <div class="vorteil-item">
+                <h4>Transparente Performance</h4>
+                <p>Wir stehen zu unseren Analysen. Verfolgen Sie die Performance unserer vergangenen Empfehlungen in Echtzeit.</p>
+            </div>
+        </div>
     </section>
-  </main>
 
-  <section class="vorteile-grid">
-    <h3>Warum capitovo?</h3>
-    <div class="grid-container">
-      <div class="vorteil-item">
-        <h4>Datengetriebene Tiefe</h4>
-        <p>Unsere Modelle verarbeiten Millionen von Datenpunkten, um Ihnen klare und unvoreingenommene Kauf- und Halteempfehlungen zu geben.</p>
-      </div>
-      <div class="vorteil-item">
-        <h4>Exklusive Berichte</h4>
-        <p>Zugang zu unseren vollständigen Berichten über Einzelaktien, veröffentlicht vor Marktöffnung, exklusiv für Abonnenten.</p>
-      </div>
-      <div class="vorteil-item">
-        <h4>Transparente Performance</h4>
-        <p>Wir stehen zu unseren Analysen. Verfolgen Sie die Performance unserer vergangenen Empfehlungen in Echtzeit.</p>
-      </div>
+    <footer id="abo">
+        <p>&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+    </footer>
+
+    <div class="sidebar" id="sidebar">
+        <button class="close-button" id="close-sidebar">&times;</button>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="login.html">Analysen (Login)</a></li>
+                <li><a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a></li> 
+            </ul>
+        </nav>
     </div>
-  </section>
-
-  <footer id="abo">
-    <p>&copy; 2024 capitovo. Wachstum durch Wissen.</p>
-  </footer>
-
-  <script src="script.js"></script>
+    
+    <script src="script.js"></script>
 </body>
 </html>

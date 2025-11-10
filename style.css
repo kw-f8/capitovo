@@ -36,8 +36,8 @@ main {
 
 header {
     /* Keine max-width, läuft über die gesamte Breite des Wrappers */
-    margin: 0; 
-    padding: 30px 0; /* Vertikaler Abstand, 0px horizontal (wird durch .header-content gesteuert) */
+    margin: 0 auto; 
+    padding: 30px 20px; /* Wichtig: Padding, damit Logo und Menü nicht kleben */
     border-bottom: none;
     background-color: transparent; 
     /* Header bekommt jetzt selbst die Flex-Eigenschaften */
@@ -45,17 +45,11 @@ header {
     justify-content: space-between;
     align-items: center;
     max-width: 1200px; /* Begrenze Header-Inhalt */
-    margin: 0 auto; /* Zentriere Header-Inhalt */
-    padding: 30px 20px; /* Wichtig: Padding, damit Logo und Menü nicht kleben */
 }
-
-/* DEINE ALTEN HEADER STILE SIND JETZT IM HEADER ELEMENT SELBST */
-/* .header-content ist nicht mehr nötig, da HEADER jetzt die max-width und Flex hat */
-/* Ich lasse den alten .header-content Block zur Info und Übersichtlichkeit drin */
 
 /* NEU: Zentriert den Header-INHALT und gibt ihm die maximale Breite */
 .header-content {
-    /* Dieser Block wird redundant, da wir die Styles in 'header' verschoben haben */
+    /* Dieser Block wird redundant und kann entfernt werden, falls er noch im HTML ist */
     max-width: 1200px;
     width: 100%;
     margin: 0 auto; /* Zentriert den Inhalt */
@@ -191,28 +185,23 @@ footer {
 
 /* 1. Hamburger-Button-Standard (wird auf Desktop versteckt) */
 .menu-toggle {
-    display: none; /* Standardmäßig im Desktop-Modus verstecken */
+    display: none; 
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
-    z-index: 100; /* Stellt sicher, dass er über der Navigation liegt */
+    z-index: 100; 
 }
-
-/* 2. Desktop-Header-Korrektur */
-/* Da wir .header-content entfernt haben, sind die Flex-Eigenschaften im <header> selbst.
-   Wir müssen sicherstellen, dass die Navigation auch auf großen Bildschirmen korrekt angezeigt wird.
-   (Das ist bereits durch nav ul { display: flex; } gegeben) */
 
 /* 3. Media Query für mobile Ansicht (z.B. alles unter 768px) */
 @media (max-width: 768px) {
     
-    /* Header auf Mobilgeräten */
-    header {
-        /* Kein Flex-Wrap nötig, da das Menü ausgeblendet wird */
-        padding: 20px 20px; /* Kleinerer vertikaler Abstand auf Mobil */
+    /* NEUE WICHTIGE REGEL: Die Desktop-Navigation MUSS auf Mobilgeräten versteckt werden, 
+       damit der Hamburger-Button an ihre Stelle treten kann. */
+    nav {
+        display: none;
     }
-
+    
     /* Der Hamburger-Button wird nur auf Mobilgeräten angezeigt */
     .menu-toggle {
         display: block; 
@@ -238,14 +227,14 @@ footer {
         transform: translateY(5px);
     }
     
-    /* Navigationsmenü (auf Mobilgeräten) */
+    /* Navigationsmenü (auf Mobilgeräten) wird über JavaScript eingeblendet */
     .main-nav {
         /* Positioniert das Menü über den gesamten Bildschirm */
         position: absolute;
-        top: 75px; /* Unterhalb des Headers (ca. 35px Logo + 20px Padding oben/unten) */
+        top: 75px; /* Unterhalb des Headers */
         left: 0;
         width: 100%;
-        height: auto; /* Höhe passt sich dem Inhalt an */
+        height: auto; 
         background-color: #fff;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         z-index: 99;
@@ -258,6 +247,7 @@ footer {
     /* Zustand, wenn die Klasse 'is-open' per JS hinzugefügt wird */
     .main-nav.is-open {
         transform: translateY(0); /* Zeigt das Menü an */
+        display: block !important; /* Wichtig: Überschreibt die 'nav { display: none; }' Regel */
     }
     
     /* Navigations-Links stapeln */

@@ -182,15 +182,13 @@ footer {
 /* --- Seitenleiste und Hamburger-Menü --- */
 
 /* 1. Hamburger-Button */
+/* 1. Hamburger-Button */
 .menu-toggle {
-    background: none;
-    border: 2px solid #bbb;
-    color: #f0f0f0; /* Helle Farbe für den dunklen Header */
-    font-size: 1.5em;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.3s;
+    /* ... */
+    /* FÜR EINE WEISSE SEITE MUSS DIE FARBE DUNKEL SEIN */
+    color: #1a1a1a; /* NEU: Dunkle Farbe für den hellen Header */
+    border: 2px solid #1a1a1a; /* NEU: Dunkler Rahmen */
+    /* ... Rest bleibt gleich ... */
 }
 
 .menu-toggle:hover {

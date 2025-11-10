@@ -9,27 +9,26 @@
  * Schaltet die CSS-Klasse 'open' auf der Sidebar.
  */
 function initialisiereSeitenleiste() {
-    // 1. Elemente anhand ihrer ID auswählen
-    const menuToggle = document.getElementById('menu-toggle'); // Der Hamburger-Button (ID ist korrekt)
+    // 1. Elemente anhand ihrer korrekten IDs auswählen
+    const menuToggle = document.getElementById('menu-toggle'); 
     const sidebar = document.getElementById('sidebar');       // KORRIGIERT: Muss 'sidebar' sein
-    const closeButton = document.getElementById('close-sidebar'); // Der X-Button zum Schließen (optional, aber gut)
+    const closeButton = document.getElementById('close-sidebar');
 
     if (menuToggle && sidebar && closeButton) {
         
         // --- Öffnungsfunktion ---
         menuToggle.addEventListener('click', () => {
-            // 2. KORRIGIERT: Klasse 'open' auf der Sidebar hinzufügen
+            // 2. KORRIGIERT: Schaltet die Klasse 'open'
             sidebar.classList.add('open');
-            // ARIA-Attribute können optional hinzugefügt werden, sind aber hier nicht das Problem.
         });
 
         // --- Schließfunktion (X-Button) ---
         closeButton.addEventListener('click', () => {
-            // 3. KORRIGIERT: Klasse 'open' auf der Sidebar entfernen
+            // 3. KORRIGIERT: Entfernt die Klasse 'open'
             sidebar.classList.remove('open');
         });
         
-        // OPTIONAL: Schließen, wenn ein Link in der Leiste geklickt wird
+        // Optional: Menü schließen, wenn ein Link in der Leiste geklickt wird
         const navLinks = sidebar.querySelectorAll('a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -38,7 +37,8 @@ function initialisiereSeitenleiste() {
         });
 
     } else {
-        console.error("Fehler: Konnte Menü-, Sidebar- oder Schließen-Elemente nicht im DOM finden.");
+        // Dieser Fehler wird in der Konsole sichtbar, falls Elemente fehlen
+        console.error("Fehler: Konnte Menü- oder Sidebar-Elemente nicht im DOM finden.");
     }
 }
 
@@ -49,6 +49,4 @@ document.addEventListener('DOMContentLoaded', initialisiereSeitenleiste);
 // =======================================================
 // DEIN BESTEHENDER CODE FOLGT (nur zur Übersicht)
 // =======================================================
-
-/* Der Rest deines Aktiendaten-Codes (aktienDaten, datenAktualisieren) 
-   bleibt unberührt und kann unten angefügt werden. */
+/* Hier folgt der Rest deines Aktiendaten-Codes (const aktienDaten, function datenAktualisieren, etc.) */

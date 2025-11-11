@@ -18,6 +18,7 @@
             colors: {
               'primary-blue': '#007bff', 
               'dark-bg': '#1a2537',     
+              'card-bg': '#24354b',     /* NEUE Farbe für den Modal-Hintergrund */
               'text-light': '#f0f0f0',  
             }
           }
@@ -46,7 +47,7 @@
 
         <main>
             <section class="hero">
-                <h2>Marktführer von morgen erkennen </h2>
+                <h2>Marktführer von morgen erkennen. <span>**Bevor**</span> sie explodieren.</h2>
                 <p>
                     capitovo liefert Ihnen tiefgehende, datengestützte Aktienanalysen, die über das Offensichtliche hinausgehen. Holen Sie sich den entscheidenden Vorsprung.
                 </p>
@@ -80,12 +81,61 @@
         <button class="close-button" id="close-sidebar">&times;</button>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="login.html">Analysen (Login)</a></li>
+                <li><a href="#open-login">Analysen (Login)</a></li>
                 <li><a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a></li> 
             </ul>
         </nav>
     </div>
+
+    <div id="login-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center p-4">
     
+        <div class="w-full max-w-sm">
+            
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-text-light">capitovo</h1>
+                <p class="text-sm text-gray-400 mt-2">Zugang zu Ihren Premium-Analysen</p>
+            </div>
+
+            <div class="bg-card-bg p-8 rounded-lg shadow-xl border border-gray-700">
+                <h2 class="text-2xl font-semibold text-text-light mb-6 text-center">Login</h2>
+                
+                <form action="#" method="POST" class="space-y-6">
+                    
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-400 mb-1">E-Mail Adresse</label>
+                        <input id="email" name="email" type="email" autocomplete="email" required
+                               class="w-full p-3 border border-gray-600 rounded-md bg-gray-800 text-text-light placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-blue"
+                               placeholder="ihre.adresse@example.com">
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-400 mb-1">Passwort</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required
+                               class="w-full p-3 border border-gray-600 rounded-md bg-gray-800 text-text-light placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-blue"
+                               placeholder="••••••••">
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <a href="#" class="text-sm text-primary-blue hover:text-blue-400">Passwort vergessen?</a>
+                    </div>
+
+                    <div>
+                        <button type="submit"
+                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition duration-150">
+                            Anmelden
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <p class="mt-8 text-center text-sm text-gray-400">
+                Noch kein Kunde? 
+                <a href="#abo" class="font-medium text-primary-blue hover:text-blue-400">Jetzt Abonnieren</a>
+            </p>
+
+        </div>
+        
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

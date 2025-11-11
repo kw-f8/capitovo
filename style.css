@@ -13,11 +13,20 @@ body {
 }
 
 /* ---------------------------------------------------- */
-/* NEUE STRUKTUR: hero-wrapper für volle Breite und Hintergrund */
+/* KORRIGIERTER ABSCHNITT: hero-wrapper für Gradient-Effekt */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    /* Setzt das tiefe Dunkelblau/Grau */
+    /* Setzt das tiefe Dunkelblau/Grau als STARTPUNKT */
     background-color: #1a2537; 
+    /* Fügt den Gradienten hinzu: Startet dunkelblau und verblasst nach unten zu weiß */
+    /* Der Gradient beginnt nach 80% Höhe des Elements, um den oberen Bereich dunkel zu halten */
+    background: linear-gradient(
+        to bottom, 
+        #1a2537 0%, 
+        #1a2537 80%, 
+        #ffffff 100%
+    );
+    
     /* Stellt sicher, dass der Text im Hero-Bereich hell ist */
     color: #f0f0f0; 
     
@@ -39,7 +48,12 @@ header {
     margin: 0; 
     padding: 30px 0; 
     border-bottom: none;
-    background-color: transparent; 
+    /* WICHTIG: Hintergrund auf Weiß für den oberen Rand */
+    background-color: #ffffff; 
+    position: sticky; /* Optional: Lässt den Header beim Scrollen kleben */
+    top: 0;
+    z-index: 50; /* Stellt sicher, dass er über anderen Elementen liegt */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Leichter Schatten zur Abgrenzung */
 }
 
 .header-content {
@@ -74,9 +88,9 @@ nav ul li {
     margin-left: 25px;
 }
 
-/* Helle Farbe für die Links auf dunklem Hero-Hintergrund */
+/* KORRIGIERT: Dunkle Farbe für Links auf weißem Header */
 .nav-link {
-    color: #bbb; 
+    color: #1a1a1a; 
     text-decoration: none;
     transition: color 0.3s;
 }
@@ -110,7 +124,8 @@ nav ul li {
 
 /* --- Hero Sektion (Hauptbotschaft) --- */
 .hero {
-    padding: 120px 0; 
+    /* Anpassung des Paddings, da der Header jetzt oben sitzt */
+    padding: 50px 0 120px 0; 
     text-align: center; 
     max-width: 900px;
     margin: 0 auto;
@@ -130,7 +145,9 @@ nav ul li {
     margin-bottom: 40px;
 }
 
-/* --- Vorteile Sektion --- */
+/* --- VORTEILE Sektion (Standard-Styling beibehalten) --- */
+/* (Wird im nächsten Schritt mit Icons und KI-IDs aufgewertet) */
+
 .vorteile-grid {
     padding: 50px 0 80px 0;
     text-align: center;
@@ -173,11 +190,11 @@ footer {
 
 /* --- Seitenleiste und Hamburger-Menü --- */
 
-/* 1. Hamburger-Button: Angepasst, falls der Hero-Wrapper weiß ist */
+/* 1. Hamburger-Button: KORRIGIERT - Dunkle Farbe auf weißem Header */
 .menu-toggle {
     background: none;
-    border: 2px solid #bbb;
-    color: #f0f0f0; /* Helle Farbe auf dunklem Header (Standard) */
+    border: 2px solid #1a1a1a; /* Dunkle Rahmenfarbe */
+    color: #1a1a1a; /* Dunkle Icon-Farbe */
     font-size: 1.5em;
     padding: 5px 10px;
     cursor: pointer;
@@ -190,7 +207,7 @@ footer {
     color: #007bff;
 }
 
-/* 2. Seitenleisten-Container */
+/* 2. Seitenleisten-Container (Styling beibehalten) */
 .sidebar {
     position: fixed;
     top: 0;
@@ -201,7 +218,6 @@ footer {
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     
-    /* Wichtig: Standardmäßig ausgeblendet */
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     padding: 20px;

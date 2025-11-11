@@ -18,8 +18,12 @@
             colors: {
               'primary-blue': '#007bff', 
               'dark-bg': '#1a2537',     
-              'card-bg': '#24354b',     /* NEUE Farbe für den Modal-Hintergrund */
+              'card-bg': '#24354b',     
               'text-light': '#f0f0f0',  
+            },
+            // WICHTIG: Definiert eine extrem starke Unschärfe für das Modal (20px)
+            blur: {
+              'xl-custom': '20px', 
             }
           }
         }
@@ -53,9 +57,8 @@
                 </p>
                 <a href="#abo" class="cta-button primary-cta">Abo-Modelle ansehen</a>
             </section>
-        </main> </div> 
-    
-    <section class="vorteile-grid">
+        </main>
+    </div> <section class="vorteile-grid">
         <h3>Warum **capitovo**?</h3>
         <div class="grid-container">
             <div class="vorteil-item">
@@ -73,64 +76,64 @@
         </div>
     </section>
 
-<section class="py-16 bg-white">
+<section id="premium-articles" class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         
-        <h3 class="text-3xl font-bold text-gray-900 mb-2">
+        <h3 id="articles-title" class="text-3xl font-bold text-gray-900 mb-2">
             Einblick in Ihre nächste große Analyse
         </h3>
-        <p class="text-xl text-gray-500 mb-12">
+        <p id="articles-subtitle" class="text-xl text-gray-500 mb-12">
             Lesen Sie eine exklusive Vorschau auf unsere aktuellsten Börsenbrief-Artikel.
         </p>
 
         <div class="grid md:grid-cols-3 gap-8">
             
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                <div class="h-48 bg-gray-200" style="background-image: url('placeholder-tech.jpg'); background-size: cover; background-position: center;">
-                    </div>
+            <div id="article-1" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
+                <div id="article-1-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-tech.jpg'); background-size: cover; background-position: center;">
+                </div>
                 <div class="p-6 text-left">
-                    <p class="text-sm font-semibold text-primary-blue uppercase mb-2">Technologie-Deep-Dive</p>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">
+                    <p id="article-1-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Technologie-Deep-Dive</p>
+                    <h4 id="article-1-title" class="text-xl font-bold text-gray-900 mb-3">
                         Nvidia: Die Welle reiten oder untergehen?
                     </h4>
-                    <p class="text-gray-600 text-base mb-4 line-clamp-3">
+                    <p id="article-1-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">
                         KI-Chips sind das Gold des 21. Jahrhunderts. Unsere Analyse beleuchtet, warum der Markt die langfristigen Skalierungsprobleme des Giganten übersieht...
                     </p>
-                    <a href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">
+                    <a id="article-1-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">
                         Vorschau lesen &rarr;
                     </a>
                 </div>
             </div>
 
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                <div class="h-48 bg-gray-200" style="background-image: url('placeholder-energy.jpg'); background-size: cover; background-position: center;">
+            <div id="article-2" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
+                <div id="article-2-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-energy.jpg'); background-size: cover; background-position: center;">
                 </div>
                 <div class="p-6 text-left">
-                    <p class="text-sm font-semibold text-primary-blue uppercase mb-2">Nachhaltigkeit</p>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">
+                    <p id="article-2-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Nachhaltigkeit</p>
+                    <h4 id="article-2-title" class="text-xl font-bold text-gray-900 mb-3">
                         Die unterschätzte Aktie: Europas führender Batteriehersteller
                     </h4>
-                    <p class="text-gray-600 text-base mb-4 line-clamp-3">
+                    <p id="article-2-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">
                         Während alle auf Tesla schauen, entwickelt dieser europäische Hidden-Champion eine Technologie, die den Energiesektor revolutionieren wird...
                     </p>
-                    <a href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">
+                    <a id="article-2-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">
                         Vorschau lesen &rarr;
                     </a>
                 </div>
             </div>
             
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                <div class="h-48 bg-gray-200" style="background-image: url('placeholder-pharma.jpg'); background-size: cover; background-position: center;">
+            <div id="article-3" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
+                <div id="article-3-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-pharma.jpg'); background-size: cover; background-position: center;">
                 </div>
                 <div class="p-6 text-left">
-                    <p class="text-sm font-semibold text-primary-blue uppercase mb-2">Biotech News</p>
-                    <h4 class="text-xl font-bold text-gray-900 mb-3">
+                    <p id="article-3-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Biotech News</p>
+                    <h4 id="article-3-title" class="text-xl font-bold text-gray-900 mb-3">
                         Ein Medikament, das den Markt bewegen wird
                     </h4>
-                    <p class="text-gray-600 text-base mb-4 line-clamp-3">
+                    <p id="article-3-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">
                         Phase-3-Daten sind da! Wir analysieren die Chancen und Risiken dieses Pharma-Startups, dessen Produkt kurz vor der Zulassung steht...
                     </p>
-                    <a href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">
+                    <a id="article-3-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">
                         Vorschau lesen &rarr;
                     </a>
                 </div>
@@ -139,7 +142,7 @@
         </div>
         
         <div class="mt-16">
-            <a href="#abo" class="inline-block cta-button primary-cta">
+            <a id="articles-cta" href="#abo" class="inline-block cta-button primary-cta">
                 Alle Premium-Artikel jetzt freischalten
             </a>
         </div>
@@ -155,13 +158,12 @@
         <button class="close-button" id="close-sidebar">&times;</button>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="#open-login">Login</a></li>
-                <li><a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a></li> 
+                <li><a href="#open-login">Analysen (Login)</a></li> <li><a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a></li> 
             </ul>
         </nav>
     </div>
 
-    <div id="login-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-lg flex items-center justify-center p-4">
+    <div id="login-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">
     
         <div class="w-full max-w-sm">
             

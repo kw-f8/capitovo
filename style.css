@@ -243,3 +243,9 @@ footer {
 }
 
 /* 4. Navigation in
+
+/* WICHTIGE KORREKTUR für Header-Ausrichtung */
+.header-content .logo {
+    flex-grow: 0; /* Verhindert, dass das Logo den gesamten verfügbaren Platz einnimmt */
+    flex-shrink: 0;
+}

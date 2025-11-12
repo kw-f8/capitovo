@@ -46,8 +46,11 @@ main {
 
 header {
     margin: 0; 
-    padding: 30px 0; 
-    border-bottom: none;
+    /* NEU: Weniger vertikales Padding, um den Header trotz des größeren Logos schlanker zu halten */
+    padding: 20px 0; 
+    border-bottom: 1px solid #e0e0e0; 
+    /* ... Restlicher Code ... */
+}
     /* WICHTIG: Hintergrund auf Weiß für den oberen Rand */
     background-color: #ffffff; 
     position: sticky; /* Optional: Lässt den Header beim Scrollen kleben */

@@ -19,7 +19,6 @@ body {
     /* Setzt das tiefe Dunkelblau/Grau als STARTPUNKT */
     background-color: #1a2537; 
     /* Fügt den Gradienten hinzu: Startet dunkelblau und verblasst nach unten zu weiß */
-    /* Der Gradient beginnt nach 80% Höhe des Elements, um den oberen Bereich dunkel zu halten */
     background: linear-gradient(
         to bottom, 
         #1a2537 0%, 
@@ -49,9 +48,8 @@ header {
     /* NEU: Weniger vertikales Padding, um den Header trotz des größeren Logos schlanker zu halten */
     padding: 20px 0; 
     border-bottom: 1px solid #e0e0e0; 
-    /* ... Restlicher Code ... */
-}
-    /* WICHTIG: Hintergrund auf Weiß für den oberen Rand */
+    
+    /* KORREKTUR: Diese Eigenschaften waren zuvor falsch platziert */
     background-color: #ffffff; 
     position: sticky; /* Optional: Lässt den Header beim Scrollen kleben */
     top: 0;
@@ -71,6 +69,7 @@ header {
 
 /* Logo Bild-Styling */
 .header-logo {
+    /* Die gewünschte, größere Höhe */
     height: 50px; 
     width: auto; 
     display: block;
@@ -243,41 +242,4 @@ footer {
     cursor: pointer;
 }
 
-/* 4. Navigation in der Seitenleiste */
-.sidebar-nav {
-    padding-top: 50px; 
-}
-
-.sidebar-nav ul {
-    list-style: none;
-    display: block; 
-}
-
-.sidebar-nav li {
-    margin: 20px 0;
-}
-
-.sidebar-nav a {
-    color: #f0f0f0;
-    text-decoration: none;
-    font-size: 1.2em;
-    display: block;
-    padding: 10px 0;
-    transition: color 0.3s;
-}
-
-.sidebar-nav a:hover {
-    color: #007bff;
-}
-
-/* Styling für den CTA-Button in der Seitenleiste */
-.sidebar-cta {
-    display: block;
-    background-color: #007bff;
-    color: white !important; 
-    text-align: center;
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-weight: 700;
-    margin-top: 15px;
-}
+/* 4. Navigation in

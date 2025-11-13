@@ -13,37 +13,31 @@ body {
 }
 
 /* ---------------------------------------------------- */
-/* KORRIGIERTER ABSCHNITT: hero-wrapper für SANFTEREN Gradient-Effekt */
+/* Hero-Wrapper und Gradient */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    /* Setzt das tiefe Dunkelblau/Grau als STARTPUNKT */
     background-color: #1a2537; 
-    
-    /* NEU: Sanfterer Gradient */
     background: linear-gradient(
         to bottom, 
-        #1a2537 0%,           /* Startet bei 0% mit Dunkelblau */
-        #1a2537 60%,           /* Hält Dunkelblau bis 60% (statt 80%) */
-        #ffffff 95%,           /* Beginnt bei 95% Weiß zu werden (früher & feiner) */
-        #ffffff 100%           /* Endet bei 100% mit reinem Weiß */
+        #1a2537 0%,           
+        #1a2537 60%,          
+        #ffffff 95%,           
+        #ffffff 100%           
     );
-    
-    /* Stellt sicher, dass der Text im Hero-Bereich hell ist */
     color: #f0f0f0; 
-    
-    padding-bottom: 100px; /* Platz unter der Hero-Sektion */
+    padding-bottom: 100px; 
     position: relative; 
     overflow: hidden; 
 }
 
-/* Zentriert den Inhalt der Seite, der NICHT volle Breite benötigt */
+/* Zentriert den Inhalt der Seite */
 main {
     max-width: 1200px;
     margin: 0 auto; 
-    padding: 0 20px; /* Horizontales Padding für Ränder */
+    padding: 0 20px; 
 }
 
-/* --- Header und Navigation (Volle Breite, Inhalt zentriert) --- */
+/* --- Header und Navigation --- */
 
 header {
     margin: 0; 
@@ -66,19 +60,16 @@ header {
     align-items: center;
 }
 
-/* Logo Bild-Styling */
 .header-logo {
     height: 50px; 
     width: auto; 
     display: block;
 }
 
-/* Versteckt den alten h1-Text */
 .logo h1 {
     display: none; 
 }
 
-/* WICHTIGE KORREKTUR für Header-Ausrichtung */
 .header-content .logo {
     flex-grow: 0; 
     flex-shrink: 0;
@@ -107,7 +98,7 @@ header {
     margin-top: 30px;
 }
 
-/* --- Hero Sektion (Hauptbotschaft) --- */
+/* --- Hero Sektion --- */
 .hero {
     padding: 50px 0 120px 0; 
     text-align: center; 
@@ -122,7 +113,6 @@ header {
     line-height: 1.1; 
 }
 
-/* Helle Farbe für den Text auf dunklem Hero-Hintergrund */
 .hero p {
     font-size: 1.3em;
     color: #bbb; 
@@ -172,10 +162,9 @@ footer {
 }
 
 /* ---------------------------------------------------- */
-/* KORRIGIERTER ABSCHNITT: Seitenleiste und Hamburger-Menü */
+/* Seitenleiste (Sidebar) */
 /* ---------------------------------------------------- */
 
-/* 1. Hamburger-Button: KORRIGIERT - Dunkle Farbe auf weißem Header */
 .menu-toggle {
     background: none;
     border: 2px solid #1a1a1a; 
@@ -192,7 +181,6 @@ footer {
     color: #007bff;
 }
 
-/* 2. Seitenleisten-Container (Styling beibehalten) */
 .sidebar {
     position: fixed;
     top: 0;
@@ -207,12 +195,10 @@ footer {
     padding: 20px;
 }
 
-/* Zustand, wenn die Seitenleiste geöffnet ist (wird per JS gesetzt) */
 .sidebar.open {
     transform: translateX(0);
 }
 
-/* 3. Schließen-Button */
 .close-button {
     background: none;
     border: none;
@@ -224,26 +210,23 @@ footer {
     cursor: pointer;
 }
 
-/* 4. Navigation in der Sidebar (Liste) */
 .sidebar-nav ul {
     list-style: none;
     padding: 0;
     margin-top: 50px; 
 }
 
-/* KORREKTUR: Macht die Listenelemente Block-Elemente für vertikale Anordnung */
 .sidebar-nav ul li {
     margin-bottom: 5px; 
     display: block; 
 }
 
-/* 5. Normale Links (z.B. "Login") in der Sidebar */
 .sidebar-nav ul li a {
     color: #f0f0f0; 
     text-decoration: none;
     font-size: 1.1em;
-    display: flex; /* Wichtig für Icon-Ausrichtung */
-    align-items: center; /* Wichtig für Icon-Ausrichtung */
+    display: flex; 
+    align-items: center; 
     padding: 10px 0;
     transition: color 0.2s;
 }
@@ -252,7 +235,6 @@ footer {
     color: #007bff;
 }
 
-/* 6. CTA Button ("Jetzt Abonnieren") in der Sidebar */
 .sidebar-nav .sidebar-cta {
     display: block; 
     background-color: #007bff;
@@ -275,7 +257,6 @@ footer {
 /* FAQ/Accordion-Styling */
 /* ---------------------------------------------------- */
 
-/* Versteckt den Standard-Dreieck-Marker */
 details > summary {
     list-style: none;
 }
@@ -283,7 +264,46 @@ details > summary::-webkit-details-marker {
     display: none;
 }
 
-/* Dreht das Plus-Symbol, wenn die Details geöffnet sind */
 details[open] .details-marker {
     transform: rotate(45deg); 
+}
+
+/* ==================================================== */
+/* RESPONSIVE DESIGN (Media Queries) */
+/* ==================================================== */
+
+/* Tablet- und Mobile-Optimierung (Max-Breite 768px) */
+@media (max-width: 768px) {
+    
+    /* --- Hero Sektion --- */
+    .hero h2 {
+        font-size: 2.5em; /* Kleiner auf Tablets/Handys */
+        margin-top: 30px;
+    }
+
+    .hero p {
+        font-size: 1.1em;
+    }
+
+    /* --- Vorteile Sektion --- */
+    .grid-container {
+        flex-direction: column; /* Stapelt die Vorteile untereinander */
+        gap: 20px;
+        padding: 0 40px; /* Mehr Rand links/rechts */
+    }
+
+    .vorteil-item {
+        flex-basis: auto; 
+    }
+    
+    /* --- Header / Logo --- */
+    .header-logo {
+        height: 40px; /* Logo etwas kleiner */
+    }
+    
+    /* --- Header-Padding anpassen --- */
+    header, .header-content {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 }

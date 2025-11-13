@@ -1,153 +1,4 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>capitovo – Ihre Premium Aktienanalyse</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="stylesheet" href="style.css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'primary-blue': '#007bff', 
-              'dark-bg': '#1a2537',     
-              'card-bg': '#24354b',     
-              'text-light': '#f0f0f0',  
-            },
-            blur: {
-              'xl-custom': '20px', 
-            }
-          }
-        }
-      }
-    </script>
-</head>
-<body>
-
-    <header>
-        <div class="header-content"> 
-            <div class="logo">
-                <a href="index.html">
-                    <img src="caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
-                </a>
-            </div>
-            
-            <button class="menu-toggle" id="menu-toggle">
-                &#9776; 
-            </button>
-            
-        </div> 
-    </header>
-
-    <div class="hero-wrapper">
-        <main>
-            <section class="hero">
-                <h2>Marktführer von morgen erkennen</h2>
-                <p>
-                    capitovo liefert Ihnen tiefgehende, datengestützte Aktienanalysen, die über das Offensichtliche hinausgehen. Holen Sie sich den entscheidenden Vorsprung.
-                </p>
-             
-            </section>
-        </main>
-    </div> 
-    
-    <section id="premium-articles" class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            
-            <h3 id="articles-title" class="text-3xl font-bold text-gray-900 mb-2">
-                Die 6 aktuellsten Top-Analysen
-            </h3>
-            <p id="articles-subtitle" class="text-xl text-gray-500 mb-12">
-                Lesen Sie eine exklusive Vorschau auf unsere Börsenbrief-Artikel und erkennen Sie Marktbewegungen frühzeitig.
-            </p>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                
-                <div id="article-1" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                    <div id="article-1-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-tech.png'); background-size: cover; background-position: center;">
-                    </div>
-                    <div class="p-6 text-left">
-                        <p id="article-1-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Technologie</p>
-                        <h4 id="article-1-title" class="text-xl font-bold text-gray-900 mb-3">Nvidia: Die Welle reiten oder untergehen?</h4>
-                        <p id="article-1-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">KI-Chips sind das Gold des 21. Jahrhunderts. Unsere Analyse beleuchtet, warum der Markt die langfristigen Skalierungsprobleme des Giganten übersieht...</p>
-                        <a id="article-1-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">Vorschau lesen &rarr;</a>
-                    </div>
-                </div>
-
-                <div id="article-2" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                    <div id="article-2-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-energy.png'); background-size: cover; background-position: center;">
-                    </div>
-                    <div class="p-6 text-left">
-                        <p id="article-2-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Nachhaltigkeit</p>
-                        <h4 id="article-2-title" class="text-xl font-bold text-gray-900 mb-3">Die unterschätzte Aktie: Europas führender Batteriehersteller</h4>
-                        <p id="article-2-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">Während alle auf Tesla schauen, entwickelt dieser europäische Hidden-Champion eine Technologie, die den Energiesektor revolutionieren wird...</p>
-                        <a id="article-2-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">Vorschau lesen &rarr;</a>
-                    </div>
-                </div>
-                
-                <div id="article-3" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                    <div id="article-3-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-pharma.png'); background-size: cover; background-position: center;">
-                    </div>
-                    <div class="p-6 text-left">
-                        <p id="article-3-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Biotech News</p>
-                        <h4 id="article-3-title" class="text-xl font-bold text-gray-900 mb-3">Ein Medikament, das den Markt bewegen wird</h4>
-                        <p id="article-3-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">Phase-3-Daten sind da! Wir analysieren die Chancen und Risiken dieses Pharma-Startups, dessen Produkt kurz vor der Zulassung steht...</p>
-                        <a id="article-3-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">Vorschau lesen &rarr;</a>
-                    </div>
-                </div>
-
-                <div id="article-4" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                    <div id="article-4-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-finance.png'); background-size: cover; background-position: center;">
-                    </div>
-                    <div class="p-6 text-left">
-                        <p id="article-4-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Finanzen & Märkte</p>
-                        <h4 id="article-4-title" class="text-xl font-bold text-gray-900 mb-3">Zinswende: Wie Sie jetzt Ihr Depot umschichten</h4>
-                        <p id="article-4-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">Die Notenbanken haben gesprochen. Wir zeigen Ihnen, welche Sektoren profitieren und welche Risiken Sie in Ihrem Portfolio minimieren müssen...</p>
-                        <a id="article-4-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">Vorschau lesen &rarr;</a>
-                    </div>
-                </div>
-
-                <div id="article-5" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                    <div id="article-5-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-consumer.png'); background-size: cover; background-position: center;">
-                    </div>
-                    <div class="p-6 text-left">
-                        <p id="article-5-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Konsumgüter</p>
-                        <h4 id="article-5-title" class="text-xl font-bold text-gray-900 mb-3">Die Marke mit dem größten Comeback-Potenzial</h4>
-                        <p id="article-5-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">Ein Traditionsunternehmen steht vor einer Neubewertung. Wir analysieren die Kennzahlen, die auf eine massive Steigerung des Aktienwerts hindeuten...</p>
-                        <a id="article-5-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">Vorschau lesen &rarr;</a>
-                    </div>
-                </div>
-                
-                <div id="article-6" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition duration-300">
-                    <div id="article-6-image" class="h-48 bg-gray-200" style="background-image: url('placeholder-realestate.png'); background-size: cover; background-position: center;">
-                    </div>
-                    <div class="p-6 text-left">
-                        <p id="article-6-category" class="text-sm font-semibold text-primary-blue uppercase mb-2">Immobilien</p>
-                        <h4 id="article-6-title" class="text-xl font-bold text-gray-900 mb-3">Der europäische Markt, der dem Crash trotzt</h4>
-                        <p id="article-6-excerpt" class="text-gray-600 text-base mb-4 line-clamp-3">Während in vielen Ländern die Blase platzt, zeigt dieser Nischenmarkt eine einzigartige Stabilität. Die besten REITs für 2025...</p>
-                        <a id="article-6-link" href="#abo" class="text-primary-blue hover:text-blue-600 font-semibold flex items-center">Vorschau lesen &rarr;</a>
-                    </div>
-                </div>
-                
-            </div>
-            
-            <div class="mt-16">
-                <a id="articles-cta" href="#abo" class="inline-block cta-button primary-cta">
-                   Jetzt Mitglied werden
-                </a>
-            </div>
-            
-        </div>
-    </section>
-
-    <section id="faq" class="py-16 bg-white">
+<section id="faq" class="py-16 bg-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <h3 id="faq-title" class="text-4xl font-extrabold text-gray-900 text-center mb-12">
@@ -208,6 +59,7 @@
             </div>
         </div>
     </section>
+    
     <section class="vorteile-grid">
         <h3>Warum **capitovo**?</h3>
         <div class="grid-container">
@@ -225,6 +77,116 @@
             </div>
         </div>
     </section>
+
+    <section id="pricing" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-4">Wählen Sie das passende Abo-Modell</h2>
+            <p class="text-xl text-gray-600 mb-16">Erhöhen Sie Ihren Marktvorsprung mit unseren exklusiven Analyse-Berichten.</p>
+            
+            <div class="grid md:grid-cols-3 gap-8 items-stretch">
+                
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-2xl">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+                        <p class="text-gray-500 mb-6">Der Einstieg in tiefgehende Marktanalysen.</p>
+                        <div class="text-4xl font-extrabold text-gray-900 mb-8">
+                            € 99,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
+                        </div>
+                        <ul class="text-left space-y-3 mb-10 text-gray-700">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Wöchentliche Markt-Bulletins
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                2 exklusive Aktienanalysen / Monat
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Zugang zum Performance-Dashboard
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Exklusive Webinare & Q&A
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#" class="w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150">
+                        Jetzt Basic wählen
+                    </a>
+                </div>
+
+                <div class="bg-primary-blue rounded-xl shadow-2xl p-8 flex flex-col justify-between transform scale-105 transition-all duration-500">
+                    <div class="relative">
+                         <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">
+                            Empfohlen
+                        </span>
+                        <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
+                        <p class="text-blue-200 mb-6">Ihr entscheidender Vorteil am Markt, alle Analysen.</p>
+                        <div class="text-4xl font-extrabold text-white mb-8">
+                            € 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span>
+                        </div>
+                        <ul class="text-left space-y-3 mb-10 text-white">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Alle Basic-Funktionen
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                **Alle** exklusiven Aktienanalysen (4+ / Monat)
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Zugang zum Performance-Dashboard
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Exklusive Webinare & Q&A
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                14-tägige Geld-zurück-Garantie
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#" class="w-full block py-3 px-8 border border-white rounded-lg shadow-lg text-base font-medium text-primary-blue bg-white hover:bg-blue-100 transition duration-150">
+                        Jetzt Premium abonnieren
+                    </a>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-2xl">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
+                        <p class="text-gray-500 mb-6">Einmal zahlen, lebenslang profitieren und sparen.</p>
+                        <div class="text-4xl font-extrabold text-gray-900 mb-8">
+                            € 4999,- <span class="text-xl font-normal text-gray-500">/ Einmalig</span>
+                        </div>
+                        <ul class="text-left space-y-3 mb-10 text-gray-700">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Alle Premium-Funktionen
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Lebenslanger Zugang (inkl. Updates)
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Priorisierter E-Mail-Support
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Kein monatliches Abo mehr nötig
+                            </li>
+                        </ul>
+                    </div>
+                    <a href="#" class="w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150">
+                        Lifetime sichern
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
     
     <footer id="abo">
         <p>&copy; 2024 capitovo. Wachstum durch Wissen.</p>
@@ -234,7 +196,17 @@
         <button class="close-button" id="close-sidebar">&times;</button>
         <nav class="sidebar-nav">
             <ul>
-                <li><a href="#open-login">Login</a></li> <li><a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a></li> 
+                <li>
+                    <a href="#open-login" class="flex items-center space-x-2"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                        </svg>
+                        <span>Login</span>
+                    </a>
+                </li> 
+                <li>
+                    <a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a>
+                </li> 
             </ul>
         </nav>
     </div>

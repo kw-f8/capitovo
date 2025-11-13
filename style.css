@@ -82,25 +82,10 @@ header {
     display: none; 
 }
 
-nav ul {
-    list-style: none;
-    display: flex;
-    align-items: center;
-}
-
-nav ul li {
-    margin-left: 25px;
-}
-
-/* KORRIGIERT: Dunkle Farbe für Links auf weißem Header */
-.nav-link {
-    color: #1a1a1a; 
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.nav-link:hover {
-    color: #007bff;
+/* WICHTIGE KORREKTUR für Header-Ausrichtung */
+.header-content .logo {
+    flex-grow: 0; /* Verhindert, dass das Logo den gesamten verfügbaren Platz einnimmt */
+    flex-shrink: 0;
 }
 
 /* --- Call-to-Action (CTA) Button --- */
@@ -149,8 +134,7 @@ nav ul li {
     margin-bottom: 40px;
 }
 
-/* --- VORTEILE Sektion (Standard-Styling beibehalten) --- */
-/* (Wird im nächsten Schritt mit Icons und KI-IDs aufgewertet) */
+/* --- VORTEILE Sektion --- */
 
 .vorteile-grid {
     padding: 50px 0 80px 0;
@@ -192,7 +176,9 @@ footer {
     border-top: 1px solid #e0e0e0;
 }
 
-/* --- Seitenleiste und Hamburger-Menü --- */
+/* ---------------------------------------------------- */
+/* KORRIGIERTER ABSCHNITT: Seitenleiste und Hamburger-Menü */
+/* ---------------------------------------------------- */
 
 /* 1. Hamburger-Button: KORRIGIERT - Dunkle Farbe auf weißem Header */
 .menu-toggle {
@@ -218,6 +204,7 @@ footer {
     right: 0;
     width: 300px; 
     height: 100%;
+    /* Hintergrundfarbe des Sidebars ist dunkel */
     background-color: #24354b; 
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     z-index: 1000;
@@ -236,7 +223,7 @@ footer {
 .close-button {
     background: none;
     border: none;
-    color: #f0f0f0;
+    color: #f0f0f0; /* Hell auf dunklem Hintergrund */
     font-size: 2em;
     position: absolute;
     top: 10px;
@@ -244,48 +231,63 @@ footer {
     cursor: pointer;
 }
 
-/* 4. Navigation in
-
-/* WICHTIGE KORREKTUR für Header-Ausrichtung */
-.header-content .logo {
-    flex-grow: 0; /* Verhindert, dass das Logo den gesamten verfügbaren Platz einnimmt */
-    flex-shrink: 0;
-
-
+/* 4. Navigation in der Sidebar (Liste) */
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 50px; /* Platz unter dem Close-Button */
 }
 
-/* --- Sidebar CTA Button Styling --- */
+.sidebar-nav ul li {
+    margin-bottom: 10px;
+}
 
+/* 5. Normale Links (z.B. "Login") in der Sidebar */
+.sidebar-nav ul li a {
+    color: #f0f0f0; /* WICHTIG: Textfarbe muss hell sein! */
+    text-decoration: none;
+    font-size: 1.1em;
+    display: block;
+    padding: 10px 0;
+    transition: color 0.2s;
+}
+
+.sidebar-nav ul li a:hover {
+    color: #007bff;
+}
+
+/* 6. CTA Button ("Jetzt Abonnieren") in der Sidebar */
 .sidebar-nav .sidebar-cta {
-    /* Macht den Link zu einem Block-Element, damit wir Padding und Margin setzen können */
     display: block; 
-    
-    /* Farben: Wir nutzen das Primary Blue, das du in Tailwind definiert hast (#007bff) */
     background-color: #007bff;
-    color: white !important; /* Text weiß, wichtig, um die Standard-Linkfarbe zu überschreiben */
+    color: white !important; 
     text-align: center;
-    
-    /* Abstände und Form */
     padding: 10px 15px;
-    margin-top: 15px; /* Abstand zum Login-Link darüber */
-    border-radius: 8px; /* Leicht abgerundete Ecken */
-    font-weight: 700; /* Bolder Text */
-    text-decoration: none; /* Entfernt die Unterstreichung */
-    
-    /* Glatter Hover-Effekt */
+    margin-top: 25px; /* Etwas mehr Abstand zum Login-Link */
+    border-radius: 8px; 
+    font-weight: 700;
+    text-decoration: none;
     transition: background-color 0.3s ease;
 }
 
 .sidebar-nav .sidebar-cta:hover {
-    background-color: #0056b3; /* Dunkleres Blau beim Hover */
+    background-color: #0056b3; 
 }
 
-/* Anpassung des normalen Login-Links in der Sidebar */
-.sidebar-nav ul li a {
-    /* Stellt sicher, dass die normalen Links klar sind */
-    color: #f0f0f0; /* Helle Farbe für den Link auf dunklem Sidebar-Hintergrund */
-    display: block;
-    padding: 10px 0;
-    text-decoration: none;
-    font-weight: 500;
+
+/* ---------------------------------------------------- */
+/* FAQ/Accordion-Styling (Fügt die nötigen Regeln hinzu) */
+/* ---------------------------------------------------- */
+
+/* Versteckt den Standard-Dreieck-Marker */
+details > summary {
+    list-style: none;
+}
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Dreht das Plus-Symbol, wenn die Details geöffnet sind */
+details[open] .details-marker {
+    transform: rotate(45deg); /* Dreht + zu X */
 }

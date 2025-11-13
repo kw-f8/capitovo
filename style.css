@@ -13,17 +13,19 @@ body {
 }
 
 /* ---------------------------------------------------- */
-/* KORRIGIERTER ABSCHNITT: hero-wrapper für Gradient-Effekt */
+/* KORRIGIERTER ABSCHNITT: hero-wrapper für SANFTEREN Gradient-Effekt */
 /* ---------------------------------------------------- */
 .hero-wrapper {
     /* Setzt das tiefe Dunkelblau/Grau als STARTPUNKT */
     background-color: #1a2537; 
-    /* Fügt den Gradienten hinzu: Startet dunkelblau und verblasst nach unten zu weiß */
+    
+    /* NEU: Sanfterer Gradient */
     background: linear-gradient(
         to bottom, 
-        #1a2537 0%, 
-        #1a2537 80%, 
-        #ffffff 100%
+        #1a2537 0%,           /* Startet bei 0% mit Dunkelblau */
+        #1a2537 60%,           /* Hält Dunkelblau bis 60% (statt 80%) */
+        #ffffff 95%,           /* Beginnt bei 95% Weiß zu werden (früher & feiner) */
+        #ffffff 100%           /* Endet bei 100% mit reinem Weiß */
     );
     
     /* Stellt sicher, dass der Text im Hero-Bereich hell ist */

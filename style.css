@@ -250,4 +250,42 @@ footer {
 .header-content .logo {
     flex-grow: 0; /* Verhindert, dass das Logo den gesamten verfügbaren Platz einnimmt */
     flex-shrink: 0;
+
+
+}
+
+/* --- Sidebar CTA Button Styling --- */
+
+.sidebar-nav .sidebar-cta {
+    /* Macht den Link zu einem Block-Element, damit wir Padding und Margin setzen können */
+    display: block; 
+    
+    /* Farben: Wir nutzen das Primary Blue, das du in Tailwind definiert hast (#007bff) */
+    background-color: #007bff;
+    color: white !important; /* Text weiß, wichtig, um die Standard-Linkfarbe zu überschreiben */
+    text-align: center;
+    
+    /* Abstände und Form */
+    padding: 10px 15px;
+    margin-top: 15px; /* Abstand zum Login-Link darüber */
+    border-radius: 8px; /* Leicht abgerundete Ecken */
+    font-weight: 700; /* Bolder Text */
+    text-decoration: none; /* Entfernt die Unterstreichung */
+    
+    /* Glatter Hover-Effekt */
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-nav .sidebar-cta:hover {
+    background-color: #0056b3; /* Dunkleres Blau beim Hover */
+}
+
+/* Anpassung des normalen Login-Links in der Sidebar */
+.sidebar-nav ul li a {
+    /* Stellt sicher, dass die normalen Links klar sind */
+    color: #f0f0f0; /* Helle Farbe für den Link auf dunklem Sidebar-Hintergrund */
+    display: block;
+    padding: 10px 0;
+    text-decoration: none;
+    font-weight: 500;
 }

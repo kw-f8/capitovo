@@ -14,29 +14,31 @@ body {
 
 /* Tailwind Custom-Farben Definitionen für style.css */
 :root {
-    /* Dunkles Blau für Abo-Paket und Sidebar-Hintergrund */
+    /* Dunkles Blau (Hauptfarbe für Header, Hero, Premium-Paket, Sidebar) */
     --color-primary-dark: #24354b;
+    /* Akzentfarbe (CTA, Links, Icons) */
+    --color-accent-blue: #007bff;
+    /* Hintergrundfarbe der Pricing-Sektion, damit Abo-Pakete abheben */
+    --color-section-bg: #f8f8f8; 
 }
 
 /* Die original Primary Blue für Akzentfarben (CTA, Links, Icons) */
-.text-primary-blue { color: #007bff; } 
-.bg-primary-blue { background-color: var(--color-primary-dark); } /* Tailwind Klasse für das Premium-Paket */
+.text-primary-blue { color: var(--color-accent-blue); } /* Konsistente Nutzung der CSS Variable */
+.bg-primary-blue { background-color: var(--color-primary-dark); } 
 
 
 /* ---------------------------------------------------- */
-/* Hero-Wrapper (Nur Header und Hero-Sektion) */
+/* Layout und Zentrierung */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    /* Hintergrundfarbe für Header und Hero-Sektion */
     background-color: var(--color-primary-dark); 
     color: #f0f0f0; 
-    /* Padding-Bottom entfernt, da Pricing/Vorteile außerhalb sind */
     padding-bottom: 0; 
     position: relative; 
     overflow: hidden; 
 }
 
-/* Zentriert den Inhalt der Hauptsektionen (Analysen, Vorteile, Pricing, FAQ) */
+/* Zentriert den Inhalt der Hauptsektionen */
 main {
     max-width: 1200px;
     margin: 0 auto; 
@@ -48,12 +50,11 @@ main {
 header {
     margin: 0; 
     padding: 20px 0; 
-    /* Der Header ist jetzt dunkel, damit das WEISSE Logo sichtbar ist */
     background-color: var(--color-primary-dark); 
     position: sticky; 
     top: 0;
     z-index: 50; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Dunklerer Schatten für dunklen Header */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5); 
 }
 
 .header-content {
@@ -80,16 +81,16 @@ header {
 
 .cta-button {
     text-decoration: none;
-    background-color: #007bff; 
+    background-color: var(--color-accent-blue); /* Variable nutzen */
     color: white;
     padding: 10px 20px;
     border-radius: 5px; 
     font-weight: 700;
     transition: background-color 0.3s;
     display: inline-block;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
+    border: none;
+    outline: none;
+    box-shadow: none; /* ' !important' ist oft nicht nötig und wurde entfernt */
 }
 
 .cta-button:hover {
@@ -123,13 +124,13 @@ header {
     margin-bottom: 40px;
 }
 
-/* --- VORTEILE Sektion (IST JETZT TEIL DES <main> INHALTS) --- */
+/* --- VORTEILE Sektion --- */
 .vorteile-grid {
-    background-color: #f8f8f8; /* Heller Hintergrund für Schlichtheit */
+    background-color: var(--color-section-bg); 
     color: #1a1a1a; 
-    padding: 80px 0; /* Mehr vertikaler Platz */
+    padding: 80px 0; 
     text-align: center;
-    max-width: 100%; /* Übernimmt volle Breite von main */
+    max-width: 100%; 
 }
 
 .vorteile-grid h3 {
@@ -148,15 +149,15 @@ header {
 .vorteil-item {
     flex-basis: 33%;
     text-align: left;
-    padding: 30px; /* Mehr Padding */
+    padding: 30px; 
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Schlichterer Schatten */
-    background-color: #ffffff; /* Weißer Hintergrund */
-    border: 1px solid #eee; /* Leichte Umrandung */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+    background-color: #ffffff; 
+    border: 1px solid #eee; 
 }
 
 .vorteil-item h4 {
-    color: #24354b; /* Dunkelblau für Überschrift */
+    color: var(--color-primary-dark); 
     margin-bottom: 10px;
     font-size: 1.3em;
 }
@@ -166,12 +167,15 @@ header {
 }
 
 
-/* --- Preis-Sektion (#pricing) --- */
+/* ---------------------------------------------------- */
+/* Preis-Sektion (#pricing) - Korrektur des Hintergrunds */
+/* ---------------------------------------------------- */
 
 #pricing {
-    background-color: var(--color-primary-dark);
+    /* NEU: Hintergrund ist hell, wie die Vorteils-Sektion, damit nur die Pakete abheben */
+    background-color: var(--color-section-bg); 
+    padding: 80px 0;
 }
-
 
 /* --- Footer --- */
 footer {
@@ -188,7 +192,6 @@ footer {
 
 .menu-toggle {
     background: none;
-    /* Der Toggle-Button muss jetzt WEISS sein, da der Header dunkel ist */
     border: 2px solid #f0f0f0; 
     color: #f0f0f0; 
     font-size: 1.5em;
@@ -199,8 +202,8 @@ footer {
 }
 
 .menu-toggle:hover {
-    border-color: #007bff;
-    color: #007bff;
+    border-color: var(--color-accent-blue);
+    color: var(--color-accent-blue);
 }
 
 .sidebar {
@@ -219,62 +222,9 @@ footer {
     flex-direction: column;
 }
 
-.sidebar.open {
-    transform: translateX(0);
-}
-
-.close-button {
-    background: none;
-    border: none;
-    color: #f0f0f0; 
-    font-size: 2em;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    cursor: pointer;
-}
-
-.sidebar-nav {
-    flex-grow: 1; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
-    padding-top: 50px; 
-}
-
-.sidebar-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-align: center; 
-}
-
-.sidebar-nav li {
-    margin-bottom: 25px; 
-}
-
-.sidebar-nav a {
-    color: #f0f0f0; 
-    text-decoration: none;
-    font-size: 1.5em; 
-    font-weight: 500;
-    display: inline-flex; 
-    align-items: center;
-    transition: color 0.2s;
-}
-
-.sidebar-nav a:hover {
-    color: #007bff; 
-}
-
-.sidebar-nav a svg {
-    margin-right: 10px;
-}
-
-/* Spezielles Styling für den "Jetzt Abonnieren" CTA */
 .sidebar-cta {
     display: inline-block;
-    background-color: #007bff; 
+    background-color: var(--color-accent-blue); 
     color: white !important; 
     padding: 10px 30px;
     border-radius: 5px;
@@ -285,4 +235,29 @@ footer {
 
 .sidebar-cta:hover {
     background-color: #0056b3;
+}
+
+/* ---------------------------------------------------- */
+/* Media Queries (Responsive Design) */
+/* ---------------------------------------------------- */
+
+@media (max-width: 768px) {
+    /* Hero Section Anpassungen */
+    .hero {
+        padding: 40px 0 80px 0;
+    }
+    
+    .hero h2 {
+        font-size: 3em; 
+    }
+
+    /* Vorteile Grid (wichtig für Mobile!) */
+    .grid-container {
+        flex-direction: column; /* Stapelt die Vorteile untereinander */
+        gap: 20px; /* Reduzierter Abstand */
+    }
+
+    .vorteil-item {
+        flex-basis: auto; /* Nimmt die volle Breite ein */
+    }
 }

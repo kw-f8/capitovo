@@ -61,7 +61,7 @@ header {
 }
 
 .header-logo {
-    height: 70px; 
+    height: 80px; /* **KORRIGIERT: Logo-Größe erhöht** */
     width: auto; 
     display: block;
 }
@@ -86,7 +86,7 @@ header {
     font-weight: 700;
     transition: background-color 0.3s;
     display: inline-block;
-    border: none; /* <--- DIESE ZEILE HINZUFÜGEN */
+    border: none; /* **KORRIGIERT: Rahmen entfernt** */
 }
 
 .cta-button:hover {
@@ -123,12 +123,15 @@ header {
 /* --- VORTEILE Sektion --- */
 
 .vorteile-grid {
+    background-color: #1a2537; /* **KORRIGIERT: Hintergrund Dunkelblau** */
+    color: #f0f0f0; /* Textfarbe auf Hell */
     padding: 50px 0 80px 0;
     text-align: center;
 }
 
 .vorteile-grid h3 {
     font-size: 2em;
+    color: #f0f0f0; /* Überschrift explizit hell */
     margin-bottom: 40px;
 }
 
@@ -144,13 +147,18 @@ header {
     text-align: left;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Schattierung für dunklen HG angepasst */
+    background-color: #24354b; /* Etwas helleres Dunkelblau für die Kacheln */
 }
 
 .vorteil-item h4 {
     color: #007bff; 
     margin-bottom: 10px;
     font-size: 1.2em;
+}
+
+.vorteil-item p {
+    color: #bbb; /* Text der Kacheln lesbar machen */
 }
 
 /* --- Footer --- */
@@ -299,7 +307,7 @@ details[open] .details-marker {
     
     /* --- Header / Logo --- */
     .header-logo {
-        height: 40px; /* Logo etwas kleiner */
+        height: 55px; /* **KORRIGIERT: Logo auch mobil größer** */
     }
     
     /* --- Header-Padding anpassen --- */

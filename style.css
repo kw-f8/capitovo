@@ -13,59 +13,52 @@ body {
 }
 
 /* Tailwind Custom-Farben Definitionen für style.css */
+/* Dies behebt das Problem, dass die Premium-Box weiß wird. */
 :root {
-    /* Dunkles Blau (Hauptfarbe für Hero, Premium-Paket, Sidebar) */
-    --color-primary-dark: #24354b;
-    /* Akzentfarbe (CTA, Links, Icons) */
-    --color-accent-blue: #007bff;
-    /* Hintergrundfarbe der Pricing-Sektion/Vorteile */
-    --color-section-bg: #f8f8f8; 
-    /* Textfarbe für weißen Hintergrund (Header-Logo/Toggle) */
-    --color-dark-text: #1a1a1a; 
+    --color-primary-blue: #24354b;
 }
 
-/* Die original Primary Blue für Akzentfarben (CTA, Links, Icons) */
-.text-primary-blue { color: var(--color-accent-blue); } /* Konsistente Nutzung der CSS Variable */
-.bg-primary-blue { background-color: var(--color-primary-dark); } 
-
+.bg-primary-blue { background-color: var(--color-primary-blue) !important; }
+.text-primary-blue { color: #007bff !important; } 
 
 /* ---------------------------------------------------- */
-/* Layout und Zentrierung */
+/* Hero-Wrapper und Gradient */
 /* ---------------------------------------------------- */
-/* NEU: Zentriert den Hauptinhalt (<main> muss im HTML außerhalb des Hero-Wrapper liegen!) */
-main {
-    max-width: 1200px; /* Begrenzt die maximale Breite */
-    margin: 0 auto;    /* Zentriert den Hauptcontainer */
-    padding: 0 20px;   /* Sorgt für seitlichen Abstand (padding) */
-}
-
 .hero-wrapper {
-    /* Hintergrundfarbe für Hero-Sektion */
-    background-color: var(--color-primary-dark); 
+    background-color: #1a2537; 
+    background: linear-gradient(
+        to bottom, 
+        #1a2537 0%,           
+        #1a2537 60%,          
+        #ffffff 95%,           
+        #ffffff 100%           
+    );
     color: #f0f0f0; 
-    padding-bottom: 0; 
+    padding-bottom: 100px; 
     position: relative; 
     overflow: hidden; 
 }
 
+/* Zentriert den Inhalt der Seite */
+main {
+    max-width: 1200px;
+    margin: 0 auto; 
+    padding: 0 20px; 
+}
 
-/* ---------------------------------------------------- */
-/* Header und Navigation */
-/* ---------------------------------------------------- */
+/* --- Header und Navigation --- */
 
 header {
     margin: 0; 
     padding: 20px 0; 
-    /* KORRIGIERT: Header ist jetzt WEISS */
+    border-bottom: 1px solid #e0e0e0; 
     background-color: #ffffff; 
     position: sticky; 
     top: 0;
     z-index: 50; 
-    /* Hellerer Schatten für hellen Header */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
 }
 
-/* Der Header-Inhalt (Logo/Toggle) muss nun die volle Breite nutzen, um auf weißem Grund zu liegen */
 .header-content {
     max-width: 1200px;
     width: 100%;
@@ -77,7 +70,7 @@ header {
 }
 
 .header-logo {
-    height: 80px; 
+    height: 80px; /* Logo-Größe erhöht */
     width: auto; 
     display: block;
 }
@@ -86,20 +79,25 @@ header {
     display: none; 
 }
 
+.header-content .logo {
+    flex-grow: 0; 
+    flex-shrink: 0;
+}
+
 /* --- Call-to-Action (CTA) Button --- */
 
 .cta-button {
     text-decoration: none;
-    background-color: var(--color-accent-blue); /* Variable nutzen */
+    background-color: #007bff; 
     color: white;
     padding: 10px 20px;
     border-radius: 5px; 
     font-weight: 700;
     transition: background-color 0.3s;
     display: inline-block;
-    border: none;
-    outline: none;
-    box-shadow: none; 
+    border: none !important; /* **KORRIGIERT: !important überschreibt Tailwind-Rahmen** */
+    outline: none !important; 
+    box-shadow: none !important; 
 }
 
 .cta-button:hover {
@@ -134,17 +132,17 @@ header {
 }
 
 /* --- VORTEILE Sektion --- */
+
 .vorteile-grid {
-    background-color: var(--color-section-bg); 
-    color: #1a1a1a; 
-    padding: 80px 0; 
+    background-color: #1a2537; /* Hintergrund Dunkelblau */
+    color: #f0f0f0; /* Textfarbe auf Hell */
+    padding: 50px 0 80px 0;
     text-align: center;
-    max-width: 100%; 
 }
 
 .vorteile-grid h3 {
     font-size: 2em;
-    color: #1a1a1a; 
+    color: #f0f0f0; /* Überschrift explizit hell */
     margin-bottom: 40px;
 }
 
@@ -158,41 +156,20 @@ header {
 .vorteil-item {
     flex-basis: 33%;
     text-align: left;
-    padding: 30px; 
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
-    background-color: #ffffff; 
-    border: 1px solid #eee; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Schattierung für dunklen HG angepasst */
+    background-color: #24354b; /* Etwas helleres Dunkelblau für die Kacheln */
 }
 
 .vorteil-item h4 {
-    color: var(--color-primary-dark); 
+    color: #007bff; 
     margin-bottom: 10px;
-    font-size: 1.3em;
+    font-size: 1.2em;
 }
 
 .vorteil-item p {
-    color: #555; 
-}
-
-
-/* ---------------------------------------------------- */
-/* Preis-Sektion (#pricing) - Korrektur des Hintergrunds & Button-Zentrierung */
-/* ---------------------------------------------------- */
-
-#pricing {
-    /* KORRIGIERT: Hintergrund ist hell, damit nur die Abo-Pakete abheben */
-    background-color: var(--color-section-bg); 
-    padding: 80px 0;
-}
-
-/* NEU: Zentrierung der Buttons in den weißen Abo-Paketen */
-/* Dies wird benötigt, da die umgebenden Tailwind-Klassen die Zentrierung nicht korrekt anwenden */
-#pricing .grid-cols-3 > div:not(.bg-primary-blue) a.w-full {
-    display: block; 
-    margin-left: auto;
-    margin-right: auto;
-    max-width: fit-content; 
+    color: #bbb; /* Text der Kacheln lesbar machen */
 }
 
 /* --- Footer --- */
@@ -210,9 +187,8 @@ footer {
 
 .menu-toggle {
     background: none;
-    /* KORRIGIERT: Toggle muss auf WEISSEM Hintergrund DUNKEL sein */
-    border: 2px solid var(--color-dark-text); 
-    color: var(--color-dark-text); 
+    border: 2px solid #1a1a1a; 
+    color: #1a1a1a; 
     font-size: 1.5em;
     padding: 5px 10px;
     cursor: pointer;
@@ -221,61 +197,133 @@ footer {
 }
 
 .menu-toggle:hover {
-    border-color: var(--color-accent-blue);
-    color: var(--color-accent-blue);
+    border-color: #007bff;
+    color: #007bff;
 }
+
 .sidebar {
     position: fixed;
     top: 0;
     right: 0;
     width: 300px; 
     height: 100%;
-    background-color: var(--color-primary-dark); 
+    background-color: #24354b; 
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
 }
 
-.sidebar-cta {
-    display: inline-block;
-    background-color: var(--color-accent-blue); 
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: #f0f0f0; 
+    font-size: 2em;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 50px; 
+}
+
+.sidebar-nav ul li {
+    margin-bottom: 5px; 
+    display: block; 
+}
+
+.sidebar-nav ul li a {
+    color: #f0f0f0; 
+    text-decoration: none;
+    font-size: 1.1em;
+    display: flex; 
+    align-items: center; 
+    padding: 10px 0;
+    transition: color 0.2s;
+}
+
+.sidebar-nav ul li a:hover {
+    color: #007bff;
+}
+
+.sidebar-nav .sidebar-cta {
+    display: block; 
+    background-color: #007bff;
     color: white !important; 
-    padding: 10px 30px;
-    border-radius: 5px;
-    font-size: 1.3em; 
-    margin-top: 10px; 
+    text-align: center;
+    padding: 10px 15px;
+    margin-top: 15px; 
+    border-radius: 8px; 
     font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
 }
 
-.sidebar-cta:hover {
-    background-color: #0056b3;
+.sidebar-nav .sidebar-cta:hover {
+    background-color: #0056b3; 
 }
 
+
 /* ---------------------------------------------------- */
-/* Media Queries (Responsive Design) */
+/* FAQ/Accordion-Styling */
 /* ---------------------------------------------------- */
 
+details > summary {
+    list-style: none;
+}
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+details[open] .details-marker {
+    transform: rotate(45deg); 
+}
+
+/* ==================================================== */
+/* RESPONSIVE DESIGN (Media Queries) */
+/* ==================================================== */
+
+/* Tablet- und Mobile-Optimierung (Max-Breite 768px) */
 @media (max-width: 768px) {
-    /* Hero Section Anpassungen */
-    .hero {
-        padding: 40px 0 80px 0;
-    }
     
+    /* --- Hero Sektion --- */
     .hero h2 {
-        font-size: 3em; 
+        font-size: 2.5em; /* Kleiner auf Tablets/Handys */
+        margin-top: 30px;
     }
 
-    /* Vorteile Grid (wichtig für Mobile!) */
+    .hero p {
+        font-size: 1.1em;
+    }
+
+    /* --- Vorteile Sektion --- */
     .grid-container {
         flex-direction: column; /* Stapelt die Vorteile untereinander */
-        gap: 20px; /* Reduzierter Abstand */
+        gap: 20px;
+        padding: 0 40px; /* Mehr Rand links/rechts */
     }
 
     .vorteil-item {
-        flex-basis: auto; /* Nimmt die volle Breite ein */
+        flex-basis: auto; 
+    }
+    
+    /* --- Header / Logo --- */
+    .header-logo {
+        height: 55px; /* Logo auch mobil größer */
+    }
+    
+    /* --- Header-Padding anpassen --- */
+    header, .header-content {
+        padding-left: 10px;
+        padding-right: 10px;
     }
 }

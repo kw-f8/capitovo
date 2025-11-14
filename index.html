@@ -23,6 +23,49 @@
         .cta-button {
             border: none; /* Entfernt den Rahmen vom Button */
         }
+        
+        /* NEUE ANPASSUNG für den "Vorteile"-Abschnitt */
+        .vorteile-grid {
+            background-color: #24354b; /* Dunkelblau wie der Hero-Bereich */
+            color: white; /* Textfarbe auf Weiß setzen */
+            padding-top: 5rem;
+            padding-bottom: 5rem;
+        }
+
+        .vorteile-grid h3 {
+            color: white; /* Überschrift weiß */
+            text-align: center;
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            margin-bottom: 3rem;
+        }
+
+        .vorteil-item {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .vorteil-item h4 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 0.5rem;
+        }
+        
+        .grid-container {
+            display: grid;
+            gap: 2rem;
+            max-width: 72rem; /* max-w-6xl */
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-container {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
     </style>
 </head>
 <body>
@@ -53,7 +96,7 @@
             <h3 class="text-xl text-gray-700 mb-12">
                 Die 6 aktuellsten Top-Analysen
                 <br>
-                
+                Lesen Sie eine exklusive Vorschau auf unsere Börsenbrief-Artikel und erkennen Sie Marktbewegungen frühzeitig.
             </h3>
             
             <div class="grid md:grid-cols-3 gap-8">
@@ -144,10 +187,86 @@
             
             <a href="#pricing" class="cta-button mt-12">Alle Premium-Artikel jetzt freischalten</a>
         </section>
+
+        <section class="vorteile-grid">
+            <h3>Warum **capitovo**?</h3>
+            <div class="grid-container">
+                <div class="vorteil-item">
+                    <h4>Datengetriebene Tiefe</h4>
+                    <p>Unsere Modelle verarbeiten Millionen von Datenpunkten, um Ihnen klare und unvoreingenommene Kauf- und Halteempfehlungen zu geben.</p>
+                </div>
+                <div class="vorteil-item">
+                    <h4>Exklusive Berichte</h4>
+                    <p>Zugang zu unseren vollständigen Berichten über Einzelaktien, veröffentlicht vor Marktöffnung, exklusiv für Abonnenten.</p>
+                    </div>
+                <div class="vorteil-item">
+                    <h4>Transparente Performance</h4>
+                    <p>Wir stehen zu unseren Analysen. Verfolgen Sie die Performance unserer vergangenen Empfehlungen in Echtzeit.</p>
+                </div>
+            </div>
+        </section>
         
-     
-        
-       
+        <section id="faq" class="py-16 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <h3 id="faq-title" class="text-4xl font-extrabold text-gray-900 text-center mb-12">
+                    Häufig gestellte Fragen
+                </h3>
+
+                <div id="faq-list" class="space-y-6">
+
+                    <details id="faq-item-1" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
+                        <summary id="faq-q-1" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
+                            <span>Wie oft werden neue Analysen veröffentlicht?</span>
+                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
+                        </summary>
+                        <p id="faq-a-1" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
+                            Unsere Premium-Analysen werden in der Regel **jeden Dienstag und Freitag vor Marktöffnung** veröffentlicht. Bei wichtigen Marktereignissen oder Eilnachrichten können zusätzliche Bulletins hinzukommen.
+                        </p>
+                    </details>
+
+                    <details id="faq-item-2" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
+                        <summary id="faq-q-2" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
+                            <span>Kann ich capitovo vorab testen?</span>
+                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
+                        </summary>
+                        <p id="faq-a-2" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
+                            Ja, wir bieten eine **14-tägige Geld-zurück-Garantie** für Neukunden an. Sollten Sie nicht vollständig zufrieden sein, erhalten Sie den vollen Betrag zurück.
+                        </p>
+                    </details>
+
+                    <details id="faq-item-3" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
+                        <summary id="faq-q-3" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
+                            <span>Sind die Empfehlungen auch für Anfänger geeignet?</span>
+                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
+                        </summary>
+                        <p id="faq-a-3" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
+                            Unsere Analysen sind datengestützt und klar formuliert. Obwohl ein grundlegendes Verständnis der Börse hilfreich ist, legen wir Wert darauf, die Empfehlungen auch für weniger erfahrene Anleger verständlich zu machen.
+                        </p>
+                    </details>
+
+                    <details id="faq-item-4" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
+                        <summary id="faq-q-4" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
+                            <span>Welche Märkte deckt capitovo ab?</span>
+                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
+                        </summary>
+                        <p id="faq-a-4" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
+                            Wir fokussieren uns hauptsächlich auf unterbewertete Aktien an **US-amerikanischen (NASDAQ, NYSE)** und **europäischen (DAX, Euro Stoxx 50)** Märkten mit starkem Wachstumspotenzial.
+                        </p>
+                    </details>
+
+                    <details id="faq-item-5" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
+                        <summary id="faq-q-5" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
+                            <span>Wie funktioniert die Kündigung meines Abos?</span>
+                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
+                        </summary>
+                        <p id="faq-a-5" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
+                            Sie können Ihr Abonnement jederzeit über Ihr Kundenkonto mit wenigen Klicks kündigen. Es gibt **keine Mindestlaufzeit** (außer beim Lifetime-Abo), und Sie behalten den Zugang bis zum Ende des bezahlten Zeitraums.
+                        </p>
+                    </details>
+                </div>
+            </div>
+        </section>
 
         <section id="pricing" class="py-20 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -236,180 +355,3 @@
                                 <li class="flex items-start">
                                     <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                     Alle Premium-Funktionen
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    Lebenslanger Zugang (inkl. Updates)
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    Priorisierter E-Mail-Support
-                                </li>
-                                <li class="flex items-start">
-                                    <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    Kein monatliches Abo mehr nötig
-                                </li>
-                            </ul>
-                        </div>
-                        <a href="#" class="w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150">
-                            Lifetime sichern
-                        </a>
-                    </div>
-                </div>
-            </div>
-            </section>
- 
-    
-   
-       <section id="faq" class="py-16 bg-white">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <h3 id="faq-title" class="text-4xl font-extrabold text-gray-900 text-center mb-12">
-                    Häufig gestellte Fragen
-                </h3>
-
-                <div id="faq-list" class="space-y-6">
-
-                    <details id="faq-item-1" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
-                        <summary id="faq-q-1" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
-                            <span>Wie oft werden neue Analysen veröffentlicht?</span>
-                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
-                        </summary>
-                        <p id="faq-a-1" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
-                            Unsere Premium-Analysen werden in der Regel **jeden Dienstag und Freitag vor Marktöffnung** veröffentlicht. Bei wichtigen Marktereignissen oder Eilnachrichten können zusätzliche Bulletins hinzukommen.
-                        </p>
-                    </details>
-
-                    <details id="faq-item-2" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
-                        <summary id="faq-q-2" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
-                            <span>Kann ich capitovo vorab testen?</span>
-                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
-                        </summary>
-                        <p id="faq-a-2" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
-                            Ja, wir bieten eine **14-tägige Geld-zurück-Garantie** für Neukunden an. Sollten Sie nicht vollständig zufrieden sein, erhalten Sie den vollen Betrag zurück.
-                        </p>
-                    </details>
-
-                    <details id="faq-item-3" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
-                        <summary id="faq-q-3" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
-                            <span>Sind die Empfehlungen auch für Anfänger geeignet?</span>
-                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
-                        </summary>
-                        <p id="faq-a-3" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
-                            Unsere Analysen sind datengestützt und klar formuliert. Obwohl ein grundlegendes Verständnis der Börse hilfreich ist, legen wir Wert darauf, die Empfehlungen auch für weniger erfahrene Anleger verständlich zu machen.
-                        </p>
-                    </details>
-
-                    <details id="faq-item-4" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
-                        <summary id="faq-q-4" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
-                            <span>Welche Märkte deckt capitovo ab?</span>
-                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
-                        </summary>
-                        <p id="faq-a-4" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
-                            Wir fokussieren uns hauptsächlich auf unterbewertete Aktien an **US-amerikanischen (NASDAQ, NYSE)** und **europäischen (DAX, Euro Stoxx 50)** Märkten mit starkem Wachstumspotenzial.
-                        </p>
-                    </details>
-
-                    <details id="faq-item-5" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100">
-                        <summary id="faq-q-5" class="flex justify-between items-center text-lg font-semibold text-gray-800 focus:outline-none">
-                            <span>Wie funktioniert die Kündigung meines Abos?</span>
-                            <span class="text-xl transform transition-transform duration-300 details-marker">&plus;</span>
-                        </summary>
-                        <p id="faq-a-5" class="pt-4 text-gray-600 border-t border-gray-200 mt-4">
-                            Sie können Ihr Abonnement jederzeit über Ihr Kundenkonto mit wenigen Klicks kündigen. Es gibt **keine Mindestlaufzeit** (außer beim Lifetime-Abo), und Sie behalten den Zugang bis zum Ende des bezahlten Zeitraums.
-                        </p>
-                    </details>
-                </div>
-            </div>
-        </section>    
-
- <section class="vorteile-grid">
-            <h3>Warum capitovo?</h3>
-            <div class="grid-container">
-                <div class="vorteil-item">
-                    <h4>Datengetriebene Tiefe</h4>
-                    <p>Unsere Modelle verarbeiten Millionen von Datenpunkten, um Ihnen klare und unvoreingenommene Kauf- und Halteempfehlungen zu geben.</p>
-                </div>
-                <div class="vorteil-item">
-                    <h4>Exklusive Berichte</h4>
-                    <p>Zugang zu unseren vollständigen Berichten über Einzelaktien, veröffentlicht vor Marktöffnung, exklusiv für Abonnenten.</p>
-                    </div>
-                <div class="vorteil-item">
-                    <h4>Transparente Performance</h4>
-                    <p>Wir stehen zu unseren Analysen. Verfolgen Sie die Performance unserer vergangenen Empfehlungen in Echtzeit.</p>
-                </div>
-            </div>
-        </section>     
-
-    </main>
-    
-    <footer id="abo">
-        <p>&copy; 2024 capitovo. Wachstum durch Wissen.</p>
-    </footer>
-
-    <div class="sidebar" id="sidebar">
-        <button class="close-button" id="close-sidebar">&times;</button>
-        <nav class="sidebar-nav">
-            <ul>
-                <li>
-                    <a href="#open-login" class="flex items-center space-x-2"> 
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                        </svg>
-                        <span>Login</span>
-                    </a>
-                </li> 
-                <li>
-                    <a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a>
-                </li> 
-            </ul>
-        </nav>
-    </div>
-
-    <div id="login-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">
-       
-        <div class="w-full max-w-sm">
-            
-            <div class="bg-white p-8 rounded-lg shadow-xl border border-gray-200">
-                <h2 class="text-2xl font-semibold text-gray-900 mb-6 text-center">Login</h2>
-                
-                <form action="#" method="POST" class="space-y-6">
-                    
-                    <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail Adresse</label>
-                        <input id="email" name="email" type="email" autocomplete="email" required
-                               class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-blue"
-                               placeholder="ihre.adresse@example.com">
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Passwort</label>
-                        <input id="password" name="password" type="password" autocomplete="current-password" required
-                               class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-blue"
-                               placeholder="••••••••">
-                    </div>
-
-                    <div class="flex items-center justify-between">
-                        <a href="#" class="text-sm text-primary-blue hover:text-blue-600">Passwort vergessen?</a>
-                    </div>
-
-                    <div>
-                        <button type="submit"
-                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition duration-150">
-                            Anmelden
-                        </button>
-                    </div>
-                </form>
-            </div>
-            
-            <p class="mt-4 text-center text-sm text-gray-300">
-                Noch kein Kunde? 
-                <a href="#abo" class="font-medium text-primary-blue hover:text-blue-400">Jetzt Abonnieren</a>
-            </p>
-
-        </div>
-    </div>
-    
-    <script src="script.js"></script>
-</body>
-</html>

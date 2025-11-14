@@ -12,6 +12,19 @@ body {
     line-height: 1.65;
 }
 
+/* Tailwind Custom-Farben Definitionen für style.css */
+/* Diese sind wichtig, da Tailwind sie sonst nicht findet, wenn der interne <style> fehlt */
+:root {
+    --color-primary-blue: #24354b;
+}
+
+.bg-primary-blue { background-color: var(--color-primary-blue); }
+.text-primary-blue { color: #007bff; } 
+/* Wenn du focus:ring-primary-blue benötigst, stelle sicher, dass Tailwind korrekt kompiliert ist
+   oder definiere es hier explizit, falls es zu Problemen kommt.
+   Für diesen Fix ist es erstmal nicht direkt notwendig, kann aber bei Bedarf ergänzt werden. */
+
+
 /* ---------------------------------------------------- */
 /* Hero-Wrapper und Gradient */
 /* ---------------------------------------------------- */
@@ -61,7 +74,7 @@ header {
 }
 
 .header-logo {
-    height: 80px; /* **KORRIGIERT: Logo-Größe erhöht** */
+    height: 80px; /* Logo-Größe erhöht */
     width: auto; 
     display: block;
 }
@@ -86,7 +99,9 @@ header {
     font-weight: 700;
     transition: background-color 0.3s;
     display: inline-block;
-    border: none; /* **KORRIGIERT: Rahmen entfernt** */
+    border: none !important; /* **KORRIGIERT: !important hinzugefügt, um Tailwind zu überschreiben** */
+    outline: none !important; /* Sicherstellen, dass auch der Outline entfernt wird */
+    box-shadow: none !important; /* Sicherstellen, dass kein Schatten als Rahmen interpretiert wird */
 }
 
 .cta-button:hover {
@@ -123,7 +138,7 @@ header {
 /* --- VORTEILE Sektion --- */
 
 .vorteile-grid {
-    background-color: #1a2537; /* **KORRIGIERT: Hintergrund Dunkelblau** */
+    background-color: #1a2537; /* Hintergrund Dunkelblau */
     color: #f0f0f0; /* Textfarbe auf Hell */
     padding: 50px 0 80px 0;
     text-align: center;
@@ -307,7 +322,7 @@ details[open] .details-marker {
     
     /* --- Header / Logo --- */
     .header-logo {
-        height: 55px; /* **KORRIGIERT: Logo auch mobil größer** */
+        height: 55px; /* Logo auch mobil größer */
     }
     
     /* --- Header-Padding anpassen --- */

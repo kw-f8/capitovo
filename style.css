@@ -14,34 +14,29 @@ body {
 
 /* Tailwind Custom-Farben Definitionen für style.css */
 :root {
-    --color-primary-blue: #24354b;
+    /* Dunkles Blau für Abo-Paket und Sidebar-Hintergrund */
+    --color-primary-dark: #24354b;
 }
 
-.bg-primary-blue { background-color: var(--color-primary-blue); }
+/* Die original Primary Blue für Akzentfarben (CTA, Links, Icons) */
 .text-primary-blue { color: #007bff; } 
+.bg-primary-blue { background-color: var(--color-primary-dark); } /* Tailwind Klasse für das Premium-Paket */
 
 
 /* ---------------------------------------------------- */
-/* Hero-Wrapper (Hält jetzt den Preis- und Vorteils-Abschnitt) */
+/* Hero-Wrapper (Nur Header und Hero-Sektion) */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    background-color: #1a2537; 
-    /* NEU: Farbverlauf entfernt, damit alles dunkel bleibt */
-    /* background: linear-gradient(
-        to bottom, 
-        #1a2537 0%,           
-        #1a2537 60%,          
-        #ffffff 95%,           
-        #ffffff 100%           
-    ); */
+    /* Hintergrundfarbe für Header und Hero-Sektion */
+    background-color: var(--color-primary-dark); 
     color: #f0f0f0; 
-    /* NEU: Sehr hohes padding-bottom, um die verschobenen Sektionen abzudecken */
-    padding-bottom: 1200px; 
+    /* Padding-Bottom entfernt, da Pricing/Vorteile außerhalb sind */
+    padding-bottom: 0; 
     position: relative; 
     overflow: hidden; 
 }
 
-/* Zentriert den Inhalt der Seite (nur für Sektionen außerhalb des hero-wrappers) */
+/* Zentriert den Inhalt der Hauptsektionen (Analysen, Vorteile, Pricing, FAQ) */
 main {
     max-width: 1200px;
     margin: 0 auto; 
@@ -53,12 +48,12 @@ main {
 header {
     margin: 0; 
     padding: 20px 0; 
-    /* NEU: Hintergrundfarbe muss wieder hell sein, da es nicht mehr im Hero-Wrapper-Verlauf ist */
-    background-color: #ffffff; 
+    /* Der Header ist jetzt dunkel, damit das WEISSE Logo sichtbar ist */
+    background-color: var(--color-primary-dark); 
     position: sticky; 
     top: 0;
     z-index: 50; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Dunklerer Schatten für dunklen Header */
 }
 
 .header-content {
@@ -79,11 +74,6 @@ header {
 
 .logo h1 {
     display: none; 
-}
-
-.header-content .logo {
-    flex-grow: 0; 
-    flex-shrink: 0;
 }
 
 /* --- Call-to-Action (CTA) Button --- */
@@ -133,20 +123,18 @@ header {
     margin-bottom: 40px;
 }
 
-/* --- VORTEILE Sektion (Hintergrund-Definition entfernt, da es im hero-wrapper ist) --- */
+/* --- VORTEILE Sektion (IST JETZT TEIL DES <main> INHALTS) --- */
 .vorteile-grid {
-    /* background-color: #1a2537; <--- ENTFERNT */
-    color: #f0f0f0; 
-    padding: 50px 0 80px 0;
+    background-color: #f8f8f8; /* Heller Hintergrund für Schlichtheit */
+    color: #1a1a1a; 
+    padding: 80px 0; /* Mehr vertikaler Platz */
     text-align: center;
-    max-width: 1200px; /* Zentrierung wie main */
-    margin: 0 auto;
-    padding: 0 20px;
+    max-width: 100%; /* Übernimmt volle Breite von main */
 }
 
 .vorteile-grid h3 {
     font-size: 2em;
-    color: #f0f0f0; 
+    color: #1a1a1a; 
     margin-bottom: 40px;
 }
 
@@ -160,21 +148,30 @@ header {
 .vorteil-item {
     flex-basis: 33%;
     text-align: left;
-    padding: 20px;
+    padding: 30px; /* Mehr Padding */
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
-    background-color: #24354b; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Schlichterer Schatten */
+    background-color: #ffffff; /* Weißer Hintergrund */
+    border: 1px solid #eee; /* Leichte Umrandung */
 }
 
 .vorteil-item h4 {
-    color: #007bff; 
+    color: #24354b; /* Dunkelblau für Überschrift */
     margin-bottom: 10px;
-    font-size: 1.2em;
+    font-size: 1.3em;
 }
 
 .vorteil-item p {
-    color: #bbb; 
+    color: #555; 
 }
+
+
+/* --- Preis-Sektion (#pricing) --- */
+
+#pricing {
+    background-color: var(--color-primary-dark);
+}
+
 
 /* --- Footer --- */
 footer {
@@ -186,13 +183,14 @@ footer {
 }
 
 /* ---------------------------------------------------- */
-/* Seitenleiste (Sidebar) - NEUE ZENTRIERUNGS-REGELN */
+/* Seitenleiste (Sidebar) */
 /* ---------------------------------------------------- */
 
 .menu-toggle {
     background: none;
-    border: 2px solid #1a1a1a; 
-    color: #1a1a1a; 
+    /* Der Toggle-Button muss jetzt WEISS sein, da der Header dunkel ist */
+    border: 2px solid #f0f0f0; 
+    color: #f0f0f0; 
     font-size: 1.5em;
     padding: 5px 10px;
     cursor: pointer;
@@ -211,13 +209,12 @@ footer {
     right: 0;
     width: 300px; 
     height: 100%;
-    background-color: #24354b; 
+    background-color: var(--color-primary-dark); 
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     padding: 20px;
-    /* NEU: Flexbox für vertikale Zentrierung */
     display: flex;
     flex-direction: column;
 }
@@ -238,10 +235,10 @@ footer {
 }
 
 .sidebar-nav {
-    flex-grow: 1; /* Lässt die Navigation den verfügbaren Platz einnehmen */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
-    justify-content: center; /* ZENTRIERT DEN INHALT VERTIKAL */
+    justify-content: center; 
     padding-top: 50px; 
 }
 
@@ -249,7 +246,7 @@ footer {
     list-style: none;
     padding: 0;
     margin: 0;
-    text-align: center; /* ZENTRIERT DEN INHALT HORIZONTAL */
+    text-align: center; 
 }
 
 .sidebar-nav li {
@@ -261,7 +258,7 @@ footer {
     text-decoration: none;
     font-size: 1.5em; 
     font-weight: 500;
-    display: inline-flex; /* Wichtig für die Zentrierung und Icon-Ausrichtung */
+    display: inline-flex; 
     align-items: center;
     transition: color 0.2s;
 }

@@ -205,18 +205,21 @@ footer {
     color: #007bff;
 }
 
-.sidebar {
+ .sidebar {
     position: fixed;
     top: 0;
     right: 0;
     width: 300px; 
     height: 100%;
-    background-color: #24354b; 
+    background-color: #24354b; /* Dunkelblau für den Hintergrund */
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     padding: 20px;
+    /* NEU: Flexbox verwenden, um den Inhalt vertikal zu steuern */
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar.open {
@@ -234,46 +237,58 @@ footer {
     cursor: pointer;
 }
 
+/* NEU: Flex-Einstellungen für die Navigation */
+.sidebar-nav {
+    flex-grow: 1; /* Lässt die Navigation den verfügbaren Platz einnehmen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* ZENTRIERT DEN INHALT VERTIKAL */
+    padding-top: 50px; /* Platz für den Close-Button */
+}
+
 .sidebar-nav ul {
     list-style: none;
     padding: 0;
-    margin-top: 50px; 
+    margin: 0;
+    text-align: center; /* ZENTRIERT DEN INHALT HORIZONTAL */
 }
 
-.sidebar-nav ul li {
-    margin-bottom: 5px; 
-    display: block; 
+.sidebar-nav li {
+    margin-bottom: 25px; /* Abstand zwischen den Elementen */
 }
 
-.sidebar-nav ul li a {
-    color: #f0f0f0; 
+.sidebar-nav a {
+    color: #f0f0f0; /* Helle Textfarbe */
     text-decoration: none;
-    font-size: 1.1em;
-    display: flex; 
-    align-items: center; 
-    padding: 10px 0;
+    font-size: 1.5em; /* Größere Schrift für bessere Lesbarkeit */
+    font-weight: 500;
+    display: inline-flex; /* Wichtig für die Zentrierung und Icon-Ausrichtung */
+    align-items: center;
     transition: color 0.2s;
 }
 
-.sidebar-nav ul li a:hover {
-    color: #007bff;
+.sidebar-nav a:hover {
+    color: #007bff; /* Hover-Effekt wie im Hero-CTA */
 }
 
-.sidebar-nav .sidebar-cta {
-    display: block; 
-    background-color: #007bff;
-    color: white !important; 
-    text-align: center;
-    padding: 10px 15px;
-    margin-top: 15px; 
-    border-radius: 8px; 
+.sidebar-nav a svg {
+    margin-right: 10px;
+}
+
+/* Spezielles Styling für den "Jetzt Abonnieren" CTA */
+.sidebar-cta {
+    display: inline-block;
+    background-color: #007bff; /* Blauer CTA-Hintergrund */
+    color: white !important; /* Wichtig, um die Standard-Anchor-Farbe zu überschreiben */
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-size: 1.3em; /* Etwas kleiner als der Login-Link */
+    margin-top: 10px; /* Abstand zum Login-Link */
     font-weight: 700;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
 }
 
-.sidebar-nav .sidebar-cta:hover {
-    background-color: #0056b3; 
+.sidebar-cta:hover {
+    background-color: #0056b3;
 }
 
 

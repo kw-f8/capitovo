@@ -14,12 +14,14 @@ body {
 
 /* Tailwind Custom-Farben Definitionen für style.css */
 :root {
-    /* Dunkles Blau (Hauptfarbe für Header, Hero, Premium-Paket, Sidebar) */
+    /* Dunkles Blau (Hauptfarbe für Hero, Premium-Paket, Sidebar) */
     --color-primary-dark: #24354b;
     /* Akzentfarbe (CTA, Links, Icons) */
     --color-accent-blue: #007bff;
-    /* Hintergrundfarbe der Pricing-Sektion, damit Abo-Pakete abheben */
+    /* Hintergrundfarbe der Pricing-Sektion/Vorteile */
     --color-section-bg: #f8f8f8; 
+    /* Textfarbe für weißen Hintergrund (Header-Logo/Toggle) */
+    --color-dark-text: #1a1a1a; 
 }
 
 /* Die original Primary Blue für Akzentfarben (CTA, Links, Icons) */
@@ -31,6 +33,7 @@ body {
 /* Layout und Zentrierung */
 /* ---------------------------------------------------- */
 .hero-wrapper {
+    /* Hintergrundfarbe für Hero-Sektion */
     background-color: var(--color-primary-dark); 
     color: #f0f0f0; 
     padding-bottom: 0; 
@@ -38,25 +41,24 @@ body {
     overflow: hidden; 
 }
 
-/* Zentriert den Inhalt der Hauptsektionen */
-main {
-    max-width: 1200px;
-    margin: 0 auto; 
-    padding: 0 20px; 
-}
 
-/* --- Header und Navigation --- */
+/* ---------------------------------------------------- */
+/* Header und Navigation */
+/* ---------------------------------------------------- */
 
 header {
     margin: 0; 
     padding: 20px 0; 
-    background-color: var(--color-primary-dark); 
+    /* KORRIGIERT: Header ist jetzt WEISS */
+    background-color: #ffffff; 
     position: sticky; 
     top: 0;
     z-index: 50; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5); 
+    /* Hellerer Schatten für hellen Header */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
 }
 
+/* Der Header-Inhalt (Logo/Toggle) muss nun die volle Breite nutzen, um auf weißem Grund zu liegen */
 .header-content {
     max-width: 1200px;
     width: 100%;
@@ -172,7 +174,7 @@ header {
 /* ---------------------------------------------------- */
 
 #pricing {
-    /* NEU: Hintergrund ist hell, wie die Vorteils-Sektion, damit nur die Pakete abheben */
+    /* KORRIGIERT: Hintergrund ist hell, damit nur die Abo-Pakete abheben */
     background-color: var(--color-section-bg); 
     padding: 80px 0;
 }
@@ -192,8 +194,9 @@ footer {
 
 .menu-toggle {
     background: none;
-    border: 2px solid #f0f0f0; 
-    color: #f0f0f0; 
+    /* KORRIGIERT: Toggle muss auf WEISSEM Hintergrund DUNKEL sein */
+    border: 2px solid var(--color-dark-text); 
+    color: var(--color-dark-text); 
     font-size: 1.5em;
     padding: 5px 10px;
     cursor: pointer;
@@ -205,7 +208,6 @@ footer {
     border-color: var(--color-accent-blue);
     color: var(--color-accent-blue);
 }
-
 .sidebar {
     position: fixed;
     top: 0;

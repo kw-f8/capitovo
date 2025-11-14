@@ -32,6 +32,13 @@ body {
 /* ---------------------------------------------------- */
 /* Layout und Zentrierung */
 /* ---------------------------------------------------- */
+/* NEU: Zentriert den Hauptinhalt (<main> muss im HTML außerhalb des Hero-Wrapper liegen!) */
+main {
+    max-width: 1200px; /* Begrenzt die maximale Breite */
+    margin: 0 auto;    /* Zentriert den Hauptcontainer */
+    padding: 0 20px;   /* Sorgt für seitlichen Abstand (padding) */
+}
+
 .hero-wrapper {
     /* Hintergrundfarbe für Hero-Sektion */
     background-color: var(--color-primary-dark); 
@@ -92,7 +99,7 @@ header {
     display: inline-block;
     border: none;
     outline: none;
-    box-shadow: none; /* ' !important' ist oft nicht nötig und wurde entfernt */
+    box-shadow: none; 
 }
 
 .cta-button:hover {
@@ -170,13 +177,22 @@ header {
 
 
 /* ---------------------------------------------------- */
-/* Preis-Sektion (#pricing) - Korrektur des Hintergrunds */
+/* Preis-Sektion (#pricing) - Korrektur des Hintergrunds & Button-Zentrierung */
 /* ---------------------------------------------------- */
 
 #pricing {
     /* KORRIGIERT: Hintergrund ist hell, damit nur die Abo-Pakete abheben */
     background-color: var(--color-section-bg); 
     padding: 80px 0;
+}
+
+/* NEU: Zentrierung der Buttons in den weißen Abo-Paketen */
+/* Dies wird benötigt, da die umgebenden Tailwind-Klassen die Zentrierung nicht korrekt anwenden */
+#pricing .grid-cols-3 > div:not(.bg-primary-blue) a.w-full {
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
+    max-width: fit-content; 
 }
 
 /* --- Footer --- */

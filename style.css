@@ -42,20 +42,23 @@ main {
     max-width: 1200px;
     margin: 0 auto; 
     padding: 0 20px; 
+    /* Damit die Analyse-Sektion hochgeschoben werden kann, sollte die main-Sektion nicht
+       den Header oder den Hero-Text verdecken. */
 }
 
 /* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
 #analysen {
     /* Zieht die gesamte Sektion nach oben, um den Abstand zum Hero-Bereich zu verringern */
-    margin-top: -60px; /* Dieser Wert bestimmt, wie weit die Sektion nach oben gezogen wird */
-    /* Behält den ursprünglichen Padding bei, um den Inhalt nicht zu quetschen */
+    margin-top: -80px; /* Zieht die Sektion 80px nach oben, überlappt mit dem Hero-Padding */
+    padding-bottom: 40px; /* Reduziert etwas den Boden-Padding, um es straffer zu machen */
 }
 /* ------------------------------------------------- */
+
 
 /* --- Header und Navigation (Transparent über Dunkelblau) --- */
 
 header {
-    /* Setzt den Hintergrund der Header-Leiste transparent, um den Hero-Hintergrund zu zeigen */
+    /* Transparent über dem Dunkelblau */
     background-color: transparent; 
     box-shadow: none; 
     border-bottom: none; 
@@ -139,12 +142,12 @@ header {
     font-weight: 700;
     margin-bottom: 25px;
     line-height: 1.1; 
-    color: white; /* Konsistente Farbe für Desktop */
+    color: white; /* Stellt die Farbe für Desktop sicher */
 }
 
 .hero p {
     font-size: 1.3em;
-    color: #b0c4de; /* Helle Textfarbe für den Fließtext (Konsistent mit Mobile) */
+    color: #b0c4de; /* Helle Textfarbe für den Fließtext */
     margin-bottom: 40px;
 }
 

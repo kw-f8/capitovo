@@ -193,11 +193,9 @@ header {
     flex-basis: 33%;
     text-align: left;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
     background-color: #f8f8f8; 
-    border-radius: var(--card-radius);
-    box-shadow: var(--card-shadow);
+    border-radius: 0.75rem; /* entspricht Tailwind rounded-xl */
+    box-shadow: 0 12px 30px rgba(2,6,23,0.08);
     transition: transform .28s ease, box-shadow .28s ease;
 }
 

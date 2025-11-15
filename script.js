@@ -103,7 +103,7 @@ async function loadAndRenderAnalyses() {
 }
 
 
-// === TEST-LOGIN-LOGIK ===
+// === TEST-LOGIN-LOGIK (KORRIGIERT) ===
 
 /** Initialisiert die simulierte Login-Funktionalität. */
 function initTestLogin() {
@@ -116,15 +116,16 @@ function initTestLogin() {
     const loginForm = loginModal.querySelector('form');
     if (!loginForm) return;
 
+    // Eingabefelder abrufen (muss nur einmal erfolgen)
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+
     loginForm.addEventListener('submit', function(event) {
         event.preventDefault(); // Verhindert das Standard-Formular-Senden
 
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-
         const enteredEmail = emailInput.value;
-        const enteredPassword = passwordInputInput.value;
-
+        const enteredPassword = passwordInput.value; // <-- HIER KORRIGIERT
+        
         // Fehlermeldungen von vorherigen Versuchen entfernen
         const existingError = loginModal.querySelector('#login-error-message');
         if (existingError) {

@@ -397,3 +397,51 @@ details[open] .details-marker {
         width: 80%; 
     }
 }
+
+/* Anpassungen für die Pricing-Sektion */
+@media (max-width: 768px) {
+  #pricing {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+/* ...existing code... */
+#pricing{
+  background: #ffffff;
+  color: #0f172a;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+/* Alle weißen Texte im Pricing dunkel machen, außer im hervorgehobenen Premium-Card */
+#pricing .text-white { color: #0f172a !important; }
+#pricing .bg-primary-blue .text-white { color: #ffffff !important; }
+
+/* Sicherstellen, dass Überschriften, Preise und Listen dunkel sind */
+#pricing h2,
+#pricing h3,
+#pricing p,
+#pricing .text-4xl,
+#pricing .text-2xl,
+#pricing ul li,
+#pricing .text-xl {
+  color: #0f172a !important;
+}
+
+/* Karten: weiße Karten klar definieren */
+#pricing .bg-white {
+  background: #ffffff;
+  border: 1px solid rgba(15,23,42,0.06);
+  color: #0f172a;
+}
+
+/* Hervorgehobene Karte beibehalten (weiß auf dunkel) */
+#pricing .bg-primary-blue {
+  background: linear-gradient(180deg, #0b74ff 0%, #0366d6 100%);
+  color: #ffffff;
+}
+
+/* Buttons / Links im Pricing: gut lesbar */
+#pricing a { color: #0f172a !important; }
+#pricing .bg-primary-blue a { background: #ffffff; color: #0366d6 !important; }

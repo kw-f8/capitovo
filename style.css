@@ -25,15 +25,12 @@ body {
 .text-accent-blue { color: var(--color-accent-blue) !important; } 
 
 /* ---------------------------------------------------- */
-/* Hero-Wrapper und Gradient */
+/* Hero-Wrapper (jetzt dauerhaft WEISS) */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    /* **KORREKTUR: Hintergrund auf Weiß setzen** */
-    background-color: #ffffff; 
-    /* **KORREKTUR: Gradient entfernen** */
-    background: none;
-    /* **KORREKTUR: Textfarbe auf Dunkel setzen, da der Hintergrund hell ist** */
-    color: #1a1a1a; 
+    background-color: #ffffff; /* Hintergrund auf Weiß setzen */
+    background: none; /* Gradient entfernen */
+    color: #1a1a1a; /* Textfarbe auf Dunkel setzen */
     padding-bottom: 100px; 
     position: relative; 
     overflow: hidden; 
@@ -46,7 +43,7 @@ main {
     padding: 0 20px; 
 }
 
-/* --- Header und Navigation (Grundzustand: Weißer Hintergrund/Sticky) --- */
+/* --- Header und Navigation (Jetzt IMMER Weiß/Sticky) --- */
 
 header {
     margin: 0; 
@@ -57,7 +54,6 @@ header {
     top: 0;
     z-index: 50; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-    /* **KORREKTUR: Transition behalten, falls später benötigt, aber Logo-Wechsel wird im JS entfernt** */
     transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
 }
 
@@ -76,22 +72,6 @@ header {
     width: auto; 
     display: block;
 }
-
-/* **KORREKTUR: Diesen gesamten Block entfernen, da der Header im Hero-Bereich jetzt genauso aussehen soll wie der Sticky Header (weiß)** */
-/* --- ZUSTAND: Header IM HERO-BEREICH (Top of Page) --- 
-
-.hero-wrapper header {
-    background-color: transparent; 
-    border-bottom: none;
-    box-shadow: none;
-}
-
-Menu Toggle Button im HERO-BEREICH (muss HELL sein) 
-.hero-wrapper header .menu-toggle {
-    border: 2px solid #f0f0f0; 
-    color: #f0f0f0; 
-} */
-
 
 /* Menu Toggle Button ist jetzt immer dunkel */
 .menu-toggle {
@@ -154,8 +134,7 @@ Menu Toggle Button im HERO-BEREICH (muss HELL sein)
 
 .hero p {
     font-size: 1.3em;
-    /* **KORREKTUR: Farbe von Hell (#bbb) auf Dunkel ändern** */
-    color: #4a4a4a; 
+    color: #4a4a4a; /* Textfarbe auf Dunkelgrau geändert */
     margin-bottom: 40px;
 }
 

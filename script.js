@@ -2,7 +2,6 @@
 
 // Funktion zum Erstellen eines einzelnen Analyse-Artikels als HTML.
 function createAnalysisArticle(analysis) {
-    // Die Klasse text-accent-blue muss in der index.html für Links korrigiert sein!
     return `
         <article class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
             <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
@@ -31,8 +30,7 @@ async function loadAndRenderAnalyses() {
     try {
         const response = await fetch(apiUrl); 
         if (!response.ok) {
-            // Fängt den Fehler ab, falls die Datei nicht gefunden wird
-            throw new Error(`HTTP-Fehler! Status: ${response.status}`);
+            throw new Error(`HTTP-Fehler! Status: ${response.status} (Pfad: ${apiUrl})`);
         }
         const analyses = await response.json(); 
         
@@ -44,19 +42,17 @@ async function loadAndRenderAnalyses() {
         analysisGrid.innerHTML = analysisHTML;
 
     } catch (error) {
+        // Ausgabe des Fehlers in der Konsole zur Diagnose
         console.error("Fehler beim Laden der Analysen:", error);
-        analysisGrid.innerHTML = '<p class="text-center text-red-500 col-span-full">Aktuelle Analysen konnten nicht geladen werden. Prüfen Sie Konsole.</p>';
+        analysisGrid.innerHTML = '<p class="text-center text-red-500 col-span-full">Aktuelle Analysen konnten nicht geladen werden. Fehler: Konsole prüfen!</p>';
     }
 }
 
-// Die Funktion handleScrollHeader() für den Logowechsel wurde entfernt.
 
 document.addEventListener('DOMContentLoaded', () => {
     
-    // **WICHTIG! RUFT DIE FUNKTIONEN JETZT BEIM LADEN DER SEITE AUF**
+    // WICHTIG: Startet den Ladevorgang der News-Kästen
     loadAndRenderAnalyses();
-    
-    // window.addEventListener('scroll', handleScrollHeader); und handleScrollHeader(); entfernt.
     
     
     // === 1. SEITENLEISTEN-FUNKTIONALITÄT ===
@@ -66,17 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (menuToggle && sidebar && closeSidebarButton) {
         
-        // Öffnet die Seitenleiste
         menuToggle.addEventListener('click', () => {
             sidebar.classList.add('open');
         });
 
-        // Schließt die Seitenleiste
         closeSidebarButton.addEventListener('click', () => {
             sidebar.classList.remove('open');
         });
         
-        // Fügt Schließlogik für alle Navigationslinks hinzu
         const navLinks = sidebar.querySelectorAll('a');
         navLinks.forEach(link => {
             if (link.getAttribute('href') !== '#open-login') {
@@ -97,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (loginModal) {
         
-        // Modal-Funktion: Öffnen, wenn ein Link geklickt wird
         openLoginLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault(); 
@@ -110,14 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         
-        // Modal-Funktion: Schließen bei Klick auf den Hintergrund
         loginModal.addEventListener('click', (e) => {
             if (e.target === loginModal) {
                 loginModal.classList.add('hidden'); 
             }
         });
         
-        // Modal-Funktion: Schließen mit ESC-Taste
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !loginModal.classList.contains('hidden')) {
                 loginModal.classList.add('hidden');

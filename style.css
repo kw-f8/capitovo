@@ -21,7 +21,7 @@ body {
 }
 
 .bg-primary-blue { background-color: var(--color-primary-blue) !important; }
-/* NEU: Klasse für Links und CTAs */
+/* Klasse für Links und CTAs (Behält !important, da Tailwind oft Standard-Farben setzt) */
 .text-accent-blue { color: var(--color-accent-blue) !important; } 
 
 /* ---------------------------------------------------- */
@@ -29,9 +29,8 @@ body {
 /* ---------------------------------------------------- */
 .hero-wrapper {
     background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
-    background: none; /* Gradient/Farbe entfernt */
     color: #1a1a1a; /* Textfarbe auf Dunkel gesetzt */
-    padding-bottom: 80px; /* Reduziert den unteren Padding leicht */
+    padding-bottom: 80px; /* Raum unter dem Hero-Inhalt */
     position: relative; 
     overflow: hidden; 
 }
@@ -43,19 +42,18 @@ main {
     padding: 0 20px; 
 }
 
-/* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
+/* --- KORRIGIERT: ANALYSE-SEKTION HOCHSCHIEBEN --- */
 #analysen {
-    /* Setzt den oberen Rand aggressiv nach oben, um den Abstand zu verringern */
+    /* Der negative Margin zieht die Sektion jetzt sauber hoch */
     margin-top: -80px; 
-    /* Setzt den inneren oberen Padding sehr niedrig oder auf 0, um den Raum zu reduzieren.
-       Die Tailwind-Klasse py-20 im HTML hat das Padding verursacht. Hier überschreiben wir es: */
-    padding-top: 30px !important; 
+    /* Ein normaler Padding, da py-20 im HTML entfernt wurde */
+    padding-top: 40px; 
     padding-bottom: 40px; 
 }
 /* ------------------------------------------------- */
 
 
-/* --- Header und Navigation (Jetzt wieder IMMER Weiß/Sticky) --- */
+/* --- Header und Navigation (IMMER Weiß/Sticky) --- */
 
 header {
     margin: 0; 
@@ -85,7 +83,7 @@ header {
     display: block;
 }
 
-/* Menu Toggle Button ist jetzt wieder Dunkel */
+/* Menu Toggle Button ist jetzt Dunkel */
 .menu-toggle {
     background: none;
     border: 2px solid #1a1a1a; /* Dunkler Rahmen */
@@ -152,7 +150,6 @@ header {
 }
 
 /* --- VORTEILE Sektion --- */
-/* WICHTIG: section#pricing wird jetzt dunkel gefärbt */
 #pricing {
     background-color: var(--color-primary-blue); /* Hintergrund Dunkelblau */
     color: #f0f0f0; 
@@ -161,7 +158,6 @@ header {
 
 
 .vorteile-grid {
-    /* Hintergrund Weiß, falls es nach Pricing kommt */
     background-color: #ffffff; 
     color: #1a1a1a; 
     padding: 80px 0 80px 0; 
@@ -336,7 +332,7 @@ details[open] .details-marker {
     /* --- ANALYSE SEKTION MOBILE ANPASSUNG --- */
     #analysen {
         margin-top: -30px; /* Reduziere den negativen Rand auf Mobile */
-        padding-top: 30px !important; 
+        padding-top: 30px; 
     }
     /* ------------------------------------------- */
 

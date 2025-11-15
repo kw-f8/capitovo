@@ -406,6 +406,36 @@ details[open] .details-marker {
   }
 }
 
+/* News-Kästen: Inhalt linksbündig, Überschriften zentriert */
+#analysis-grid > * {
+  text-align: left;
+}
+
+/* Überschriften in den Kästen ausdrücklich zentriert halten */
+#analysis-grid > * h1,
+#analysis-grid > * h2,
+#analysis-grid > * h3,
+#analysis-grid > * h4,
+#analysis-grid > * .card-title,
+#analysis-grid > * .title {
+  text-align: center;
+}
+
+/* Sicherstellen, dass Listen, Absätze und Buttons links bleiben */
+#analysis-grid > * p,
+#analysis-grid > * ul,
+#analysis-grid > * li,
+#analysis-grid > * .meta,
+#analysis-grid > * a,
+#analysis-grid > * button {
+  text-align: left;
+}
+
+/* Optional: etwas Innenabstand für bessere Lesbarkeit */
+#analysis-grid > * {
+  padding: 1rem;
+}
+
 /* ...existing code... */
 #pricing{
   background: #ffffff;

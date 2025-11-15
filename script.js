@@ -1,47 +1,51 @@
-// Verbesserte Modalsteuerung mit leichter UX-Optimierung
+// script.js
+
+// === HILFSFUNKTIONEN FÜR MODAL STEUERUNG ===
+// Diese Funktionen rufen die benötigten Elemente IMMER direkt im Moment des Aufrufs ab,
+// was sehr robust gegenüber Initialisierungsfehlern ist.
 
 function openModal() {
-    const modal = document.getElementById('login-modal');
+    // Elemente sicher abrufen
+    const loginModal = document.getElementById('login-modal');
     const sidebar = document.getElementById('sidebar');
 
-    if (!modal) return;
-
-    if (sidebar && sidebar.classList.contains('open')) {
-        sidebar.classList.remove('open');
+    if (loginModal) {
+        // Schließt die Sidebar, falls sie geöffnet ist
+        if (sidebar && sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open'); 
+        }
+        
+        loginModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds
     }
-
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-
-    // Fokus in Formular setzen (UX Upgrade)
-    const firstInput = modal.querySelector('input, button');
-    if (firstInput) firstInput.focus();
 }
 
 function closeModal() {
-    const modal = document.getElementById('login-modal');
-    if (!modal) return;
+    const loginModal = document.getElementById('login-modal');
 
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
+    if (loginModal) {
+        loginModal.classList.add('hidden');
+        document.body.style.overflow = ''; // Stellt das Scrollen wieder her
+    }
 }
 
 
-/* ------- Analysen dynamisch laden ------- */
+// Funktion zum Erstellen eines einzelnen Analyse-Artikels als HTML.
 function createAnalysisArticle(analysis) {
     return `
-        <article class="transform transition duration-300">
+        <article class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
             <div class="h-40 mb-4 overflow-hidden rounded-lg">
-                <img src="${analysis.image}" alt="${analysis.title}"
-                     class="w-full h-full object-cover transition-transform duration-400 hover:scale-105">
-            </div>
+                <img src="${analysis.image}" alt="Titelbild für ${analysis.title}" 
+                     class="w-full h-full object-cover">
+            </div> 
             
             <p class="text-xs font-bold text-gray-700 uppercase mb-2">${analysis.category}</p>
-
-            <h4 class="text-lg font-semibold text-gray-900 mb-2">${analysis.title}</h4>
-
-            <p class="text-sm text-gray-600 mb-4">${analysis.summary}</p>
-
+            <h4 class="text-lg font-semibold text-gray-900 mb-2">
+                ${analysis.title}
+            </h4>
+            <p class="text-sm text-gray-600 mb-4">
+                ${analysis.summary}
+            </p>
             <a href="${analysis.link}" class="text-accent-blue hover:text-blue-700 font-medium text-sm flex items-center">
                 Vorschau lesen →
             </a>
@@ -49,60 +53,127 @@ function createAnalysisArticle(analysis) {
     `;
 }
 
+// Funktion zum Laden der Analysen und Einfügen in die Seite.
 async function loadAndRenderAnalyses() {
-    const container = document.getElementById('analysis-grid');
-    if (!container) return;
-
+    const analysisGrid = document.getElementById('analysis-grid');
+    if (!analysisGrid) return; 
+    
+    // Generiert eine zufällige Zahl, um den Browser-Cache zu umgehen (Cache-Buster)
+    const cacheBuster = `?t=${new Date().getTime()}`; 
+    
+    // Der Pfad zur JSON-Datei + Cache-Buster-Parameter
+    const apiUrl = 'data/analysen.json' + cacheBuster; 
+    
     try {
-        const response = await fetch('data/analysen.json?t=' + Date.now());
-        if (!response.ok) throw new Error("Fehler: " + response.status);
-
-        const data = await response.json();
-        container.innerHTML = data.slice(0, 6).map(createAnalysisArticle).join('');
+        const response = await fetch(apiUrl); 
+        if (!response.ok) {
+            // Wirft einen Fehler, wenn die Datei nicht gefunden wird (z.B. 404)
+            throw new Error(`HTTP-Fehler! Status: ${response.status} (Pfad: ${apiUrl})`);
+        }
+        
+        const analyses = await response.json(); 
+        
+        // Erzeugt das HTML und fügt es in das Grid ein (lädt max. 6)
+        const analysisHTML = analyses.slice(0, 6) 
+                                     .map(createAnalysisArticle)
+                                     .join('');
+        
+        analysisGrid.innerHTML = analysisHTML;
 
     } catch (error) {
-        console.error(error);
-        container.innerHTML = `<p class="text-red-500 text-center col-span-full">
-            Analysen konnten nicht geladen werden.
-        </p>`;
+        // Ausgabe des Fehlers in der Konsole zur Diagnose
+        console.error("Fehler beim Laden der Analysen:", error);
+        // Zeigt die rote Fehlermeldung auf der Webseite an
+        analysisGrid.innerHTML = '<p class="text-center text-red-500 col-span-full">Aktuelle Analysen konnten nicht geladen werden. Prüfen Sie Konsole.</p>';
     }
 }
 
 
-/* ------- DOM Events ------- */
+// === HAUPT-LOGIK, die nach dem Laden des DOM ausgeführt wird ===
 document.addEventListener('DOMContentLoaded', () => {
-
+    
+    // 1. Lade die Analysen
     loadAndRenderAnalyses();
+    
+    // === 2. ELEMENT-SELEKTOREN (JETZT SICHER DEFINIERT) ===
+    const loginModalElement = document.getElementById('login-modal');
+    const sidebarElement = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menu-toggle'); 
+    const closeSidebarButton = document.getElementById('close-sidebar');
 
-    const modal = document.getElementById('login-modal');
-    const sidebar = document.getElementById('sidebar');
-    const menuToggle = document.getElementById('menu-toggle');
-    const closeSidebar = document.getElementById('close-sidebar');
+    
+    // === 3. SEITENLEISTEN-FUNKTIONALITÄT ===
+    
+    if (menuToggle && sidebarElement && closeSidebarButton) {
+        
+        // Öffnet die Seitenleiste beim Klick auf das Hamburger-Menü
+        menuToggle.addEventListener('click', () => {
+            sidebarElement.classList.add('open');
+        });
 
-
-    /* Sidebar */
-    if (menuToggle && sidebar) {
-        menuToggle.addEventListener('click', () => sidebar.classList.add('open'));
-        closeSidebar.addEventListener('click', () => sidebar.classList.remove('open'));
+        // Schließt die Seitenleiste beim Klick auf das X
+        closeSidebarButton.addEventListener('click', () => {
+            sidebarElement.classList.remove('open');
+        });
+        
+        // Schließt die Seitenleiste/Öffnet Modal beim Klick auf einen Navigationslink
+        const navLinks = sidebarElement.querySelectorAll('a');
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') !== '#open-login') {
+                // Schließt die Sidebar für normale Navigation
+                link.addEventListener('click', () => {
+                    sidebarElement.classList.remove('open');
+                });
+            } else {
+                // Öffnet das Modal für den #open-login Link
+                 link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal();
+                 });
+            }
+        });
     }
 
-    /* Login-Links */
-    const openLoginLinks = document.querySelectorAll('a[href="#open-login"]');
-    openLoginLinks.forEach(a => {
-        a.addEventListener('click', e => {
-            e.preventDefault();
-            openModal();
+    
+    // === 4. LOGIN MODAL-FUNKTIONALITÄT ===
+    
+    if (loginModalElement) {
+        
+        // 4a. Statische Links (z.B. in Sidebar oder Header)
+        const openLoginLinks = document.querySelectorAll('a[href="#open-login"]');
+        openLoginLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                openModal();
+            });
         });
-    });
-
-    /* Klick außerhalb → Modal schließen */
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
+        
+        // 4b. Dynamische Links ("Vorschau lesen") via Event Delegation
+        const analysisGrid = document.getElementById('analysis-grid');
+        if (analysisGrid) {
+            analysisGrid.addEventListener('click', (e) => {
+                // Findet den nächstgelegenen Link, der auf #open-login zeigt
+                const link = e.target.closest('a[href="#open-login"]'); 
+                
+                if (link) {
+                    e.preventDefault();
+                    openModal(); // Modal öffnen
+                }
+            });
+        }
+        
+        // 4c. Schließ-Logik
+        
+        // Schließt das Modal beim Klick außerhalb des Formulars (auf den Backdrop)
+        loginModalElement.addEventListener('click', (e) => {
+            if (e.target === loginModalElement) {
+                closeModal();
+            }
         });
-
+        
+        // Schließt das Modal beim Drücken der ESC-Taste
         document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && !modal.classList.contains('hidden')) {
+            if (e.key === 'Escape' && !loginModalElement.classList.contains('hidden')) {
                 closeModal();
             }
         });

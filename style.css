@@ -492,17 +492,25 @@ details[open] .details-marker {
 .footer-links{ display:flex; gap:12px; align-items:center; }
 .footer-btn{
     display:inline-block;
-    background: var(--color-accent-blue);
-    color: #ffffff;
+    background: transparent; /* dezenter Look */
+    color: #64748b; /* gedämpfte Textfarbe */
     border: none;
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 6px 10px; /* kleinerer Klickbereich, unaufdringlich */
+    border-radius: 8px;
     text-decoration: none;
-    font-weight: 700;
-    transition: background-color .18s ease, transform .12s ease, box-shadow .12s ease;
-    box-shadow: 0 6px 18px rgba(3, 102, 214, 0.12);
+    font-weight: 500;
+    transition: color .12s ease, background-color .12s ease;
+    box-shadow: none;
 }
-.footer-btn:hover{ background: #0056b3; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(3, 102, 214, 0.16); }
+.footer-btn:hover{
+    color: #0f172a; /* bei Hover deutlicher werden */
+    background: rgba(15,23,42,0.03); /* sehr dezenter Hover-Hintergrund */
+}
+.footer-btn:focus-visible{
+    outline: 3px solid rgba(11,116,255,0.12);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
 .site-footer .copyright{ color: #64748b; }
 
 @media (max-width: 768px){

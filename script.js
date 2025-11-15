@@ -4,7 +4,10 @@
 function createAnalysisArticle(analysis) {
     return `
         <article class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
-            <div class="h-40 bg-gray-300 rounded-lg mb-4"></div> 
+            <div class="h-40 mb-4 overflow-hidden rounded-lg">
+                <img src="${analysis.image}" alt="Titelbild für ${analysis.title}" 
+                     class="w-full h-full object-cover">
+            </div> 
             
             <p class="text-xs font-bold text-gray-700 uppercase mb-2">${analysis.category}</p>
             <h4 class="text-lg font-semibold text-gray-900 mb-2">

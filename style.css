@@ -407,7 +407,20 @@ details[open] .details-marker {
 
 /* News-Kästen: Inhalt linksbündig, Überschriften zentriert */
 #analysis-grid > * {
-  text-align: left;
+    text-align: left;
+    /* make each news item look like the subscription cards */
+    background: #ffffff;
+    border: 1px solid rgba(15,23,42,0.06);
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 8px 30px rgba(2,6,23,0.12);
+    padding: 1rem;
+    transition: transform .28s ease, box-shadow .28s ease;
+}
+
+/* hover effect matching the Abo-Karten */
+#analysis-grid > *:hover{
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 18px 40px rgba(2,6,23,0.18);
 }
 
 /* Überschriften in den Kästen ausdrücklich zentriert halten */

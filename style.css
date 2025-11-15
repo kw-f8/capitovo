@@ -28,14 +28,14 @@ body {
 /* Hero-Wrapper (jetzt dauerhaft WEISS) */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    background-color: #ffffff; /* Hintergrund auf Weiß setzen */
-    background: none; /* Gradient entfernen */
-    color: #1a1a1a; /* Textfarbe auf Dunkel setzen */
+    /* Setzt den Hintergrund wieder auf die Primary Blue Farbe */
+    background-color: var(--color-primary-blue); 
+    /* Setzt die Textfarbe auf Weiß */
+    color: white; 
     padding-bottom: 100px; 
     position: relative; 
     overflow: hidden; 
 }
-
 /* Zentriert den Inhalt der Seite */
 main {
     max-width: 1200px;
@@ -46,14 +46,14 @@ main {
 /* --- Header und Navigation (Jetzt IMMER Weiß/Sticky) --- */
 
 header {
-    margin: 0; 
+    /* Setzt den Hintergrund der Header-Leiste transparent (oder hell, je nach Wunsch) */
+    background-color: transparent; /* Macht den Header-Hintergrund transparent, um den Hero-Hintergrund zu zeigen */
+    box-shadow: none; /* Entfernt den Schatten, da der Hintergrund dunkel ist */
+    border-bottom: none; /* Entfernt die Trennlinie */
     padding: 20px 0; 
-    border-bottom: 1px solid #e0e0e0; 
-    background-color: #ffffff; 
     position: sticky; 
     top: 0;
     z-index: 50; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
     transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
 }
 
@@ -76,8 +76,8 @@ header {
 /* Menu Toggle Button ist jetzt immer dunkel */
 .menu-toggle {
     background: none;
-    border: 2px solid #1a1a1a; /* Dunkler Rahmen */
-    color: #1a1a1a; /* Dunkles Icon */
+    border: 2px solid white; /* Heller Rahmen */
+    color: white; /* Helles Icon */
     font-size: 1.5em;
     padding: 5px 10px;
     cursor: pointer;
@@ -309,14 +309,13 @@ details[open] .details-marker {
 @media (max-width: 768px) {
     
     /* --- Hero Sektion --- */
-    .hero h2 {
-        font-size: 2.5em; 
-        margin-top: 30px;
-    }
+  .hero h2 {
+    color: white; /* Stellt sicher, dass der Titel weiß ist */
+}
 
-    .hero p {
-        font-size: 1.1em;
-    }
+.hero p {
+    color: #b0c4de; /* Helle Textfarbe für den Fließtext */
+}
 
     /* --- VORTEILE Sektion --- */
     .grid-container {

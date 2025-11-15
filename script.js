@@ -13,6 +13,12 @@ function openLoginModal() {
             sidebar.classList.remove('open'); 
         }
         
+        // Stellt sicher, dass alle alten Fehlermeldungen entfernt werden
+        const existingError = loginModal.querySelector('#login-error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+
         loginModal.classList.remove('hidden');
         document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds
     }
@@ -37,24 +43,32 @@ function closeLoginModal() {
  * die Tailwind ggf. nicht kennt, falls sie nicht in der config.js ist.
  */
 function createAnalysisArticle(analysis) {
+    // Verwendung des neuen, von Ihnen genehmigten HTML-Templates, angepasst an die Datenstruktur
     return `
-        <article class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
-            <div class="h-40 mb-4 overflow-hidden rounded-lg">
-                <img src="${analysis.image}" alt="Titelbild für ${analysis.title}" 
-                     class="w-full h-full object-cover">
-            </div> 
+        <a href="${analysis.link}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] overflow-hidden group">
             
-            <p class="text-xs font-bold text-gray-700 uppercase mb-2">${analysis.category}</p>
-            <h4 class="text-lg font-semibold text-gray-900 mb-2">
+            <div class="w-full h-40 bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
+                <img src="${analysis.image}" alt="Vorschaubild für ${analysis.title}" 
+                     class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
+            </div>
+            
+            <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
+                ${analysis.category}
+            </p>
+            
+            <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
                 ${analysis.title}
             </h4>
-            <p class="text-sm text-gray-600 mb-4">
+            
+            <p class="text-sm text-gray-600 mb-4 line-clamp-3">
                 ${analysis.summary}
             </p>
-            <a href="#open-login" class="text-blue-500 hover:text-blue-700 font-medium text-sm flex items-center">
+            
+            <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
                 Vorschau lesen →
-            </a>
-        </article>
+            </span>
+            
+        </a>
     `;
 }
 
@@ -89,7 +103,67 @@ async function loadAndRenderAnalyses() {
 }
 
 
-// === INITIALISIERUNGSFUNKTIONEN ===
+// === TEST-LOGIN-LOGIK ===
+
+/** Initialisiert die simulierte Login-Funktionalität. */
+function initTestLogin() {
+    const TEST_EMAIL = 'test@capitovo.de';
+    const TEST_PASSWORD = 'passwort123';
+    
+    const loginModal = document.getElementById('login-modal');
+    if (!loginModal) return;
+    
+    const loginForm = loginModal.querySelector('form');
+    if (!loginForm) return;
+
+    loginForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Verhindert das Standard-Formular-Senden
+
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        const enteredEmail = emailInput.value;
+        const enteredPassword = passwordInputInput.value;
+
+        // Fehlermeldungen von vorherigen Versuchen entfernen
+        const existingError = loginModal.querySelector('#login-error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        const submitButton = loginModal.querySelector('button[type="submit"]');
+
+        // Überprüfung der Testdaten
+        if (enteredEmail === TEST_EMAIL && enteredPassword === TEST_PASSWORD) {
+            
+            // **ERFOLGREICHE ANMELDUNG (SIMULIERT)**
+            alert('Anmeldung erfolgreich! (Simuliert)');
+            
+            // Felder leeren und Modal schließen
+            emailInput.value = '';
+            passwordInput.value = '';
+            closeLoginModal();
+            
+
+        } else {
+            
+            // **FEHLERHAFTE ANMELDUNG**
+            
+            // Fehlermeldung erstellen und einfügen
+            const errorMessage = document.createElement('p');
+            errorMessage.id = 'login-error-message';
+            // Styling für Fehlermeldung
+            errorMessage.className = 'text-red-500 text-sm mt-3 text-center'; 
+            errorMessage.textContent = 'Fehler: Ungültige E-Mail oder Passwort. Verwenden Sie test@capitovo.de / passwort123';
+            
+            // Die Meldung unter dem Button einfügen
+            submitButton.parentNode.insertBefore(errorMessage, submitButton.nextSibling);
+        }
+    });
+}
+
+
+// === INITIALISIERUNGSFUNKTIONEN (unverändert) ===
 
 /** Initialisiert die Funktionalität der Seitenleiste (Sidebar). */
 function initSidebar() {
@@ -102,10 +176,12 @@ function initSidebar() {
         // Öffnen/Schließen der Sidebar
         menuToggle.addEventListener('click', () => {
             sidebarElement.classList.add('open');
+            document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds, wenn Sidebar offen
         });
 
         closeSidebarButton.addEventListener('click', () => {
             sidebarElement.classList.remove('open');
+            document.body.style.overflow = ''; // Stellt Scrollen wieder her
         });
         
         // Schließt die Sidebar beim Klick auf einen normalen Navigationslink
@@ -113,6 +189,7 @@ function initSidebar() {
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 sidebarElement.classList.remove('open');
+                document.body.style.overflow = '';
             });
         });
     }
@@ -144,6 +221,7 @@ function initModalControl() {
     
     // 3. Schließen des Modals (ESC-Taste)
     document.addEventListener('keydown', (e) => {
+        // Prüft, ob das Modal sichtbar (nicht hidden) ist, bevor geschlossen wird
         if (e.key === 'Escape' && !loginModalElement.classList.contains('hidden')) {
             closeLoginModal();
         }
@@ -163,4 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Initialisiere Modal-Steuerung
     initModalControl();
     
+    // 4. NEU: Initialisiere die simulierte Login-Funktionalität
+    initTestLogin();
 });

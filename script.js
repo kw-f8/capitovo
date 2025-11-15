@@ -4,7 +4,8 @@
 function createAnalysisArticle(analysis) {
     return `
         <article class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300">
-            <div class="h-40 bg-gray-300 rounded-lg mb-4"></div>
+            <div class="h-40 bg-gray-300 rounded-lg mb-4"></div> 
+            
             <p class="text-xs font-bold text-gray-700 uppercase mb-2">${analysis.category}</p>
             <h4 class="text-lg font-semibold text-gray-900 mb-2">
                 ${analysis.title}
@@ -24,14 +25,19 @@ async function loadAndRenderAnalyses() {
     const analysisGrid = document.getElementById('analysis-grid');
     if (!analysisGrid) return; 
     
-    // Der Pfad zur JSON-Datei
-    const apiUrl = 'data/analysen.json'; 
+    // Generiert eine zufällige Zahl, um den Browser-Cache zu umgehen (Cache-Buster)
+    const cacheBuster = `?t=${new Date().getTime()}`; 
+    
+    // Der Pfad zur JSON-Datei + Cache-Buster-Parameter
+    const apiUrl = 'data/analysen.json' + cacheBuster; 
     
     try {
         const response = await fetch(apiUrl); 
         if (!response.ok) {
+            // Wirft einen Fehler, wenn die Datei nicht gefunden wird (z.B. 404)
             throw new Error(`HTTP-Fehler! Status: ${response.status} (Pfad: ${apiUrl})`);
         }
+        
         const analyses = await response.json(); 
         
         // Erzeugt das HTML und fügt es in das Grid ein (lädt max. 6)
@@ -44,7 +50,8 @@ async function loadAndRenderAnalyses() {
     } catch (error) {
         // Ausgabe des Fehlers in der Konsole zur Diagnose
         console.error("Fehler beim Laden der Analysen:", error);
-        analysisGrid.innerHTML = '<p class="text-center text-red-500 col-span-full">Aktuelle Analysen konnten nicht geladen werden. Fehler: Konsole prüfen!</p>';
+        // Zeigt die rote Fehlermeldung auf der Webseite an
+        analysisGrid.innerHTML = '<p class="text-center text-red-500 col-span-full">Aktuelle Analysen konnten nicht geladen werden. Prüfen Sie Konsole.</p>';
     }
 }
 
@@ -62,14 +69,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (menuToggle && sidebar && closeSidebarButton) {
         
+        // Öffnet die Seitenleiste beim Klick auf das Hamburger-Menü
         menuToggle.addEventListener('click', () => {
             sidebar.classList.add('open');
         });
 
+        // Schließt die Seitenleiste beim Klick auf das X
         closeSidebarButton.addEventListener('click', () => {
             sidebar.classList.remove('open');
         });
         
+        // Schließt die Seitenleiste beim Klick auf einen Navigationslink
         const navLinks = sidebar.querySelectorAll('a');
         navLinks.forEach(link => {
             if (link.getAttribute('href') !== '#open-login') {
@@ -86,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 2. LOGIN MODAL-FUNKTIONALITÄT ===
     
     const loginModal = document.getElementById('login-modal');
+    // Wählt alle Links aus, die das Login-Modal öffnen sollen
     const openLoginLinks = document.querySelectorAll('a[href="#open-login"]');
     
     if (loginModal) {
@@ -94,20 +105,24 @@ document.addEventListener('DOMContentLoaded', () => {
             link.addEventListener('click', (e) => {
                 e.preventDefault(); 
                 
-                if (sidebar.classList.contains('open')) {
+                // Schließt die Sidebar, falls sie geöffnet ist
+                if (sidebar && sidebar.classList.contains('open')) {
                     sidebar.classList.remove('open'); 
                 }
                 
+                // Zeigt das Modal an
                 loginModal.classList.remove('hidden'); 
             });
         });
         
+        // Schließt das Modal beim Klick außerhalb des Formulars
         loginModal.addEventListener('click', (e) => {
             if (e.target === loginModal) {
                 loginModal.classList.add('hidden'); 
             }
         });
         
+        // Schließt das Modal beim Drücken der ESC-Taste
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !loginModal.classList.contains('hidden')) {
                 loginModal.classList.add('hidden');

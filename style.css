@@ -326,3 +326,21 @@ details[open] .details-marker {
         width: 80%; /* Die Sidebar nimmt 80% des Bildschirms ein */
     }
 }
+
+/* style.css */
+
+/* ... (Vorheriger Code) ... */
+
+
+/* ---------------------------------------------------- */
+/* Login Modal Hintergrund Blur */
+/* ---------------------------------------------------- */
+
+/* Die Hintergrundfarbe wird von der Tailwind-Klasse "bg-black bg-opacity-75" kommen */
+/* Diese Klasse fügt den Blur-Effekt hinzu */
+.backdrop-blur-xl-custom {
+    backdrop-filter: blur(20px); /* Starker Blur-Effekt */
+    -webkit-backdrop-filter: blur(20px); /* Für Safari-Kompatibilität */
+    background-color: rgba(0, 0, 0, 0.6); /* Hintergrundfarbe des Overlays */
+}
+

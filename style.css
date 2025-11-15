@@ -28,15 +28,12 @@ body {
 /* Hero-Wrapper und Gradient */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    background-color: #1a2537; 
-    background: linear-gradient(
-        to bottom, 
-        #1a2537 0%,           
-        #1a2537 60%,          
-        #ffffff 95%,           
-        #ffffff 100%           
-    );
-    color: #f0f0f0; 
+    /* **KORREKTUR: Hintergrund auf Weiß setzen** */
+    background-color: #ffffff; 
+    /* **KORREKTUR: Gradient entfernen** */
+    background: none;
+    /* **KORREKTUR: Textfarbe auf Dunkel setzen, da der Hintergrund hell ist** */
+    color: #1a1a1a; 
     padding-bottom: 100px; 
     position: relative; 
     overflow: hidden; 
@@ -60,7 +57,7 @@ header {
     top: 0;
     z-index: 50; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-    /* NEU: Fügt Transition für Scroll-Effekt hinzu */
+    /* **KORREKTUR: Transition behalten, falls später benötigt, aber Logo-Wechsel wird im JS entfernt** */
     transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
 }
 
@@ -80,21 +77,23 @@ header {
     display: block;
 }
 
-/* --- ZUSTAND: Header IM HERO-BEREICH (Top of Page) --- */
+/* **KORREKTUR: Diesen gesamten Block entfernen, da der Header im Hero-Bereich jetzt genauso aussehen soll wie der Sticky Header (weiß)** */
+/* --- ZUSTAND: Header IM HERO-BEREICH (Top of Page) --- 
 
 .hero-wrapper header {
-    background-color: transparent; /* Transparent im Hero-Bereich */
+    background-color: transparent; 
     border-bottom: none;
     box-shadow: none;
 }
 
-/* Menu Toggle Button im HERO-BEREICH (muss HELL sein) */
+Menu Toggle Button im HERO-BEREICH (muss HELL sein) 
 .hero-wrapper header .menu-toggle {
-    border: 2px solid #f0f0f0; /* Weißer Rahmen */
-    color: #f0f0f0; /* Weißes Icon */
-}
+    border: 2px solid #f0f0f0; 
+    color: #f0f0f0; 
+} */
 
-/* Menu Toggle Button im SCROLL-ZUSTAND (muss DUNKEL sein) */
+
+/* Menu Toggle Button ist jetzt immer dunkel */
 .menu-toggle {
     background: none;
     border: 2px solid #1a1a1a; /* Dunkler Rahmen */
@@ -155,7 +154,8 @@ header {
 
 .hero p {
     font-size: 1.3em;
-    color: #bbb; 
+    /* **KORREKTUR: Farbe von Hell (#bbb) auf Dunkel ändern** */
+    color: #4a4a4a; 
     margin-bottom: 40px;
 }
 

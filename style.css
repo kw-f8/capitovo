@@ -25,10 +25,10 @@ body {
 .text-accent-blue { color: var(--color-accent-blue) !important; } 
 
 /* ---------------------------------------------------- */
-/* Hero-Wrapper (jetzt dauerhaft WEISS) */
+/* Hero-Wrapper (DUNKELBLAU) */
 /* ---------------------------------------------------- */
 .hero-wrapper {
-    /* Setzt den Hintergrund wieder auf die Primary Blue Farbe */
+    /* Setzt den Hintergrund auf die Primary Blue Farbe */
     background-color: var(--color-primary-blue); 
     /* Setzt die Textfarbe auf Weiß */
     color: white; 
@@ -36,6 +36,7 @@ body {
     position: relative; 
     overflow: hidden; 
 }
+
 /* Zentriert den Inhalt der Seite */
 main {
     max-width: 1200px;
@@ -43,13 +44,21 @@ main {
     padding: 0 20px; 
 }
 
-/* --- Header und Navigation (Jetzt IMMER Weiß/Sticky) --- */
+/* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
+#analysen {
+    /* Zieht die gesamte Sektion nach oben, um den Abstand zum Hero-Bereich zu verringern */
+    margin-top: -60px; /* Dieser Wert bestimmt, wie weit die Sektion nach oben gezogen wird */
+    /* Behält den ursprünglichen Padding bei, um den Inhalt nicht zu quetschen */
+}
+/* ------------------------------------------------- */
+
+/* --- Header und Navigation (Transparent über Dunkelblau) --- */
 
 header {
-    /* Setzt den Hintergrund der Header-Leiste transparent (oder hell, je nach Wunsch) */
-    background-color: transparent; /* Macht den Header-Hintergrund transparent, um den Hero-Hintergrund zu zeigen */
-    box-shadow: none; /* Entfernt den Schatten, da der Hintergrund dunkel ist */
-    border-bottom: none; /* Entfernt die Trennlinie */
+    /* Setzt den Hintergrund der Header-Leiste transparent, um den Hero-Hintergrund zu zeigen */
+    background-color: transparent; 
+    box-shadow: none; 
+    border-bottom: none; 
     padding: 20px 0; 
     position: sticky; 
     top: 0;
@@ -73,7 +82,7 @@ header {
     display: block;
 }
 
-/* Menu Toggle Button ist jetzt immer dunkel */
+/* Menu Toggle Button ist jetzt Weiß */
 .menu-toggle {
     background: none;
     border: 2px solid white; /* Heller Rahmen */
@@ -130,11 +139,12 @@ header {
     font-weight: 700;
     margin-bottom: 25px;
     line-height: 1.1; 
+    color: white; /* Konsistente Farbe für Desktop */
 }
 
 .hero p {
     font-size: 1.3em;
-    color: #4a4a4a; /* Textfarbe auf Dunkelgrau geändert */
+    color: #b0c4de; /* Helle Textfarbe für den Fließtext (Konsistent mit Mobile) */
     margin-bottom: 40px;
 }
 
@@ -309,13 +319,23 @@ details[open] .details-marker {
 @media (max-width: 768px) {
     
     /* --- Hero Sektion --- */
-  .hero h2 {
-    color: white; /* Stellt sicher, dass der Titel weiß ist */
-}
+    .hero h2 {
+        color: white; /* Konsistent */
+        font-size: 2.5em; 
+        margin-top: 30px;
+    }
 
-.hero p {
-    color: #b0c4de; /* Helle Textfarbe für den Fließtext */
-}
+    .hero p {
+        color: #b0c4de; /* Konsistent */
+        font-size: 1.1em;
+    }
+    
+    /* --- ANALYSE SEKTION MOBILE ANPASSUNG --- */
+    #analysen {
+        margin-top: -30px; /* Reduziere den negativen Rand auf Mobile */
+        padding-top: 60px; /* Stelle einen angemessenen inneren Abstand sicher */
+    }
+    /* ------------------------------------------- */
 
     /* --- VORTEILE Sektion --- */
     .grid-container {

@@ -1,234 +1,229 @@
-/* Globale Definitionen und Reset */
+/* ==========================================================
+   Modernisierte & verfeinerte capitovo Styles – Farben unverändert
+   Fokus: sauberer Look, bessere Typografie, klare Abstände,
+          modernere UI-Elemente, weiche Animationen.
+   ========================================================== */
+
+/* Reset */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Grundlayout */
 body {
-    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
-    background-color: #ffffff; 
-    color: #1a1a1a; 
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
     line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Tailwind Custom-Farben Definitionen für style.css */
+/* Farbvariablen – bleiben wie bei dir */
 :root {
-    /* Dunkles Blau (Hintergrund, Sidebar, Premium Box) */
     --color-primary-blue: #24354b;
-    /* Akzent Blau (Links, CTAs, Hervorhebungen) */
-    --color-accent-blue: #007bff; 
+    --color-accent-blue: #007bff;
+    --radius: 12px;
+    --shadow-soft: 0 6px 18px rgba(0,0,0,0.08);
+    --shadow-medium: 0 8px 24px rgba(0,0,0,0.12);
 }
 
+/* Utility */
 .bg-primary-blue { background-color: var(--color-primary-blue) !important; }
-/* NEU: Klasse für Links und CTAs */
-.text-accent-blue { color: var(--color-accent-blue) !important; } 
+.text-accent-blue { color: var(--color-accent-blue) !important; }
 
-/* ---------------------------------------------------- */
-/* Hero-Wrapper (DUNKELBLAU) */
-/* ---------------------------------------------------- */
-.hero-wrapper {
-    /* Setzt den Hintergrund auf die Primary Blue Farbe */
-    background-color: var(--color-primary-blue); 
-    /* Setzt die Textfarbe auf Weiß */
-    color: white; 
-    padding-bottom: 100px; 
-    position: relative; 
-    overflow: hidden; 
-}
-
-/* Zentriert den Inhalt der Seite */
-main {
-    max-width: 1200px;
-    margin: 0 auto; 
-    padding: 0 20px; 
-    /* Damit die Analyse-Sektion hochgeschoben werden kann, sollte die main-Sektion nicht
-       den Header oder den Hero-Text verdecken. */
-}
-
-/* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
-#analysen {
-    /* Zieht die gesamte Sektion nach oben, um den Abstand zum Hero-Bereich zu verringern */
-    margin-top: -80px; /* Zieht die Sektion 80px nach oben, überlappt mit dem Hero-Padding */
-    padding-bottom: 40px; /* Reduziert etwas den Boden-Padding, um es straffer zu machen */
-}
-/* ------------------------------------------------- */
-
-
-/* --- Header und Navigation (Transparent über Dunkelblau) --- */
+/* ------------------------------------ */
+/* Header */
+/* ------------------------------------ */
 
 header {
-    /* Transparent über dem Dunkelblau */
-    background-color: transparent; 
-    box-shadow: none; 
-    border-bottom: none; 
-    padding: 20px 0; 
-    position: sticky; 
+    margin: 0;
+    padding: 18px 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    position: sticky;
     top: 0;
-    z-index: 50; 
-    transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
+    z-index: 50;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    transition: background-color .3s, box-shadow .3s;
 }
 
 .header-content {
     max-width: 1200px;
-    width: 100%;
-    margin: 0 auto; 
-    padding: 0 20px; 
+    margin: 0 auto;
+    padding: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .header-logo {
-    height: 80px; 
-    width: auto; 
-    display: block;
+    height: 80px;
+    transition: transform .25s ease;
+}
+.header-logo:hover {
+    transform: scale(1.03);
 }
 
-/* Menu Toggle Button ist jetzt Weiß */
+/* Hamburger Menü */
 .menu-toggle {
     background: none;
-    border: 2px solid white; /* Heller Rahmen */
-    color: white; /* Helles Icon */
+    border: 2px solid #1a1a1a;
+    color: #1a1a1a;
     font-size: 1.5em;
-    padding: 5px 10px;
+    padding: 6px 12px;
     cursor: pointer;
-    border-radius: 4px;
-    transition: all 0.3s;
+    border-radius: var(--radius);
+    transition: all .25s ease;
 }
-
 .menu-toggle:hover {
-    border-color: var(--color-accent-blue);
     color: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
+    transform: translateY(-2px);
 }
 
+/* ------------------------------------ */
+/* Hero */
+/* ------------------------------------ */
 
-/* --- Call-to-Action (CTA) Button --- */
-
-.cta-button {
-    text-decoration: none;
-    background-color: var(--color-accent-blue); 
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px; 
-    font-weight: 700;
-    transition: background-color 0.3s;
-    display: inline-block;
-    border: none !important; 
-    outline: none !important; 
-    box-shadow: none !important; 
+.hero-wrapper {
+    background-color: #ffffff;
+    padding-bottom: 60px;
+    position: relative;
 }
 
-.cta-button:hover {
-    background-color: #0056b3;
-}
-
-.primary-cta {
-    font-size: 1.1em;
-    padding: 15px 30px;
-    margin-top: 30px;
-}
-
-/* --- Hero Sektion --- */
 .hero {
-    padding: 50px 0 120px 0; 
-    text-align: center; 
+    text-align: center;
+    padding: 60px 20px 110px;
     max-width: 900px;
     margin: 0 auto;
 }
 
 .hero h2 {
-    font-size: 4em; 
-    font-weight: 700;
+    font-size: 3.8em;
+    font-weight: 800;
     margin-bottom: 25px;
-    line-height: 1.1; 
-    color: white; /* Stellt die Farbe für Desktop sicher */
+    line-height: 1.1;
+    color: #1a1a1a;
 }
 
 .hero p {
-    font-size: 1.3em;
-    color: #b0c4de; /* Helle Textfarbe für den Fließtext */
-    margin-bottom: 40px;
+    font-size: 1.28em;
+    color: #444;
+    margin-bottom: 35px;
 }
 
-/* --- VORTEILE Sektion --- */
-/* WICHTIG: section#pricing wird jetzt dunkel gefärbt */
-#pricing {
-    background-color: var(--color-primary-blue); /* Hintergrund Dunkelblau */
-    color: #f0f0f0; 
-    padding: 80px 0 80px 0; 
+/* Call To Action */
+.cta-button {
+    text-decoration: none;
+    background-color: var(--color-accent-blue);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    transition: all .25s ease;
+    display: inline-block;
+}
+.cta-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
 }
 
+.primary-cta {
+    font-size: 1.15em;
+    margin-top: 25px;
+}
+
+/* ------------------------------------ */
+/* Analysen */
+/* ------------------------------------ */
+
+#analysen {
+    margin-top: -80px;
+    padding-top: 30px !important;
+    padding-bottom: 40px;
+}
+
+/* Kartenoptik verbessern */
+#analysis-grid article {
+    border-radius: var(--radius);
+    background: #f9fafb;
+    box-shadow: var(--shadow-soft);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+#analysis-grid article:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* ------------------------------------ */
+/* Vorteile */
+/* ------------------------------------ */
 
 .vorteile-grid {
-    /* Hintergrund Weiß, falls es nach Pricing kommt */
-    background-color: #ffffff; 
-    color: #1a1a1a; 
-    padding: 80px 0 80px 0; 
+    background-color: #ffffff;
+    padding: 80px 0;
     text-align: center;
-}
-
-.vorteile-grid h3 {
-    font-size: 2em;
-    color: #1a1a1a; 
-    margin-bottom: 40px;
 }
 
 .grid-container {
     max-width: 1200px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between;
     gap: 30px;
-    padding: 0 20px; 
+    padding: 0 20px;
 }
 
 .vorteil-item {
-    flex-basis: 33%;
-    text-align: left;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-    background-color: #f8f8f8; 
+    background: #f8f8f8;
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+.vorteil-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-medium);
 }
 
 .vorteil-item h4 {
-    color: var(--color-accent-blue); 
+    color: var(--color-accent-blue);
     margin-bottom: 10px;
-    font-size: 1.2em;
+    font-size: 1.25em;
 }
 
-.vorteil-item p {
-    color: #4a4a4a; 
+/* ------------------------------------ */
+/* Pricing */
+/* ------------------------------------ */
+
+#pricing {
+    background-color: var(--color-primary-blue);
+    color: #f0f0f0;
+    padding: 80px 0;
+}
+#pricing .scale-105 {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-medium);
 }
 
-/* --- Footer --- */
-footer {
-    text-align: center;
-    padding: 40px;
-    font-size: 0.9em;
-    color: #999;
-    border-top: 1px solid #e0e0e0;
-}
-
-/* ---------------------------------------------------- */
-/* Seitenleiste (Sidebar) */
-/* ---------------------------------------------------- */
+/* ------------------------------------ */
+/* Sidebar */
+/* ------------------------------------ */
 
 .sidebar {
     position: fixed;
     top: 0;
     right: 0;
-    width: 300px; 
+    width: 300px;
     height: 100%;
-    background-color: var(--color-primary-blue); 
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    background-color: var(--color-primary-blue);
     z-index: 1000;
     transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
+    transition: transform .35s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 20px;
 }
-
 .sidebar.open {
     transform: translateX(0);
 }
@@ -236,7 +231,7 @@ footer {
 .close-button {
     background: none;
     border: none;
-    color: #f0f0f0; 
+    color: #fff;
     font-size: 2em;
     position: absolute;
     top: 10px;
@@ -244,138 +239,79 @@ footer {
     cursor: pointer;
 }
 
-.sidebar-nav ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 50px; 
-}
-
-.sidebar-nav ul li {
-    margin-bottom: 5px; 
-    display: block; 
-}
-
+/* Navigation in Sidebar */
 .sidebar-nav ul li a {
-    color: #f0f0f0; 
-    text-decoration: none;
-    font-size: 1.1em;
-    display: flex; 
-    align-items: center; 
+    color: #f0f0f0;
     padding: 10px 0;
-    transition: color 0.2s;
+    display: flex;
+    transition: color .2s;
+    font-size: 1.08em;
 }
-
 .sidebar-nav ul li a:hover {
     color: var(--color-accent-blue);
 }
 
+/* CTA in Sidebar */
 .sidebar-nav .sidebar-cta {
-    display: block; 
     background-color: var(--color-accent-blue);
-    color: white !important; 
+    color: white !important;
+    padding: 12px 15px;
+    margin-top: 20px;
+    border-radius: var(--radius);
     text-align: center;
-    padding: 10px 15px;
-    margin-top: 15px; 
-    border-radius: 8px; 
-    font-weight: 700;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
+    transition: background-color .25s ease, transform .25s ease;
 }
-
 .sidebar-nav .sidebar-cta:hover {
-    background-color: #0056b3; 
+    background-color: #0056b3;
+    transform: translateY(-3px);
 }
 
+/* ------------------------------------ */
+/* FAQ */
+/* ------------------------------------ */
 
-/* ---------------------------------------------------- */
-/* FAQ/Accordion-Styling */
-/* ---------------------------------------------------- */
-
-details > summary {
-    list-style: none;
+details {
+    margin-bottom: 12px;
+    background: #f5f7fa;
+    padding: 18px 22px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    transition: all .25s ease;
 }
-details > summary::-webkit-details-marker {
-    display: none;
+details[open] {
+    background: #eef1f6;
 }
 
-details[open] .details-marker {
-    transform: rotate(45deg); 
-}
-
-/* ---------------------------------------------------- */
-/* Login Modal Hintergrund Blur */
-/* ---------------------------------------------------- */
+/* ------------------------------------ */
+/* Modal */
+/* ------------------------------------ */
 
 .backdrop-blur-xl-custom {
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px); 
-    background-color: rgba(0, 0, 0, 0.6); 
-    z-index: 1001; 
+    backdrop-filter: blur(10px);
+    background-color: rgba(0,0,0,0.55);
 }
 
+/* ------------------------------------ */
+/* Mobile */
+/* ------------------------------------ */
 
-/* ==================================================== */
-/* RESPONSIVE DESIGN (Media Queries) */
-/* ==================================================== */
-
-/* Tablet- und Mobile-Optimierung (Max-Breite 768px) */
 @media (max-width: 768px) {
-    
-    /* --- Hero Sektion --- */
+
     .hero h2 {
-        color: white; /* Konsistent */
-        font-size: 2.5em; 
+        font-size: 2.6em;
         margin-top: 30px;
     }
 
-    .hero p {
-        color: #b0c4de; /* Konsistent */
-        font-size: 1.1em;
-    }
-    
-    /* --- ANALYSE SEKTION MOBILE ANPASSUNG --- */
-    #analysen {
-        margin-top: -30px; /* Reduziere den negativen Rand auf Mobile */
-        padding-top: 60px; /* Stelle einen angemessenen inneren Abstand sicher */
-    }
-    /* ------------------------------------------- */
-
-    /* --- VORTEILE Sektion --- */
     .grid-container {
-        flex-direction: column; 
-        gap: 20px;
-        padding: 0 40px; 
+        flex-direction: column;
+        gap: 22px;
     }
 
-    .vorteil-item {
-        flex-basis: auto; 
-    }
-    
-    /* --- Header / Logo --- */
     .header-logo {
-        height: 55px; 
+        height: 55px;
     }
-    
-    /* --- Header-Padding anpassen --- */
-    header, .header-content {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-    
-    /* Pricing Grid (Abo-Modelle) */
-    #pricing .grid {
-        grid-template-columns: 1fr;
-    }
-    
-    /* Premium Box auf Mobile zurücksetzen */
-    #pricing .scale-105 {
-        transform: scale(1);
-    }
-}
 
-/* Bessere Responsivität der Sidebar für sehr kleine Screens */
-@media (max-width: 450px) {
     .sidebar {
-        width: 80%; 
+        width: 80%;
     }
 }

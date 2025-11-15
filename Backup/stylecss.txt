@@ -1,0 +1,381 @@
+/* Globale Definitionen und Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
+    background-color: #ffffff; 
+    color: #1a1a1a; 
+    line-height: 1.65;
+}
+
+/* Tailwind Custom-Farben Definitionen für style.css */
+:root {
+    /* Dunkles Blau (Hintergrund, Sidebar, Premium Box) */
+    --color-primary-blue: #24354b;
+    /* Akzent Blau (Links, CTAs, Hervorhebungen) */
+    --color-accent-blue: #007bff; 
+}
+
+.bg-primary-blue { background-color: var(--color-primary-blue) !important; }
+/* NEU: Klasse für Links und CTAs */
+.text-accent-blue { color: var(--color-accent-blue) !important; } 
+
+/* ---------------------------------------------------- */
+/* Hero-Wrapper (WEISS) */
+/* ---------------------------------------------------- */
+.hero-wrapper {
+    background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
+    background: none; /* Gradient/Farbe entfernt */
+    color: #1a1a1a; /* Textfarbe auf Dunkel gesetzt */
+    padding-bottom: 80px; /* Reduziert den unteren Padding leicht */
+    position: relative; 
+    overflow: hidden; 
+}
+
+/* Zentriert den Inhalt der Seite */
+main {
+    max-width: 1200px;
+    margin: 0 auto; 
+    padding: 0 20px; 
+}
+
+/* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
+#analysen {
+    /* Setzt den oberen Rand aggressiv nach oben, um den Abstand zu verringern */
+    margin-top: -80px; 
+    /* Setzt den inneren oberen Padding sehr niedrig oder auf 0, um den Raum zu reduzieren.
+       Die Tailwind-Klasse py-20 im HTML hat das Padding verursacht. Hier überschreiben wir es: */
+    padding-top: 30px !important; 
+    padding-bottom: 40px; 
+}
+/* ------------------------------------------------- */
+
+
+/* --- Header und Navigation (Jetzt wieder IMMER Weiß/Sticky) --- */
+
+header {
+    margin: 0; 
+    padding: 20px 0; 
+    border-bottom: 1px solid #e0e0e0; 
+    background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
+    position: sticky; 
+    top: 0;
+    z-index: 50; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
+    transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
+}
+
+.header-content {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto; 
+    padding: 0 20px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logo {
+    height: 80px; 
+    width: auto; 
+    display: block;
+}
+
+/* Menu Toggle Button ist jetzt wieder Dunkel */
+.menu-toggle {
+    background: none;
+    border: 2px solid #1a1a1a; /* Dunkler Rahmen */
+    color: #1a1a1a; /* Dunkles Icon */
+    font-size: 1.5em;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.menu-toggle:hover {
+    border-color: var(--color-accent-blue);
+    color: var(--color-accent-blue);
+}
+
+
+/* --- Call-to-Action (CTA) Button --- */
+
+.cta-button {
+    text-decoration: none;
+    background-color: var(--color-accent-blue); 
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px; 
+    font-weight: 700;
+    transition: background-color 0.3s;
+    display: inline-block;
+    border: none !important; 
+    outline: none !important; 
+    box-shadow: none !important; 
+}
+
+.cta-button:hover {
+    background-color: #0056b3;
+}
+
+.primary-cta {
+    font-size: 1.1em;
+    padding: 15px 30px;
+    margin-top: 30px;
+}
+
+/* --- Hero Sektion --- */
+.hero {
+    padding: 50px 0 120px 0; 
+    text-align: center; 
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero h2 {
+    font-size: 4em; 
+    font-weight: 700;
+    margin-bottom: 25px;
+    line-height: 1.1; 
+    color: #1a1a1a; /* Dunkle Farbe für weißen Hintergrund */
+}
+
+.hero p {
+    font-size: 1.3em;
+    color: #4a4a4a; /* Dunkle Farbe für Fließtext */
+    margin-bottom: 40px;
+}
+
+/* --- VORTEILE Sektion --- */
+/* WICHTIG: section#pricing wird jetzt dunkel gefärbt */
+#pricing {
+    background-color: var(--color-primary-blue); /* Hintergrund Dunkelblau */
+    color: #f0f0f0; 
+    padding: 80px 0 80px 0; 
+}
+
+
+.vorteile-grid {
+    /* Hintergrund Weiß, falls es nach Pricing kommt */
+    background-color: #ffffff; 
+    color: #1a1a1a; 
+    padding: 80px 0 80px 0; 
+    text-align: center;
+}
+
+.vorteile-grid h3 {
+    font-size: 2em;
+    color: #1a1a1a; 
+    margin-bottom: 40px;
+}
+
+.grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 0 20px; 
+}
+
+.vorteil-item {
+    flex-basis: 33%;
+    text-align: left;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    background-color: #f8f8f8; 
+}
+
+.vorteil-item h4 {
+    color: var(--color-accent-blue); 
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.vorteil-item p {
+    color: #4a4a4a; 
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 40px;
+    font-size: 0.9em;
+    color: #999;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* ---------------------------------------------------- */
+/* Seitenleiste (Sidebar) */
+/* ---------------------------------------------------- */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px; 
+    height: 100%;
+    background-color: var(--color-primary-blue); 
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    padding: 20px;
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: #f0f0f0; 
+    font-size: 2em;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 50px; 
+}
+
+.sidebar-nav ul li {
+    margin-bottom: 5px; 
+    display: block; 
+}
+
+.sidebar-nav ul li a {
+    color: #f0f0f0; 
+    text-decoration: none;
+    font-size: 1.1em;
+    display: flex; 
+    align-items: center; 
+    padding: 10px 0;
+    transition: color 0.2s;
+}
+
+.sidebar-nav ul li a:hover {
+    color: var(--color-accent-blue);
+}
+
+.sidebar-nav .sidebar-cta {
+    display: block; 
+    background-color: var(--color-accent-blue);
+    color: white !important; 
+    text-align: center;
+    padding: 10px 15px;
+    margin-top: 15px; 
+    border-radius: 8px; 
+    font-weight: 700;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-nav .sidebar-cta:hover {
+    background-color: #0056b3; 
+}
+
+
+/* ---------------------------------------------------- */
+/* FAQ/Accordion-Styling */
+/* ---------------------------------------------------- */
+
+details > summary {
+    list-style: none;
+}
+details > summary::-webkit-details-marker {
+    display: none;
+}
+
+details[open] .details-marker {
+    transform: rotate(45deg); 
+}
+
+/* ---------------------------------------------------- */
+/* Login Modal Hintergrund Blur */
+/* ---------------------------------------------------- */
+
+.backdrop-blur-xl-custom {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background-color: rgba(0, 0, 0, 0.6); 
+    z-index: 1001; 
+}
+
+
+/* ==================================================== */
+/* RESPONSIVE DESIGN (Media Queries) */
+/* ==================================================== */
+
+/* Tablet- und Mobile-Optimierung (Max-Breite 768px) */
+@media (max-width: 768px) {
+    
+    /* --- Hero Sektion --- */
+    .hero h2 {
+        color: #1a1a1a; 
+        font-size: 2.5em; 
+        margin-top: 30px;
+    }
+
+    .hero p {
+        color: #4a4a4a; 
+        font-size: 1.1em;
+    }
+    
+    /* --- ANALYSE SEKTION MOBILE ANPASSUNG --- */
+    #analysen {
+        margin-top: -30px; /* Reduziere den negativen Rand auf Mobile */
+        padding-top: 30px !important; 
+    }
+    /* ------------------------------------------- */
+
+    /* --- VORTEILE Sektion --- */
+    .grid-container {
+        flex-direction: column; 
+        gap: 20px;
+        padding: 0 40px; 
+    }
+
+    .vorteil-item {
+        flex-basis: auto; 
+    }
+    
+    /* --- Header / Logo --- */
+    .header-logo {
+        height: 55px; 
+    }
+    
+    /* --- Header-Padding anpassen --- */
+    header, .header-content {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    /* Pricing Grid (Abo-Modelle) */
+    #pricing .grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Premium Box auf Mobile zurücksetzen */
+    #pricing .scale-105 {
+        transform: scale(1);
+    }
+}
+
+/* Bessere Responsivität der Sidebar für sehr kleine Screens */
+@media (max-width: 450px) {
+    .sidebar {
+        width: 80%; 
+    }
+}

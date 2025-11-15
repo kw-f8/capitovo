@@ -58,7 +58,30 @@ async function loadAndRenderAnalyses() {
     }
 }
 
+// === HELPER FUNKTIONEN FÜR MODAL STEUERUNG ===
+const loginModal = document.getElementById('login-modal');
+const sidebar = document.getElementById('sidebar'); // Sidebar wird hier benötigt, um sie zu schließen
 
+function openModal() {
+    if (loginModal) {
+        // Schließt die Sidebar, falls sie geöffnet ist
+        if (sidebar && sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open'); 
+        }
+        
+        loginModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds
+    }
+}
+
+function closeModal() {
+    if (loginModal) {
+        loginModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+}
+
+// === HAUPT-LOGIK ===
 document.addEventListener('DOMContentLoaded', () => {
     
     // WICHTIG: Startet den Ladevorgang der News-Kästen
@@ -67,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // === 1. SEITENLEISTEN-FUNKTIONALITÄT ===
     const menuToggle = document.getElementById('menu-toggle'); 
-    const sidebar = document.getElementById('sidebar');      
     const closeSidebarButton = document.getElementById('close-sidebar');
 
     if (menuToggle && sidebar && closeSidebarButton) {
@@ -85,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Schließt die Seitenleiste beim Klick auf einen Navigationslink
         const navLinks = sidebar.querySelectorAll('a');
         navLinks.forEach(link => {
+            // Schließt die Sidebar nur, wenn es KEIN #open-login Link ist
             if (link.getAttribute('href') !== '#open-login') {
                 link.addEventListener('click', () => {
                     sidebar.classList.remove('open');
@@ -98,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // === 2. LOGIN MODAL-FUNKTIONALITÄT ===
     
-    const loginModal = document.getElementById('login-modal');
+    // 2a. Statische Links (z.B. in Sidebar oder Header)
     // Wählt alle Links aus, die das Login-Modal öffnen sollen
     const openLoginLinks = document.querySelectorAll('a[href="#open-login"]');
     
@@ -107,28 +130,37 @@ document.addEventListener('DOMContentLoaded', () => {
         openLoginLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault(); 
-                
-                // Schließt die Sidebar, falls sie geöffnet ist
-                if (sidebar && sidebar.classList.contains('open')) {
-                    sidebar.classList.remove('open'); 
-                }
-                
-                // Zeigt das Modal an
-                loginModal.classList.remove('hidden'); 
+                openModal(); // Nutzt die Helper-Funktion
             });
         });
         
-        // Schließt das Modal beim Klick außerhalb des Formulars
+        // 2b. Dynamische Links ("Vorschau lesen") via Event Delegation
+        const analysisGrid = document.getElementById('analysis-grid');
+        if (analysisGrid) {
+            analysisGrid.addEventListener('click', (e) => {
+                // Findet den nächstgelegenen Link, der auf #open-login zeigt
+                const link = e.target.closest('a[href="#open-login"]'); 
+                
+                if (link) {
+                    e.preventDefault();
+                    openModal(); // Nutzt die Helper-Funktion
+                }
+            });
+        }
+        
+        // 2c. Schließ-Logik
+        
+        // Schließt das Modal beim Klick außerhalb des Formulars (auf den Backdrop)
         loginModal.addEventListener('click', (e) => {
             if (e.target === loginModal) {
-                loginModal.classList.add('hidden'); 
+                closeModal(); // Nutzt die Helper-Funktion
             }
         });
         
         // Schließt das Modal beim Drücken der ESC-Taste
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && !loginModal.classList.contains('hidden')) {
-                loginModal.classList.add('hidden');
+                closeModal(); // Nutzt die Helper-Funktion
             }
         });
     }

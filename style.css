@@ -327,20 +327,22 @@ details[open] .details-marker {
     }
 }
 
-/* style.css */
-
-/* ... (Vorheriger Code) ... */
-
-
 /* ---------------------------------------------------- */
 /* Login Modal Hintergrund Blur */
 /* ---------------------------------------------------- */
 
-/* Die Hintergrundfarbe wird von der Tailwind-Klasse "bg-black bg-opacity-75" kommen */
-/* Diese Klasse fügt den Blur-Effekt hinzu */
+/* Fügt den unscharfen Hintergrund und die dunkle Overlay-Farbe hinzu.
+   Dieser Stil wird auf das Modal-Overlay selbst angewendet (z.B. durch 
+   die Klasse "backdrop-blur-xl-custom" im HTML). */
 .backdrop-blur-xl-custom {
-    backdrop-filter: blur(20px); /* Starker Blur-Effekt */
-    -webkit-backdrop-filter: blur(20px); /* Für Safari-Kompatibilität */
-    background-color: rgba(0, 0, 0, 0.6); /* Hintergrundfarbe des Overlays */
+    backdrop-filter: blur(10px); /* Leichter reduzierter Blur-Effekt */
+    -webkit-backdrop-filter: blur(10px); /* Für Safari-Kompatibilität */
+    background-color: rgba(0, 0, 0, 0.6); /* Dunkles Overlay (60% Schwarz) */
+    /* Wir stellen sicher, dass das Modal einen höheren Z-Index hat, als der Header (z-index: 50) */
+    z-index: 1000; 
+    position: fixed; /* Muss fixed sein, um den gesamten Viewport abzudecken */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
-

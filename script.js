@@ -25,7 +25,7 @@ async function loadAndRenderAnalyses() {
     if (!analysisGrid) return; 
     
     // Der Pfad zur JSON-Datei
-    const apiUrl = 'data/analyses.json'; 
+    const apiUrl = 'data/analysen.json'; 
     
     try {
         const response = await fetch(apiUrl); 

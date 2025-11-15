@@ -193,9 +193,10 @@ header {
     flex-basis: 33%;
     text-align: left;
     padding: 20px;
-    background-color: #f8f8f8; 
+    background-color: #ffffff; /* wie die Basic-Abo-Karte */
     border-radius: 0.75rem; /* entspricht Tailwind rounded-xl */
-    box-shadow: 0 12px 30px rgba(2,6,23,0.08);
+    border: 1px solid rgba(15,23,42,0.06);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.12); /* Basis-Shadow ähnlich Abo-Karten */
     transition: transform .28s ease, box-shadow .28s ease;
 }
 

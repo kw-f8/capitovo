@@ -139,14 +139,13 @@ header {
 }
 
 .hero h2 {
-    font-size: 4em; 
-    font-weight: 700;
-    margin-bottom: 25px;
-    line-height: 1.1; 
-    color: #1a1a1a; /* Dunkle Farbe für weißen Hintergrund */
     font-size: clamp(1.75rem, 3.5vw, 3.25rem);
+    font-weight: 400; /* weniger fett: wirkt normaler */
+    margin-bottom: 25px;
+    line-height: 1.15;
+    color: #1a1a1a; /* Dunkle Farbe für weißen Hintergrund */
     letter-spacing: -0.02em;
-    text-shadow: 0 4px 20px rgba(2,6,23,0.35);
+    text-shadow: none; /* entferne den starken Schatten */
 }
 
 .hero p {
@@ -475,3 +474,38 @@ details[open] .details-marker {
 /* Buttons / Links im Pricing: gut lesbar */
 #pricing a { color: #0f172a !important; }
 #pricing .bg-primary-blue a { background: #ffffff; color: #0366d6 !important; }
+
+/* ------------------------- */
+/* Footer: Buttons für Rechtstexte */
+/* ------------------------- */
+.site-footer{
+    background: #ffffff;
+    border-top: 1px solid rgba(15,23,42,0.06);
+    color: #475569;
+}
+.site-footer .footer-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+}
+.footer-links{ display:flex; gap:12px; align-items:center; }
+.footer-btn{
+    display:inline-block;
+    background: var(--color-accent-blue);
+    color: #ffffff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background-color .18s ease, transform .12s ease, box-shadow .12s ease;
+    box-shadow: 0 6px 18px rgba(3, 102, 214, 0.12);
+}
+.footer-btn:hover{ background: #0056b3; transform: translateY(-2px); box-shadow: 0 12px 30px rgba(3, 102, 214, 0.16); }
+.site-footer .copyright{ color: #64748b; }
+
+@media (max-width: 768px){
+    .site-footer .footer-inner{ flex-direction: column; text-align: center; }
+    .footer-links{ margin-top: 8px; }
+}

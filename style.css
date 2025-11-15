@@ -139,22 +139,31 @@ header {
 }
 
 /* --- VORTEILE Sektion --- */
-
-.vorteile-grid {
+/* WICHTIG: section#pricing wird jetzt dunkel gefärbt */
+#pricing {
     background-color: var(--color-primary-blue); /* Hintergrund Dunkelblau */
     color: #f0f0f0; 
-    /* PADDiNG ANGEPASST: Mehr Abstand oben, da sie auf der Pricing-Sektion folgt */
+    padding: 80px 0 80px 0; 
+}
+
+
+.vorteile-grid {
+    /* Hintergrund Weiß, falls es nach Pricing kommt */
+    background-color: #ffffff; 
+    color: #1a1a1a; 
     padding: 80px 0 80px 0; 
     text-align: center;
 }
 
 .vorteile-grid h3 {
     font-size: 2em;
-    color: #f0f0f0; 
+    color: #1a1a1a; 
     margin-bottom: 40px;
 }
 
 .grid-container {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     gap: 30px;
@@ -166,8 +175,8 @@ header {
     text-align: left;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
-    background-color: #24354b; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    background-color: #f8f8f8; 
 }
 
 .vorteil-item h4 {
@@ -177,7 +186,7 @@ header {
 }
 
 .vorteil-item p {
-    color: #bbb; 
+    color: #4a4a4a; 
 }
 
 /* --- Footer --- */
@@ -280,6 +289,18 @@ details[open] .details-marker {
     transform: rotate(45deg); 
 }
 
+/* ---------------------------------------------------- */
+/* Login Modal Hintergrund Blur */
+/* ---------------------------------------------------- */
+
+.backdrop-blur-xl-custom {
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px); 
+    background-color: rgba(0, 0, 0, 0.6); 
+    z-index: 1001; 
+}
+
+
 /* ==================================================== */
 /* RESPONSIVE DESIGN (Media Queries) */
 /* ==================================================== */
@@ -297,7 +318,7 @@ details[open] .details-marker {
         font-size: 1.1em;
     }
 
-    /* --- Vorteile Sektion --- */
+    /* --- VORTEILE Sektion --- */
     .grid-container {
         flex-direction: column; 
         gap: 20px;
@@ -318,31 +339,21 @@ details[open] .details-marker {
         padding-left: 10px;
         padding-right: 10px;
     }
-}
-
-/* NEU: Bessere Responsivität der Sidebar für sehr kleine Screens */
-@media (max-width: 450px) {
-    .sidebar {
-        width: 80%; /* Die Sidebar nimmt 80% des Bildschirms ein */
+    
+    /* Pricing Grid (Abo-Modelle) */
+    #pricing .grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Premium Box auf Mobile zurücksetzen */
+    #pricing .scale-105 {
+        transform: scale(1);
     }
 }
 
-/* ---------------------------------------------------- */
-/* Login Modal Hintergrund Blur */
-/* ---------------------------------------------------- */
-
-/* Fügt den unscharfen Hintergrund und die dunkle Overlay-Farbe hinzu.
-   Dieser Stil wird auf das Modal-Overlay selbst angewendet (z.B. durch 
-   die Klasse "backdrop-blur-xl-custom" im HTML). */
-.backdrop-blur-xl-custom {
-    backdrop-filter: blur(10px); /* Leichter reduzierter Blur-Effekt */
-    -webkit-backdrop-filter: blur(10px); /* Für Safari-Kompatibilität */
-    background-color: rgba(0, 0, 0, 0.6); /* Dunkles Overlay (60% Schwarz) */
-    /* Wir stellen sicher, dass das Modal einen höheren Z-Index hat, als der Header (z-index: 50) */
-    z-index: 1000; 
-    position: fixed; /* Muss fixed sein, um den gesamten Viewport abzudecken */
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+/* Bessere Responsivität der Sidebar für sehr kleine Screens */
+@media (max-width: 450px) {
+    .sidebar {
+        width: 80%; 
+    }
 }

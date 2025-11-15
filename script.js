@@ -1,5 +1,35 @@
 // script.js
 
+// === HILFSFUNKTIONEN FÜR MODAL STEUERUNG ===
+// Diese Funktionen rufen die benötigten Elemente IMMER direkt im Moment des Aufrufs ab,
+// was sehr robust gegenüber Initialisierungsfehlern ist.
+
+function openModal() {
+    // Elemente sicher abrufen
+    const loginModal = document.getElementById('login-modal');
+    const sidebar = document.getElementById('sidebar');
+
+    if (loginModal) {
+        // Schließt die Sidebar, falls sie geöffnet ist
+        if (sidebar && sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open'); 
+        }
+        
+        loginModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds
+    }
+}
+
+function closeModal() {
+    const loginModal = document.getElementById('login-modal');
+
+    if (loginModal) {
+        loginModal.classList.add('hidden');
+        document.body.style.overflow = ''; // Stellt das Scrollen wieder her
+    }
+}
+
+
 // Funktion zum Erstellen eines einzelnen Analyse-Artikels als HTML.
 function createAnalysisArticle(analysis) {
     return `
@@ -58,83 +88,67 @@ async function loadAndRenderAnalyses() {
     }
 }
 
-// === HELPER FUNKTIONEN FÜR MODAL STEUERUNG ===
-const loginModal = document.getElementById('login-modal');
-const sidebar = document.getElementById('sidebar'); // Sidebar wird hier benötigt, um sie zu schließen
 
-function openModal() {
-    if (loginModal) {
-        // Schließt die Sidebar, falls sie geöffnet ist
-        if (sidebar && sidebar.classList.contains('open')) {
-            sidebar.classList.remove('open'); 
-        }
-        
-        loginModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds
-    }
-}
-
-function closeModal() {
-    if (loginModal) {
-        loginModal.classList.add('hidden');
-        document.body.style.overflow = '';
-    }
-}
-
-// === HAUPT-LOGIK ===
+// === HAUPT-LOGIK, die nach dem Laden des DOM ausgeführt wird ===
 document.addEventListener('DOMContentLoaded', () => {
     
-    // WICHTIG: Startet den Ladevorgang der News-Kästen
+    // 1. Lade die Analysen
     loadAndRenderAnalyses();
     
-    
-    // === 1. SEITENLEISTEN-FUNKTIONALITÄT ===
+    // === 2. ELEMENT-SELEKTOREN (JETZT SICHER DEFINIERT) ===
+    const loginModalElement = document.getElementById('login-modal');
+    const sidebarElement = document.getElementById('sidebar');
     const menuToggle = document.getElementById('menu-toggle'); 
     const closeSidebarButton = document.getElementById('close-sidebar');
 
-    if (menuToggle && sidebar && closeSidebarButton) {
+    
+    // === 3. SEITENLEISTEN-FUNKTIONALITÄT ===
+    
+    if (menuToggle && sidebarElement && closeSidebarButton) {
         
         // Öffnet die Seitenleiste beim Klick auf das Hamburger-Menü
         menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('open');
+            sidebarElement.classList.add('open');
         });
 
         // Schließt die Seitenleiste beim Klick auf das X
         closeSidebarButton.addEventListener('click', () => {
-            sidebar.classList.remove('open');
+            sidebarElement.classList.remove('open');
         });
         
-        // Schließt die Seitenleiste beim Klick auf einen Navigationslink
-        const navLinks = sidebar.querySelectorAll('a');
+        // Schließt die Seitenleiste/Öffnet Modal beim Klick auf einen Navigationslink
+        const navLinks = sidebarElement.querySelectorAll('a');
         navLinks.forEach(link => {
-            // Schließt die Sidebar nur, wenn es KEIN #open-login Link ist
             if (link.getAttribute('href') !== '#open-login') {
+                // Schließt die Sidebar für normale Navigation
                 link.addEventListener('click', () => {
-                    sidebar.classList.remove('open');
+                    sidebarElement.classList.remove('open');
                 });
+            } else {
+                // Öffnet das Modal für den #open-login Link
+                 link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal();
+                 });
             }
         });
     }
 
-    // --- ENDE SEITENLEISTEN-FUNKTIONALITÄT ---
     
+    // === 4. LOGIN MODAL-FUNKTIONALITÄT ===
     
-    // === 2. LOGIN MODAL-FUNKTIONALITÄT ===
-    
-    // 2a. Statische Links (z.B. in Sidebar oder Header)
-    // Wählt alle Links aus, die das Login-Modal öffnen sollen
-    const openLoginLinks = document.querySelectorAll('a[href="#open-login"]');
-    
-    if (loginModal) {
+    if (loginModalElement) {
         
+        // 4a. Statische Links (z.B. in Sidebar oder Header)
+        const openLoginLinks = document.querySelectorAll('a[href="#open-login"]');
         openLoginLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault(); 
-                openModal(); // Nutzt die Helper-Funktion
+                openModal();
             });
         });
         
-        // 2b. Dynamische Links ("Vorschau lesen") via Event Delegation
+        // 4b. Dynamische Links ("Vorschau lesen") via Event Delegation
         const analysisGrid = document.getElementById('analysis-grid');
         if (analysisGrid) {
             analysisGrid.addEventListener('click', (e) => {
@@ -143,24 +157,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 if (link) {
                     e.preventDefault();
-                    openModal(); // Nutzt die Helper-Funktion
+                    openModal(); // Modal öffnen
                 }
             });
         }
         
-        // 2c. Schließ-Logik
+        // 4c. Schließ-Logik
         
         // Schließt das Modal beim Klick außerhalb des Formulars (auf den Backdrop)
-        loginModal.addEventListener('click', (e) => {
-            if (e.target === loginModal) {
-                closeModal(); // Nutzt die Helper-Funktion
+        loginModalElement.addEventListener('click', (e) => {
+            if (e.target === loginModalElement) {
+                closeModal();
             }
         });
         
         // Schließt das Modal beim Drücken der ESC-Taste
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !loginModal.classList.contains('hidden')) {
-                closeModal(); // Nutzt die Helper-Funktion
+            if (e.key === 'Escape' && !loginModalElement.classList.contains('hidden')) {
+                closeModal();
             }
         });
     }

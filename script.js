@@ -321,7 +321,7 @@ function typeHeroText(options = {}){
         c.id = 'stock';
         Object.assign(c.style, {
             position: 'absolute',
-            zIndex: '0',
+            zIndex: '1',
             pointerEvents: 'none',
             opacity: '0.95',
             willChange: 'transform'
@@ -378,7 +378,8 @@ function typeHeroText(options = {}){
         if (heading) {
             const hs = window.getComputedStyle(heading);
             if (hs.position === 'static') heading.style.position = 'relative';
-            heading.style.zIndex = '1';
+            // ensure heading is above the canvas
+            heading.style.zIndex = '2';
         }
 
         // initial position

@@ -241,23 +241,56 @@
         </div>
     </footer>
 
-    <div class="sidebar" id="sidebar">
-        <button class="close-button" id="close-sidebar">&times;</button>
-        <nav class="sidebar-nav">
+    <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
+        <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
+        <div class="sidebar-header" style="color:#fff; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:48px;height:48px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff">CV</div>
+                <div>
+                    <div style="font-weight:700">Gast</div>
+                    <div style="font-size:13px;opacity:0.85">Nicht angemeldet</div>
+                </div>
+            </div>
+            <div style="margin-top:10px;">
+                <a href="#open-login" class="sidebar-cta" style="display:inline-block; width:100%; text-align:center;">Anmelden / Konto</a>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Hauptnavigation">
             <ul>
-                <li>
-                    <a href="#open-login" class="flex items-center space-x-2"> 
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                        </svg>
-                        <span>Login</span>
-                    </a>
-                </li> 
-                <li>
-                    <a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a>
-                </li> 
+                <li><a href="#analysen" class="flex items-center space-x-2"><span>📊</span><span>Analysen</span></a></li>
+                <li><a href="#pricing" class="flex items-center space-x-2"><span>💳</span><span>Abo & Preise</span></a></li>
+                <li><a href="#vorteile" class="flex items-center space-x-2"><span>✨</span><span>Vorteile</span></a></li>
+                <li><a href="#faq" class="flex items-center space-x-2"><span>❓</span><span>FAQ</span></a></li>
+                <li><a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a></li>
             </ul>
         </nav>
+
+        <div class="sidebar-subscribe" style="margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04);">
+            <h4 style="color:#fff;margin-bottom:8px;font-size:15px">Newsletter abonnieren</h4>
+            <form id="sidebar-subscribe-form" style="display:flex;gap:8px;">
+                <input id="sidebar-subscribe-email" type="email" required placeholder="Ihre E-Mail" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:#fff">
+                <button type="submit" class="sidebar-cta" style="padding:8px 10px;">Abonnieren</button>
+            </form>
+            <div id="sidebar-subscribe-msg" style="margin-top:8px;color:rgba(255,255,255,0.85);font-size:13px;display:none"></div>
+        </div>
+
+        <div class="sidebar-quick" style="margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04);">
+            <h5 style="color:#fff;margin-bottom:8px;font-size:13px">Schnellzugriff</h5>
+            <ul style="list-style:none;padding:0;margin:0;color:#fff;opacity:0.95">
+                <li style="padding:6px 0"><a href="#" class="sidebar-link" style="color:inherit;text-decoration:none">Favoriten</a></li>
+                <li style="padding:6px 0"><a href="#" class="sidebar-link" style="color:inherit;text-decoration:none">Marktübersicht</a></li>
+                <li style="padding:6px 0"><a href="#" class="sidebar-link" style="color:inherit;text-decoration:none">Einstellungen</a></li>
+            </ul>
+        </div>
+
+        <div class="sidebar-social" style="margin-top:18px;border-top:1px solid rgba(255,255,255,0.04);padding-top:12px;">
+            <div style="display:flex;gap:8px;">
+                <a href="#" aria-label="Twitter" style="color:#fff;text-decoration:none">🐦</a>
+                <a href="#" aria-label="LinkedIn" style="color:#fff;text-decoration:none">🔗</a>
+                <a href="#" aria-label="YouTube" style="color:#fff;text-decoration:none">▶️</a>
+            </div>
+        </div>
     </div>
 
     <div id="login-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">

@@ -24,6 +24,43 @@ function openLoginModal() {
     }
 }
 
+/** Sidebar: Subscribe form handler */
+function initSidebarSubscribeHandler(){
+    const form = document.getElementById('sidebar-subscribe-form');
+    if (!form) return;
+    const emailInput = document.getElementById('sidebar-subscribe-email');
+    const msg = document.getElementById('sidebar-subscribe-msg');
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        if (!emailInput) return;
+        const val = (emailInput.value || '').trim();
+        if (!val || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)){
+            if (msg) { msg.style.display='block'; msg.textContent='Bitte gültige E-Mail eingeben.'; msg.style.color='rgba(255,180,180,0.95)'; }
+            return;
+        }
+
+        // persist subscription locally (placeholder for real backend)
+        try{
+            const list = JSON.parse(localStorage.getItem('capitovo_newsletter')||'[]');
+            if (!list.includes(val)) list.push(val);
+            localStorage.setItem('capitovo_newsletter', JSON.stringify(list));
+        } catch(err){ /* ignore */ }
+
+        if (msg) { msg.style.display='block'; msg.textContent='Danke! Bestätige deine E-Mail in deinem Posteingang.'; msg.style.color='rgba(200,255,220,0.95)'; }
+        emailInput.value = '';
+
+        // close sidebar shortly after subscribe to show confirmation
+        setTimeout(()=>{
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            if (sidebar) { sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); }
+            if (menuToggle) menuToggle.setAttribute('aria-expanded','false');
+            document.body.style.overflow = '';
+        }, 900);
+    });
+}
+
 /** Schließt das Login-Modal. */
 function closeLoginModal() {
     const loginModal = document.getElementById('login-modal');
@@ -177,11 +214,15 @@ function initSidebar() {
         // Öffnen/Schließen der Sidebar
         menuToggle.addEventListener('click', () => {
             sidebarElement.classList.add('open');
+            sidebarElement.setAttribute('aria-hidden', 'false');
+            menuToggle.setAttribute('aria-expanded', 'true');
             document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds, wenn Sidebar offen
         });
 
         closeSidebarButton.addEventListener('click', () => {
             sidebarElement.classList.remove('open');
+            sidebarElement.setAttribute('aria-hidden', 'true');
+            menuToggle.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = ''; // Stellt Scrollen wieder her
         });
         
@@ -190,6 +231,8 @@ function initSidebar() {
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
                 sidebarElement.classList.remove('open');
+                sidebarElement.setAttribute('aria-hidden', 'true');
+                menuToggle.setAttribute('aria-expanded', 'false');
                 document.body.style.overflow = '';
             });
         });
@@ -253,6 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try { createAnimationDiagnosticPanel(); } catch (e) { /* ignore */ }
     // add live controls panel for animation
     try { createAnimationControlPanel(); } catch (e) { /* ignore */ }
+    // sidebar subscribe handler
+    try { initSidebarSubscribeHandler(); } catch (e) { /* ignore */ }
 });
 
 /**

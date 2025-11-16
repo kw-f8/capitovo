@@ -418,9 +418,15 @@ function typeHeroText(options = {}){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
             const baseline = (c.height / DPR) / 2;
             const last = points.length ? points[points.length-1] : {y: baseline};
-            // make jumps more pronounced and less smooth: sometimes large spikes
-            const jitter = (Math.random() - 0.5) * amplitude * (0.6 + Math.random()*1.4);
-            const y = Math.max(2, Math.min((c.height/DPR)-2, last.y + jitter));
+            // mostly moderate jitter, occasional larger spike for realism
+            const spike = Math.random() < 0.12; // 12% chance of spike
+            const baseFactor = 0.45 + Math.random() * 0.7; // 0.45 - 1.15
+            const multiplier = spike ? (1.8 + Math.random()*1.6) : baseFactor;
+            const jitter = (Math.random() - 0.5) * amplitude * multiplier;
+            // limit per-step jump to avoid extreme stuttering
+            const maxJump = Math.max(6, amplitude * 0.9);
+            const delta = Math.max(-maxJump, Math.min(maxJump, jitter));
+            const y = Math.max(2, Math.min((c.height/DPR)-2, last.y + delta));
             const xPos = points.length ? points[points.length-1].x + pointSpacing : 0;
             points.push({x: xPos, y});
         }
@@ -469,9 +475,15 @@ function typeHeroText(options = {}){
                 // build offset points for extrusion (perspective from top-left => offset down-right)
                 const depthOffsetX = Number(depthX) || 0;
                 const depthOffsetY = Number(depthY) || 0;
-                const offsetPoints = points.map(p => ({ x: p.x + depthOffsetX, y: p.y + depthOffsetY }));
 
-                // fill the extrusion polygon between line and its offset to simulate depth
+                // build offset points with perspective: offset grows with normalized x -> further right appears deeper
+                const widthForPerspective = Math.max(1, cssWidth);
+                const offsetPoints = points.map(p => {
+                    const t = Math.max(0, Math.min(1, p.x / widthForPerspective));
+                    return { x: p.x + depthOffsetX * t, y: p.y + depthOffsetY * t };
+                });
+
+                // fill the extrusion polygon between line and its offset to simulate depth (with gradient)
                 try{
                     x.beginPath();
                     x.moveTo(points[0].x, points[0].y);
@@ -486,13 +498,13 @@ function typeHeroText(options = {}){
                     }
                     x.closePath();
                     const grad = x.createLinearGradient(0, 0, 0, cssHeight + depthOffsetY);
-                    grad.addColorStop(0, 'rgba(0,0,0,0.04)');
-                    grad.addColorStop(1, 'rgba(0,0,0,0.18)');
+                    grad.addColorStop(0, 'rgba(0,0,0,0.06)');
+                    grad.addColorStop(1, 'rgba(0,0,0,0.22)');
                     x.fillStyle = grad;
                     x.fill();
                 } catch(e){}
 
-                // draw the sharp polyline on top
+                // draw the sharp polyline on top (straight segments to keep corners)
                 x.beginPath();
                 x.moveTo(points[0].x, points[0].y);
                 for(let i=1;i<points.length;i++){
@@ -501,17 +513,33 @@ function typeHeroText(options = {}){
                 }
                 x.stroke();
 
-                // add a subtle highlight along the top-left edge of extrusion
+                // subtle highlight along the top-left edge of extrusion
                 try{
                     x.beginPath();
                     x.moveTo(points[0].x, points[0].y);
                     for(let i=1;i<points.length;i++){
                         const p = points[i];
-                        x.lineTo(p.x - depthOffsetX*0.15, p.y - depthOffsetY*0.15);
+                        const t = Math.max(0, Math.min(1, p.x / widthForPerspective));
+                        x.lineTo(p.x - depthOffsetX * 0.08 * t, p.y - depthOffsetY * 0.08 * t);
                     }
-                    x.strokeStyle = 'rgba(255,255,255,0.65)';
+                    x.strokeStyle = 'rgba(255,255,255,0.6)';
                     x.lineWidth = Math.max(1, Math.min(2, lineW/2));
                     x.stroke();
+                } catch(e){}
+
+                // apply horizontal fade mask so line fades at left and right edges, making overall composition rounder
+                try{
+                    x.save();
+                    x.globalCompositeOperation = 'destination-in';
+                    const mask = x.createLinearGradient(0,0,cssWidth,0);
+                    const fade = Math.max(0.05, Math.min(0.35, Math.max(0.12, pointSpacing/40)));
+                    mask.addColorStop(0, 'rgba(0,0,0,0)');
+                    mask.addColorStop(fade, 'rgba(0,0,0,1)');
+                    mask.addColorStop(1-fade, 'rgba(0,0,0,1)');
+                    mask.addColorStop(1, 'rgba(0,0,0,0)');
+                    x.fillStyle = mask;
+                    x.fillRect(0,0,cssWidth,cssHeight);
+                    x.restore();
                 } catch(e){}
 
                 x.restore();

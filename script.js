@@ -309,12 +309,18 @@ function typeHeroText(options = {}){
         c.id = 'stock';
         Object.assign(c.style, {
             position: 'absolute',
-            zIndex: '-1',
+            zIndex: '0',
             pointerEvents: 'none',
             opacity: '0.95',
             willChange: 'transform'
         });
-        document.body.appendChild(c);
+
+        // Place canvas inside the hero wrapper (or hero) so z-indexing works predictably
+        const container = document.querySelector('.hero-wrapper') || hero || document.body;
+        // ensure container can position absolute children
+        const containerStyle = window.getComputedStyle(container);
+        if (containerStyle.position === 'static') container.style.position = 'relative';
+        container.appendChild(c);
         const x = c.getContext('2d');
 
         // compute and apply size & position so canvas sits centered under the heading
@@ -327,11 +333,12 @@ function typeHeroText(options = {}){
             const desiredWidth = headingRect ? Math.min(Math.max(300, headingRect.width * 0.9), Math.floor(vw * 0.8)) : Math.floor(vw * 0.8);
             const desiredHeight = 140; // px in CSS pixels
 
-            // compute top/left in CSS pixels (account for scroll)
-            const top = headingRect ? (window.scrollY + headingRect.bottom + 8) : Math.floor(window.innerHeight * 0.12);
-            const left = Math.floor((vw - desiredWidth) / 2);
+            // compute top/left in CSS pixels relative to the container
+            const containerRect = container.getBoundingClientRect();
+            const top = headingRect ? (headingRect.bottom - containerRect.top + 8) : Math.floor(window.innerHeight * 0.12);
+            const left = headingRect ? Math.floor((headingRect.left - containerRect.left) + (headingRect.width - desiredWidth) / 2) : Math.floor((vw - desiredWidth) / 2);
 
-            // apply CSS size/position
+            // apply CSS size/position (relative to container)
             c.style.left = left + 'px';
             c.style.top = top + 'px';
             c.style.width = desiredWidth + 'px';
@@ -341,6 +348,13 @@ function typeHeroText(options = {}){
             c.width = Math.floor(desiredWidth * DPR);
             c.height = Math.floor(desiredHeight * DPR);
             x.setTransform(DPR, 0, 0, DPR, 0, 0);
+        }
+
+        // ensure heading sits above the canvas
+        if (heading) {
+            const hs = window.getComputedStyle(heading);
+            if (hs.position === 'static') heading.style.position = 'relative';
+            heading.style.zIndex = '1';
         }
 
         // initial position
@@ -385,7 +399,8 @@ function typeHeroText(options = {}){
         // cleanup when page unloads
         function unmount(){
             if (rafId) cancelAnimationFrame(rafId);
-            window.removeEventListener('resize', resize);
+            window.removeEventListener('resize', onResize);
+            window.removeEventListener('scroll', onScroll);
             window.removeEventListener('pagehide', onPageHide);
             if (c && c.parentNode) c.parentNode.removeChild(c);
         }

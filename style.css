@@ -142,7 +142,7 @@ header {
 .hero h2 {
     font-size: clamp(1.75rem, 3.5vw, 3.25rem);
     font-weight: 400; /* weniger fett: wirkt normaler */
-    margin-top: 28px;
+    margin-top: 72px;
     margin-bottom: 25px;
     line-height: 1.15;
     color: #1a1a1a; /* Dunkle Farbe für weißen Hintergrund */

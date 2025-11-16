@@ -392,6 +392,10 @@ function typeHeroText(options = {}){
         let depthY = (typeof initial.depthY === 'number') ? Number(initial.depthY) : Math.max(1, Math.round((typeof initial.depth === 'number') ? Number(initial.depth)*0.45 : 4));
 
         // compute and apply size & position so canvas sits centered under the heading
+        let _lastCssWidth = 0, _lastCssHeight = 0, _lastDPR = 0;
+        // vertical offset to raise the canvas relative to heading (negative -> moves up)
+        const canvasYOffset = -36;
+
         function resizeAndPosition(){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
             const headingRect = heading ? heading.getBoundingClientRect() : null;
@@ -403,7 +407,7 @@ function typeHeroText(options = {}){
 
             // compute top/left in CSS pixels relative to the container
             const containerRect = container.getBoundingClientRect();
-            const top = headingRect ? (headingRect.bottom - containerRect.top + 8) : Math.floor(window.innerHeight * 0.12);
+            const top = headingRect ? (headingRect.bottom - containerRect.top + 8 + canvasYOffset) : Math.floor(window.innerHeight * 0.12 + canvasYOffset);
             const left = headingRect ? Math.floor((headingRect.left - containerRect.left) + (headingRect.width - desiredWidth) / 2) : Math.floor((vw - desiredWidth) / 2);
 
             // apply CSS size/position (relative to container)
@@ -413,17 +417,20 @@ function typeHeroText(options = {}){
             c.style.height = hpx + 'px';
             c.style.display = visible ? 'block' : 'none';
 
-                // set backing buffer size for DPR and scale context so we draw in CSS pixels
-                c.width = Math.floor(desiredWidth * DPR);
-                c.height = Math.floor(hpx * DPR);
-                // reset transform and scale -> draw using CSS pixels
-                x.setTransform(1, 0, 0, 1, 0, 0);
-                x.scale(DPR, DPR);
-                // reinitialize points for new size
-            try { initPoints(); } catch (e) { /* ignore if not ready */ }
+                // set backing buffer size for DPR and scale context only when size or DPR changed
+                if (desiredWidth !== _lastCssWidth || hpx !== _lastCssHeight || DPR !== _lastDPR) {
+                    _lastCssWidth = desiredWidth; _lastCssHeight = hpx; _lastDPR = DPR;
+                    c.width = Math.floor(desiredWidth * DPR);
+                    c.height = Math.floor(hpx * DPR);
+                    // reset transform and scale -> draw using CSS pixels
+                    x.setTransform(1, 0, 0, 1, 0, 0);
+                    x.scale(DPR, DPR);
+                    // reinitialize points for new size
+                    try { initPoints(); } catch (e) { /* ignore if not ready */ }
+                }
         }
 
-        // ensure heading sits above the canvas
+            // ensure heading sits above the canvas
         if (heading) {
             const hs = window.getComputedStyle(heading);
             if (hs.position === 'static') heading.style.position = 'relative';
@@ -431,12 +438,33 @@ function typeHeroText(options = {}){
             heading.style.zIndex = '101';
         }
 
-        // initial position
-        resizeAndPosition();
-        const onResize = () => resizeAndPosition();
-        const onScroll = () => resizeAndPosition();
-        window.addEventListener('resize', onResize, {passive:true});
-        window.addEventListener('scroll', onScroll, {passive:true});
+            // initial position
+            resizeAndPosition();
+            const onResize = () => resizeAndPosition();
+
+            // For scroll we only adjust the CSS position (left/top) to avoid re-allocating the backing buffer
+            // or reinitializing points on every scroll tick which caused visual jumps/acceleration.
+            function positionOnly(){
+                const headingRect = heading ? heading.getBoundingClientRect() : null;
+                const containerRect = container.getBoundingClientRect();
+                const vw = window.innerWidth;
+                const desiredWidth = headingRect ? Math.min(Math.max(300, headingRect.width * 0.9), Math.floor(vw * 0.8)) : Math.floor(vw * 0.8);
+                const left = headingRect ? Math.floor((headingRect.left - containerRect.left) + (headingRect.width - desiredWidth) / 2) : Math.floor((vw - desiredWidth) / 2);
+                const top = headingRect ? (headingRect.bottom - containerRect.top + 8 + canvasYOffset) : Math.floor(window.innerHeight * 0.12 + canvasYOffset);
+                c.style.left = left + 'px';
+                c.style.top = top + 'px';
+            }
+
+            let _scrollTick = false;
+            const onScroll = () => {
+                if (!_scrollTick) {
+                    _scrollTick = true;
+                    requestAnimationFrame(() => { positionOnly(); _scrollTick = false; });
+                }
+            };
+
+            window.addEventListener('resize', onResize, {passive:true});
+            window.addEventListener('scroll', onScroll, {passive:true});
 
         // animation state: line chart
         let points = [];

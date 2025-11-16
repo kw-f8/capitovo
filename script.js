@@ -474,8 +474,8 @@ function typeHeroText(options = {}){
         let amplitude = volatility;
         // upward trend: px per second (negative moves line up visually)
         let trendPerSecond = (typeof initial.trendPerSecond === 'number') ? Number(initial.trendPerSecond) : -6;
-        // cumulative trend applied to newly appended points (px)
-        let cumulativeTrend = 0;
+        // visualTrend is applied at draw time (so underlying point y-values keep their jitter)
+        let visualTrend = 0;
 
         // initialize points to fill width along an upward-sloping baseline (bottom-left → top-right)
         function initPoints(){
@@ -506,16 +506,14 @@ function typeHeroText(options = {}){
             const baseline = (c.height / DPR) / 2;
             const last = points.length ? points[points.length-1] : {y: baseline};
             // mostly moderate jitter, occasional larger spike for realism
-            const spike = Math.random() < 0.12; // 12% chance of spike
+            const spike = Math.random() < 0.18; // 18% chance of spike for persistent variance
             const baseFactor = 0.45 + Math.random() * 0.7; // 0.45 - 1.15
             const multiplier = spike ? (1.8 + Math.random()*1.6) : baseFactor;
             const jitter = (Math.random() - 0.5) * amplitude * multiplier;
             // limit per-step jump to avoid extreme stuttering
             const maxJump = Math.max(6, amplitude * 0.9);
             const delta = Math.max(-maxJump, Math.min(maxJump, jitter));
-            // include cumulative trend so the overall shape shows an upward drift over time
-            const yRaw = last.y + delta + cumulativeTrend;
-            const y = Math.max(2, Math.min((c.height/DPR)-2, yRaw));
+            const y = Math.max(2, Math.min((c.height/DPR)-2, last.y + delta));
             const xPos = points.length ? points[points.length-1].x + pointSpacing : 0;
             points.push({x: xPos, y});
         }
@@ -528,8 +526,8 @@ function typeHeroText(options = {}){
             const dt = Math.min(200, timestamp - _lastTime); // cap delta to avoid huge jumps
             _lastTime = timestamp;
 
-            // update cumulative trend based on time (px per second)
-            cumulativeTrend += (trendPerSecond * (dt / 1000));
+            // update visual trend based on time (px per second)
+            visualTrend += (trendPerSecond * (dt / 1000));
 
             // convert animSpeed (legacy: px per frame at 60fps) into px per delta
             const factor = dt / (1000 / 60);
@@ -608,21 +606,26 @@ function typeHeroText(options = {}){
 
                 // draw the sharp polyline on top (straight segments to keep corners)
                 x.beginPath();
-                x.moveTo(points[0].x, points[0].y);
+                // draw using visualTrend applied so the whole curve appears to drift upward
+                const firstYVis = points[0].y + visualTrend;
+                x.moveTo(points[0].x, firstYVis);
                 for(let i=1;i<points.length;i++){
                     const p = points[i];
-                    x.lineTo(p.x, p.y);
+                    const yVis = p.y + visualTrend;
+                    x.lineTo(p.x, yVis);
                 }
                 x.stroke();
 
                 // subtle highlight along the top-left edge of extrusion
                 try{
                     x.beginPath();
-                    x.moveTo(points[0].x, points[0].y);
+                    const firstYVis2 = points[0].y + visualTrend;
+                    x.moveTo(points[0].x, firstYVis2);
                     for(let i=1;i<points.length;i++){
                         const p = points[i];
                         const t = Math.max(0, Math.min(1, p.x / widthForPerspective));
-                        x.lineTo(p.x - depthOffsetX * 0.08 * t, p.y - depthOffsetY * 0.08 * t);
+                        const yVis = p.y + visualTrend;
+                        x.lineTo(p.x - depthOffsetX * 0.08 * t, yVis - depthOffsetY * 0.08 * t);
                     }
                     x.strokeStyle = 'rgba(255,255,255,0.6)';
                     x.lineWidth = Math.max(1, Math.min(2, lineW/2));

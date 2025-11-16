@@ -16,6 +16,7 @@
                     <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
                 </a>
             </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
             <div class="flex items-center gap-4">
                 <a href="../index.html" class="text-sm text-gray-600 hover:text-accent-blue">Startseite</a>
                 <a href="#" id="logout-link" class="text-sm cta-button">Abmelden</a>
@@ -67,6 +68,68 @@
         </div>
     </footer>
 
+    <!-- Sidebar (members) -->
+    <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
+        <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
+        <nav class="sidebar-nav" aria-label="Hauptnavigation">
+            <ul>
+                <li>
+                    <a href="#open-account" id="sidebar-account" class="flex items-center space-x-3" aria-label="Mein Konto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                            <circle cx="12" cy="8" r="3.5" />
+                        </svg>
+                        <span>Mein Konto</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#member-analyses" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="10" width="4" height="11" rx="0.5" /><rect x="10" y="6" width="4" height="15" rx="0.5" /><rect x="17" y="3" width="4" height="18" rx="0.5" /></svg>
+                        <span>Analysen</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" /><path d="M12 16h-0.01" /><path d="M11 12h1v-1a2 2 0 10-2-2" /></svg>
+                        <span>Hilfe / FAQ</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../Rechtliches/impressum.html" class="flex items-center space-x-3" target="_blank" rel="noopener noreferrer">
+                        <span>Impressum</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../Rechtliches/datenschutz.html" class="flex items-center space-x-3" target="_blank" rel="noopener noreferrer">
+                        <span>Datenschutz</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../Rechtliches/agb.html" class="flex items-center space-x-3" target="_blank" rel="noopener noreferrer">
+                        <span>AGB</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Account Modal -->
+    <div id="account-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-60 flex items-center justify-center p-4">
+        <div class="w-full max-w-md bg-white rounded-lg shadow-xl p-6">
+            <h2 class="text-xl font-semibold mb-4">Mein Konto</h2>
+            <div id="account-content" class="space-y-3 text-sm text-gray-800">
+                <p><strong>E-Mail:</strong> <span id="acc-email">–</span></p>
+                <p><strong>Name:</strong> <span id="acc-name">–</span></p>
+                <p><strong>Kontakt:</strong> <span id="acc-contact">–</span></p>
+                <p class="text-gray-600 text-xs">Hinweis: Dies ist ein client-seitiges Demo-Konto. Für echte Kontoverwaltung wird ein Backend benötigt.</p>
+            </div>
+            <div class="mt-4 flex justify-end gap-2">
+                <button id="account-close" class="cta-button">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
     <script>
         // simple logout: redirect to start
         document.getElementById('logout-link')?.addEventListener('click', function(e){
@@ -91,8 +154,8 @@
 
                 // load analyses dynamically (max 6)
                 const container = document.getElementById('member-analyses');
-                if (container) {
-                    fetch('../data/analysen.json')
+                    if (container) {
+                        fetch('../data/analysen.json')
                         .then(r => r.ok ? r.json() : Promise.reject(r.status))
                         .then(data => {
                             const list = data.slice(0,6).map(a => {
@@ -105,6 +168,27 @@
                         });
                 }
             } catch(e){ window.location.href = '../index.html'; }
+        })();
+
+        // Account modal open/close behavior
+        (function(){
+            const openLink = document.querySelector('a[href="#open-account"]') || document.getElementById('sidebar-account');
+            const modal = document.getElementById('account-modal');
+            const closeBtn = document.getElementById('account-close');
+            function openModal(){
+                try{
+                    const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
+                    document.getElementById('acc-email').textContent = sess.email || '—';
+                    document.getElementById('acc-name').textContent = sess.name || '—';
+                    document.getElementById('acc-contact').textContent = sess.phone || '—';
+                } catch(e){}
+                if (modal) { modal.classList.remove('hidden'); }
+            }
+            function closeModal(){ if (modal) modal.classList.add('hidden'); }
+            if (openLink) openLink.addEventListener('click', function(e){ e.preventDefault(); openModal(); const sb = document.getElementById('sidebar'); if (sb) { sb.classList.remove('open'); sb.setAttribute('aria-hidden','true'); } });
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) closeModal(); });
+            document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
         })();
     </script>
 </body>

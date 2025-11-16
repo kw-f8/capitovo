@@ -244,48 +244,4 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 4. NEU: Initialisiere die simulierte Login-Funktionalität
     initTestLogin();
-
-    // 5. Fallback: sichere Zurück-zur-Startseite Links in Rechtliches
-    initLegalBackLinks();
 });
-
-/**
- * Stellt sicher, dass "Zurück zur Startseite" Links aus dem Ordner /Rechtliches
- * zuverlässig auf die Haupt-Indexseite zeigen (funktioniert lokal und auf GitHub Pages).
- */
-function initLegalBackLinks(){
-    // Selektiere Links, die mit ../index.html verlinken oder die klassisch die CTA-Buttons sind
-    const links = Array.from(document.querySelectorAll('a.cta-button, a'))
-        .filter(a => {
-            const href = a.getAttribute('href') || '';
-            const text = (a.textContent || '').toLowerCase();
-            return href.endsWith('index.html') || text.includes('zurück') || text.includes('startseite');
-        });
-
-    links.forEach(link => {
-        link.addEventListener('click', function(e){
-            // Wenn Ziel offensichtlich korrekt, lassen wir die normale Navigation zu
-            const href = link.getAttribute('href') || '';
-            if(href && !href.startsWith('..') && !href.startsWith('Rechtliches') ) return;
-
-            // Verhindern, wir berechnen einen robusten Pfad zur index.html
-            e.preventDefault();
-
-            try{
-                // Versuche die Basis-Index-URL berechen, indem alles ab '/Rechtliches/' entfernt wird
-                const pathname = window.location.pathname || '';
-                const targetPath = pathname.replace(/\/Rechtliches\/.*/, '/index.html');
-                const targetUrl = new URL(targetPath, window.location.href).href;
-
-                // Öffne im selben Ziel wie das Link-Target (z. B. _blank)
-                const openTarget = link.target || '_self';
-                window.open(targetUrl, openTarget);
-            } catch(err){
-                // Fallback: normale relative Navigation
-                const openTarget = link.target || '_self';
-                const resolved = new URL(href, window.location.href).href;
-                window.open(resolved, openTarget);
-            }
-        });
-    });
-}

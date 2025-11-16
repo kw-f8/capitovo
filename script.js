@@ -394,7 +394,7 @@ function typeHeroText(options = {}){
         // compute and apply size & position so canvas sits centered under the heading
         let _lastCssWidth = 0, _lastCssHeight = 0, _lastDPR = 0;
         // vertical offset to raise the canvas relative to heading (negative -> moves up)
-        const canvasYOffset = -96;
+        let canvasYOffset = -96;
 
         function resizeAndPosition(){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
@@ -572,23 +572,34 @@ function typeHeroText(options = {}){
                 x.lineJoin = 'miter';
                 x.lineCap = 'butt';
 
-                // build offset points for extrusion (perspective from top-left => offset down-right)
+                // build drawPoints = underlying points + visualTrend (visual offset applied at draw time)
+                const widthForPerspective = Math.max(1, cssWidth);
                 const depthOffsetX = Number(depthX) || 0;
                 const depthOffsetY = Number(depthY) || 0;
+                let drawPoints = points.map(p => ({ x: p.x, y: p.y + visualTrend }));
 
-                // build offset points with perspective: offset grows with normalized x -> further right appears deeper
-                const widthForPerspective = Math.max(1, cssWidth);
-                const offsetPoints = points.map(p => {
+                // if the drawn points moved above the canvas top, nudge underlying points down
+                // so the curve doesn't clip to the top and become a flat line
+                const minY = Math.min(...drawPoints.map(p=>p.y));
+                if (minY < 4) {
+                    const shift = 4 - minY;
+                    for (let k=0;k<points.length;k++) points[k].y += shift;
+                    // recompute drawPoints after shifting underlying data
+                    drawPoints = points.map(p => ({ x: p.x, y: p.y + visualTrend }));
+                }
+
+                // build offsetPoints from drawPoints so extrusion follows the visible curve
+                const offsetPoints = drawPoints.map(p => {
                     const t = Math.max(0, Math.min(1, p.x / widthForPerspective));
                     return { x: p.x + depthOffsetX * t, y: p.y + depthOffsetY * t };
                 });
 
-                // fill the extrusion polygon between line and its offset to simulate depth (with gradient)
+                // fill the extrusion polygon between drawPoints and its offset to simulate depth (with gradient)
                 try{
                     x.beginPath();
-                    x.moveTo(points[0].x, points[0].y);
-                    for(let i=1;i<points.length;i++){
-                        const p = points[i];
+                    x.moveTo(drawPoints[0].x, drawPoints[0].y);
+                    for(let i=1;i<drawPoints.length;i++){
+                        const p = drawPoints[i];
                         x.lineTo(p.x, p.y);
                     }
                     // connect to offset points in reverse
@@ -606,26 +617,22 @@ function typeHeroText(options = {}){
 
                 // draw the sharp polyline on top (straight segments to keep corners)
                 x.beginPath();
-                // draw using visualTrend applied so the whole curve appears to drift upward
-                const firstYVis = points[0].y + visualTrend;
-                x.moveTo(points[0].x, firstYVis);
-                for(let i=1;i<points.length;i++){
-                    const p = points[i];
-                    const yVis = p.y + visualTrend;
-                    x.lineTo(p.x, yVis);
+                // draw using drawPoints so everything is consistent with extrusion
+                x.moveTo(drawPoints[0].x, drawPoints[0].y);
+                for(let i=1;i<drawPoints.length;i++){
+                    const p = drawPoints[i];
+                    x.lineTo(p.x, p.y);
                 }
                 x.stroke();
 
                 // subtle highlight along the top-left edge of extrusion
                 try{
                     x.beginPath();
-                    const firstYVis2 = points[0].y + visualTrend;
-                    x.moveTo(points[0].x, firstYVis2);
-                    for(let i=1;i<points.length;i++){
-                        const p = points[i];
+                    x.moveTo(drawPoints[0].x - depthOffsetX * 0.08 * 0, drawPoints[0].y - depthOffsetY * 0.08 * 0);
+                    for(let i=1;i<drawPoints.length;i++){
+                        const p = drawPoints[i];
                         const t = Math.max(0, Math.min(1, p.x / widthForPerspective));
-                        const yVis = p.y + visualTrend;
-                        x.lineTo(p.x - depthOffsetX * 0.08 * t, yVis - depthOffsetY * 0.08 * t);
+                        x.lineTo(p.x - depthOffsetX * 0.08 * t, p.y - depthOffsetY * 0.08 * t);
                     }
                     x.strokeStyle = 'rgba(255,255,255,0.6)';
                     x.lineWidth = Math.max(1, Math.min(2, lineW/2));
@@ -675,6 +682,9 @@ function typeHeroText(options = {}){
             setDepthY(dy){ depthY = Math.max(0, Number(dy) || 0); },
             // legacy: setDepth sets both
             setDepth(d){ depthX = depthY = Math.max(0, Number(d) || 0); },
+            // new: control canvas vertical offset (CSS px) and trend
+            setCanvasYOffset(y){ canvasYOffset = Number(y) || 0; resizeAndPosition(); },
+            setTrendPerSecond(t){ trendPerSecond = Number(t) || 0; },
             getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, pointSpacing: pointSpacing, volatility: volatility, depthX: depthX, depthY: depthY }; }
         };
 
@@ -919,6 +929,16 @@ function createAnimationControlPanel(){
     const depthYInput = document.createElement('input'); depthYInput.type = 'range'; depthYInput.min = '0'; depthYInput.max = '40'; depthYInput.value = '4';
     rDepthY.appendChild(lDepthY); rDepthY.appendChild(depthYInput);
 
+    // Canvas Y Offset (px) - slider
+    const {row: rYOffset, label: lYOffset} = makeRow('Canvas Y Offset (px)');
+    const yOffsetInput = document.createElement('input'); yOffsetInput.type = 'range'; yOffsetInput.min = '-300'; yOffsetInput.max = '300'; yOffsetInput.step = '1'; yOffsetInput.value = '-96';
+    rYOffset.appendChild(lYOffset); rYOffset.appendChild(yOffsetInput);
+
+    // Trend (px/s) - slider
+    const {row: rTrend, label: lTrend} = makeRow('Trend (px/s)');
+    const trendInput = document.createElement('input'); trendInput.type = 'range'; trendInput.min = '-40'; trendInput.max = '40'; trendInput.step = '1'; trendInput.value = '-6';
+    rTrend.appendChild(lTrend); rTrend.appendChild(trendInput);
+
     // Height
     const {row: rHeight, label: lHeight} = makeRow('Höhe (px)');
     const heightInput = document.createElement('input');
@@ -946,6 +966,8 @@ function createAnimationControlPanel(){
     box.appendChild(rSp);
     box.appendChild(rVol);
     box.appendChild(rDepth);
+    box.appendChild(rYOffset);
+    box.appendChild(rTrend);
     box.appendChild(rHeight);
     box.appendChild(rVis);
     box.appendChild(btnRow);
@@ -973,6 +995,8 @@ function createAnimationControlPanel(){
         const enabled3d = !!depthInput.checked;
         const dx = enabled3d ? Number(depthXInput.value || 8) : 0;
         const dy = enabled3d ? Number(depthYInput.value || 4) : 0;
+        const yoff = Number(yOffsetInput.value) || 0;
+        const trend = Number(trendInput.value) || 0;
 
         if (window.stockAnimController){
             window.stockAnimController.setColor(rgba);
@@ -986,6 +1010,8 @@ function createAnimationControlPanel(){
             window.stockAnimController.setVolatility(vol);
             window.stockAnimController.setDepthX(dx);
             window.stockAnimController.setDepthY(dy);
+            window.stockAnimController.setCanvasYOffset(yoff);
+            window.stockAnimController.setTrendPerSecond(trend);
         } else {
             // set config so mount reads it when ready
             window.stockAnimConfig = window.stockAnimConfig || {};
@@ -999,11 +1025,13 @@ function createAnimationControlPanel(){
             window.stockAnimConfig.volatility = vol;
             window.stockAnimConfig.depthX = dx;
             window.stockAnimConfig.depthY = dy;
+            window.stockAnimConfig.canvasYOffset = yoff;
+            window.stockAnimConfig.trendPerSecond = trend;
         }
     }
 
     // live apply on change
-    [colorInput, speedInput, lineInput, heightInput, visInput, cwInput, spInput, volInput, depthInput, depthXInput, depthYInput].forEach(inp => inp.addEventListener('input', applyToController));
+    [colorInput, speedInput, lineInput, heightInput, visInput, cwInput, spInput, volInput, depthInput, depthXInput, depthYInput, yOffsetInput, trendInput].forEach(inp => inp.addEventListener('input', applyToController));
 
     // save to localStorage
     saveBtn.addEventListener('click', () => {
@@ -1039,6 +1067,8 @@ function createAnimationControlPanel(){
         if (typeof cfg.depthX === 'number') depthXInput.value = cfg.depthX;
         if (typeof cfg.depthY === 'number') depthYInput.value = cfg.depthY;
         if (typeof cfg.depthX === 'number' || typeof cfg.depthY === 'number') depthInput.checked = (cfg.depthX||0) > 0 || (cfg.depthY||0) > 0;
+        if (typeof cfg.canvasYOffset === 'number') yOffsetInput.value = cfg.canvasYOffset;
+        if (typeof cfg.trendPerSecond === 'number') trendInput.value = cfg.trendPerSecond;
     } catch(e){}
 
     // apply once at creation

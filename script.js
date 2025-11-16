@@ -447,6 +447,7 @@ function typeHeroText(options = {}){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
             const canvasH = c.height / DPR;
 
+            try {
             for(const cd of candles){
                 const cx = cd.x;
                 const openY = cd.open;
@@ -485,8 +486,24 @@ function typeHeroText(options = {}){
                     x.fillRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
                 }
             }
+            // diagnostic: draw a tiny test pixel in center (non-destructive)
+            try{
+                const midX = Math.floor((c.width)/2);
+                const midY = Math.floor((c.height)/2);
+                // draw a 2x2 red square in device pixels (use reset transform)
+                x.save();
+                x.setTransform(1,0,0,1,0,0);
+                x.fillStyle = 'rgba(255,0,0,0.8)';
+                x.fillRect(midX-1, midY-1, 2, 2);
+                x.restore();
+            } catch(e){}
 
             rafId = requestAnimationFrame(step);
+        } catch(err){
+            console.error('candles.step error', err);
+            // attempt to continue
+            rafId = requestAnimationFrame(step);
+        }
         }
 
         // initialize

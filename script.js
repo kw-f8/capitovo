@@ -249,6 +249,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.debug('typeHeroText invoked');
         typeHeroText(); 
     } catch (e) { /* ignore if function missing */ }
+    // add on-page diagnostic helper (non-destructive)
+    try { createAnimationDiagnosticPanel(); } catch (e) { /* ignore */ }
 });
 
 /**
@@ -416,3 +418,98 @@ function typeHeroText(options = {}){
     }
 
 })();
+
+// --- Diagnostic helper UI -------------------------------------------------
+function createAnimationDiagnosticPanel(){
+    if (document.getElementById('anim-diag-panel')) return;
+
+    const panel = document.createElement('div');
+    panel.id = 'anim-diag-panel';
+    Object.assign(panel.style, {
+        position: 'fixed',
+        right: '12px',
+        bottom: '12px',
+        zIndex: 99999,
+        fontFamily: 'system-ui,Segoe UI,Roboto,Arial',
+    });
+
+    const btn = document.createElement('button');
+    btn.textContent = 'Diagnose Animation';
+    Object.assign(btn.style, {
+        background: '#0ea5a6',
+        color: '#fff',
+        border: 'none',
+        padding: '8px 10px',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        boxShadow: '0 6px 18px rgba(2,6,23,0.2)'
+    });
+
+    const output = document.createElement('pre');
+    Object.assign(output.style, {
+        display: 'none',
+        minWidth: '320px',
+        maxWidth: '680px',
+        maxHeight: '50vh',
+        overflow: 'auto',
+        marginTop: '8px',
+        padding: '10px',
+        background: 'rgba(0,0,0,0.85)',
+        color: '#e6fffa',
+        borderRadius: '8px',
+        fontSize: '13px',
+        lineHeight: '1.3'
+    });
+
+    btn.addEventListener('click', async () => {
+        output.style.display = 'block';
+        output.textContent = 'Running diagnostics...\n';
+
+        // 1) Canvas existence
+        const c = document.getElementById('stock');
+        output.textContent += `stock canvas element: ${c ? 'FOUND' : 'MISSING'}\n`;
+
+        // 1a) prefers-reduced-motion and hero presence
+        output.textContent += `prefers-reduced-motion: ${window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches}\n`;
+        output.textContent += `hero-wrapper present: ${!!document.querySelector('.hero-wrapper')}\n`;
+        output.textContent += `hero h2 present: ${!!document.querySelector('.hero h2')}\n`;
+
+        if (!c) return;
+
+        // 2) layout and sizes
+        const cs = getComputedStyle(c);
+        const crect = c.getBoundingClientRect();
+        output.textContent += `\ncomputed style: left=${cs.left}, top=${cs.top}, width=${cs.width}, height=${cs.height}, zIndex=${cs.zIndex}\n`;
+        output.textContent += `DOM rect: left=${crect.left}, top=${crect.top}, width=${crect.width}, height=${crect.height}\n`;
+        output.textContent += `backing buffer size: width=${c.width}, height=${c.height}\n`;
+
+        // 3) stacking and elementFromPoint
+        const h = document.querySelector('.hero h2');
+        if (h) output.textContent += `\nheading rect: ${JSON.stringify(h.getBoundingClientRect())}\n`;
+        output.textContent += `heading z-index: ${h ? getComputedStyle(h).zIndex : 'n/a'}\n`;
+        output.textContent += `canvas z-index: ${getComputedStyle(c).zIndex}\n`;
+
+        try{
+            const midX = Math.floor(crect.left + crect.width/2);
+            const midY = Math.floor(crect.top + crect.height/2);
+            const els = document.elementsFromPoint(midX, midY).slice(0,6).map(e => e.tagName + (e.id ? `#${e.id}` : '') + (e.className ? `.${e.className.split(' ').join('.')}` : ''));
+            output.textContent += `elements at canvas center: ${els.join(' > ')}\n`;
+        } catch(e){ output.textContent += `elementsFromPoint failed: ${e.message}\n`; }
+
+        // 4) drawing check
+        try{
+            const ctx = c.getContext('2d');
+            output.textContent += `\n2d context ok: ${!!ctx}\n`;
+            try{
+                const img = ctx.getImageData(Math.floor(c.width/2), Math.floor(c.height/2),1,1);
+                output.textContent += `pixel at center (RGBA): [${img.data.join(',')}]\n`;
+            } catch(err){ output.textContent += `pixel read failed (expected in some browsers): ${err.message}\n`; }
+        } catch(e){ output.textContent += `getContext failed: ${e.message}\n`; }
+
+        output.textContent += '\nDone. If anything looks wrong, paste this output here.';
+    });
+
+    panel.appendChild(btn);
+    panel.appendChild(output);
+    document.body.appendChild(panel);
+}

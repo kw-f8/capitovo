@@ -244,20 +244,20 @@
     <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
         <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
 
-        <!-- Top: Login CTA (weiß, Icon, gleiche Anordnung wie Nav-Buttons) -->
-        <div style="padding:12px 8px;">
-            <a href="#open-login" id="sidebar-login" aria-label="Login" class="flex items-center space-x-3 sidebar-cta bg-white text-gray-900 rounded-md px-3 py-2 mx-3" style="display:flex; align-items:center; justify-content:flex-start;">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                </svg>
-                <span>Login</span>
-            </a>
-        </div>
+        <!-- Top: Login (als erstes Nav-Item, gleich formatiert wie andere Links) -->
 
         <!-- Navigation: klare Buttons nach Login -->
         <nav class="sidebar-nav" aria-label="Hauptnavigation">
             <ul>
+                <li>
+                    <a href="#open-login" id="sidebar-login" class="flex items-center space-x-3" aria-label="Login">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <span>Login</span>
+                    </a>
+                </li>
                 <li>
                     <a href="#analysen" class="flex items-center space-x-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="10" width="4" height="11" rx="0.5" /><rect x="10" y="6" width="4" height="15" rx="0.5" /><rect x="17" y="3" width="4" height="18" rx="0.5" /></svg>

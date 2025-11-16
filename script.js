@@ -245,7 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 4. NEU: Initialisiere die simulierte Login-Funktionalität
     initTestLogin();
     // 5. Tippeffekt für Hero-Überschrift (nur einfügen, nicht andere Styles ändern)
-    try { typeHeroText(); } catch (e) { /* ignore if function missing */ }
+    try { 
+        console.debug('typeHeroText invoked');
+        typeHeroText(); 
+    } catch (e) { /* ignore if function missing */ }
 });
 
 /**
@@ -253,6 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * ändert keine bestehenden Styles oder Klassen dauerhaft.
  */
 function typeHeroText(options = {}){
+    console.debug('typeHeroText: start');
     const speed = typeof options.speed === 'number' ? options.speed : 48; // ms per char
     const delay = typeof options.delay === 'number' ? options.delay : 220; // ms before start
 

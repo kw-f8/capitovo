@@ -85,8 +85,16 @@ header {
     height: 80px; 
     width: auto; 
     display: block;
-}
+    background-color: var(--color-accent-blue-dark); 
 
+
+/* Sidebar link icon spacing and muted color for non-CTA links */
+.sidebar-nav ul li a svg { margin-right: 12px; flex-shrink: 0; }
+.sidebar-nav ul li a span { color: #f0f0f0; }
+.sidebar-nav ul li a:hover span { color: #ffffff; }
+
+/* Slightly reduce size of links to match compact sidebar */
+.sidebar-nav ul li a { font-size: 0.98rem; }
 /* Menu Toggle Button ist jetzt Dunkel */
 .menu-toggle {
     background: none;

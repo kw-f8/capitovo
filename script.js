@@ -341,6 +341,8 @@ function typeHeroText(options = {}){
         let lineW = Number(initial.lineWidth) || 2;
         let desiredHeight = Number(initial.height) || 140;
         let visible = !!initial.visible;
+        // 3D depth in CSS pixels for side faces
+        let depth = (typeof initial.depth === 'number') ? Number(initial.depth) : 6;
 
         // compute and apply size & position so canvas sits centered under the heading
         function resizeAndPosition(){
@@ -463,7 +465,6 @@ function typeHeroText(options = {}){
                 x.restore();
             } catch(e){}
 
-            try {
             for(const cd of candles){
                 const cx = cd.x;
                 const openY = cd.open;
@@ -477,61 +478,54 @@ function typeHeroText(options = {}){
 
                 // wick
                 x.beginPath();
-                x.strokeStyle = 'black';
+                x.strokeStyle = 'rgba(0,0,0,0.9)';
                 x.lineWidth = 1;
                 const wickX = Math.round(cx + candleWidth/2);
                 x.moveTo(wickX, top);
                 x.lineTo(wickX, bottom);
                 x.stroke();
 
-                // body
+                // body (3D-like): draw side depth, then body with gradient and stroke
                 const bodyTop = Math.min(openY, closeY);
                 const bodyBottom = Math.max(openY, closeY);
                 const bodyHeight = Math.max(1, bodyBottom - bodyTop);
                 const bodyX = Math.round(cx);
-                // up candle (close >= open) -> white fill with black stroke
+
+                // depth offset (in CSS pixels)
+                const depthOffset = Math.max(0, Math.round(depth));
+
+                // draw right-side face to simulate thickness
+                if (depthOffset > 0){
+                    x.fillStyle = 'rgba(0,0,0,0.12)';
+                    x.fillRect(bodyX + candleWidth, bodyTop + Math.round(depthOffset/2), Math.round(depthOffset/2), bodyHeight);
+                    // bottom face
+                    x.fillRect(bodyX + Math.round(depthOffset/4), bodyBottom, candleWidth, Math.round(depthOffset/2));
+                }
+
+                // gradient fill for body
                 if (cd.close >= cd.open){
-                    x.fillStyle = 'white';
-                    x.strokeStyle = 'black';
-                    x.lineWidth = 1;
+                    const grad = x.createLinearGradient(0, bodyTop, 0, bodyBottom);
+                    grad.addColorStop(0, '#ffffff');
+                    grad.addColorStop(1, '#e6e6e6');
+                    x.fillStyle = grad;
                     x.fillRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
+                    x.strokeStyle = 'rgba(0,0,0,0.85)';
+                    x.lineWidth = 1;
                     x.strokeRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
                 } else {
-                    // down candle -> black filled
-                    x.fillStyle = 'black';
+                    const grad = x.createLinearGradient(0, bodyTop, 0, bodyBottom);
+                    grad.addColorStop(0, '#444444');
+                    grad.addColorStop(1, '#000000');
+                    x.fillStyle = grad;
                     x.fillRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
                 }
             }
-            // diagnostic: draw a tiny test pixel in center (non-destructive)
-            try{
-                const midX = Math.floor((c.width)/2);
-                const midY = Math.floor((c.height)/2);
-                // draw a 2x2 red square in device pixels (use reset transform)
-                x.save();
-                x.setTransform(1,0,0,1,0,0);
-                x.fillStyle = 'rgba(255,0,0,0.8)';
-                x.fillRect(midX-1, midY-1, 2, 2);
-                x.restore();
-            } catch(e){}
-
             rafId = requestAnimationFrame(step);
-        } catch(err){
-            console.error('candles.step error', err);
-            // attempt to continue
-            rafId = requestAnimationFrame(step);
-        }
         }
 
         // initialize
         initCandles();
-        try{ console.debug('stock mounted', { width: c.style.width, height: c.style.height, backingWidth: c.width, backingHeight: c.height, candles: candles.length }); } catch(e){}
-        let _firstStep = true;
-        rafId = requestAnimationFrame(function firstStep(){
-            if(_firstStep){ try{ console.debug('stock step starting, candles', candles.length); }catch(e){}
-                _firstStep = false;
-            }
-            step();
-        });
+        rafId = requestAnimationFrame(step);
 
         // expose controller for live changes (extended for candles)
         window.stockAnimController = {
@@ -544,7 +538,9 @@ function typeHeroText(options = {}){
             setCandleWidth(w){ candleWidth = Math.max(1, Number(w) || candleWidth); initCandles(); },
             setSpacing(s){ spacing = Math.max(0, Number(s) || spacing); initCandles(); },
             setVolatility(v){ volatility = Math.max(0, Number(v) || volatility); },
-            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, candleWidth: candleWidth, spacing: spacing, volatility: volatility }; }
+            // 3D depth
+            setDepth(d){ depth = Math.max(0, Number(d) || depth); },
+            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, candleWidth: candleWidth, spacing: spacing, volatility: volatility, depth: depth }; }
         };
 
         // cleanup when page unloads
@@ -751,6 +747,11 @@ function createAnimationControlPanel(){
     const volInput = document.createElement('input'); volInput.type='range'; volInput.min='0'; volInput.max='40'; volInput.value='10';
     rVol.appendChild(lVol); rVol.appendChild(volInput);
 
+    // 3D depth (toggle)
+    const {row: rDepth, label: lDepth} = makeRow('3D-Effekt');
+    const depthInput = document.createElement('input'); depthInput.type = 'checkbox'; depthInput.checked = true;
+    rDepth.appendChild(lDepth); rDepth.appendChild(depthInput);
+
     // Height
     const {row: rHeight, label: lHeight} = makeRow('Höhe (px)');
     const heightInput = document.createElement('input');
@@ -770,8 +771,17 @@ function createAnimationControlPanel(){
     saveBtn.style.background = '#06b6d4'; saveBtn.style.color = '#fff'; resetBtn.style.background = '#ef4444'; resetBtn.style.color = '#fff';
     btnRow.appendChild(saveBtn); btnRow.appendChild(resetBtn);
 
-    // Append rows
-    box.appendChild(rColor); box.appendChild(rSpeed); box.appendChild(rLine); box.appendChild(rHeight); box.appendChild(rVis); box.appendChild(btnRow);
+    // Append rows (include candle controls)
+    box.appendChild(rColor);
+    box.appendChild(rSpeed);
+    box.appendChild(rLine);
+    box.appendChild(rCw);
+    box.appendChild(rSp);
+    box.appendChild(rVol);
+    box.appendChild(rDepth);
+    box.appendChild(rHeight);
+    box.appendChild(rVis);
+    box.appendChild(btnRow);
 
     // Toggle behavior
     toggle.addEventListener('click', () => { box.style.display = box.style.display === 'none' ? 'block' : 'none'; });
@@ -790,12 +800,22 @@ function createAnimationControlPanel(){
         const h = Number(heightInput.value)||140;
         const vis = !!visInput.checked;
 
+        const cw = Number(cwInput.value) || 10;
+        const sp = Number(spInput.value) || 4;
+        const vol = Number(volInput.value) || 10;
+        const d3 = !!depthInput.checked ? 8 : 0;
+
         if (window.stockAnimController){
             window.stockAnimController.setColor(rgba);
             window.stockAnimController.setSpeed(speed);
             window.stockAnimController.setLineWidth(lw);
             window.stockAnimController.setHeight(h);
             window.stockAnimController.setVisible(vis);
+            // candle specifics
+            window.stockAnimController.setCandleWidth(cw);
+            window.stockAnimController.setSpacing(sp);
+            window.stockAnimController.setVolatility(vol);
+            window.stockAnimController.setDepth(d3);
         } else {
             // set config so mount reads it when ready
             window.stockAnimConfig = window.stockAnimConfig || {};
@@ -804,11 +824,15 @@ function createAnimationControlPanel(){
             window.stockAnimConfig.lineWidth = lw;
             window.stockAnimConfig.height = h;
             window.stockAnimConfig.visible = vis;
+            window.stockAnimConfig.candleWidth = cw;
+            window.stockAnimConfig.spacing = sp;
+            window.stockAnimConfig.volatility = vol;
+            window.stockAnimConfig.depth = d3;
         }
     }
 
     // live apply on change
-    [colorInput, speedInput, lineInput, heightInput, visInput, cwInput, spInput, volInput].forEach(inp => inp.addEventListener('input', applyToController));
+    [colorInput, speedInput, lineInput, heightInput, visInput, cwInput, spInput, volInput, depthInput].forEach(inp => inp.addEventListener('input', applyToController));
 
     // save to localStorage
     saveBtn.addEventListener('click', () => {
@@ -818,7 +842,9 @@ function createAnimationControlPanel(){
 
     // reset
     resetBtn.addEventListener('click', () => {
-        colorInput.value = '#00c88c'; speedInput.value = '3'; lineInput.value = '2'; heightInput.value = '140'; visInput.checked = true; applyToController(); try{ localStorage.removeItem('capitovo_stock_anim'); }catch(e){}
+        colorInput.value = '#00c88c'; speedInput.value = '3'; lineInput.value = '2'; heightInput.value = '140'; visInput.checked = true;
+        cwInput.value = '10'; spInput.value = '4'; volInput.value = '10'; depthInput.checked = true;
+        applyToController(); try{ localStorage.removeItem('capitovo_stock_anim'); }catch(e){}
     });
 
     // hydrate values from localStorage or window.stockAnimConfig
@@ -835,6 +861,10 @@ function createAnimationControlPanel(){
         if (cfg.lineWidth) lineInput.value = cfg.lineWidth;
         if (cfg.height) heightInput.value = cfg.height;
         if (typeof cfg.visible === 'boolean') visInput.checked = cfg.visible;
+        if (cfg.candleWidth) cwInput.value = cfg.candleWidth;
+        if (cfg.spacing) spInput.value = cfg.spacing;
+        if (cfg.volatility) volInput.value = cfg.volatility;
+        if (typeof cfg.depth === 'number') depthInput.checked = cfg.depth > 0;
     } catch(e){}
 
     // apply once at creation

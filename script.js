@@ -394,7 +394,7 @@ function typeHeroText(options = {}){
         // compute and apply size & position so canvas sits centered under the heading
         let _lastCssWidth = 0, _lastCssHeight = 0, _lastDPR = 0;
         // vertical offset to raise the canvas relative to heading (negative -> moves up)
-        const canvasYOffset = -36;
+        const canvasYOffset = -96;
 
         function resizeAndPosition(){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
@@ -470,25 +470,35 @@ function typeHeroText(options = {}){
         let points = [];
         let pointSpacing = 6; // px between sample points
         // higher default volatility for a more jagged, 'market-like' line
-        let volatility = 24; // amplitude for random moves (px)
+        let volatility = 32; // amplitude for random moves (px)
         let amplitude = volatility;
         // upward trend: px per second (negative moves line up visually)
         let trendPerSecond = (typeof initial.trendPerSecond === 'number') ? Number(initial.trendPerSecond) : -6;
         // cumulative trend applied to newly appended points (px)
         let cumulativeTrend = 0;
 
-        // initialize points to fill width
+        // initialize points to fill width along an upward-sloping baseline (bottom-left → top-right)
         function initPoints(){
             points = [];
             const DPR = Math.max(1, window.devicePixelRatio || 1);
-            const width = parseInt(c.style.width,10) || Math.floor((c.width || window.innerWidth)/DPR);
-            const count = Math.ceil(width / pointSpacing) + 6;
-            const baseline = (c.height / DPR) / 2;
+            const cssWidth = parseInt(c.style.width,10) || Math.floor((c.width || window.innerWidth)/DPR);
+            const cssHeight = parseInt(c.style.height,10) || Math.floor((c.height || window.innerHeight)/DPR);
+            const count = Math.ceil(cssWidth / pointSpacing) + 6;
+            // baseline near the bottom of canvas
+            const baseline = cssHeight * 0.85;
+            // slope amount so right side is visibly higher (less y -> toward top)
+            const slope = cssHeight * 0.5; // strong visible slope
             for(let i=0;i<count;i++){
-                const y = baseline + (Math.random() - 0.5) * amplitude;
                 const xPos = i * pointSpacing;
+                const t = Math.max(0, Math.min(1, xPos / Math.max(1, cssWidth)));
+                // y decreases with x to create upward trend left->right
+                const ideal = baseline - slope * t;
+                const jitter = (Math.random() - 0.5) * amplitude;
+                const y = Math.max(2, Math.min(cssHeight-2, ideal + jitter));
                 points.push({x: xPos, y});
             }
+            // reset cumulative trend so initial shape is driven by baseline slope
+            cumulativeTrend = 0;
         }
 
         function appendPoint(){

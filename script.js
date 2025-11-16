@@ -303,36 +303,52 @@ function typeHeroText(options = {}){
         if (mounted) return; mounted = true;
 
         const hero = document.querySelector('.hero');
-        const heightPx = hero ? Math.max(120, hero.getBoundingClientRect().height) : Math.min(window.innerHeight, Math.floor(window.innerHeight * 0.45));
+        const heading = (hero && hero.querySelector('h2')) || document.querySelector('.hero h2');
 
         const c = document.createElement('canvas');
         c.id = 'stock';
         Object.assign(c.style, {
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: heightPx + 'px',
+            position: 'absolute',
             zIndex: '-1',
             pointerEvents: 'none',
-            opacity: '0.95'
+            opacity: '0.95',
+            willChange: 'transform'
         });
         document.body.appendChild(c);
         const x = c.getContext('2d');
 
-        function resize(){
-            const w = window.innerWidth;
-            const h = hero ? Math.max(120, hero.getBoundingClientRect().height) : Math.min(window.innerHeight, Math.floor(window.innerHeight * 0.45));
+        // compute and apply size & position so canvas sits centered under the heading
+        function resizeAndPosition(){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
-            c.style.height = h + 'px';
-            c.width = Math.floor(w * DPR);
-            c.height = Math.floor(h * DPR);
-            c.style.width = w + 'px';
-            c.style.height = h + 'px';
+            const headingRect = heading ? heading.getBoundingClientRect() : null;
+
+            // desired canvas width: 80% of heading width or 60% viewport, clamped
+            const vw = window.innerWidth;
+            const desiredWidth = headingRect ? Math.min(Math.max(300, headingRect.width * 0.9), Math.floor(vw * 0.8)) : Math.floor(vw * 0.8);
+            const desiredHeight = 140; // px in CSS pixels
+
+            // compute top/left in CSS pixels (account for scroll)
+            const top = headingRect ? (window.scrollY + headingRect.bottom + 8) : Math.floor(window.innerHeight * 0.12);
+            const left = Math.floor((vw - desiredWidth) / 2);
+
+            // apply CSS size/position
+            c.style.left = left + 'px';
+            c.style.top = top + 'px';
+            c.style.width = desiredWidth + 'px';
+            c.style.height = desiredHeight + 'px';
+
+            // set backing buffer size for DPR
+            c.width = Math.floor(desiredWidth * DPR);
+            c.height = Math.floor(desiredHeight * DPR);
             x.setTransform(DPR, 0, 0, DPR, 0, 0);
         }
-        resize();
-        window.addEventListener('resize', resize, {passive:true});
+
+        // initial position
+        resizeAndPosition();
+        const onResize = () => resizeAndPosition();
+        const onScroll = () => resizeAndPosition();
+        window.addEventListener('resize', onResize, {passive:true});
+        window.addEventListener('scroll', onScroll, {passive:true});
 
         // animation state
         let pts = [], px = -40, py = (c.height/ (window.devicePixelRatio||1)) / 2;

@@ -149,6 +149,22 @@ header {
     text-shadow: none; /* entferne den starken Schatten */
 }
 
+/* Typing caret (dezent) - nur sichtbar während der Tipp-Animation */
+.typing-caret::after{
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 1.05em;
+    background: currentColor;
+    margin-left: 6px;
+    vertical-align: bottom;
+    animation: caret-blink 1s steps(2, start) infinite;
+}
+@keyframes caret-blink{
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
 .hero p {
     font-size: 1.3em;
     color: #4a4a4a; /* Dunkle Farbe für Fließtext */

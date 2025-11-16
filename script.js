@@ -244,4 +244,40 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 4. NEU: Initialisiere die simulierte Login-Funktionalität
     initTestLogin();
+    // 5. Tippeffekt für Hero-Überschrift (nur einfügen, nicht andere Styles ändern)
+    try { typeHeroText(); } catch (e) { /* ignore if function missing */ }
 });
+
+/**
+ * Tippt die Hero-Überschrift Zeichen für Zeichen ein. Nur fügt Verhalten hinzu,
+ * ändert keine bestehenden Styles oder Klassen dauerhaft.
+ */
+function typeHeroText(options = {}){
+    const speed = typeof options.speed === 'number' ? options.speed : 48; // ms per char
+    const delay = typeof options.delay === 'number' ? options.delay : 220; // ms before start
+
+    const h2 = document.querySelector('.hero h2');
+    if(!h2) return;
+
+    const full = h2.textContent || '';
+    // don't run if already empty or already typed
+    if(!full.trim() || h2.dataset.typed === 'true') return;
+
+    h2.dataset.typed = 'true';
+    h2.originalText = full;
+    h2.textContent = '';
+    h2.classList.add('typing-caret');
+
+    let i = 0;
+    setTimeout(() => {
+        const timer = setInterval(() => {
+            h2.textContent += full.charAt(i);
+            i++;
+            if(i >= full.length){
+                clearInterval(timer);
+                // short delay then remove caret
+                setTimeout(() => h2.classList.remove('typing-caret'), 300);
+            }
+        }, speed);
+    }, delay);
+}

@@ -342,8 +342,9 @@ function typeHeroText(options = {}){
         let lineW = Number(initial.lineWidth) || 2;
         let desiredHeight = Number(initial.height) || 140;
         let visible = !!initial.visible;
-        // 3D depth in CSS pixels for side faces
-        let depth = (typeof initial.depth === 'number') ? Number(initial.depth) : 6;
+        // 3D perspective offsets (CSS pixels). Separate X/Y for better control.
+        let depthX = (typeof initial.depthX === 'number') ? Number(initial.depthX) : ((typeof initial.depth === 'number') ? Number(initial.depth) : 8);
+        let depthY = (typeof initial.depthY === 'number') ? Number(initial.depthY) : Math.max(1, Math.round((typeof initial.depth === 'number') ? Number(initial.depth)*0.45 : 4));
 
         // compute and apply size & position so canvas sits centered under the heading
         function resizeAndPosition(){
@@ -395,7 +396,8 @@ function typeHeroText(options = {}){
         // animation state: line chart
         let points = [];
         let pointSpacing = 6; // px between sample points
-        let volatility = 10; // amplitude for random moves (px)
+        // higher default volatility for a more jagged, 'market-like' line
+        let volatility = 24; // amplitude for random moves (px)
         let amplitude = volatility;
 
         // initialize points to fill width
@@ -416,7 +418,9 @@ function typeHeroText(options = {}){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
             const baseline = (c.height / DPR) / 2;
             const last = points.length ? points[points.length-1] : {y: baseline};
-            const y = Math.max(2, Math.min((c.height/DPR)-2, last.y + (Math.random()-0.5) * amplitude * 0.6));
+            // make jumps more pronounced and less smooth: sometimes large spikes
+            const jitter = (Math.random() - 0.5) * amplitude * (0.6 + Math.random()*1.4);
+            const y = Math.max(2, Math.min((c.height/DPR)-2, last.y + jitter));
             const xPos = points.length ? points[points.length-1].x + pointSpacing : 0;
             points.push({x: xPos, y});
         }
@@ -454,28 +458,62 @@ function typeHeroText(options = {}){
                 x.restore();
             } catch(e){}
 
-            // draw the smooth line
+            // draw the line with a sharper, more jagged appearance and a 3D extrusion
             if (points.length){
                 x.save();
                 x.lineWidth = lineW;
                 x.strokeStyle = strokeColor;
-                x.lineJoin = 'round';
-                x.lineCap = 'round';
+                x.lineJoin = 'miter';
+                x.lineCap = 'butt';
 
+                // build offset points for extrusion (perspective from top-left => offset down-right)
+                const depthOffsetX = Number(depthX) || 0;
+                const depthOffsetY = Number(depthY) || 0;
+                const offsetPoints = points.map(p => ({ x: p.x + depthOffsetX, y: p.y + depthOffsetY }));
+
+                // fill the extrusion polygon between line and its offset to simulate depth
+                try{
+                    x.beginPath();
+                    x.moveTo(points[0].x, points[0].y);
+                    for(let i=1;i<points.length;i++){
+                        const p = points[i];
+                        x.lineTo(p.x, p.y);
+                    }
+                    // connect to offset points in reverse
+                    for(let j=offsetPoints.length-1;j>=0;j--){
+                        const op = offsetPoints[j];
+                        x.lineTo(op.x, op.y);
+                    }
+                    x.closePath();
+                    const grad = x.createLinearGradient(0, 0, 0, cssHeight + depthOffsetY);
+                    grad.addColorStop(0, 'rgba(0,0,0,0.04)');
+                    grad.addColorStop(1, 'rgba(0,0,0,0.18)');
+                    x.fillStyle = grad;
+                    x.fill();
+                } catch(e){}
+
+                // draw the sharp polyline on top
                 x.beginPath();
                 x.moveTo(points[0].x, points[0].y);
                 for(let i=1;i<points.length;i++){
                     const p = points[i];
-                    // simple smoothing: quadratic curve to midpoint
-                    const prev = points[i-1];
-                    const mx = (prev.x + p.x)/2;
-                    const my = (prev.y + p.y)/2;
-                    x.quadraticCurveTo(prev.x, prev.y, mx, my);
+                    x.lineTo(p.x, p.y);
                 }
-                // final line to last
-                const last = points[points.length-1];
-                x.lineTo(last.x, last.y);
                 x.stroke();
+
+                // add a subtle highlight along the top-left edge of extrusion
+                try{
+                    x.beginPath();
+                    x.moveTo(points[0].x, points[0].y);
+                    for(let i=1;i<points.length;i++){
+                        const p = points[i];
+                        x.lineTo(p.x - depthOffsetX*0.15, p.y - depthOffsetY*0.15);
+                    }
+                    x.strokeStyle = 'rgba(255,255,255,0.65)';
+                    x.lineWidth = Math.max(1, Math.min(2, lineW/2));
+                    x.stroke();
+                } catch(e){}
+
                 x.restore();
             }
 
@@ -486,7 +524,7 @@ function typeHeroText(options = {}){
         initPoints();
         rafId = requestAnimationFrame(step);
 
-        // expose controller for live changes (extended for candles)
+                // expose controller for live changes (extended for candles/line)
         window.stockAnimController = {
             setColor(cNew){ strokeColor = cNew; },
             setSpeed(s){ animSpeed = Number(s) || animSpeed; },
@@ -497,9 +535,12 @@ function typeHeroText(options = {}){
             setCandleWidth(w){ /* legacy alias -> pointSpacing */ pointSpacing = Math.max(1, Number(w) || pointSpacing); initPoints(); },
             setSpacing(s){ pointSpacing = Math.max(1, Number(s) || pointSpacing); initPoints(); },
             setVolatility(v){ volatility = Math.max(0, Number(v) || volatility); amplitude = volatility; },
-            // 3D depth kept for compatibility (no-op for line)
-            setDepth(d){ depth = Math.max(0, Number(d) || depth); },
-            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, pointSpacing: pointSpacing, volatility: volatility, depth: depth }; }
+            // depth X/Y
+            setDepthX(dx){ depthX = Math.max(0, Number(dx) || 0); },
+            setDepthY(dy){ depthY = Math.max(0, Number(dy) || 0); },
+            // legacy: setDepth sets both
+            setDepth(d){ depthX = depthY = Math.max(0, Number(d) || 0); },
+            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, pointSpacing: pointSpacing, volatility: volatility, depthX: depthX, depthY: depthY }; }
         };
 
         // cleanup when page unloads
@@ -612,6 +653,28 @@ function createAnimationDiagnosticPanel(){
             } catch(err){ output.textContent += `pixel read failed (expected in some browsers): ${err.message}\n`; }
         } catch(e){ output.textContent += `getContext failed: ${e.message}\n`; }
 
+        // Extra compatibility checks: UA, DPR, offscreen canvas pixel test
+        try{
+            output.textContent += `\nuserAgent: ${navigator.userAgent}\n`;
+            output.textContent += `devicePixelRatio: ${window.devicePixelRatio || 1}\n`;
+
+            // offscreen test: draw to an ephemeral canvas and read pixels
+            const testCanvas = document.createElement('canvas');
+            const DPR = Math.max(1, window.devicePixelRatio || 1);
+            testCanvas.width = 4 * DPR; testCanvas.height = 4 * DPR;
+            testCanvas.style.width = '4px'; testCanvas.style.height = '4px';
+            const tctx = testCanvas.getContext('2d');
+            tctx.fillStyle = 'rgb(10,20,30)';
+            tctx.fillRect(0,0, testCanvas.width, testCanvas.height);
+            // draw a small semi-transparent rect
+            tctx.fillStyle = 'rgba(250,200,10,0.5)';
+            tctx.fillRect(1*DPR,1*DPR,2*DPR,2*DPR);
+            try{
+                const td = tctx.getImageData(2*DPR,2*DPR,1,1).data;
+                output.textContent += `offscreen test pixel: [${td.join(',')}]\n`;
+            } catch(err){ output.textContent += `offscreen pixel read failed: ${err.message}\n`; }
+        } catch(e){ output.textContent += `extra diag failed: ${e.message}\n`; }
+
         output.textContent += '\nDone. If anything looks wrong, paste this output here.';
     });
 
@@ -711,6 +774,16 @@ function createAnimationControlPanel(){
     const depthInput = document.createElement('input'); depthInput.type = 'checkbox'; depthInput.checked = true;
     rDepth.appendChild(lDepth); rDepth.appendChild(depthInput);
 
+    // Perspective X (px)
+    const {row: rDepthX, label: lDepthX} = makeRow('Perspektive X (px)');
+    const depthXInput = document.createElement('input'); depthXInput.type = 'range'; depthXInput.min = '0'; depthXInput.max = '60'; depthXInput.value = '8';
+    rDepthX.appendChild(lDepthX); rDepthX.appendChild(depthXInput);
+
+    // Perspective Y (px)
+    const {row: rDepthY, label: lDepthY} = makeRow('Perspektive Y (px)');
+    const depthYInput = document.createElement('input'); depthYInput.type = 'range'; depthYInput.min = '0'; depthYInput.max = '40'; depthYInput.value = '4';
+    rDepthY.appendChild(lDepthY); rDepthY.appendChild(depthYInput);
+
     // Height
     const {row: rHeight, label: lHeight} = makeRow('Höhe (px)');
     const heightInput = document.createElement('input');
@@ -762,7 +835,9 @@ function createAnimationControlPanel(){
         const cw = Number(cwInput.value) || 10;
         const sp = Number(spInput.value) || 4;
         const vol = Number(volInput.value) || 10;
-        const d3 = !!depthInput.checked ? 8 : 0;
+        const enabled3d = !!depthInput.checked;
+        const dx = enabled3d ? Number(depthXInput.value || 8) : 0;
+        const dy = enabled3d ? Number(depthYInput.value || 4) : 0;
 
         if (window.stockAnimController){
             window.stockAnimController.setColor(rgba);
@@ -774,7 +849,8 @@ function createAnimationControlPanel(){
             window.stockAnimController.setCandleWidth(cw);
             window.stockAnimController.setSpacing(sp);
             window.stockAnimController.setVolatility(vol);
-            window.stockAnimController.setDepth(d3);
+            window.stockAnimController.setDepthX(dx);
+            window.stockAnimController.setDepthY(dy);
         } else {
             // set config so mount reads it when ready
             window.stockAnimConfig = window.stockAnimConfig || {};
@@ -786,12 +862,13 @@ function createAnimationControlPanel(){
             window.stockAnimConfig.candleWidth = cw;
             window.stockAnimConfig.spacing = sp;
             window.stockAnimConfig.volatility = vol;
-            window.stockAnimConfig.depth = d3;
+            window.stockAnimConfig.depthX = dx;
+            window.stockAnimConfig.depthY = dy;
         }
     }
 
     // live apply on change
-    [colorInput, speedInput, lineInput, heightInput, visInput, cwInput, spInput, volInput, depthInput].forEach(inp => inp.addEventListener('input', applyToController));
+    [colorInput, speedInput, lineInput, heightInput, visInput, cwInput, spInput, volInput, depthInput, depthXInput, depthYInput].forEach(inp => inp.addEventListener('input', applyToController));
 
     // save to localStorage
     saveBtn.addEventListener('click', () => {
@@ -803,6 +880,7 @@ function createAnimationControlPanel(){
     resetBtn.addEventListener('click', () => {
         colorInput.value = '#00c88c'; speedInput.value = '3'; lineInput.value = '2'; heightInput.value = '140'; visInput.checked = true;
         cwInput.value = '10'; spInput.value = '4'; volInput.value = '10'; depthInput.checked = true;
+        depthXInput.value = '8'; depthYInput.value = '4';
         applyToController(); try{ localStorage.removeItem('capitovo_stock_anim'); }catch(e){}
     });
 
@@ -823,7 +901,9 @@ function createAnimationControlPanel(){
         if (cfg.candleWidth) cwInput.value = cfg.candleWidth;
         if (cfg.spacing) spInput.value = cfg.spacing;
         if (cfg.volatility) volInput.value = cfg.volatility;
-        if (typeof cfg.depth === 'number') depthInput.checked = cfg.depth > 0;
+        if (typeof cfg.depthX === 'number') depthXInput.value = cfg.depthX;
+        if (typeof cfg.depthY === 'number') depthYInput.value = cfg.depthY;
+        if (typeof cfg.depthX === 'number' || typeof cfg.depthY === 'number') depthInput.checked = (cfg.depthX||0) > 0 || (cfg.depthY||0) > 0;
     } catch(e){}
 
     // apply once at creation

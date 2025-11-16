@@ -388,45 +388,124 @@ function typeHeroText(options = {}){
         window.addEventListener('resize', onResize, {passive:true});
         window.addEventListener('scroll', onScroll, {passive:true});
 
-        // animation state
-        let pts = [], px = -40, py = (c.height/ (window.devicePixelRatio||1)) / 2;
+        // animation state: candlesticks
+        let candles = [];
+        let candleWidth = 10; // css px
+        let spacing = 4; // px between candles
+        let volatility = 10; // px magnitude for random price moves
+
+        // expose extra setters via controller later (initialized below)
+
+        // initialize candles to fill width
+        function initCandles(){
+            candles = [];
+            const stepX = candleWidth + spacing;
+            const count = Math.ceil((parseInt(c.style.width,10) || window.innerWidth) / stepX) + 6;
+            const baseline = (c.height / (window.devicePixelRatio||1)) / 2;
+            let lastClose = baseline;
+            for(let i=0;i<count;i++){
+                const open = lastClose;
+                const change = (Math.random() - 0.5) * volatility;
+                const close = Math.max(4, Math.min(baseline*2-4, open + change));
+                const high = Math.max(open, close) + Math.random()*volatility*0.6;
+                const low = Math.min(open, close) - Math.random()*volatility*0.6;
+                const xPos = i * stepX;
+                candles.push({x: xPos, open, high, low, close});
+                lastClose = close;
+            }
+        }
+
+        function appendCandle(){
+            const stepX = candleWidth + spacing;
+            const baseline = (c.height / (window.devicePixelRatio||1)) / 2;
+            const last = candles.length ? candles[candles.length-1] : {close: baseline};
+            const open = last.close;
+            const change = (Math.random() - 0.5) * volatility;
+            const close = Math.max(4, Math.min((c.height/(window.devicePixelRatio||1))-4, open + change));
+            const high = Math.max(open, close) + Math.random()*volatility*0.6;
+            const low = Math.min(open, close) - Math.random()*volatility*0.6;
+            const xPos = (candles.length ? candles[candles.length-1].x + stepX : 0);
+            candles.push({x: xPos, open, high, low, close});
+        }
 
         function step(){
-            // push new point
-            px += animSpeed;
-            py += (Math.random() - 0.5) * 10;
-            const currH = c.height / (window.devicePixelRatio||1);
-            if (py < 0) py = 0;
-            if (py > currH) py = currH;
-            pts.push({x: px, y: py});
+            const stepX = candleWidth + spacing;
+            // move candles left
+            for(const cd of candles) cd.x -= animSpeed;
 
-            // trim
-            const maxPoints = Math.ceil(window.innerWidth / 2);
-            if (pts.length > maxPoints){
-                pts.shift();
-                pts.forEach(p => p.x -= animSpeed);
+            // remove off-screen
+            while(candles.length && (candles[0].x + stepX) < 0) candles.shift();
+
+            // append if needed to fill right side
+            const desiredWidth = parseInt(c.style.width,10) || window.innerWidth;
+            while(!candles.length || (candles[candles.length-1].x + stepX) < desiredWidth + stepX){
+                appendCandle();
             }
 
-            // clear and draw
+            // clear and draw candles
             x.clearRect(0, 0, c.width, c.height);
-            x.beginPath();
-            x.lineWidth = lineW;
-            x.strokeStyle = strokeColor;
-            pts.forEach((p, i) => { i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y); });
-            x.stroke();
+            const DPR = Math.max(1, window.devicePixelRatio || 1);
+            const canvasH = c.height / DPR;
+
+            for(const cd of candles){
+                const cx = cd.x;
+                const openY = cd.open;
+                const closeY = cd.close;
+                const highY = cd.high;
+                const lowY = cd.low;
+
+                // stick within canvas
+                const top = Math.max(0, Math.min(canvasH, highY));
+                const bottom = Math.max(0, Math.min(canvasH, lowY));
+
+                // wick
+                x.beginPath();
+                x.strokeStyle = 'black';
+                x.lineWidth = 1;
+                const wickX = Math.round(cx + candleWidth/2);
+                x.moveTo(wickX, top);
+                x.lineTo(wickX, bottom);
+                x.stroke();
+
+                // body
+                const bodyTop = Math.min(openY, closeY);
+                const bodyBottom = Math.max(openY, closeY);
+                const bodyHeight = Math.max(1, bodyBottom - bodyTop);
+                const bodyX = Math.round(cx);
+                // up candle (close >= open) -> white fill with black stroke
+                if (cd.close >= cd.open){
+                    x.fillStyle = 'white';
+                    x.strokeStyle = 'black';
+                    x.lineWidth = 1;
+                    x.fillRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
+                    x.strokeRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
+                } else {
+                    // down candle -> black filled
+                    x.fillStyle = 'black';
+                    x.fillRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
+                }
+            }
 
             rafId = requestAnimationFrame(step);
         }
+
+        // initialize
+        let pts = [];
+        initCandles();
         rafId = requestAnimationFrame(step);
 
-        // expose controller for live changes
+        // expose controller for live changes (extended for candles)
         window.stockAnimController = {
             setColor(cNew){ strokeColor = cNew; },
             setSpeed(s){ animSpeed = Number(s) || animSpeed; },
             setLineWidth(w){ lineW = Number(w) || lineW; },
             setHeight(h){ desiredHeight = Number(h) || desiredHeight; resizeAndPosition(); },
             setVisible(v){ visible = !!v; c.style.display = visible ? 'block' : 'none'; },
-            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible }; }
+            // candle-specific
+            setCandleWidth(w){ candleWidth = Math.max(1, Number(w) || candleWidth); initCandles(); },
+            setSpacing(s){ spacing = Math.max(0, Number(s) || spacing); initCandles(); },
+            setVolatility(v){ volatility = Math.max(0, Number(v) || volatility); },
+            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, candleWidth: candleWidth, spacing: spacing, volatility: volatility }; }
         };
 
         // cleanup when page unloads
@@ -618,6 +697,21 @@ function createAnimationControlPanel(){
     lineInput.type = 'range'; lineInput.min = '1'; lineInput.max = '10'; lineInput.value = '2';
     rLine.appendChild(lLine); rLine.appendChild(lineInput);
 
+    // Candle width
+    const {row: rCw, label: lCw} = makeRow('Kerzen-Breite');
+    const cwInput = document.createElement('input'); cwInput.type = 'range'; cwInput.min='4'; cwInput.max='40'; cwInput.value='10';
+    rCw.appendChild(lCw); rCw.appendChild(cwInput);
+
+    // Spacing
+    const {row: rSp, label: lSp} = makeRow('Abstand');
+    const spInput = document.createElement('input'); spInput.type='range'; spInput.min='0'; spInput.max='30'; spInput.value='4';
+    rSp.appendChild(lSp); rSp.appendChild(spInput);
+
+    // Volatility
+    const {row: rVol, label: lVol} = makeRow('Volatilität');
+    const volInput = document.createElement('input'); volInput.type='range'; volInput.min='0'; volInput.max='40'; volInput.value='10';
+    rVol.appendChild(lVol); rVol.appendChild(volInput);
+
     // Height
     const {row: rHeight, label: lHeight} = makeRow('Höhe (px)');
     const heightInput = document.createElement('input');
@@ -675,7 +769,7 @@ function createAnimationControlPanel(){
     }
 
     // live apply on change
-    [colorInput, speedInput, lineInput, heightInput, visInput].forEach(inp => inp.addEventListener('input', applyToController));
+    [colorInput, speedInput, lineInput, heightInput, visInput, cwInput, spInput, volInput].forEach(inp => inp.addEventListener('input', applyToController));
 
     // save to localStorage
     saveBtn.addEventListener('click', () => {

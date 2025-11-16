@@ -494,6 +494,17 @@ details[open] .details-marker {
 #pricing a { color: #0f172a !important; }
 #pricing .bg-primary-blue a { background: #ffffff; color: var(--color-accent-blue) !important; }
 
+/* Harmonisiere Hover/Hebe-Effekt der Abo-Karten mit den 'Warum capitovo' Kästen */
+#pricing .grid > * {
+    transition: transform .28s ease, box-shadow .28s ease;
+    border-radius: 0.75rem; /* gleiche Abrundung */
+}
+
+#pricing .grid > *:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 18px 40px rgba(2,6,23,0.18);
+}
+
 /* ------------------------- */
 /* Footer: Buttons für Rechtstexte */
 /* ------------------------- */

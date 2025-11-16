@@ -429,6 +429,7 @@ function typeHeroText(options = {}){
             candles.push({x: xPos, open, high, low, close});
         }
 
+        let _frameCount = 0;
         function step(){
             const stepX = candleWidth + spacing;
             // move candles left
@@ -444,9 +445,21 @@ function typeHeroText(options = {}){
             }
 
             // clear and draw candles
-            x.clearRect(0, 0, c.width, c.height);
             const DPR = Math.max(1, window.devicePixelRatio || 1);
             const canvasH = c.height / DPR;
+            // clear using CSS-pixel dimensions to avoid transform issues
+            x.clearRect(0, 0, c.width / DPR, c.height / DPR);
+            _frameCount++;
+            if (_frameCount % 60 === 0) {
+                try { console.debug('candles.frame', _frameCount, 'candles', candles.length, 'canvasCSS', c.width/DPR, c.height/DPR); } catch(e){}
+            }
+            // subtle diagnostic overlay so we can visually confirm drawing
+            try{
+                x.save();
+                x.fillStyle = 'rgba(255,0,0,0.03)';
+                x.fillRect(0,0, c.width / DPR, canvasH);
+                x.restore();
+            } catch(e){}
 
             try {
             for(const cd of candles){

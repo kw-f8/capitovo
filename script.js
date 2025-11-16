@@ -173,16 +173,11 @@ function initTestLogin() {
 
         // Überprüfung der Testdaten
         if (enteredEmail === TEST_EMAIL && enteredPassword === TEST_PASSWORD) {
-            
             // **ERFOLGREICHE ANMELDUNG (SIMULIERT)**
-            alert('Anmeldung erfolgreich! (Simuliert)');
-            
-            // Felder leeren und Modal schließen
-            emailInput.value = '';
-            passwordInput.value = '';
-            closeLoginModal();
-            
-
+            try{ localStorage.setItem('capitovo_session', JSON.stringify({ email: enteredEmail, ts: Date.now() })); }catch(e){}
+            // Weiterleitung zum Mitgliederbereich
+            window.location.href = 'abonenten.html';
+            return;
         } else {
             
             // **FEHLERHAFTE ANMELDUNG**

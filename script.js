@@ -323,7 +323,8 @@ function typeHeroText(options = {}){
             position: 'absolute',
             zIndex: '100',
             pointerEvents: 'none',
-            opacity: '0.95',
+            opacity: '1',
+            background: '#ffffff',
             willChange: 'transform'
         });
 
@@ -372,8 +373,8 @@ function typeHeroText(options = {}){
                 // reset transform and scale -> draw using CSS pixels
                 x.setTransform(1, 0, 0, 1, 0, 0);
                 x.scale(DPR, DPR);
-            // reinitialize candles for new size
-            try { initCandles(); } catch (e) { /* ignore if not ready */ }
+                // reinitialize points for new size
+            try { initPoints(); } catch (e) { /* ignore if not ready */ }
         }
 
         // ensure heading sits above the canvas
@@ -391,140 +392,98 @@ function typeHeroText(options = {}){
         window.addEventListener('resize', onResize, {passive:true});
         window.addEventListener('scroll', onScroll, {passive:true});
 
-        // animation state: candlesticks
-        let candles = [];
-        let candleWidth = 10; // css px
-        let spacing = 4; // px between candles
-        let volatility = 10; // px magnitude for random price moves
+        // animation state: line chart
+        let points = [];
+        let pointSpacing = 6; // px between sample points
+        let volatility = 10; // amplitude for random moves (px)
+        let amplitude = volatility;
 
-        // expose extra setters via controller later (initialized below)
-
-        // initialize candles to fill width
-        function initCandles(){
-            candles = [];
-            const stepX = candleWidth + spacing;
-            const count = Math.ceil((parseInt(c.style.width,10) || window.innerWidth) / stepX) + 6;
-            const baseline = (c.height / (window.devicePixelRatio||1)) / 2;
-            let lastClose = baseline;
+        // initialize points to fill width
+        function initPoints(){
+            points = [];
+            const DPR = Math.max(1, window.devicePixelRatio || 1);
+            const width = parseInt(c.style.width,10) || Math.floor((c.width || window.innerWidth)/DPR);
+            const count = Math.ceil(width / pointSpacing) + 6;
+            const baseline = (c.height / DPR) / 2;
             for(let i=0;i<count;i++){
-                const open = lastClose;
-                const change = (Math.random() - 0.5) * volatility;
-                const close = Math.max(4, Math.min(baseline*2-4, open + change));
-                const high = Math.max(open, close) + Math.random()*volatility*0.6;
-                const low = Math.min(open, close) - Math.random()*volatility*0.6;
-                const xPos = i * stepX;
-                candles.push({x: xPos, open, high, low, close});
-                lastClose = close;
+                const y = baseline + (Math.random() - 0.5) * amplitude;
+                const xPos = i * pointSpacing;
+                points.push({x: xPos, y});
             }
         }
 
-        function appendCandle(){
-            const stepX = candleWidth + spacing;
-            const baseline = (c.height / (window.devicePixelRatio||1)) / 2;
-            const last = candles.length ? candles[candles.length-1] : {close: baseline};
-            const open = last.close;
-            const change = (Math.random() - 0.5) * volatility;
-            const close = Math.max(4, Math.min((c.height/(window.devicePixelRatio||1))-4, open + change));
-            const high = Math.max(open, close) + Math.random()*volatility*0.6;
-            const low = Math.min(open, close) - Math.random()*volatility*0.6;
-            const xPos = (candles.length ? candles[candles.length-1].x + stepX : 0);
-            candles.push({x: xPos, open, high, low, close});
+        function appendPoint(){
+            const DPR = Math.max(1, window.devicePixelRatio || 1);
+            const baseline = (c.height / DPR) / 2;
+            const last = points.length ? points[points.length-1] : {y: baseline};
+            const y = Math.max(2, Math.min((c.height/DPR)-2, last.y + (Math.random()-0.5) * amplitude * 0.6));
+            const xPos = points.length ? points[points.length-1].x + pointSpacing : 0;
+            points.push({x: xPos, y});
         }
 
         let _frameCount = 0;
         function step(){
-            const stepX = candleWidth + spacing;
-            // move candles left
-            for(const cd of candles) cd.x -= animSpeed;
+            // move points left by animSpeed
+            for(const p of points) p.x -= animSpeed;
 
-            // remove off-screen
-            while(candles.length && (candles[0].x + stepX) < 0) candles.shift();
+            // remove off-screen points
+            while(points.length && (points[0].x + pointSpacing) < 0) points.shift();
 
             // append if needed to fill right side
             const desiredWidth = parseInt(c.style.width,10) || window.innerWidth;
-            while(!candles.length || (candles[candles.length-1].x + stepX) < desiredWidth + stepX){
-                appendCandle();
+            while(!points.length || (points[points.length-1].x + pointSpacing) < desiredWidth + pointSpacing){
+                appendPoint();
             }
 
-            // clear and draw candles
-                // clear and draw candles (use CSS-pixel dims)
-                const DPR = Math.max(1, window.devicePixelRatio || 1);
-                const canvasH = c.height / DPR;
-                const cssWidth = parseInt(c.style.width, 10) || (c.width / DPR);
-                const cssHeight = canvasH;
-                x.clearRect(0, 0, cssWidth, cssHeight);
+            // clear and draw (use CSS pixels)
+            const DPR = Math.max(1, window.devicePixelRatio || 1);
+            const canvasH = c.height / DPR;
+            const cssWidth = parseInt(c.style.width, 10) || (c.width / DPR);
+            const cssHeight = canvasH;
+            x.clearRect(0, 0, cssWidth, cssHeight);
             _frameCount++;
             if (_frameCount % 60 === 0) {
-                try { console.debug('candles.frame', _frameCount, 'candles', candles.length, 'canvasCSS', c.width/DPR, c.height/DPR); } catch(e){}
+                try { console.debug('line.frame', _frameCount, 'points', points.length, 'canvasCSS', c.width/DPR, c.height/DPR); } catch(e){}
             }
-            // subtle diagnostic overlay so we can visually confirm drawing
+
+            // fill white background so it matches page
             try{
                 x.save();
-                x.fillStyle = 'rgba(255,0,0,0.03)';
-                x.fillRect(0,0, c.width / DPR, canvasH);
+                x.fillStyle = '#ffffff';
+                x.fillRect(0,0, cssWidth, canvasH);
                 x.restore();
             } catch(e){}
 
-            for(const cd of candles){
-                const cx = cd.x;
-                const openY = cd.open;
-                const closeY = cd.close;
-                const highY = cd.high;
-                const lowY = cd.low;
+            // draw the smooth line
+            if (points.length){
+                x.save();
+                x.lineWidth = lineW;
+                x.strokeStyle = strokeColor;
+                x.lineJoin = 'round';
+                x.lineCap = 'round';
 
-                // stick within canvas
-                const top = Math.max(0, Math.min(canvasH, highY));
-                const bottom = Math.max(0, Math.min(canvasH, lowY));
-
-                // wick
                 x.beginPath();
-                x.strokeStyle = 'rgba(0,0,0,0.9)';
-                x.lineWidth = 1;
-                const wickX = Math.round(cx + candleWidth/2);
-                x.moveTo(wickX, top);
-                x.lineTo(wickX, bottom);
+                x.moveTo(points[0].x, points[0].y);
+                for(let i=1;i<points.length;i++){
+                    const p = points[i];
+                    // simple smoothing: quadratic curve to midpoint
+                    const prev = points[i-1];
+                    const mx = (prev.x + p.x)/2;
+                    const my = (prev.y + p.y)/2;
+                    x.quadraticCurveTo(prev.x, prev.y, mx, my);
+                }
+                // final line to last
+                const last = points[points.length-1];
+                x.lineTo(last.x, last.y);
                 x.stroke();
-
-                // body (3D-like): draw side depth, then body with gradient and stroke
-                const bodyTop = Math.min(openY, closeY);
-                const bodyBottom = Math.max(openY, closeY);
-                const bodyHeight = Math.max(1, bodyBottom - bodyTop);
-                const bodyX = Math.round(cx);
-
-                // depth offset (in CSS pixels)
-                const depthOffset = Math.max(0, Math.round(depth));
-
-                // draw right-side face to simulate thickness
-                if (depthOffset > 0){
-                    x.fillStyle = 'rgba(0,0,0,0.12)';
-                    x.fillRect(bodyX + candleWidth, bodyTop + Math.round(depthOffset/2), Math.round(depthOffset/2), bodyHeight);
-                    // bottom face
-                    x.fillRect(bodyX + Math.round(depthOffset/4), bodyBottom, candleWidth, Math.round(depthOffset/2));
-                }
-
-                // gradient fill for body
-                if (cd.close >= cd.open){
-                    const grad = x.createLinearGradient(0, bodyTop, 0, bodyBottom);
-                    grad.addColorStop(0, '#ffffff');
-                    grad.addColorStop(1, '#e6e6e6');
-                    x.fillStyle = grad;
-                    x.fillRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
-                    x.strokeStyle = 'rgba(0,0,0,0.85)';
-                    x.lineWidth = 1;
-                    x.strokeRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
-                } else {
-                    const grad = x.createLinearGradient(0, bodyTop, 0, bodyBottom);
-                    grad.addColorStop(0, '#444444');
-                    grad.addColorStop(1, '#000000');
-                    x.fillStyle = grad;
-                    x.fillRect(bodyX, bodyTop, Math.max(1, candleWidth), bodyHeight);
-                }
+                x.restore();
             }
+
             rafId = requestAnimationFrame(step);
         }
 
         // initialize
-        initCandles();
+        initPoints();
         rafId = requestAnimationFrame(step);
 
         // expose controller for live changes (extended for candles)
@@ -534,13 +493,13 @@ function typeHeroText(options = {}){
             setLineWidth(w){ lineW = Number(w) || lineW; },
             setHeight(h){ desiredHeight = Number(h) || desiredHeight; resizeAndPosition(); },
             setVisible(v){ visible = !!v; c.style.display = visible ? 'block' : 'none'; },
-            // candle-specific
-            setCandleWidth(w){ candleWidth = Math.max(1, Number(w) || candleWidth); initCandles(); },
-            setSpacing(s){ spacing = Math.max(0, Number(s) || spacing); initCandles(); },
-            setVolatility(v){ volatility = Math.max(0, Number(v) || volatility); },
-            // 3D depth
+            // point/line specific
+            setCandleWidth(w){ /* legacy alias -> pointSpacing */ pointSpacing = Math.max(1, Number(w) || pointSpacing); initPoints(); },
+            setSpacing(s){ pointSpacing = Math.max(1, Number(s) || pointSpacing); initPoints(); },
+            setVolatility(v){ volatility = Math.max(0, Number(v) || volatility); amplitude = volatility; },
+            // 3D depth kept for compatibility (no-op for line)
             setDepth(d){ depth = Math.max(0, Number(d) || depth); },
-            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, candleWidth: candleWidth, spacing: spacing, volatility: volatility, depth: depth }; }
+            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible, pointSpacing: pointSpacing, volatility: volatility, depth: depth }; }
         };
 
         // cleanup when page unloads

@@ -5,20 +5,21 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>capitovo — Mitgliederbereich</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 <body class="bg-white text-gray-900">
 
-    <header class="py-6 border-b">
-        <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-3">
-                <img src="caitavo_logo_weiß.png" alt="capitovo" class="h-10">
-                <span class="font-bold text-xl text-primary-blue">capitovo</span>
-            </a>
-            <nav>
-                <a href="index.html" class="text-sm text-gray-600 hover:text-accent-blue mr-4">Startseite</a>
-                <a href="#" id="logout-link" class="text-sm bg-primary-blue text-white px-3 py-2 rounded">Abmelden</a>
-            </nav>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="text-sm text-gray-600 hover:text-accent-blue">Startseite</a>
+                <a href="#" id="logout-link" class="text-sm cta-button">Abmelden</a>
+            </div>
         </div>
     </header>
 
@@ -67,7 +68,7 @@
             e.preventDefault();
             // clear any simulated session storage
             try{ localStorage.removeItem('capitovo_session'); }catch(e){}
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         });
 
         // Client-side protection: redirect to homepage if not logged in
@@ -75,7 +76,7 @@
             try{
                 const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null');
                 if (!sess || !sess.email) {
-                    window.location.href = 'index.html';
+                    window.location.href = '../index.html';
                     return;
                 }
 
@@ -86,7 +87,7 @@
                 // load analyses dynamically (max 6)
                 const container = document.getElementById('member-analyses');
                 if (container) {
-                    fetch('data/analysen.json')
+                    fetch('../data/analysen.json')
                         .then(r => r.ok ? r.json() : Promise.reject(r.status))
                         .then(data => {
                             const list = data.slice(0,6).map(a => {
@@ -98,7 +99,7 @@
                             container.innerHTML = '<p class="text-sm text-gray-500">Analysen konnten nicht geladen werden.</p>';
                         });
                 }
-            } catch(e){ window.location.href = 'index.html'; }
+            } catch(e){ window.location.href = '../index.html'; }
         })();
     </script>
 </body>

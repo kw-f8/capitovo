@@ -102,7 +102,7 @@ function createAnalysisArticle(analysis) {
             </p>
             
             <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
-                Vorschau lesen →
+                Jetzt lesen →
             </span>
             
         </a>

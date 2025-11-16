@@ -243,95 +243,44 @@
 
     <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
         <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
-        <div class="sidebar-header" style="color:#fff; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.04);">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:48px;height:48px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff">CV</div>
-                <div>
-                    <div style="font-weight:700">Gast</div>
-                    <div style="font-size:13px;opacity:0.85">Nicht angemeldet</div>
-                </div>
-            </div>
-            <div style="margin-top:10px;">
-                <a href="#open-login" class="sidebar-cta" style="display:inline-block; width:100%; text-align:center;">Anmelden / Konto</a>
-            </div>
+
+        <!-- Top: Login CTA -->
+        <div style="padding:14px 0 8px 0;">
+            <a href="#open-login" class="sidebar-cta" style="display:block; text-align:center;">Anmelden / Konto</a>
         </div>
 
+        <!-- Navigation: klare Buttons nach Login -->
         <nav class="sidebar-nav" aria-label="Hauptnavigation">
             <ul>
                 <li>
-                    <a href="#analysen" class="flex items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="3" y="10" width="4" height="11" rx="0.5" />
-                            <rect x="10" y="6" width="4" height="15" rx="0.5" />
-                            <rect x="17" y="3" width="4" height="18" rx="0.5" />
-                        </svg>
+                    <a href="#analysen" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="10" width="4" height="11" rx="0.5" /><rect x="10" y="6" width="4" height="15" rx="0.5" /><rect x="17" y="3" width="4" height="18" rx="0.5" /></svg>
                         <span>Analysen</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#pricing" class="flex items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="2" y="6" width="20" height="12" rx="2" />
-                            <rect x="4" y="9" width="6" height="2" rx="1" />
-                        </svg>
+                    <a href="#pricing" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2" /><rect x="4" y="9" width="6" height="2" rx="1" /></svg>
                         <span>Abo & Preise</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#vorteile" class="flex items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2l2.09 6.26L20 9l-5 3.63L16.18 20 12 16.9 7.82 20 9 12.63 4 9l5.91-.74L12 2z" />
-                        </svg>
+                    <a href="#vorteile" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l2.09 6.26L20 9l-5 3.63L16.18 20 12 16.9 7.82 20 9 12.63 4 9l5.91-.74L12 2z" /></svg>
                         <span>Vorteile</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#faq" class="flex items-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2a10 10 0 100 20 10 10 0 000-20z" />
-                            <path d="M12 16h-0.01" />
-                            <path d="M11 12h1v-1a2 2 0 10-2-2" />
-                        </svg>
+                    <a href="#faq" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" /><path d="M12 16h-0.01" /><path d="M11 12h1v-1a2 2 0 10-2-2" /></svg>
                         <span>FAQ</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#abo" class="sidebar-cta">Jetzt Abonnieren</a>
+                    <a href="#abo" class="sidebar-cta" style="margin-top:12px;">Jetzt Abonnieren</a>
                 </li>
             </ul>
         </nav>
-
-        <div class="sidebar-subscribe" style="margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04);">
-            <h4 style="color:#fff;margin-bottom:8px;font-size:15px">Newsletter abonnieren</h4>
-            <form id="sidebar-subscribe-form" style="display:flex;gap:8px;">
-                <input id="sidebar-subscribe-email" type="email" required placeholder="Ihre E-Mail" style="flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:#fff">
-                <button type="submit" class="sidebar-cta" style="padding:8px 10px;">Abonnieren</button>
-            </form>
-            <div id="sidebar-subscribe-msg" style="margin-top:8px;color:rgba(255,255,255,0.85);font-size:13px;display:none"></div>
-        </div>
-
-        <div class="sidebar-quick" style="margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.04);">
-            <h5 style="color:#fff;margin-bottom:8px;font-size:13px">Schnellzugriff</h5>
-            <ul style="list-style:none;padding:0;margin:0;color:#fff;opacity:0.95">
-                <li style="padding:6px 0"><a href="#" class="sidebar-link" style="color:inherit;text-decoration:none">Favoriten</a></li>
-                <li style="padding:6px 0"><a href="#" class="sidebar-link" style="color:inherit;text-decoration:none">Marktübersicht</a></li>
-                <li style="padding:6px 0"><a href="#" class="sidebar-link" style="color:inherit;text-decoration:none">Einstellungen</a></li>
-            </ul>
-        </div>
-
-        <div class="sidebar-social" style="margin-top:18px;border-top:1px solid rgba(255,255,255,0.04);padding-top:12px;">
-            <div style="display:flex;gap:12px;">
-                <a href="#" aria-label="Twitter" style="color:#fff;text-decoration:none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0016 3a4.48 4.48 0 00-4.47 4.47c0 .35.04.69.12 1.02A12.78 12.78 0 013 4s-4 9 5 13a13 13 0 01-8 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>
-                </a>
-                <a href="#" aria-label="LinkedIn" style="color:#fff;text-decoration:none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 012-2h0"/></svg>
-                </a>
-                <a href="#" aria-label="YouTube" style="color:#fff;text-decoration:none">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.97C18.88 4 12 4 12 4s-6.88 0-8.59.45A2.78 2.78 0 001.46 6.42 29.75 29.75 0 001 12a29.75 29.75 0 00.46 5.58 2.78 2.78 0 001.95 1.97C5.12 20 12 20 12 20s6.88 0 8.59-.45a2.78 2.78 0 001.95-1.97A29.75 29.75 0 0023 12a29.75 29.75 0 00-.46-5.58z"/><path d="M9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>
-                </a>
-            </div>
-        </div>
     </div>
 
     <div id="login-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">

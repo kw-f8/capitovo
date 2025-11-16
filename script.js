@@ -368,10 +368,8 @@ function typeHeroText(options = {}){
             c.width = Math.floor(desiredWidth * DPR);
             c.height = Math.floor(hpx * DPR);
             x.setTransform(DPR, 0, 0, DPR, 0, 0);
-            // reset drawing state so py baseline recalculates
-            pts = [];
-            px = -40;
-            py = (c.height/ (window.devicePixelRatio||1)) / 2;
+            // reinitialize candles for new size
+            try { initCandles(); } catch (e) { /* ignore if not ready */ }
         }
 
         // ensure heading sits above the canvas
@@ -521,9 +519,15 @@ function typeHeroText(options = {}){
         }
 
         // initialize
-        let pts = [];
         initCandles();
-        rafId = requestAnimationFrame(step);
+        try{ console.debug('stock mounted', { width: c.style.width, height: c.style.height, backingWidth: c.width, backingHeight: c.height, candles: candles.length }); } catch(e){}
+        let _firstStep = true;
+        rafId = requestAnimationFrame(function firstStep(){
+            if(_firstStep){ try{ console.debug('stock step starting, candles', candles.length); }catch(e){}
+                _firstStep = false;
+            }
+            step();
+        });
 
         // expose controller for live changes (extended for candles)
         window.stockAnimController = {

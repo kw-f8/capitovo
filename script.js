@@ -285,3 +285,103 @@ function typeHeroText(options = {}){
         }, speed);
     }, delay);
 }
+
+// --- Stock-like canvas background animation (non-destructive) ---
+// Adds a full-width canvas behind the top section (hero) and animates a flowing line.
+// Respects prefers-reduced-motion and uses devicePixelRatio for crisp rendering.
+(function initStockBackground(){
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        console.debug('stock animation skipped: prefers-reduced-motion');
+        return;
+    }
+
+    let mounted = false;
+    let rafId = null;
+
+    function mount(){
+        if (mounted) return; mounted = true;
+
+        const hero = document.querySelector('.hero');
+        const heightPx = hero ? Math.max(120, hero.getBoundingClientRect().height) : Math.min(window.innerHeight, Math.floor(window.innerHeight * 0.45));
+
+        const c = document.createElement('canvas');
+        c.id = 'stock';
+        Object.assign(c.style, {
+            position: 'fixed',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: heightPx + 'px',
+            zIndex: '-1',
+            pointerEvents: 'none',
+            opacity: '0.95'
+        });
+        document.body.appendChild(c);
+        const x = c.getContext('2d');
+
+        function resize(){
+            const w = window.innerWidth;
+            const h = hero ? Math.max(120, hero.getBoundingClientRect().height) : Math.min(window.innerHeight, Math.floor(window.innerHeight * 0.45));
+            const DPR = Math.max(1, window.devicePixelRatio || 1);
+            c.style.height = h + 'px';
+            c.width = Math.floor(w * DPR);
+            c.height = Math.floor(h * DPR);
+            c.style.width = w + 'px';
+            c.style.height = h + 'px';
+            x.setTransform(DPR, 0, 0, DPR, 0, 0);
+        }
+        resize();
+        window.addEventListener('resize', resize, {passive:true});
+
+        // animation state
+        let pts = [], px = -40, py = (c.height/ (window.devicePixelRatio||1)) / 2;
+        const speed = 3; // pixels per frame
+
+        function step(){
+            // push new point
+            px += speed;
+            py += (Math.random() - 0.5) * 10;
+            const currH = c.height / (window.devicePixelRatio||1);
+            if (py < 0) py = 0;
+            if (py > currH) py = currH;
+            pts.push({x: px, y: py});
+
+            // trim
+            const maxPoints = Math.ceil(window.innerWidth / 2);
+            if (pts.length > maxPoints){
+                pts.shift();
+                pts.forEach(p => p.x -= speed);
+            }
+
+            // clear and draw
+            x.clearRect(0, 0, c.width, c.height);
+            x.beginPath();
+            x.lineWidth = 2;
+            x.strokeStyle = 'rgba(0,200,140,0.45)';
+            pts.forEach((p, i) => { i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y); });
+            x.stroke();
+
+            rafId = requestAnimationFrame(step);
+        }
+        rafId = requestAnimationFrame(step);
+
+        // cleanup when page unloads
+        function unmount(){
+            if (rafId) cancelAnimationFrame(rafId);
+            window.removeEventListener('resize', resize);
+            window.removeEventListener('pagehide', onPageHide);
+            if (c && c.parentNode) c.parentNode.removeChild(c);
+        }
+        function onPageHide(){ unmount(); }
+        window.addEventListener('pagehide', onPageHide);
+    }
+
+    // Mount after DOM ready to avoid interfering with layout constructs
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(mount, 20);
+    } else {
+        document.addEventListener('DOMContentLoaded', () => setTimeout(mount, 20));
+    }
+
+})();

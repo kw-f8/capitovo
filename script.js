@@ -505,9 +505,20 @@ function typeHeroText(options = {}){
         }
 
         let _frameCount = 0;
-        function step(){
-            // move points left by animSpeed
-            for(const p of points) p.x -= animSpeed;
+        let _lastTime = null;
+        function step(now){
+            if (!_lastTime) _lastTime = now || performance.now();
+            const timestamp = now || performance.now();
+            const dt = Math.min(200, timestamp - _lastTime); // cap delta to avoid huge jumps
+            _lastTime = timestamp;
+
+            // convert animSpeed (legacy: px per frame at 60fps) into px per delta
+            // base frame time ~16.6667ms -> factor = dt / 16.6667
+            const factor = dt / (1000 / 60);
+            const moveBy = animSpeed * factor;
+
+            // move points left by time-corrected animSpeed
+            for(const p of points) p.x -= moveBy;
 
             // remove off-screen points
             while(points.length && (points[0].x + pointSpacing) < 0) points.shift();

@@ -472,6 +472,10 @@ function typeHeroText(options = {}){
         // higher default volatility for a more jagged, 'market-like' line
         let volatility = 24; // amplitude for random moves (px)
         let amplitude = volatility;
+        // upward trend: px per second (negative moves line up visually)
+        let trendPerSecond = (typeof initial.trendPerSecond === 'number') ? Number(initial.trendPerSecond) : -6;
+        // cumulative trend applied to newly appended points (px)
+        let cumulativeTrend = 0;
 
         // initialize points to fill width
         function initPoints(){
@@ -499,7 +503,9 @@ function typeHeroText(options = {}){
             // limit per-step jump to avoid extreme stuttering
             const maxJump = Math.max(6, amplitude * 0.9);
             const delta = Math.max(-maxJump, Math.min(maxJump, jitter));
-            const y = Math.max(2, Math.min((c.height/DPR)-2, last.y + delta));
+            // include cumulative trend so the overall shape shows an upward drift over time
+            const yRaw = last.y + delta + cumulativeTrend;
+            const y = Math.max(2, Math.min((c.height/DPR)-2, yRaw));
             const xPos = points.length ? points[points.length-1].x + pointSpacing : 0;
             points.push({x: xPos, y});
         }
@@ -512,8 +518,10 @@ function typeHeroText(options = {}){
             const dt = Math.min(200, timestamp - _lastTime); // cap delta to avoid huge jumps
             _lastTime = timestamp;
 
+            // update cumulative trend based on time (px per second)
+            cumulativeTrend += (trendPerSecond * (dt / 1000));
+
             // convert animSpeed (legacy: px per frame at 60fps) into px per delta
-            // base frame time ~16.6667ms -> factor = dt / 16.6667
             const factor = dt / (1000 / 60);
             const moveBy = animSpeed * factor;
 
@@ -632,8 +640,10 @@ function typeHeroText(options = {}){
             rafId = requestAnimationFrame(step);
         }
 
-        // initialize
+            // initialize and force one immediate draw so the animation doesn't appear "small"
         initPoints();
+        // perform a synchronous first frame render
+        try { step(performance.now()); } catch(e) { /* ignore */ }
         rafId = requestAnimationFrame(step);
 
                 // expose controller for live changes (extended for candles/line)

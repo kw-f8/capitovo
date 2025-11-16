@@ -339,11 +339,27 @@ function typeHeroText(options = {}){
         return;
     }
 
+    // Only allow mounting on the site's index/root page — prevents accidental mounts
+    try{
+        const p = (window.location && window.location.pathname || '').toLowerCase();
+        const isIndexLike = p.endsWith('index.html') || p === '/' || p.endsWith('/');
+        if (!isIndexLike) {
+            console.debug('stock animation skipped: not on index/root path', p);
+            return;
+        }
+    } catch(e){}
+
     let mounted = false;
     let rafId = null;
 
     function mount(){
         if (mounted) return; mounted = true;
+        // Only mount the animation on pages that contain a hero area.
+        // Prevents the canvas from being appended to document.body on other pages
+        if (!document.querySelector('.hero') && !document.querySelector('.hero-wrapper')) {
+            console.debug('stock animation mount skipped: no hero present on this page');
+            return;
+        }
         const hero = document.querySelector('.hero');
         const heading = (hero && hero.querySelector('h2')) || document.querySelector('.hero h2');
 

@@ -251,6 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { /* ignore if function missing */ }
     // add on-page diagnostic helper (non-destructive)
     try { createAnimationDiagnosticPanel(); } catch (e) { /* ignore */ }
+    // add live controls panel for animation
+    try { createAnimationControlPanel(); } catch (e) { /* ignore */ }
 });
 
 /**
@@ -303,9 +305,17 @@ function typeHeroText(options = {}){
 
     function mount(){
         if (mounted) return; mounted = true;
-
         const hero = document.querySelector('.hero');
         const heading = (hero && hero.querySelector('h2')) || document.querySelector('.hero h2');
+
+        // read initial config (can be set before mount via window.stockAnimConfig)
+        const initial = Object.assign({
+            color: 'rgba(0,200,140,0.45)',
+            speed: 3,
+            lineWidth: 2,
+            height: 140,
+            visible: true
+        }, window.stockAnimConfig || {});
 
         const c = document.createElement('canvas');
         c.id = 'stock';
@@ -325,6 +335,13 @@ function typeHeroText(options = {}){
         container.appendChild(c);
         const x = c.getContext('2d');
 
+        // animation state variables that controller will update
+        let strokeColor = initial.color;
+        let animSpeed = Number(initial.speed) || 3;
+        let lineW = Number(initial.lineWidth) || 2;
+        let desiredHeight = Number(initial.height) || 140;
+        let visible = !!initial.visible;
+
         // compute and apply size & position so canvas sits centered under the heading
         function resizeAndPosition(){
             const DPR = Math.max(1, window.devicePixelRatio || 1);
@@ -333,7 +350,7 @@ function typeHeroText(options = {}){
             // desired canvas width: 80% of heading width or 60% viewport, clamped
             const vw = window.innerWidth;
             const desiredWidth = headingRect ? Math.min(Math.max(300, headingRect.width * 0.9), Math.floor(vw * 0.8)) : Math.floor(vw * 0.8);
-            const desiredHeight = 140; // px in CSS pixels
+            const hpx = desiredHeight; // px in CSS pixels
 
             // compute top/left in CSS pixels relative to the container
             const containerRect = container.getBoundingClientRect();
@@ -344,12 +361,17 @@ function typeHeroText(options = {}){
             c.style.left = left + 'px';
             c.style.top = top + 'px';
             c.style.width = desiredWidth + 'px';
-            c.style.height = desiredHeight + 'px';
+            c.style.height = hpx + 'px';
+            c.style.display = visible ? 'block' : 'none';
 
             // set backing buffer size for DPR
             c.width = Math.floor(desiredWidth * DPR);
-            c.height = Math.floor(desiredHeight * DPR);
+            c.height = Math.floor(hpx * DPR);
             x.setTransform(DPR, 0, 0, DPR, 0, 0);
+            // reset drawing state so py baseline recalculates
+            pts = [];
+            px = -40;
+            py = (c.height/ (window.devicePixelRatio||1)) / 2;
         }
 
         // ensure heading sits above the canvas
@@ -368,11 +390,10 @@ function typeHeroText(options = {}){
 
         // animation state
         let pts = [], px = -40, py = (c.height/ (window.devicePixelRatio||1)) / 2;
-        const speed = 3; // pixels per frame
 
         function step(){
             // push new point
-            px += speed;
+            px += animSpeed;
             py += (Math.random() - 0.5) * 10;
             const currH = c.height / (window.devicePixelRatio||1);
             if (py < 0) py = 0;
@@ -383,20 +404,30 @@ function typeHeroText(options = {}){
             const maxPoints = Math.ceil(window.innerWidth / 2);
             if (pts.length > maxPoints){
                 pts.shift();
-                pts.forEach(p => p.x -= speed);
+                pts.forEach(p => p.x -= animSpeed);
             }
 
             // clear and draw
             x.clearRect(0, 0, c.width, c.height);
             x.beginPath();
-            x.lineWidth = 2;
-            x.strokeStyle = 'rgba(0,200,140,0.45)';
+            x.lineWidth = lineW;
+            x.strokeStyle = strokeColor;
             pts.forEach((p, i) => { i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y); });
             x.stroke();
 
             rafId = requestAnimationFrame(step);
         }
         rafId = requestAnimationFrame(step);
+
+        // expose controller for live changes
+        window.stockAnimController = {
+            setColor(cNew){ strokeColor = cNew; },
+            setSpeed(s){ animSpeed = Number(s) || animSpeed; },
+            setLineWidth(w){ lineW = Number(w) || lineW; },
+            setHeight(h){ desiredHeight = Number(h) || desiredHeight; resizeAndPosition(); },
+            setVisible(v){ visible = !!v; c.style.display = visible ? 'block' : 'none'; },
+            getConfig(){ return { color: strokeColor, speed: animSpeed, lineWidth: lineW, height: desiredHeight, visible: visible }; }
+        };
 
         // cleanup when page unloads
         function unmount(){
@@ -405,6 +436,8 @@ function typeHeroText(options = {}){
             window.removeEventListener('scroll', onScroll);
             window.removeEventListener('pagehide', onPageHide);
             if (c && c.parentNode) c.parentNode.removeChild(c);
+            // remove controller
+            try{ delete window.stockAnimController; } catch(e){ window.stockAnimController = undefined; }
         }
         function onPageHide(){ unmount(); }
         window.addEventListener('pagehide', onPageHide);
@@ -511,5 +544,170 @@ function createAnimationDiagnosticPanel(){
 
     panel.appendChild(btn);
     panel.appendChild(output);
+    document.body.appendChild(panel);
+}
+
+// --- Live control panel for animation ------------------------------------
+function createAnimationControlPanel(){
+    if (document.getElementById('anim-control-panel')) return;
+
+    const panel = document.createElement('div');
+    panel.id = 'anim-control-panel';
+    Object.assign(panel.style, {
+        position: 'fixed',
+        right: '12px',
+        bottom: '80px',
+        zIndex: 99999,
+        fontFamily: 'system-ui,Segoe UI,Roboto,Arial',
+    });
+
+    const toggle = document.createElement('button');
+    toggle.textContent = 'Animation anpassen';
+    Object.assign(toggle.style, {
+        background: '#111827',
+        color: '#fff',
+        border: 'none',
+        padding: '8px 10px',
+        borderRadius: '8px',
+        cursor: 'pointer',
+        boxShadow: '0 6px 18px rgba(2,6,23,0.2)'
+    });
+
+    const box = document.createElement('div');
+    Object.assign(box.style, {
+        display: 'none',
+        marginTop: '8px',
+        background: '#fff',
+        color: '#111',
+        padding: '12px',
+        borderRadius: '8px',
+        boxShadow: '0 8px 30px rgba(2,6,23,0.12)',
+        minWidth: '260px'
+    });
+
+    // helpers
+    function makeRow(labelText){
+        const row = document.createElement('div');
+        row.style.display = 'flex';
+        row.style.alignItems = 'center';
+        row.style.justifyContent = 'space-between';
+        row.style.marginBottom = '8px';
+        const label = document.createElement('label');
+        label.textContent = labelText;
+        label.style.marginRight = '8px';
+        return {row, label};
+    }
+
+    // Color
+    const {row: rColor, label: lColor} = makeRow('Farbe');
+    const colorInput = document.createElement('input');
+    colorInput.type = 'color';
+    colorInput.value = '#00c88c';
+    rColor.appendChild(lColor);
+    rColor.appendChild(colorInput);
+
+    // Speed
+    const {row: rSpeed, label: lSpeed} = makeRow('Geschwindigkeit');
+    const speedInput = document.createElement('input');
+    speedInput.type = 'range'; speedInput.min = '1'; speedInput.max = '12'; speedInput.value = '3';
+    rSpeed.appendChild(lSpeed); rSpeed.appendChild(speedInput);
+
+    // Line width
+    const {row: rLine, label: lLine} = makeRow('Linienstärke');
+    const lineInput = document.createElement('input');
+    lineInput.type = 'range'; lineInput.min = '1'; lineInput.max = '10'; lineInput.value = '2';
+    rLine.appendChild(lLine); rLine.appendChild(lineInput);
+
+    // Height
+    const {row: rHeight, label: lHeight} = makeRow('Höhe (px)');
+    const heightInput = document.createElement('input');
+    heightInput.type = 'number'; heightInput.min = '40'; heightInput.max = '600'; heightInput.value = '140'; heightInput.style.width = '80px';
+    rHeight.appendChild(lHeight); rHeight.appendChild(heightInput);
+
+    // Visibility toggle
+    const {row: rVis, label: lVis} = makeRow('Sichtbar');
+    const visInput = document.createElement('input'); visInput.type = 'checkbox'; visInput.checked = true;
+    rVis.appendChild(lVis); rVis.appendChild(visInput);
+
+    // Save / Reset
+    const btnRow = document.createElement('div'); btnRow.style.display = 'flex'; btnRow.style.gap = '8px';
+    const saveBtn = document.createElement('button'); saveBtn.textContent = 'Speichern';
+    const resetBtn = document.createElement('button'); resetBtn.textContent = 'Zurücksetzen';
+    [saveBtn, resetBtn].forEach(b=>{ Object.assign(b.style, {flex: '1', padding: '8px', borderRadius: '6px', border:'none', cursor:'pointer'}) });
+    saveBtn.style.background = '#06b6d4'; saveBtn.style.color = '#fff'; resetBtn.style.background = '#ef4444'; resetBtn.style.color = '#fff';
+    btnRow.appendChild(saveBtn); btnRow.appendChild(resetBtn);
+
+    // Append rows
+    box.appendChild(rColor); box.appendChild(rSpeed); box.appendChild(rLine); box.appendChild(rHeight); box.appendChild(rVis); box.appendChild(btnRow);
+
+    // Toggle behavior
+    toggle.addEventListener('click', () => { box.style.display = box.style.display === 'none' ? 'block' : 'none'; });
+
+    // helper to apply values via controller when available
+    function applyToController(){
+        const col = colorInput.value || '#00c88c';
+        // convert hex to rgba with alpha ~0.45
+        const hex = col.replace('#','');
+        const r = parseInt(hex.substring(0,2),16);
+        const g = parseInt(hex.substring(2,4),16);
+        const b = parseInt(hex.substring(4,6),16);
+        const rgba = `rgba(${r},${g},${b},0.45)`;
+        const speed = Number(speedInput.value)||3;
+        const lw = Number(lineInput.value)||2;
+        const h = Number(heightInput.value)||140;
+        const vis = !!visInput.checked;
+
+        if (window.stockAnimController){
+            window.stockAnimController.setColor(rgba);
+            window.stockAnimController.setSpeed(speed);
+            window.stockAnimController.setLineWidth(lw);
+            window.stockAnimController.setHeight(h);
+            window.stockAnimController.setVisible(vis);
+        } else {
+            // set config so mount reads it when ready
+            window.stockAnimConfig = window.stockAnimConfig || {};
+            window.stockAnimConfig.color = rgba;
+            window.stockAnimConfig.speed = speed;
+            window.stockAnimConfig.lineWidth = lw;
+            window.stockAnimConfig.height = h;
+            window.stockAnimConfig.visible = vis;
+        }
+    }
+
+    // live apply on change
+    [colorInput, speedInput, lineInput, heightInput, visInput].forEach(inp => inp.addEventListener('input', applyToController));
+
+    // save to localStorage
+    saveBtn.addEventListener('click', () => {
+        const cfg = window.stockAnimController ? window.stockAnimController.getConfig() : window.stockAnimConfig;
+        try{ localStorage.setItem('capitovo_stock_anim', JSON.stringify(cfg)); alert('Einstellungen gespeichert'); } catch(e){ alert('Speichern fehlgeschlagen'); }
+    });
+
+    // reset
+    resetBtn.addEventListener('click', () => {
+        colorInput.value = '#00c88c'; speedInput.value = '3'; lineInput.value = '2'; heightInput.value = '140'; visInput.checked = true; applyToController(); try{ localStorage.removeItem('capitovo_stock_anim'); }catch(e){}
+    });
+
+    // hydrate values from localStorage or window.stockAnimConfig
+    try{
+        const fromStorage = JSON.parse(localStorage.getItem('capitovo_stock_anim')||'null');
+        const cfg = fromStorage || window.stockAnimConfig || {};
+        if (cfg.color){
+            // convert rgba back to hex if possible: skip if not hex; keep default otherwise
+            // we'll just keep picker default and apply rgba when controller available
+            colorInput.value = cfg._hex || '#00c88c';
+            // directly apply rgba to controller on mount
+        }
+        if (cfg.speed) speedInput.value = cfg.speed;
+        if (cfg.lineWidth) lineInput.value = cfg.lineWidth;
+        if (cfg.height) heightInput.value = cfg.height;
+        if (typeof cfg.visible === 'boolean') visInput.checked = cfg.visible;
+    } catch(e){}
+
+    // apply once at creation
+    setTimeout(applyToController, 100);
+
+    panel.appendChild(toggle);
+    panel.appendChild(box);
     document.body.appendChild(panel);
 }

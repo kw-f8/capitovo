@@ -364,10 +364,12 @@ function typeHeroText(options = {}){
             c.style.height = hpx + 'px';
             c.style.display = visible ? 'block' : 'none';
 
-            // set backing buffer size for DPR
-            c.width = Math.floor(desiredWidth * DPR);
-            c.height = Math.floor(hpx * DPR);
-            x.setTransform(DPR, 0, 0, DPR, 0, 0);
+                // set backing buffer size for DPR and scale context so we draw in CSS pixels
+                c.width = Math.floor(desiredWidth * DPR);
+                c.height = Math.floor(hpx * DPR);
+                // reset transform and scale -> draw using CSS pixels
+                x.setTransform(1, 0, 0, 1, 0, 0);
+                x.scale(DPR, DPR);
             // reinitialize candles for new size
             try { initCandles(); } catch (e) { /* ignore if not ready */ }
         }
@@ -443,10 +445,12 @@ function typeHeroText(options = {}){
             }
 
             // clear and draw candles
-            const DPR = Math.max(1, window.devicePixelRatio || 1);
-            const canvasH = c.height / DPR;
-            // clear using CSS-pixel dimensions to avoid transform issues
-            x.clearRect(0, 0, c.width / DPR, c.height / DPR);
+                // clear and draw candles (use CSS-pixel dims)
+                const DPR = Math.max(1, window.devicePixelRatio || 1);
+                const canvasH = c.height / DPR;
+                const cssWidth = parseInt(c.style.width, 10) || (c.width / DPR);
+                const cssHeight = canvasH;
+                x.clearRect(0, 0, cssWidth, cssHeight);
             _frameCount++;
             if (_frameCount % 60 === 0) {
                 try { console.debug('candles.frame', _frameCount, 'candles', candles.length, 'canvasCSS', c.width/DPR, c.height/DPR); } catch(e){}

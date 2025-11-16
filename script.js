@@ -332,6 +332,8 @@ function typeHeroText(options = {}){
 // Respects prefers-reduced-motion and uses devicePixelRatio for crisp rendering.
 (function initStockBackground(){
     if (typeof window === 'undefined') return;
+    // allow pages to disable the animation before script loads
+    try{ if (window.stockAnimDisabled) { console.debug('stock animation disabled via flag'); return; } } catch(e){}
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         console.debug('stock animation skipped: prefers-reduced-motion');
         return;

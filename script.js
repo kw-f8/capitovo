@@ -175,8 +175,8 @@ function initTestLogin() {
         if (enteredEmail === TEST_EMAIL && enteredPassword === TEST_PASSWORD) {
             // **ERFOLGREICHE ANMELDUNG (SIMULIERT)**
             try{ localStorage.setItem('capitovo_session', JSON.stringify({ email: enteredEmail, ts: Date.now() })); }catch(e){}
-            // Weiterleitung zum Mitgliederbereich
-            window.location.href = 'abonenten.html';
+            // Weiterleitung zum Mitgliederbereich (Pfad korrekt auf Groß-/Kleinschreibung achten)
+            window.location.href = 'Abonenten/abonenten.html';
             return;
         } else {
             

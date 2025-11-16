@@ -244,9 +244,15 @@
     <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
         <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
 
-        <!-- Top: Login CTA -->
-        <div style="padding:14px 0 8px 0;">
-            <a href="#open-login" class="sidebar-cta" style="display:block; text-align:center;">Login</a>
+        <!-- Top: Login CTA (weiß, Icon, gleiche Anordnung wie Nav-Buttons) -->
+        <div style="padding:12px 8px;">
+            <a href="#open-login" id="sidebar-login" aria-label="Login" class="flex items-center space-x-3 sidebar-cta bg-white text-gray-900 rounded-md px-3 py-2 mx-3" style="display:flex; align-items:center; justify-content:flex-start;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span>Login</span>
+            </a>
         </div>
 
         <!-- Navigation: klare Buttons nach Login -->

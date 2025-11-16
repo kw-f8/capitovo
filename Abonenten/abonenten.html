@@ -192,5 +192,18 @@
             document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeModal(); });
         })();
     </script>
+    <script>
+        // Ensure any leftover stock animation is stopped/removed on the members page
+        try {
+            if (window.stockAnimController) {
+                try { window.stockAnimController.setVisible(false); } catch(e){}
+                try { delete window.stockAnimController; } catch(e) { window.stockAnimController = undefined; }
+            }
+            const _c = document.getElementById('stock');
+            if (_c && _c.parentNode) {
+                _c.parentNode.removeChild(_c);
+            }
+        } catch(e) { /* ignore */ }
+    </script>
 </body>
 </html>

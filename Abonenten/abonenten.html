@@ -7,8 +7,19 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
 </head>
-<body class="bg-white text-gray-900">
+    <body class="bg-white text-gray-900 abonenten-page">
 
+        <style>
+            /* Page-local overrides: make header non-sticky for the Mitgliederseite */
+            .abonenten-page header { position: static !important; box-shadow: none !important; border-bottom: 1px solid rgba(0,0,0,0.04); }
+            .abonenten-page .header-content { align-items: center; }
+            /* Members layout: three-column responsive layout, keeping design simple */
+            .member-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+            @media (min-width: 768px) { .member-grid { grid-template-columns: 260px 1fr 320px; } }
+            .profile-card { position: sticky; top: 90px; align-self: start; }
+            /* keep the logo image as-is but ensure it doesn't stick */
+            .header-logo { position: relative; }
+        </style>
     <header>
         <div class="header-content">
             <div class="logo">
@@ -21,35 +32,57 @@
     </header>
 
     <main class="max-w-6xl mx-auto p-6">
-        <section class="mb-8">
+        <section class="mb-6">
             <h1 class="text-3xl font-extrabold mb-2">Willkommen im Mitgliederbereich</h1>
             <p id="welcome-text" class="text-gray-600">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
 
-        <section class="grid md:grid-cols-3 gap-6">
+        <section class="member-grid">
+            <!-- Left: Profile / Quick actions -->
+            <aside class="profile-card bg-white p-6 rounded-xl shadow">
+                <div class="flex items-center space-x-4 mb-4">
+                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-600">A</div>
+                    <div>
+                        <div id="member-name" class="font-semibold">Mitglied</div>
+                        <div id="member-email" class="text-sm text-gray-500">—</div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <a href="#open-account" class="block text-left text-primary-blue font-medium">Profil bearbeiten</a>
+                    <a href="#" class="block text-left text-accent-blue">Zahlungsinformationen</a>
+                    <a href="#" class="block text-left text-accent-blue">Rechnungen &amp; Belege</a>
+                    <a href="#" id="logout-link-2" class="block text-left text-red-600">Abmelden</a>
+                </div>
+                <div class="mt-6 pt-4 border-t text-sm text-gray-600">
+                    <div><strong>Vertragslaufzeit:</strong> 12 Monate</div>
+                    <div class="mt-1"><strong>Nächste Zahlung:</strong> 01.12.2025</div>
+                </div>
+            </aside>
+
+            <!-- Middle: Analyses list (primary content) -->
             <div class="bg-white p-6 rounded-xl shadow">
-                <h2 class="text-xl font-semibold mb-2">Ihre letzten Analysen</h2>
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold">Ihre letzten Analysen</h2>
+                    <a href="#" class="text-sm text-accent-blue">Alle anzeigen</a>
+                </div>
                 <div id="member-analyses" class="space-y-3 text-gray-700">
                     <p class="text-sm text-gray-400">Lade Analysen…</p>
                 </div>
-                <a href="#" class="mt-4 inline-block text-accent-blue">Alle Analysen anzeigen →</a>
             </div>
 
-            <div class="bg-white p-6 rounded-xl shadow">
-                <h2 class="text-xl font-semibold mb-2">Downloads</h2>
-                <p class="text-gray-700">Laden Sie PDF‑Berichte und Excel‑Daten herunter.</p>
-                <ul class="mt-3 space-y-2">
+            <!-- Right: Downloads & Subscription -->
+            <aside class="bg-white p-6 rounded-xl shadow">
+                <h3 class="text-lg font-semibold mb-3">Downloads</h3>
+                <ul class="space-y-2 text-sm text-gray-700 mb-4">
                     <li><a href="#" class="text-accent-blue">Q4_Analyse.pdf</a></li>
                     <li><a href="#" class="text-accent-blue">Portfolio_Template.xlsx</a></li>
                 </ul>
-            </div>
 
-            <div class="bg-white p-6 rounded-xl shadow">
-                <h2 class="text-xl font-semibold mb-2">Ihr Abonnement</h2>
-                <p class="text-gray-700">Status: <strong class="text-green-600">Aktiv</strong></p>
-                <p class="text-gray-700 mt-2">Nächste Abbuchung: <strong>01.12.2025</strong></p>
+                <h3 class="text-lg font-semibold mb-2">Ihr Abonnement</h3>
+                <p class="text-sm text-gray-700">Status: <strong class="text-green-600">Aktiv</strong></p>
+                <p class="text-sm text-gray-700 mt-1">Nächste Abbuchung: <strong>01.12.2025</strong></p>
                 <a href="#" class="mt-4 inline-block bg-primary-blue text-white px-3 py-2 rounded">Abo verwalten</a>
-            </div>
+            </aside>
         </section>
     </main>
 

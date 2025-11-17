@@ -246,6 +246,7 @@ function initSidebar() {
     // attach direct handler if toggle exists
     try{
         menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); console.debug('menuToggle clicked - toggling sidebar'); toggleSidebar(); });
+        try{ menuToggle.dataset.sidebarBound = 'true'; }catch(e){}
     } catch(e){}
 
     if (closeSidebarButton){
@@ -309,6 +310,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 2. Initialisiere Sidebar und Navigation
     initSidebar();
+    try{
+        const mt = document.getElementById('menu-toggle');
+        console.debug('POST INIT: menu-toggle present?', !!mt, 'dataset.sidebarBound=', mt && mt.dataset ? mt.dataset.sidebarBound : undefined, 'aria-expanded=', mt && mt.getAttribute ? mt.getAttribute('aria-expanded') : undefined);
+    } catch(e){}
     
     // 3. Initialisiere Modal-Steuerung
     initModalControl();

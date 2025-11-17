@@ -829,15 +829,23 @@ function typeHeroText(options = {}){
 function initHeroCandles(){
     const canvas = document.getElementById('hero-stock-canvas');
     if(!canvas) return;
-    const colorInput = document.getElementById('hs-color');
-    const widthInput = document.getElementById('hs-linewidth');
+    // color / basic inputs (backwards-compatible fallbacks included)
+    const colorInput = document.getElementById('hs-color'); // legacy
+    const colorUpInput = document.getElementById('hs-color-up');
+    const colorDownInput = document.getElementById('hs-color-down');
+    const widthInput = document.getElementById('hs-linewidth'); // legacy
+    const candleWidthInput = document.getElementById('hs-candlewidth');
     const volInput = document.getElementById('hs-vol');
     const trendInput = document.getElementById('hs-trend');
-    const speedInput = document.getElementById('hs-speed');
+    const countInput = document.getElementById('hs-count');
+    const gapInput = document.getElementById('hs-gap');
+    const paddingInput = document.getElementById('hs-padding');
+    const depthInput = document.getElementById('hs-depth');
+    const gridInput = document.getElementById('hs-grid');
+    const shadowInput = document.getElementById('hs-shadow');
     const visibleInput = document.getElementById('hs-visible');
     const resetBtn = document.getElementById('hs-reset');
-    // render button (if missing, we use input changes to trigger)
-    let renderBtn = document.getElementById('hs-render');
+    const renderBtn = document.getElementById('hs-render');
 
     const ctx = canvas.getContext('2d');
     let DPR = Math.max(1, window.devicePixelRatio || 1);
@@ -871,6 +879,19 @@ function initHeroCandles(){
         return out;
     }
 
+    function drawGrid(cssW, cssH){
+        if(!gridInput || !gridInput.checked) return;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(15,23,42,0.04)';
+        ctx.lineWidth = 1;
+        const lines = 4;
+        for(let i=0;i<=lines;i++){
+            const y = 10 + (i/(lines))* (cssH - 20);
+            ctx.beginPath(); ctx.moveTo(6,y); ctx.lineTo(cssW-6,y); ctx.stroke();
+        }
+        ctx.restore();
+    }
+
     function renderCandles(){
         try{
             resize();
@@ -880,25 +901,34 @@ function initHeroCandles(){
             // background
             ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,cssW,cssH);
 
-            const count = Math.max(6, Math.min(200, Number(speedInput?.value) || 40));
+            // read controls with fallbacks
+            const count = Math.max(6, Math.min(1000, Number(countInput?.value) || Number(document.getElementById('hs-speed')?.value) || 40));
             const vol = Math.max(0, Number(volInput?.value) || 28);
             const trend = Number(trendInput?.value) || 0; // price delta per candle
-            const candleW = Math.max(2, Number(widthInput?.value) || 10);
-            const padding = 14;
+            const candleW = Math.max(2, Number(candleWidthInput?.value) || Number(widthInput?.value) || 10);
+            const padding = Number(paddingInput?.value) || 14;
             const usableW = Math.max(40, cssW - padding*2);
-            const gap = Math.max(2, Math.floor((usableW - count * candleW) / (count + 1)));
-            const depth = Math.max(2, Math.round(candleW * 0.6));
+            const gap = Math.max(0, Number(gapInput?.value) || Math.floor((usableW - count * candleW) / (count + 1)) );
+            const depth = Math.max(0, Number(depthInput?.value) || Math.round(candleW * 0.6));
+            const showGrid = gridInput ? gridInput.checked : false;
+            const showShadow = shadowInput ? shadowInput.checked : true;
+
+            const upColor = colorUpInput?.value || colorInput?.value || '#00c88c';
+            const downColor = colorDownInput?.value || '#e11d48';
 
             const ohlc = genOHLC(count, vol, trend);
             // compute price scale
             let minP = Infinity, maxP = -Infinity;
             for(const d of ohlc){ minP = Math.min(minP, d.l); maxP = Math.max(maxP, d.h); }
-            const pad = (maxP - minP) * 0.12 || 2;
-            minP -= pad; maxP += pad;
+            const padPrice = (maxP - minP) * 0.12 || 2;
+            minP -= padPrice; maxP += padPrice;
             const priceToY = p => {
                 const r = (p - minP) / Math.max(1e-6, (maxP - minP));
                 return cssH - (r * (cssH - 20)) - 10; // top/bottom padding
             };
+
+            // optional grid
+            if(showGrid) drawGrid(cssW, cssH);
 
             // draw each candle with simple 3D extrusion to bottom-right
             for(let i=0;i<ohlc.length;i++){
@@ -913,33 +943,32 @@ function initHeroCandles(){
                 const bodyBottom = Math.max(yOpen, yClose);
 
                 const up = data.c >= data.o;
-                const upColor = colorInput?.value || '#00c88c';
-                const downColor = '#e11d48';
                 const fillColor = up ? upColor : downColor;
 
                 // extrusion polygon (offset)
                 const dx = depth * 0.6, dy = depth * 0.35;
-                // body polygon (3D look)
-                ctx.beginPath();
-                ctx.moveTo(x, bodyTop);
-                ctx.lineTo(x + candleW, bodyTop);
-                ctx.lineTo(x + candleW + dx, bodyTop + dy);
-                ctx.lineTo(x + dx, bodyTop + dy);
-                ctx.closePath();
-                // extrusion shading
-                const grad = ctx.createLinearGradient(0, bodyTop, 0, bodyBottom + dy);
-                grad.addColorStop(0, 'rgba(0,0,0,0.06)');
-                grad.addColorStop(1, 'rgba(0,0,0,0.12)');
-                ctx.fillStyle = grad; ctx.fill();
 
-                // right face
-                ctx.beginPath();
-                ctx.moveTo(x + candleW, bodyTop);
-                ctx.lineTo(x + candleW, bodyBottom);
-                ctx.lineTo(x + candleW + dx, bodyBottom + dy);
-                ctx.lineTo(x + candleW + dx, bodyTop + dy);
-                ctx.closePath();
-                ctx.fillStyle = 'rgba(0,0,0,0.04)'; ctx.fill();
+                if(showShadow && depth > 0){
+                    ctx.beginPath();
+                    ctx.moveTo(x, bodyTop);
+                    ctx.lineTo(x + candleW, bodyTop);
+                    ctx.lineTo(x + candleW + dx, bodyTop + dy);
+                    ctx.lineTo(x + dx, bodyTop + dy);
+                    ctx.closePath();
+                    const grad = ctx.createLinearGradient(0, bodyTop, 0, bodyBottom + dy);
+                    grad.addColorStop(0, 'rgba(0,0,0,0.06)');
+                    grad.addColorStop(1, 'rgba(0,0,0,0.12)');
+                    ctx.fillStyle = grad; ctx.fill();
+
+                    // right face subtle shading
+                    ctx.beginPath();
+                    ctx.moveTo(x + candleW, bodyTop);
+                    ctx.lineTo(x + candleW, bodyBottom);
+                    ctx.lineTo(x + candleW + dx, bodyBottom + dy);
+                    ctx.lineTo(x + candleW + dx, bodyTop + dy);
+                    ctx.closePath();
+                    ctx.fillStyle = 'rgba(0,0,0,0.04)'; ctx.fill();
+                }
 
                 // body
                 ctx.beginPath();
@@ -956,11 +985,11 @@ function initHeroCandles(){
                 ctx.strokeStyle = 'rgba(0,0,0,0.6)';
                 ctx.stroke();
 
-                // small top highlight
+                // small top highlight for 3D feel
                 ctx.beginPath();
                 ctx.moveTo(x, bodyTop);
                 ctx.lineTo(x + candleW, bodyTop);
-                ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+                ctx.strokeStyle = 'rgba(255,255,255,0.22)';
                 ctx.lineWidth = 1; ctx.stroke();
             }
 
@@ -968,14 +997,22 @@ function initHeroCandles(){
     }
 
     // wire inputs -> render on change (static chart, no animation loop)
-    const inputs = [colorInput, widthInput, volInput, trendInput, speedInput, visibleInput];
+    const inputs = [colorUpInput, colorDownInput, candleWidthInput, widthInput, volInput, trendInput, countInput, gapInput, paddingInput, depthInput, gridInput, shadowInput, visibleInput];
     inputs.forEach(el => { if(!el) return; el.addEventListener('input', ()=>{ renderCandles(); }); });
+    if(renderBtn) renderBtn.addEventListener('click', ()=>{ renderCandles(); });
     if(resetBtn) resetBtn.addEventListener('click', ()=>{
-        if(colorInput) colorInput.value = '#00c88c';
+        if(colorUpInput) colorUpInput.value = '#00c88c';
+        if(colorDownInput) colorDownInput.value = '#e11d48';
+        if(candleWidthInput) candleWidthInput.value = 10;
         if(widthInput) widthInput.value = 10;
+        if(gapInput) gapInput.value = 4;
+        if(paddingInput) paddingInput.value = 14;
+        if(depthInput) depthInput.value = 6;
         if(volInput) volInput.value = 28;
         if(trendInput) trendInput.value = 0;
-        if(speedInput) speedInput.value = 40;
+        if(countInput) countInput.value = 40;
+        if(gridInput) gridInput.checked = true;
+        if(shadowInput) shadowInput.checked = true;
         if(visibleInput) visibleInput.checked = true;
         renderCandles();
     });

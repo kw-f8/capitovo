@@ -29,14 +29,21 @@
             <div id="hero-visual" style="width:100%;display:flex;flex-direction:column;align-items:center;margin-top:18px;">
                 <canvas id="hero-stock-canvas" width="1200" height="260" style="width:86%;max-width:1200px;height:260px;display:block;border-radius:8px;background:#fff;box-shadow:0 6px 20px rgba(2,6,23,0.06);"></canvas>
 
-                <div id="hero-stock-console" style="width:86%;max-width:900px;margin-top:10px;background:#f9fafb;border:1px solid rgba(15,23,42,0.04);padding:8px 10px;border-radius:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#0f172a;">
-                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:60px">Farbe</span><input type="color" id="hs-color" value="#00c88c"></label>
-                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:60px">Linien</span><input id="hs-linewidth" type="range" min="1" max="6" value="2"></label>
-                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:60px">Volatilität</span><input id="hs-vol" type="range" min="0" max="80" value="28"></label>
-                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:60px">Trend</span><input id="hs-trend" type="range" min="-40" max="40" value="-6"></label>
-                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:60px">Geschw.</span><input id="hs-speed" type="range" min="0" max="10" value="3"></label>
+                <div id="hero-stock-console" style="width:86%;max-width:1000px;margin-top:10px;background:#f9fafb;border:1px solid rgba(15,23,42,0.04);padding:10px;border-radius:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#0f172a;">
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Up-Farbe</span><input type="color" id="hs-color-up" value="#00c88c"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Down-Farbe</span><input type="color" id="hs-color-down" value="#e11d48"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Kerzenbreite</span><input id="hs-candlewidth" type="range" min="2" max="40" value="10"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Abstand</span><input id="hs-gap" type="range" min="0" max="20" value="4"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Padding</span><input id="hs-padding" type="range" min="4" max="60" value="14"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Tiefe</span><input id="hs-depth" type="range" min="0" max="40" value="6"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Volatilität</span><input id="hs-vol" type="range" min="0" max="80" value="28"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Trend</span><input id="hs-trend" type="range" min="-40" max="40" value="0"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Kerzenanz.</span><input id="hs-count" type="range" min="6" max="160" value="40"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><input id="hs-grid" type="checkbox" checked> Gitter</label>
+                    <label style="display:flex;align-items:center;gap:6px;"><input id="hs-shadow" type="checkbox" checked> Schatten</label>
                     <label style="display:flex;align-items:center;gap:6px;"><input id="hs-visible" type="checkbox" checked> Sichtbar</label>
-                    <button id="hs-reset" style="margin-left:auto;background:#0f172a;color:#fff;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">Zurücksetzen</button>
+                    <button id="hs-render" style="background:#0f172a;color:#fff;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">Render</button>
+                    <button id="hs-reset" style="margin-left:auto;background:#ffffff;color:#0f172a;padding:6px 10px;border-radius:6px;border:1px solid rgba(15,23,42,0.06);cursor:pointer;">Zurücksetzen</button>
                 </div>
             </div>
         </section>     

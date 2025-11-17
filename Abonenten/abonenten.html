@@ -136,6 +136,7 @@
                                 </a>
                             </li>
 
+                <script>
                 // personalize welcome
                 const welcome = document.getElementById('welcome-text');
                 if (welcome) welcome.textContent = `Willkommen, ${sess.email}`;
@@ -180,6 +181,33 @@
         })();
     </script>
     <script>
+        // DEBUG: attach quick sidebar toggle & log bindings (temporary)
+        (function(){
+            try {
+                const btn = document.getElementById('menu-toggle');
+                const sidebar = document.getElementById('sidebar');
+                const closeBtn = document.getElementById('close-sidebar');
+                console.log('DEBUG: menu-toggle exists?', !!btn, 'sidebar?', !!sidebar, 'closeBtn?', !!closeBtn);
+                if (btn) {
+                    btn.addEventListener('click', function(e){
+                        console.log('DEBUG: menu-toggle clicked');
+                        if (sidebar) {
+                            const open = sidebar.classList.toggle('open');
+                            sidebar.setAttribute('aria-hidden', String(!open));
+                            btn.setAttribute('aria-expanded', String(open));
+                        }
+                    });
+                }
+                if (closeBtn) closeBtn.addEventListener('click', function(){ if (sidebar) { sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); if (btn) btn.setAttribute('aria-expanded','false'); } });
+                const test = document.createElement('button');
+                test.id = 'menu-test-button';
+                test.textContent = 'Toggle Menü (Test)';
+                Object.assign(test.style,{position:'fixed',right:'12px',bottom:'12px',zIndex:2000,background:'#0366d6',color:'#fff',padding:'8px 12px',borderRadius:'6px',boxShadow:'0 2px 6px rgba(0,0,0,0.2)'});
+                document.body.appendChild(test);
+                test.addEventListener('click', function(){ const b = document.getElementById('menu-toggle'); if (b) b.click(); });
+            } catch(e){ console.error('DEBUG attach failed', e); }
+        })();
+
         // Ensure any leftover stock animation is stopped/removed on the members page
         try {
             if (window.stockAnimController) {

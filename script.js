@@ -270,6 +270,19 @@ function initSidebar() {
             toggleSidebar();
         }
     });
+
+    // header fallback: if the toggle is not receiving clicks (overlay issues), allow clicking the header area
+    try{
+        const headerArea = document.querySelector('.header-content') || document.querySelector('header');
+        if (headerArea) {
+            headerArea.addEventListener('click', function(e){
+                // ignore clicks on interactive children (links, buttons, inputs)
+                if (e.target.closest('a, button, input, label')) return;
+                console.debug('header fallback click detected - toggling sidebar');
+                toggleSidebar();
+            });
+        }
+    } catch(e) { /* ignore */ }
 }
 
 /** Initialisiert die Modal-Steuerung mit Event Delegation. */

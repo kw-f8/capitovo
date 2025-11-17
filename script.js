@@ -331,6 +331,54 @@ document.addEventListener('DOMContentLoaded', () => {
         const mt = document.getElementById('menu-toggle');
         console.debug('POST INIT: menu-toggle present?', !!mt, 'dataset.sidebarBound=', mt && mt.dataset ? mt.dataset.sidebarBound : undefined, 'aria-expanded=', mt && mt.getAttribute ? mt.getAttribute('aria-expanded') : undefined);
     } catch(e){}
+
+    // TEMP DIAGNOSTIC (remove after debug): simulate click and report styles/state — only on index/root
+    try{
+        const p = (window.location && window.location.pathname || '').toLowerCase();
+        const isIndexLike = p.endsWith('index.html') || p === '/' || p.endsWith('/');
+        if (isIndexLike) {
+            setTimeout(()=>{
+                try{
+                    const DIAG = (msg, obj) => console.log('DIAG:', msg, obj === undefined ? '' : obj);
+                    const mt = document.getElementById('menu-toggle');
+                    const sb = document.getElementById('sidebar');
+                    DIAG('menu-toggle exists?', !!mt);
+                    DIAG('sidebar exists?', !!sb);
+                    if (mt) {
+                        const cs = window.getComputedStyle(mt);
+                        DIAG('menuToggle styles', { position: cs.position, zIndex: cs.zIndex, pointerEvents: cs.pointerEvents, display: cs.display, opacity: cs.opacity });
+                    }
+                    if (sb) {
+                        const csb = window.getComputedStyle(sb);
+                        DIAG('sidebar styles', { transform: csb.transform, zIndex: csb.zIndex, display: csb.display, pointerEvents: csb.pointerEvents });
+                    }
+
+                    if (mt) {
+                        DIAG('attempting programmatic click on #menu-toggle');
+                        mt.click();
+                        setTimeout(()=>{
+                            DIAG('after click: sidebar.open?', sb && sb.classList.contains('open'));
+                            // revert to closed to avoid leaving UI changed by test
+                            if (sb && sb.classList.contains('open')) {
+                                sb.classList.remove('open'); sb.setAttribute('aria-hidden','true');
+                                try{ mt.setAttribute('aria-expanded','false'); }catch(e){}
+                                try{ document.body.style.overflow = ''; }catch(e){}
+                            }
+                        }, 220);
+                    } else {
+                        DIAG('no #menu-toggle found — trying header click fallback');
+                        const header = document.querySelector('.header-content') || document.querySelector('header');
+                        if (header) {
+                            header.click();
+                            setTimeout(()=>{ DIAG('after header click: sidebar.open?', sb && sb.classList.contains('open')); }, 220);
+                        } else {
+                            DIAG('no header found for fallback');
+                        }
+                    }
+                } catch(err){ console.error('DIAG error', err); }
+            }, 300);
+        }
+    } catch(e) { /* ignore */ }
     
     // 3. Initialisiere Modal-Steuerung
     initModalControl();

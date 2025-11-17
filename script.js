@@ -232,16 +232,27 @@ function initSidebar() {
 
     // helper functions to open/close/toggle sidebar
     function openSidebar(){
-        sidebarElement.classList.add('open');
-        sidebarElement.setAttribute('aria-hidden','false');
-        try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
-        document.body.style.overflow = 'hidden';
+        try{
+            console.debug('openSidebar: attempting to open');
+            sidebarElement.classList.add('open');
+            // force inline transform if a different inline style blocks the CSS class
+            try{ sidebarElement.style.transform = 'translateX(0)'; } catch(e){}
+            sidebarElement.setAttribute('aria-hidden','false');
+            try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
+            document.body.style.overflow = 'hidden';
+            console.debug('openSidebar: done, classList contains open?', sidebarElement.classList.contains('open'));
+        } catch(err){ console.error('openSidebar error', err); }
     }
     function closeSidebar(){
-        sidebarElement.classList.remove('open');
-        sidebarElement.setAttribute('aria-hidden','true');
-        try{ menuToggle.setAttribute('aria-expanded','false'); }catch(e){}
-        document.body.style.overflow = '';
+        try{
+            console.debug('closeSidebar: attempting to close');
+            sidebarElement.classList.remove('open');
+            try{ sidebarElement.style.transform = ''; } catch(e){}
+            sidebarElement.setAttribute('aria-hidden','true');
+            try{ menuToggle.setAttribute('aria-expanded','false'); }catch(e){}
+            document.body.style.overflow = '';
+            console.debug('closeSidebar: done, classList contains open?', sidebarElement.classList.contains('open'));
+        } catch(err){ console.error('closeSidebar error', err); }
     }
     function toggleSidebar(){
         if (sidebarElement.classList.contains('open')) closeSidebar(); else openSidebar();

@@ -221,7 +221,11 @@ function initSidebar() {
         if (menuToggle && window.getComputedStyle(menuToggle).position === 'static') {
             menuToggle.style.position = 'relative';
         }
-        menuToggle.style.zIndex = String(Math.max(1010, parseInt(menuToggle.style.zIndex||0,10)));
+        // ensure toggle sits above the canvas (zIndex ~100) but below the sidebar (1000)
+        try{
+            const current = parseInt(menuToggle.style.zIndex||'0',10) || 0;
+            menuToggle.style.zIndex = String(Math.max(current, 210));
+        }catch(e){}
     } catch(e) { /* ignore */ }
 
     console.debug('initSidebar: menuToggle found and prepared', menuToggle);

@@ -63,7 +63,7 @@ header {
     background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
     position: sticky; 
     top: 0;
-    z-index: 50; 
+    z-index: 200; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
     transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
 }

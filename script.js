@@ -388,6 +388,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try { 
         typeHeroText(); 
     } catch (e) { /* ignore if function missing */ }
+    // 6. Initialize hero stock canvas controller (if present on page)
+    try { initHeroStock(); } catch(e){}
     // Animation UI: removed automatic diagnostic/control buttons per user request
     // sidebar subscribe handler
     try { initSidebarSubscribeHandler(); } catch (e) { /* ignore */ }
@@ -822,3 +824,136 @@ function typeHeroText(options = {}){
 })();
 
 // Animation diagnostic/control helpers removed (user requested full removal)
+
+/* --- Hero inline stock chart (controlled via small console) --- */
+function initHeroStock(){
+    const canvas = document.getElementById('hero-stock-canvas');
+    if(!canvas) return;
+    const colorInput = document.getElementById('hs-color');
+    const widthInput = document.getElementById('hs-linewidth');
+    const volInput = document.getElementById('hs-vol');
+    const trendInput = document.getElementById('hs-trend');
+    const speedInput = document.getElementById('hs-speed');
+    const visibleInput = document.getElementById('hs-visible');
+    const resetBtn = document.getElementById('hs-reset');
+
+    const ctx = canvas.getContext('2d');
+    let DPR = Math.max(1, window.devicePixelRatio || 1);
+    function resize(){
+        DPR = Math.max(1, window.devicePixelRatio || 1);
+        const cssW = Math.floor(parseFloat(getComputedStyle(canvas).width));
+        const cssH = Math.floor(parseFloat(getComputedStyle(canvas).height));
+        canvas.width = Math.max(120, cssW * DPR);
+        canvas.height = Math.max(40, cssH * DPR);
+        canvas.style.height = cssH + 'px';
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+    }
+
+    let pts = [];
+    let spacing = 6;
+    let volatility = Number(volInput?.value||28);
+    let animSpeed = Number(speedInput?.value||3);
+    let lineW = Number(widthInput?.value||2);
+    let strokeColor = colorInput?.value||'#00c88c';
+    let trendPerSecond = Number(trendInput?.value||-6);
+    let visible = visibleInput ? visibleInput.checked : true;
+    let cumulativeTrend = 0;
+
+    function initPoints(){
+        pts = [];
+        const cssW = canvas.width / DPR;
+        const cssH = canvas.height / DPR;
+        const count = Math.ceil(cssW / spacing) + 4;
+        const baseline = cssH * 0.78;
+        for(let i=0;i<count;i++){
+            const x = i * spacing;
+            const t = x / Math.max(1, cssW);
+            const ideal = baseline - (cssH * 0.45) * t;
+            const j = (Math.random()-0.5) * volatility;
+            pts.push({x, y: Math.max(2, Math.min(cssH-2, ideal + j))});
+        }
+    }
+
+    function appendPoint(){
+        const cssH = canvas.height / DPR;
+        const last = pts.length ? pts[pts.length-1] : {y: cssH/2};
+        const spike = Math.random() < 0.18;
+        const mul = spike ? (1.8 + Math.random()*1.6) : (0.45 + Math.random()*0.7);
+        const jitter = (Math.random()-0.5) * volatility * mul;
+        const maxJump = Math.max(6, volatility * 0.9);
+        const delta = Math.max(-maxJump, Math.min(maxJump, jitter));
+        const y = Math.max(2, Math.min((canvas.height/DPR)-2, last.y + delta + cumulativeTrend));
+        const x = pts.length ? pts[pts.length-1].x + spacing : 0;
+        pts.push({x,y});
+    }
+
+    let lastTime = null;
+    function step(ts){
+        if(!lastTime) lastTime = ts;
+        const dt = Math.min(200, ts - lastTime); lastTime = ts;
+        // update cumulative trend based on time (px per second)
+        cumulativeTrend += (trendPerSecond * (dt / 1000));
+        // move left
+        const factor = dt / (1000/60);
+        const moveBy = animSpeed * factor;
+        for(const p of pts) p.x -= moveBy;
+        while(pts.length && (pts[0].x + spacing) < 0) pts.shift();
+        const desiredW = canvas.width / DPR;
+        while(!pts.length || (pts[pts.length-1].x + spacing) < desiredW + spacing) appendPoint();
+
+        // draw
+        const cssW = canvas.width / DPR; const cssH = canvas.height / DPR;
+        ctx.clearRect(0,0,cssW,cssH);
+        if(!visible) return;
+        // background
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,cssW,cssH);
+
+        // extrusion fill
+        if(pts.length){
+            ctx.save();
+            ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+            for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+            // fill down to bottom
+            ctx.lineTo(pts[pts.length-1].x, cssH);
+            ctx.lineTo(pts[0].x, cssH);
+            ctx.closePath();
+            const g = ctx.createLinearGradient(0,0,0,cssH);
+            g.addColorStop(0,'rgba(0,200,140,0.06)'); g.addColorStop(1,'rgba(0,0,0,0.06)');
+            ctx.fillStyle = g; ctx.fill();
+            ctx.restore();
+        }
+
+        // line
+        ctx.beginPath(); ctx.lineWidth = lineW; ctx.strokeStyle = strokeColor; ctx.lineJoin='miter'; ctx.lineCap='butt';
+        ctx.moveTo(pts[0].x, pts[0].y);
+        for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+        ctx.stroke();
+
+        requestAnimationFrame(step);
+    }
+
+    // wire inputs
+    function applyInputs(){
+        strokeColor = colorInput?.value || strokeColor;
+        lineW = Number(widthInput?.value) || lineW;
+        volatility = Number(volInput?.value) || volatility;
+        trendPerSecond = Number(trendInput?.value) || trendPerSecond;
+        animSpeed = Number(speedInput?.value) || animSpeed;
+        visible = visibleInput ? visibleInput.checked : visible;
+    }
+    [colorInput, widthInput, volInput, trendInput, speedInput, visibleInput].forEach(el=>{ if(!el) return; el.addEventListener('input', ()=>{ applyInputs(); }); });
+    if(resetBtn) resetBtn.addEventListener('click', ()=>{
+        if(colorInput) colorInput.value = '#00c88c';
+        if(widthInput) widthInput.value = 2;
+        if(volInput) volInput.value = 28;
+        if(trendInput) trendInput.value = -6;
+        if(speedInput) speedInput.value = 3;
+        if(visibleInput) visibleInput.checked = true;
+        applyInputs();
+        initPoints();
+    });
+
+    // respond to resize
+    window.addEventListener('resize', ()=>{ resize(); initPoints(); });
+    resize(); initPoints(); requestAnimationFrame(step);
+}

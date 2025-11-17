@@ -129,33 +129,12 @@
                 <p><strong>E-Mail:</strong> <span id="acc-email">–</span></p>
                 <p><strong>Name:</strong> <span id="acc-name">–</span></p>
                 <p><strong>Kontakt:</strong> <span id="acc-contact">–</span></p>
-                <p class="text-gray-600 text-xs">Hinweis: Dies ist ein client-seitiges Demo-Konto. Für echte Kontoverwaltung wird ein Backend benötigt.</p>
-            </div>
-            <div class="mt-4 flex justify-end gap-2">
-                <button id="account-close" class="cta-button">Schließen</button>
-            </div>
-        </div>
-    </div>
-
-    <script>window.stockAnimDisabled = true;</script>
-    <script src="../script.js"></script>
-    <script>
-        // simple logout: redirect to start
-        document.getElementById('logout-link')?.addEventListener('click', function(e){
-            e.preventDefault();
-            // clear any simulated session storage
-            try{ localStorage.removeItem('capitovo_session'); }catch(e){}
-            window.location.href = '../index.html';
-        });
-
-        // Client-side protection: redirect to homepage if not logged in
-        (function(){
-            try{
-                const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null');
-                if (!sess || !sess.email) {
-                    window.location.href = '../index.html';
-                    return;
-                }
+                            <li>
+                                <a href="#" id="logout-link" class="flex items-center space-x-3 cta-button">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/><path d="M7 8v8"/></svg>
+                                    <span>Abmelden</span>
+                                </a>
+                            </li>
 
                 // personalize welcome
                 const welcome = document.getElementById('welcome-text');

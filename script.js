@@ -216,6 +216,16 @@ function initSidebar() {
         return;
     }
 
+    // defensive: ensure the toggle sits above other positioned elements (e.g. animation canvas)
+    try{
+        if (menuToggle && window.getComputedStyle(menuToggle).position === 'static') {
+            menuToggle.style.position = 'relative';
+        }
+        menuToggle.style.zIndex = String(Math.max(1010, parseInt(menuToggle.style.zIndex||0,10)));
+    } catch(e) { /* ignore */ }
+
+    console.debug('initSidebar: menuToggle found and prepared', menuToggle);
+
     // helper functions to open/close/toggle sidebar
     function openSidebar(){
         sidebarElement.classList.add('open');
@@ -235,7 +245,7 @@ function initSidebar() {
 
     // attach direct handler if toggle exists
     try{
-        menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); toggleSidebar(); });
+        menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); console.debug('menuToggle clicked - toggling sidebar'); toggleSidebar(); });
     } catch(e){}
 
     if (closeSidebarButton){
@@ -251,6 +261,7 @@ function initSidebar() {
         const t = e.target.closest('#menu-toggle, .menu-toggle, [aria-controls="sidebar"]');
         if (t) {
             e.preventDefault();
+            console.debug('delegated toggle click detected via', t);
             toggleSidebar();
         }
     });

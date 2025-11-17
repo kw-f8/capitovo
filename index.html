@@ -29,21 +29,55 @@
             <div id="hero-visual" style="width:100%;display:flex;flex-direction:column;align-items:center;margin-top:18px;">
                 <canvas id="hero-stock-canvas" width="1200" height="260" style="width:86%;max-width:1200px;height:260px;display:block;border-radius:8px;background:#fff;box-shadow:0 6px 20px rgba(2,6,23,0.06);"></canvas>
 
-                <div id="hero-stock-console" style="width:86%;max-width:1000px;margin-top:10px;background:#f9fafb;border:1px solid rgba(15,23,42,0.04);padding:10px;border-radius:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#0f172a;">
+                <div id="hero-stock-console" style="width:86%;max-width:1100px;margin-top:10px;background:#f9fafb;border:1px solid rgba(15,23,42,0.04);padding:10px;border-radius:8px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#0f172a;">
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:88px">Preset</span>
+                        <select id="hs-preset" style="padding:6px;border-radius:6px;border:1px solid rgba(15,23,42,0.06);background:#fff;color:#042f3a;">
+                            <option value="">— Wähle Preset —</option>
+                            <option value="neutral">Neutral</option>
+                            <option value="bullish">Bullish</option>
+                            <option value="bearish">Bearish</option>
+                            <option value="deepgreen">Deep Green</option>
+                            <option value="retro">Retro</option>
+                        </select>
+                    </label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Up-Farbe</span><input type="color" id="hs-color-up" value="#00c88c"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Down-Farbe</span><input type="color" id="hs-color-down" value="#e11d48"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Kerzenbreite</span><input id="hs-candlewidth" type="range" min="2" max="40" value="10"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Abstand</span><input id="hs-gap" type="range" min="0" max="20" value="4"></label>
-                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Padding</span><input id="hs-padding" type="range" min="4" max="60" value="14"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Padding</span><input id="hs-padding" type="range" min="0" max="80" value="14"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Tiefe</span><input id="hs-depth" type="range" min="0" max="40" value="6"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Volatilität</span><input id="hs-vol" type="range" min="0" max="80" value="28"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Trend</span><input id="hs-trend" type="range" min="-40" max="40" value="0"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Kerzenanz.</span><input id="hs-count" type="range" min="6" max="160" value="40"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Wick Breite</span><input id="hs-wick" type="range" min="1" max="6" value="2"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Rand-Opazität</span><input id="hs-border" type="range" min="0" max="1" step="0.05" value="0.08"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">Fade(px)</span><input id="hs-fade" type="range" min="0" max="200" value="48"></label>
+                    <label style="display:flex;align-items:center;gap:6px;"><span style="min-width:72px">BG</span><input type="color" id="hs-bg" value="#ffffff"></label>
                     <label style="display:flex;align-items:center;gap:6px;"><input id="hs-grid" type="checkbox" checked> Gitter</label>
                     <label style="display:flex;align-items:center;gap:6px;"><input id="hs-shadow" type="checkbox" checked> Schatten</label>
+                    <label style="display:flex;align-items:center;gap:6px;"><input id="hs-pricelabels" type="checkbox" checked> Preislabels</label>
                     <label style="display:flex;align-items:center;gap:6px;"><input id="hs-visible" type="checkbox" checked> Sichtbar</label>
                     <button id="hs-render" style="background:#0f172a;color:#fff;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">Render</button>
+                    <button id="hs-export" style="background:#06b6d4;color:#042f3a;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">Export</button>
+                    <button id="hs-import" style="background:#f97316;color:#fff;padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">Import</button>
                     <button id="hs-reset" style="margin-left:auto;background:#ffffff;color:#0f172a;padding:6px 10px;border-radius:6px;border:1px solid rgba(15,23,42,0.06);cursor:pointer;">Zurücksetzen</button>
+                </div>
+
+                <!-- Import Modal for settings (hidden by default) -->
+                <div id="hs-import-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(2,6,23,0.5);">
+                    <div style="width:min(760px,96%);background:#fff;border-radius:10px;padding:14px;box-shadow:0 12px 40px rgba(2,6,23,0.4);">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                            <strong>Einstellungen importieren</strong>
+                            <button id="hs-import-close" style="background:transparent;border:none;font-size:20px;cursor:pointer;">&times;</button>
+                        </div>
+                        <p style="font-size:13px;color:#334155;margin-bottom:8px;">Füge hier das JSON ein oder bearbeite es. Klicke auf <em>Übernehmen</em>.</p>
+                        <textarea id="hs-import-textarea" style="width:100%;height:180px;border:1px solid rgba(15,23,42,0.06);border-radius:6px;padding:8px;font-family:monospace;font-size:13px;color:#042f3a;"></textarea>
+                        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
+                            <div id="hs-import-error" style="flex:1;color:#e11d48;font-size:13px;align-self:center;"></div>
+                            <button id="hs-import-apply" style="background:#059669;color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;">Übernehmen</button>
+                            <button id="hs-import-cancel" style="background:#f3f4f6;color:#042f3a;padding:8px 12px;border-radius:8px;border:1px solid rgba(15,23,42,0.06);cursor:pointer;">Abbrechen</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>     

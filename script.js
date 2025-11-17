@@ -993,6 +993,40 @@ function initHeroCandles(){
                 ctx.lineWidth = 1; ctx.stroke();
             }
 
+            // edge fade mask (left/right) to avoid hard clipping
+            try{
+                const fadePx = Number(document.getElementById('hs-fade')?.value || 48);
+                const f = Math.max(0, Math.min(1, fadePx / Math.max(1, cssW)));
+                if(f > 0){
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'destination-in';
+                    const mask = ctx.createLinearGradient(0,0,cssW,0);
+                    mask.addColorStop(0, 'rgba(0,0,0,0)');
+                    mask.addColorStop(Math.max(0, f*0.9), 'rgba(0,0,0,1)');
+                    mask.addColorStop(Math.max(0, 1 - f*0.9), 'rgba(0,0,0,1)');
+                    mask.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.fillStyle = mask;
+                    ctx.fillRect(0,0,cssW,cssH);
+                    ctx.restore();
+                }
+            }catch(e){ console.error('fade mask error', e); }
+
+            // price labels (min/max) on left/right
+            try{
+                const showLabels = document.getElementById('hs-pricelabels')?.checked;
+                if(showLabels){
+                    ctx.save();
+                    ctx.fillStyle = 'rgba(2,6,23,0.7)';
+                    ctx.font = '12px system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial';
+                    const minLabel = minP.toFixed(2);
+                    const maxLabel = maxP.toFixed(2);
+                    ctx.fillText(maxLabel, 8, 16);
+                    const w = ctx.measureText(minLabel).width;
+                    ctx.fillText(minLabel, cssW - w - 8, cssH - 6);
+                    ctx.restore();
+                }
+            }catch(e){ console.error('price labels error', e); }
+
         }catch(e){ console.error('renderCandles error', e); }
     }
 
@@ -1000,6 +1034,114 @@ function initHeroCandles(){
     const inputs = [colorUpInput, colorDownInput, candleWidthInput, widthInput, volInput, trendInput, countInput, gapInput, paddingInput, depthInput, gridInput, shadowInput, visibleInput];
     inputs.forEach(el => { if(!el) return; el.addEventListener('input', ()=>{ renderCandles(); }); });
     if(renderBtn) renderBtn.addEventListener('click', ()=>{ renderCandles(); });
+
+    // export/import settings helpers
+    function getSettings(){
+        return {
+            colorUp: colorUpInput?.value || colorInput?.value || '#00c88c',
+            colorDown: colorDownInput?.value || '#e11d48',
+            candleWidth: Number(candleWidthInput?.value || widthInput?.value || 10),
+            wickWidth: Number(document.getElementById('hs-wick')?.value || 2),
+            gap: Number(gapInput?.value || 4),
+            padding: Number(paddingInput?.value || 14),
+            depth: Number(depthInput?.value || 6),
+            volatility: Number(volInput?.value || 28),
+            trend: Number(trendInput?.value || 0),
+            count: Number(countInput?.value || document.getElementById('hs-speed')?.value || 40),
+            grid: !!(gridInput && gridInput.checked),
+            shadow: !!(shadowInput && shadowInput.checked),
+            visible: !!(visibleInput && visibleInput.checked),
+            fadePx: Number(document.getElementById('hs-fade')?.value || 48),
+            borderOpacity: Number(document.getElementById('hs-border')?.value || 0.08),
+            bgColor: document.getElementById('hs-bg')?.value || '#ffffff',
+            priceLabels: !!(document.getElementById('hs-pricelabels')?.checked)
+        };
+    }
+
+    function applySettings(s){
+        try{
+            if(!s || typeof s !== 'object') return;
+            if(colorUpInput && s.colorUp) colorUpInput.value = s.colorUp;
+            if(colorDownInput && s.colorDown) colorDownInput.value = s.colorDown;
+            if(candleWidthInput && typeof s.candleWidth !== 'undefined') candleWidthInput.value = s.candleWidth;
+            if(document.getElementById('hs-wick') && typeof s.wickWidth !== 'undefined') document.getElementById('hs-wick').value = s.wickWidth;
+            if(gapInput && typeof s.gap !== 'undefined') gapInput.value = s.gap;
+            if(paddingInput && typeof s.padding !== 'undefined') paddingInput.value = s.padding;
+            if(depthInput && typeof s.depth !== 'undefined') depthInput.value = s.depth;
+            if(volInput && typeof s.volatility !== 'undefined') volInput.value = s.volatility;
+            if(trendInput && typeof s.trend !== 'undefined') trendInput.value = s.trend;
+            if(countInput && typeof s.count !== 'undefined') countInput.value = s.count;
+            if(document.getElementById('hs-fade') && typeof s.fadePx !== 'undefined') document.getElementById('hs-fade').value = s.fadePx;
+            if(document.getElementById('hs-border') && typeof s.borderOpacity !== 'undefined') document.getElementById('hs-border').value = s.borderOpacity;
+            if(document.getElementById('hs-bg') && typeof s.bgColor !== 'undefined') document.getElementById('hs-bg').value = s.bgColor;
+            if(gridInput && typeof s.grid !== 'undefined') gridInput.checked = !!s.grid;
+            if(shadowInput && typeof s.shadow !== 'undefined') shadowInput.checked = !!s.shadow;
+            if(visibleInput && typeof s.visible !== 'undefined') visibleInput.checked = !!s.visible;
+            if(document.getElementById('hs-pricelabels') && typeof s.priceLabels !== 'undefined') document.getElementById('hs-pricelabels').checked = !!s.priceLabels;
+            // re-render after applying
+            setTimeout(()=>{ renderCandles(); }, 20);
+        }catch(e){ console.error('applySettings error', e); }
+    }
+
+    // Export/Import buttons
+    const exportBtn = document.getElementById('hs-export');
+    const importBtn = document.getElementById('hs-import');
+    if(exportBtn){
+        exportBtn.addEventListener('click', async ()=>{
+            try{
+                const settings = getSettings();
+                const json = JSON.stringify(settings, null, 2);
+                // show modal with JSON for easy copying
+                const modal = document.getElementById('hs-import-modal');
+                const ta = document.getElementById('hs-import-textarea');
+                if(ta) ta.value = json;
+                if(modal) modal.classList.remove('hidden');
+                // try copy to clipboard as well
+                if(navigator.clipboard && navigator.clipboard.writeText){
+                    await navigator.clipboard.writeText(json);
+                    exportBtn.textContent = 'Kopiert ✓';
+                    setTimeout(()=> exportBtn.textContent = 'Export', 1500);
+                }
+                console.log('Hero candlestick settings:', settings);
+            }catch(e){ console.error('export failed', e); alert('Export fehlgeschlagen — siehe Konsole.'); }
+        });
+    }
+    if(importBtn){
+        importBtn.addEventListener('click', ()=>{
+            const modal = document.getElementById('hs-import-modal');
+            const ta = document.getElementById('hs-import-textarea');
+            const err = document.getElementById('hs-import-error');
+            if(err) err.textContent = '';
+            if(ta) ta.value = '';
+            if(modal) modal.classList.remove('hidden');
+            // focus textarea
+            setTimeout(()=>{ if(ta) ta.focus(); }, 40);
+        });
+    }
+
+    // import modal controls
+    const importModal = document.getElementById('hs-import-modal');
+    if(importModal){
+        const ta = document.getElementById('hs-import-textarea');
+        const applyBtn = document.getElementById('hs-import-apply');
+        const closeBtn = document.getElementById('hs-import-close');
+        const cancelBtn = document.getElementById('hs-import-cancel');
+        const err = document.getElementById('hs-import-error');
+        function closeModal(){ if(importModal) importModal.classList.add('hidden'); if(err) err.textContent=''; }
+        if(closeBtn) closeBtn.addEventListener('click', ()=> closeModal());
+        if(cancelBtn) cancelBtn.addEventListener('click', ()=> closeModal());
+        if(applyBtn) applyBtn.addEventListener('click', ()=>{
+            if(!ta) return;
+            try{
+                const obj = JSON.parse(ta.value);
+                applySettings(obj);
+                closeModal();
+            }catch(e){ if(err) err.textContent = 'Ungültiges JSON: ' + (e && e.message ? e.message : 'parse error'); }
+        });
+        // close when clicking outside modal content
+        importModal.addEventListener('click', (ev)=>{ if(ev.target === importModal) closeModal(); });
+    }
+
     if(resetBtn) resetBtn.addEventListener('click', ()=>{
         if(colorUpInput) colorUpInput.value = '#00c88c';
         if(colorDownInput) colorDownInput.value = '#e11d48';

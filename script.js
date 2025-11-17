@@ -388,8 +388,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try { 
         typeHeroText(); 
     } catch (e) { /* ignore if function missing */ }
-    // 6. Initialize hero stock canvas controller (if present on page)
-    try { initHeroStock(); } catch(e){}
+    // 6. Initialize hero candlestick canvas controller (if present on page)
+    try { initHeroCandles(); } catch(e){}
     // Animation UI: removed automatic diagnostic/control buttons per user request
     // sidebar subscribe handler
     try { initSidebarSubscribeHandler(); } catch (e) { /* ignore */ }
@@ -826,7 +826,7 @@ function typeHeroText(options = {}){
 // Animation diagnostic/control helpers removed (user requested full removal)
 
 /* --- Hero inline stock chart (controlled via small console) --- */
-function initHeroStock(){
+function initHeroCandles(){
     const canvas = document.getElementById('hero-stock-canvas');
     if(!canvas) return;
     const colorInput = document.getElementById('hs-color');
@@ -836,6 +836,8 @@ function initHeroStock(){
     const speedInput = document.getElementById('hs-speed');
     const visibleInput = document.getElementById('hs-visible');
     const resetBtn = document.getElementById('hs-reset');
+    // render button (if missing, we use input changes to trigger)
+    let renderBtn = document.getElementById('hs-render');
 
     const ctx = canvas.getContext('2d');
     let DPR = Math.max(1, window.devicePixelRatio || 1);
@@ -844,122 +846,140 @@ function initHeroStock(){
         const cs = getComputedStyle(canvas);
         let cssW = Math.floor(parseFloat(cs.width));
         let cssH = Math.floor(parseFloat(cs.height));
-        // fallback if computed style returns NaN (layout not ready)
-        if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 600);
+        if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 900);
         if (!cssH || isNaN(cssH)) cssH = Math.max(100, canvas.clientHeight || 260);
         canvas.width = Math.max(120, Math.round(cssW * DPR));
         canvas.height = Math.max(40, Math.round(cssH * DPR));
-        // ensure CSS height matches expected
         canvas.style.height = cssH + 'px';
         ctx.setTransform(DPR,0,0,DPR,0,0);
     }
 
-    let pts = [];
-    let spacing = 6;
-    let volatility = Number(volInput?.value||28);
-    let animSpeed = Number(speedInput?.value||3);
-    let lineW = Number(widthInput?.value||2);
-    let strokeColor = colorInput?.value||'#00c88c';
-    let trendPerSecond = Number(trendInput?.value||-6);
-    let visible = visibleInput ? visibleInput.checked : true;
-    let cumulativeTrend = 0;
-
-    function initPoints(){
-        pts = [];
-        const cssW = canvas.width / DPR;
-        const cssH = canvas.height / DPR;
-        const count = Math.ceil(cssW / spacing) + 4;
-        const baseline = cssH * 0.78;
+    // generate synthetic OHLC data
+    function genOHLC(count, volatility, trendPerCandle){
+        const out = [];
+        let price = 100 + Math.random()*8;
         for(let i=0;i<count;i++){
-            const x = i * spacing;
-            const t = x / Math.max(1, cssW);
-            const ideal = baseline - (cssH * 0.45) * t;
-            const j = (Math.random()-0.5) * volatility;
-            pts.push({x, y: Math.max(2, Math.min(cssH-2, ideal + j))});
+            const open = price;
+            const jitter = (Math.random()-0.5)*volatility;
+            const delta = (trendPerCandle || 0) + jitter;
+            const close = Math.max(0.1, open + delta);
+            const high = Math.max(open, close) + Math.random()*Math.abs(volatility*0.4);
+            const low = Math.min(open, close) - Math.random()*Math.abs(volatility*0.4);
+            out.push({o:open,h:high,l:low,c:close});
+            price = close;
         }
+        return out;
     }
 
-    function appendPoint(){
-        const cssH = canvas.height / DPR;
-        const last = pts.length ? pts[pts.length-1] : {y: cssH/2};
-        const spike = Math.random() < 0.18;
-        const mul = spike ? (1.8 + Math.random()*1.6) : (0.45 + Math.random()*0.7);
-        const jitter = (Math.random()-0.5) * volatility * mul;
-        const maxJump = Math.max(6, volatility * 0.9);
-        const delta = Math.max(-maxJump, Math.min(maxJump, jitter));
-        const y = Math.max(2, Math.min((canvas.height/DPR)-2, last.y + delta + cumulativeTrend));
-        const x = pts.length ? pts[pts.length-1].x + spacing : 0;
-        pts.push({x,y});
+    function renderCandles(){
+        try{
+            resize();
+            const cssW = canvas.width / DPR; const cssH = canvas.height / DPR;
+            ctx.clearRect(0,0,cssW,cssH);
+            if(visibleInput && !visibleInput.checked) return;
+            // background
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,cssW,cssH);
+
+            const count = Math.max(6, Math.min(200, Number(speedInput?.value) || 40));
+            const vol = Math.max(0, Number(volInput?.value) || 28);
+            const trend = Number(trendInput?.value) || 0; // price delta per candle
+            const candleW = Math.max(2, Number(widthInput?.value) || 10);
+            const padding = 14;
+            const usableW = Math.max(40, cssW - padding*2);
+            const gap = Math.max(2, Math.floor((usableW - count * candleW) / (count + 1)));
+            const depth = Math.max(2, Math.round(candleW * 0.6));
+
+            const ohlc = genOHLC(count, vol, trend);
+            // compute price scale
+            let minP = Infinity, maxP = -Infinity;
+            for(const d of ohlc){ minP = Math.min(minP, d.l); maxP = Math.max(maxP, d.h); }
+            const pad = (maxP - minP) * 0.12 || 2;
+            minP -= pad; maxP += pad;
+            const priceToY = p => {
+                const r = (p - minP) / Math.max(1e-6, (maxP - minP));
+                return cssH - (r * (cssH - 20)) - 10; // top/bottom padding
+            };
+
+            // draw each candle with simple 3D extrusion to bottom-right
+            for(let i=0;i<ohlc.length;i++){
+                const data = ohlc[i];
+                const x = padding + gap + i * (candleW + gap);
+                const cx = x + 0.5; // crisp lines
+                const yOpen = priceToY(data.o);
+                const yClose = priceToY(data.c);
+                const yHigh = priceToY(data.h);
+                const yLow = priceToY(data.l);
+                const bodyTop = Math.min(yOpen, yClose);
+                const bodyBottom = Math.max(yOpen, yClose);
+
+                const up = data.c >= data.o;
+                const upColor = colorInput?.value || '#00c88c';
+                const downColor = '#e11d48';
+                const fillColor = up ? upColor : downColor;
+
+                // extrusion polygon (offset)
+                const dx = depth * 0.6, dy = depth * 0.35;
+                // body polygon (3D look)
+                ctx.beginPath();
+                ctx.moveTo(x, bodyTop);
+                ctx.lineTo(x + candleW, bodyTop);
+                ctx.lineTo(x + candleW + dx, bodyTop + dy);
+                ctx.lineTo(x + dx, bodyTop + dy);
+                ctx.closePath();
+                // extrusion shading
+                const grad = ctx.createLinearGradient(0, bodyTop, 0, bodyBottom + dy);
+                grad.addColorStop(0, 'rgba(0,0,0,0.06)');
+                grad.addColorStop(1, 'rgba(0,0,0,0.12)');
+                ctx.fillStyle = grad; ctx.fill();
+
+                // right face
+                ctx.beginPath();
+                ctx.moveTo(x + candleW, bodyTop);
+                ctx.lineTo(x + candleW, bodyBottom);
+                ctx.lineTo(x + candleW + dx, bodyBottom + dy);
+                ctx.lineTo(x + candleW + dx, bodyTop + dy);
+                ctx.closePath();
+                ctx.fillStyle = 'rgba(0,0,0,0.04)'; ctx.fill();
+
+                // body
+                ctx.beginPath();
+                ctx.rect(x, bodyTop, candleW, Math.max(1, bodyBottom - bodyTop));
+                ctx.fillStyle = fillColor; ctx.fill();
+                // border
+                ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.strokeRect(x+0.5, bodyTop+0.5, candleW, Math.max(1, bodyBottom - bodyTop));
+
+                // wick
+                ctx.beginPath();
+                ctx.moveTo(cx + candleW/2 - 0.5, yHigh);
+                ctx.lineTo(cx + candleW/2 - 0.5, yLow);
+                ctx.lineWidth = Math.max(1, Math.min(2, candleW/6));
+                ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+                ctx.stroke();
+
+                // small top highlight
+                ctx.beginPath();
+                ctx.moveTo(x, bodyTop);
+                ctx.lineTo(x + candleW, bodyTop);
+                ctx.strokeStyle = 'rgba(255,255,255,0.25)';
+                ctx.lineWidth = 1; ctx.stroke();
+            }
+
+        }catch(e){ console.error('renderCandles error', e); }
     }
 
-    let lastTime = null;
-    function step(ts){
-        if(!lastTime) lastTime = ts;
-        const dt = Math.min(200, ts - lastTime); lastTime = ts;
-        // update cumulative trend based on time (px per second)
-        cumulativeTrend += (trendPerSecond * (dt / 1000));
-        // move left
-        const factor = dt / (1000/60);
-        const moveBy = animSpeed * factor;
-        for(const p of pts) p.x -= moveBy;
-        while(pts.length && (pts[0].x + spacing) < 0) pts.shift();
-        const desiredW = canvas.width / DPR;
-        while(!pts.length || (pts[pts.length-1].x + spacing) < desiredW + spacing) appendPoint();
-
-        // draw
-        const cssW = canvas.width / DPR; const cssH = canvas.height / DPR;
-        ctx.clearRect(0,0,cssW,cssH);
-        if(!visible) return;
-        // background
-        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,cssW,cssH);
-
-        // extrusion fill
-        if(pts.length){
-            ctx.save();
-            ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
-            for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-            // fill down to bottom
-            ctx.lineTo(pts[pts.length-1].x, cssH);
-            ctx.lineTo(pts[0].x, cssH);
-            ctx.closePath();
-            const g = ctx.createLinearGradient(0,0,0,cssH);
-            g.addColorStop(0,'rgba(0,200,140,0.06)'); g.addColorStop(1,'rgba(0,0,0,0.06)');
-            ctx.fillStyle = g; ctx.fill();
-            ctx.restore();
-        }
-
-        // line
-        ctx.beginPath(); ctx.lineWidth = lineW; ctx.strokeStyle = strokeColor; ctx.lineJoin='miter'; ctx.lineCap='butt';
-        ctx.moveTo(pts[0].x, pts[0].y);
-        for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-        ctx.stroke();
-
-        requestAnimationFrame(step);
-    }
-
-    // wire inputs
-    function applyInputs(){
-        strokeColor = colorInput?.value || strokeColor;
-        lineW = Number(widthInput?.value) || lineW;
-        volatility = Number(volInput?.value) || volatility;
-        trendPerSecond = Number(trendInput?.value) || trendPerSecond;
-        animSpeed = Number(speedInput?.value) || animSpeed;
-        visible = visibleInput ? visibleInput.checked : visible;
-    }
-    [colorInput, widthInput, volInput, trendInput, speedInput, visibleInput].forEach(el=>{ if(!el) return; el.addEventListener('input', ()=>{ applyInputs(); }); });
+    // wire inputs -> render on change (static chart, no animation loop)
+    const inputs = [colorInput, widthInput, volInput, trendInput, speedInput, visibleInput];
+    inputs.forEach(el => { if(!el) return; el.addEventListener('input', ()=>{ renderCandles(); }); });
     if(resetBtn) resetBtn.addEventListener('click', ()=>{
         if(colorInput) colorInput.value = '#00c88c';
-        if(widthInput) widthInput.value = 2;
+        if(widthInput) widthInput.value = 10;
         if(volInput) volInput.value = 28;
-        if(trendInput) trendInput.value = -6;
-        if(speedInput) speedInput.value = 3;
+        if(trendInput) trendInput.value = 0;
+        if(speedInput) speedInput.value = 40;
         if(visibleInput) visibleInput.checked = true;
-        applyInputs();
-        initPoints();
+        renderCandles();
     });
 
-    // respond to resize
-    window.addEventListener('resize', ()=>{ resize(); initPoints(); });
-    // Delay initial resize/init a bit so layout settles in slower environments
-    setTimeout(()=>{ try{ resize(); initPoints(); requestAnimationFrame(step); }catch(e){ console.error('heroStock init failed', e); } }, 60);
+    // initial render when layout stable
+    setTimeout(()=>{ try{ renderCandles(); }catch(e){ console.error('initHeroCandles error', e); } }, 60);
 }

@@ -841,10 +841,15 @@ function initHeroStock(){
     let DPR = Math.max(1, window.devicePixelRatio || 1);
     function resize(){
         DPR = Math.max(1, window.devicePixelRatio || 1);
-        const cssW = Math.floor(parseFloat(getComputedStyle(canvas).width));
-        const cssH = Math.floor(parseFloat(getComputedStyle(canvas).height));
-        canvas.width = Math.max(120, cssW * DPR);
-        canvas.height = Math.max(40, cssH * DPR);
+        const cs = getComputedStyle(canvas);
+        let cssW = Math.floor(parseFloat(cs.width));
+        let cssH = Math.floor(parseFloat(cs.height));
+        // fallback if computed style returns NaN (layout not ready)
+        if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 600);
+        if (!cssH || isNaN(cssH)) cssH = Math.max(100, canvas.clientHeight || 260);
+        canvas.width = Math.max(120, Math.round(cssW * DPR));
+        canvas.height = Math.max(40, Math.round(cssH * DPR));
+        // ensure CSS height matches expected
         canvas.style.height = cssH + 'px';
         ctx.setTransform(DPR,0,0,DPR,0,0);
     }
@@ -955,5 +960,6 @@ function initHeroStock(){
 
     // respond to resize
     window.addEventListener('resize', ()=>{ resize(); initPoints(); });
-    resize(); initPoints(); requestAnimationFrame(step);
+    // Delay initial resize/init a bit so layout settles in slower environments
+    setTimeout(()=>{ try{ resize(); initPoints(); requestAnimationFrame(step); }catch(e){ console.error('heroStock init failed', e); } }, 60);
 }

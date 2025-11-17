@@ -261,7 +261,7 @@ function initSidebar() {
 
     // attach direct handler if toggle exists
     try{
-        menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); console.debug('menuToggle clicked - toggling sidebar'); toggleSidebar(); });
+        menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); console.debug('menuToggle clicked - toggling sidebar'); toggleSidebar(); });
         try{ menuToggle.dataset.sidebarBound = 'true'; }catch(e){}
     } catch(e){}
 

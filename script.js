@@ -464,7 +464,8 @@ function typeHeroText(options = {}){
         // read initial config (can be set before mount via window.stockAnimConfig)
         const initial = Object.assign({
             color: 'rgba(0,200,140,0.45)',
-            speed: 3,
+            // reduced default speed (px per frame @60fps equivalent) — slower motion
+            speed: 1.2,
             lineWidth: 2,
             height: 140,
             visible: true

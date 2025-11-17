@@ -201,37 +201,49 @@ function initTestLogin() {
 /** Initialisiert die Funktionalität der Seitenleiste (Sidebar). */
 function initSidebar() {
     const sidebarElement = document.getElementById('sidebar');
-    const menuToggle = document.getElementById('menu-toggle'); 
-    const closeSidebarButton = document.getElementById('close-sidebar');
+    // try multiple ways to find the menu toggle in case markup differs
+    let menuToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle') || document.querySelector('[aria-controls="sidebar"]');
+    const closeSidebarButton = document.getElementById('close-sidebar') || (sidebarElement && sidebarElement.querySelector('.close-button'));
 
-    if (menuToggle && sidebarElement && closeSidebarButton) {
-        
-        // Öffnen/Schließen der Sidebar
-        menuToggle.addEventListener('click', () => {
-            sidebarElement.classList.add('open');
-            sidebarElement.setAttribute('aria-hidden', 'false');
-            menuToggle.setAttribute('aria-expanded', 'true');
-            document.body.style.overflow = 'hidden'; // Verhindert Scrollen des Hintergrunds, wenn Sidebar offen
-        });
+    if (!sidebarElement) {
+        console.debug('initSidebar: no sidebar element found');
+        return;
+    }
 
+    if (!menuToggle) {
+        console.debug('initSidebar: no menuToggle found - attempting to create one');
+        // nothing else to do; return early
+        return;
+    }
+
+    // toggle behavior (use toggle so repeated clicks open/close)
+    menuToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = sidebarElement.classList.toggle('open');
+        sidebarElement.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+        try{ menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false'); }catch(e){}
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    if (closeSidebarButton) {
         closeSidebarButton.addEventListener('click', () => {
             sidebarElement.classList.remove('open');
             sidebarElement.setAttribute('aria-hidden', 'true');
-            menuToggle.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = ''; // Stellt Scrollen wieder her
-        });
-        
-        // Schließt die Sidebar beim Klick auf einen normalen Navigationslink
-        const navLinks = sidebarElement.querySelectorAll('a:not([href="#open-login"])');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                sidebarElement.classList.remove('open');
-                sidebarElement.setAttribute('aria-hidden', 'true');
-                menuToggle.setAttribute('aria-expanded', 'false');
-                document.body.style.overflow = '';
-            });
+            try{ menuToggle.setAttribute('aria-expanded', 'false'); }catch(e){}
+            document.body.style.overflow = '';
         });
     }
+
+    // Schließt die Sidebar beim Klick auf einen normalen Navigationslink
+    const navLinks = sidebarElement.querySelectorAll('a:not([href="#open-login"])');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            sidebarElement.classList.remove('open');
+            sidebarElement.setAttribute('aria-hidden', 'true');
+            try{ menuToggle.setAttribute('aria-expanded', 'false'); }catch(e){}
+            document.body.style.overflow = '';
+        });
+    });
 }
 
 /** Initialisiert die Modal-Steuerung mit Event Delegation. */

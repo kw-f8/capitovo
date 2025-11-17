@@ -36,6 +36,58 @@ body {
     overflow: hidden; 
 }
 
+/* ---------------------------------------------------- */
+/* SVG Wave Background Styling and variables         */
+/* ---------------------------------------------------- */
+:root {
+    --wave-color: rgba(0,200,140,0.18);
+    --wave-color-2: rgba(0,145,214,0.12);
+    --animation-speed: 28s; /* duration for one full cycle */
+    --svg-height: 220px; /* visible svg height */
+}
+
+.hero-wave-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: var(--svg-height);
+    pointer-events: none;
+    z-index: 50; /* behind header (200) and above background */
+    display: block;
+    overflow: visible;
+}
+
+.hero-wave {
+    width: 200%; /* make room for seamless horizontal looping */
+    height: var(--svg-height);
+    display: block;
+    position: relative;
+    transform: translate3d(0,0,0);
+}
+
+.wave-track { /* group that will be translated */
+    transform-origin: 0 0;
+    animation: wave-pan var(--animation-speed) linear infinite;
+}
+
+.wave-path {
+    fill: var(--wave-color);
+    opacity: 1;
+}
+
+/* second path is subtle overlay for depth */
+.wave-path + .wave-path { fill: var(--wave-color-2); opacity: 0.85; }
+
+@keyframes wave-pan {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+/* Ensure hero content sits above the SVG */
+.hero { position: relative; z-index: 101; }
+
+
 /* Zentriert den Inhalt der Seite */
 main {
     max-width: 1200px;

@@ -23,6 +23,30 @@ body {
 
 .bg-primary-blue { background-color: var(--color-primary-blue) !important; }
 /* Klasse für Links und CTAs (Behält !important, da Tailwind oft Standard-Farben setzt) */
+/* Globale Definitionen und Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif; 
+    background-color: #ffffff; 
+    color: #1a1a1a; 
+    line-height: 1.65;
+}
+
+/* Tailwind Custom-Farben Definitionen für style.css */
+:root {
+    /* Dunkles Blau (Hintergrund, Sidebar, Premium Box) */
+    --color-primary-blue: #24354b;
+    /* Akzent Blau (Links, CTAs, Hervorhebungen) */
+    --color-accent-blue: #007bff; 
+}
+
+.bg-primary-blue { background-color: var(--color-primary-blue) !important; }
+/* NEU: Klasse für Links und CTAs */
 .text-accent-blue { color: var(--color-accent-blue) !important; } 
 
 /* ---------------------------------------------------- */
@@ -30,63 +54,12 @@ body {
 /* ---------------------------------------------------- */
 .hero-wrapper {
     background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
+    background: none; /* Gradient/Farbe entfernt */
     color: #1a1a1a; /* Textfarbe auf Dunkel gesetzt */
-    padding-bottom: 80px; /* Raum unter dem Hero-Inhalt */
+    padding-bottom: 80px; /* Reduziert den unteren Padding leicht */
     position: relative; 
     overflow: hidden; 
 }
-
-/* ---------------------------------------------------- */
-/* SVG Wave Background Styling and variables         */
-/* ---------------------------------------------------- */
-:root {
-    --wave-color: rgba(0,200,140,0.18);
-    --wave-color-2: rgba(0,145,214,0.12);
-    --animation-speed: 28s; /* duration for one full cycle */
-    --svg-height: 220px; /* visible svg height */
-}
-
-.hero-wave-wrapper {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: var(--svg-height);
-    pointer-events: none;
-    z-index: 50; /* behind header (200) and above background */
-    display: block;
-    overflow: visible;
-}
-
-.hero-wave {
-    width: 200%; /* make room for seamless horizontal looping */
-    height: var(--svg-height);
-    display: block;
-    position: relative;
-    transform: translate3d(0,0,0);
-}
-
-.wave-track { /* group that will be translated */
-    transform-origin: 0 0;
-    animation: wave-pan var(--animation-speed) linear infinite;
-}
-
-.wave-path {
-    fill: var(--wave-color);
-    opacity: 1;
-}
-
-/* second path is subtle overlay for depth */
-.wave-path + .wave-path { fill: var(--wave-color-2); opacity: 0.85; }
-
-@keyframes wave-pan {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-}
-
-/* Ensure hero content sits above the SVG */
-.hero { position: relative; z-index: 101; }
-
 
 /* Zentriert den Inhalt der Seite */
 main {
@@ -95,18 +68,19 @@ main {
     padding: 0 20px; 
 }
 
-/* --- KORRIGIERT: ANALYSE-SEKTION HOCHSCHIEBEN --- */
+/* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
 #analysen {
-    /* Der negative Margin zieht die Sektion jetzt sauber hoch */
+    /* Setzt den oberen Rand aggressiv nach oben, um den Abstand zu verringern */
     margin-top: -80px; 
-    /* Ein normaler Padding, da py-20 im HTML entfernt wurde */
-    padding-top: 40px; 
+    /* Setzt den inneren oberen Padding sehr niedrig oder auf 0, um den Raum zu reduzieren.
+       Die Tailwind-Klasse py-20 im HTML hat das Padding verursacht. Hier überschreiben wir es: */
+    padding-top: 30px !important; 
     padding-bottom: 40px; 
 }
 /* ------------------------------------------------- */
 
 
-/* --- Header und Navigation (IMMER Weiß/Sticky) --- */
+/* --- Header und Navigation (Jetzt wieder IMMER Weiß/Sticky) --- */
 
 header {
     margin: 0; 
@@ -115,7 +89,7 @@ header {
     background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
     position: sticky; 
     top: 0;
-    z-index: 200; 
+    z-index: 50; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
     transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
 }
@@ -128,9 +102,6 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    backdrop-filter: blur(6px);
 }
 
 .header-logo {
@@ -139,7 +110,7 @@ header {
     display: block;
 }
 
-/* Menu Toggle Button ist jetzt Dunkel */
+/* Menu Toggle Button ist jetzt wieder Dunkel */
 .menu-toggle {
     background: none;
     border: 2px solid #1a1a1a; /* Dunkler Rahmen */
@@ -174,7 +145,7 @@ header {
 }
 
 .cta-button:hover {
-    background-color: var(--color-accent-blue-dark);
+    background-color: #0056b3;
 }
 
 .primary-cta {
@@ -185,50 +156,28 @@ header {
 
 /* --- Hero Sektion --- */
 .hero {
-    padding: 130px 0 120px 0; 
+    padding: 50px 0 120px 0; 
     text-align: center; 
     max-width: 900px;
     margin: 0 auto;
 }
 
 .hero h2 {
-    font-size: clamp(1.75rem, 3.5vw, 3.25rem);
-    font-weight: 400; /* weniger fett: wirkt normaler */
-    margin-top: 72px;
+    font-size: 4em; 
+    font-weight: 700;
     margin-bottom: 25px;
-    line-height: 1.15;
+    line-height: 1.1; 
     color: #1a1a1a; /* Dunkle Farbe für weißen Hintergrund */
-    letter-spacing: -0.02em;
-    text-shadow: none; /* entferne den starken Schatten */
-}
-
-/* Typing caret (dezent) - nur sichtbar während der Tipp-Animation */
-.typing-caret::after{
-    content: '';
-    display: inline-block;
-    width: 1px;
-    height: 1.05em;
-    background: currentColor;
-    margin-left: 6px;
-    vertical-align: bottom;
-    animation: caret-blink 1s steps(2, start) infinite;
-}
-@keyframes caret-blink{
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
 }
 
 .hero p {
     font-size: 1.3em;
     color: #4a4a4a; /* Dunkle Farbe für Fließtext */
     margin-bottom: 40px;
-    max-width: 54ch;
-    margin: 0 auto;
-    color: rgba(255,255,255,0.92);
-    font-size: 1.05rem;
 }
 
 /* --- VORTEILE Sektion --- */
+/* WICHTIG: section#pricing wird jetzt dunkel gefärbt */
 #pricing {
     background-color: var(--color-primary-blue); /* Hintergrund Dunkelblau */
     color: #f0f0f0; 
@@ -237,6 +186,7 @@ header {
 
 
 .vorteile-grid {
+    /* Hintergrund Weiß, falls es nach Pricing kommt */
     background-color: #ffffff; 
     color: #1a1a1a; 
     padding: 80px 0 80px 0; 
@@ -262,16 +212,9 @@ header {
     flex-basis: 33%;
     text-align: left;
     padding: 20px;
-    background-color: #ffffff; /* wie die Basic-Abo-Karte */
-    border-radius: 0.75rem; /* entspricht Tailwind rounded-xl */
-    border: 1px solid rgba(15,23,42,0.06);
-    box-shadow: 0 8px 30px rgba(2,6,23,0.12); /* Basis-Shadow ähnlich Abo-Karten */
-    transition: transform .28s ease, box-shadow .28s ease;
-}
-
-.vorteil-item:hover {
-    transform: translateY(-8px) scale(1.01);
-    box-shadow: 0 18px 40px rgba(2,6,23,0.18);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    background-color: #f8f8f8; 
 }
 
 .vorteil-item h4 {
@@ -309,10 +252,6 @@ footer {
     transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
     padding: 20px;
-    transition: transform .28s cubic-bezier(.2,.9,.3,1), opacity .2s;
-    box-shadow: 0 18px 40px rgba(2,6,23,0.22);
-    border-radius: 12px;
-    padding: 1rem;
 }
 
 .sidebar.open {
@@ -369,7 +308,7 @@ footer {
 }
 
 .sidebar-nav .sidebar-cta:hover {
-    background-color: var(--color-accent-blue-dark);
+    background-color: #0056b3; 
 }
 
 
@@ -422,7 +361,7 @@ details[open] .details-marker {
     /* --- ANALYSE SEKTION MOBILE ANPASSUNG --- */
     #analysen {
         margin-top: -30px; /* Reduziere den negativen Rand auf Mobile */
-        padding-top: 30px; 
+        padding-top: 30px !important; 
     }
     /* ------------------------------------------- */
 

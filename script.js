@@ -237,6 +237,7 @@ function initSidebar() {
             sidebarElement.classList.add('open');
             // force inline transform if a different inline style blocks the CSS class
             try{ sidebarElement.style.transform = 'translateX(0)'; } catch(e){}
+            try{ sidebarElement.style.display = 'block'; sidebarElement.style.opacity = '1'; sidebarElement.style.pointerEvents = 'auto'; sidebarElement.style.zIndex = '1000'; } catch(e){}
             sidebarElement.setAttribute('aria-hidden','false');
             try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
             document.body.style.overflow = 'hidden';
@@ -247,7 +248,7 @@ function initSidebar() {
         try{
             console.debug('closeSidebar: attempting to close');
             sidebarElement.classList.remove('open');
-            try{ sidebarElement.style.transform = ''; } catch(e){}
+            try{ sidebarElement.style.transform = ''; sidebarElement.style.display = ''; sidebarElement.style.opacity = ''; sidebarElement.style.pointerEvents = ''; /* keep zIndex for stacking */ } catch(e){}
             sidebarElement.setAttribute('aria-hidden','true');
             try{ menuToggle.setAttribute('aria-expanded','false'); }catch(e){}
             document.body.style.overflow = '';

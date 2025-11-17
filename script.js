@@ -242,6 +242,34 @@ function initSidebar() {
             try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
             document.body.style.overflow = 'hidden';
             console.debug('openSidebar: done, classList contains open?', sidebarElement.classList.contains('open'));
+
+            // Verify visibility: bounding rect and computed styles
+            try{
+                const rect = sidebarElement.getBoundingClientRect();
+                const cs = window.getComputedStyle(sidebarElement);
+                console.debug('openSidebar: rect', {left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height});
+                console.debug('openSidebar: computedStyle', {display: cs.display, visibility: cs.visibility, opacity: cs.opacity, transform: cs.transform, zIndex: cs.zIndex, pointerEvents: cs.pointerEvents});
+
+                const visibleEnough = rect.width > 8 && rect.height > 8 && cs.display !== 'none' && cs.opacity !== '0';
+                if (!visibleEnough) {
+                    console.warn('openSidebar: sidebar not visible after opening — applying forced inline fallback styles');
+                    try{
+                        sidebarElement.style.position = 'fixed';
+                        sidebarElement.style.right = '0';
+                        sidebarElement.style.top = '0';
+                        sidebarElement.style.height = '100%';
+                        sidebarElement.style.width = sidebarElement.style.width || '300px';
+                        sidebarElement.style.transform = 'none';
+                        sidebarElement.style.display = 'block';
+                        sidebarElement.style.opacity = '1';
+                        sidebarElement.style.pointerEvents = 'auto';
+                        sidebarElement.style.zIndex = '10050';
+                    } catch(e){ console.error('openSidebar: forced style apply failed', e); }
+                    // log rect after forcing
+                    const rect2 = sidebarElement.getBoundingClientRect();
+                    console.debug('openSidebar: rect after forcing', {left: rect2.left, top: rect2.top, right: rect2.right, bottom: rect2.bottom, width: rect2.width, height: rect2.height});
+                }
+            } catch(e){ console.error('openSidebar: visibility check failed', e); }
         } catch(err){ console.error('openSidebar error', err); }
     }
     function closeSidebar(){

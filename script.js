@@ -216,33 +216,43 @@ function initSidebar() {
         return;
     }
 
-    // toggle behavior (use toggle so repeated clicks open/close)
-    menuToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        const isOpen = sidebarElement.classList.toggle('open');
-        sidebarElement.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-        try{ menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false'); }catch(e){}
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    });
-
-    if (closeSidebarButton) {
-        closeSidebarButton.addEventListener('click', () => {
-            sidebarElement.classList.remove('open');
-            sidebarElement.setAttribute('aria-hidden', 'true');
-            try{ menuToggle.setAttribute('aria-expanded', 'false'); }catch(e){}
-            document.body.style.overflow = '';
-        });
+    // helper functions to open/close/toggle sidebar
+    function openSidebar(){
+        sidebarElement.classList.add('open');
+        sidebarElement.setAttribute('aria-hidden','false');
+        try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar(){
+        sidebarElement.classList.remove('open');
+        sidebarElement.setAttribute('aria-hidden','true');
+        try{ menuToggle.setAttribute('aria-expanded','false'); }catch(e){}
+        document.body.style.overflow = '';
+    }
+    function toggleSidebar(){
+        if (sidebarElement.classList.contains('open')) closeSidebar(); else openSidebar();
     }
 
-    // Schließt die Sidebar beim Klick auf einen normalen Navigationslink
+    // attach direct handler if toggle exists
+    try{
+        menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); toggleSidebar(); });
+    } catch(e){}
+
+    if (closeSidebarButton){
+        closeSidebarButton.addEventListener('click', closeSidebar);
+    }
+
+    // close when clicking any internal nav link
     const navLinks = sidebarElement.querySelectorAll('a:not([href="#open-login"])');
-    navLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            sidebarElement.classList.remove('open');
-            sidebarElement.setAttribute('aria-hidden', 'true');
-            try{ menuToggle.setAttribute('aria-expanded', 'false'); }catch(e){}
-            document.body.style.overflow = '';
-        });
+    navLinks.forEach(link => link.addEventListener('click', () => { closeSidebar(); }));
+
+    // delegation fallback: handle clicks on dynamically created / differently marked toggles
+    document.body.addEventListener('click', (e)=>{
+        const t = e.target.closest('#menu-toggle, .menu-toggle, [aria-controls="sidebar"]');
+        if (t) {
+            e.preventDefault();
+            toggleSidebar();
+        }
     });
 }
 

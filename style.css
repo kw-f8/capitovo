@@ -167,19 +167,19 @@ header {
 }
 
 .hero h2 {
-    font-size: 4em; 
-    font-weight: 700;
-    margin-bottom: 25px;
-    line-height: 1.1; 
+    font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+    font-weight: 300;
+    margin-top: 36px;
+    margin-bottom: 18px;
+    line-height: 1.15;
     color: #1a1a1a; /* Dunkle Farbe für weißen Hintergrund */
 }
 
 .hero p {
     font-size: 1.3em;
-    color: #4a4a4a; /* Dunkle Farbe für Fließtext */
+    color: #4a4a4a; /* dunkler Fließtext */
     margin-bottom: 40px;
 }
-
 /* --- VORTEILE Sektion --- */
 /* WICHTIG: section#pricing wird jetzt dunkel gefärbt */
 #pricing {

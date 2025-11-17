@@ -206,7 +206,6 @@ function initSidebar() {
     const closeSidebarButton = document.getElementById('close-sidebar') || (sidebarElement && sidebarElement.querySelector('.close-button'));
 
     if (!sidebarElement) {
-        console.debug('initSidebar: no sidebar element found');
         return;
     }
 
@@ -222,7 +221,6 @@ function initSidebar() {
     } catch(e) { /* ignore */ }
 
     if (!menuToggle) {
-        console.debug('initSidebar: no menuToggle found - attempting to create one');
         // nothing else to do; return early
         return;
     }
@@ -239,12 +237,12 @@ function initSidebar() {
         }catch(e){}
     } catch(e) { /* ignore */ }
 
-    console.debug('initSidebar: menuToggle found and prepared', menuToggle);
+    // menu toggle prepared
 
     // helper functions to open/close/toggle sidebar
     function openSidebar(){
         try{
-            console.debug('openSidebar: attempting to open');
+                // opening sidebar
             sidebarElement.classList.add('open');
             // force inline transform if a different inline style blocks the CSS class
             try{ sidebarElement.style.transform = 'translateX(0)'; } catch(e){}
@@ -252,14 +250,12 @@ function initSidebar() {
             sidebarElement.setAttribute('aria-hidden','false');
             try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
             document.body.style.overflow = 'hidden';
-            console.debug('openSidebar: done, classList contains open?', sidebarElement.classList.contains('open'));
+            // open complete
 
             // Verify visibility: bounding rect and computed styles
-            try{
+                try{
                 const rect = sidebarElement.getBoundingClientRect();
                 const cs = window.getComputedStyle(sidebarElement);
-                console.debug('openSidebar: rect', {left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height});
-                console.debug('openSidebar: computedStyle', {display: cs.display, visibility: cs.visibility, opacity: cs.opacity, transform: cs.transform, zIndex: cs.zIndex, pointerEvents: cs.pointerEvents});
 
                 const visibleEnough = rect.width > 8 && rect.height > 8 && cs.display !== 'none' && cs.opacity !== '0';
                 if (!visibleEnough) {
@@ -278,20 +274,20 @@ function initSidebar() {
                     } catch(e){ console.error('openSidebar: forced style apply failed', e); }
                     // log rect after forcing
                     const rect2 = sidebarElement.getBoundingClientRect();
-                    console.debug('openSidebar: rect after forcing', {left: rect2.left, top: rect2.top, right: rect2.right, bottom: rect2.bottom, width: rect2.width, height: rect2.height});
+                    // rect after forcing applied
                 }
             } catch(e){ console.error('openSidebar: visibility check failed', e); }
         } catch(err){ console.error('openSidebar error', err); }
     }
     function closeSidebar(){
         try{
-            console.debug('closeSidebar: attempting to close');
+            // closing sidebar
             sidebarElement.classList.remove('open');
             try{ sidebarElement.style.transform = ''; sidebarElement.style.display = ''; sidebarElement.style.opacity = ''; sidebarElement.style.pointerEvents = ''; /* keep zIndex for stacking */ } catch(e){}
             sidebarElement.setAttribute('aria-hidden','true');
             try{ menuToggle.setAttribute('aria-expanded','false'); }catch(e){}
             document.body.style.overflow = '';
-            console.debug('closeSidebar: done, classList contains open?', sidebarElement.classList.contains('open'));
+            // close complete
         } catch(err){ console.error('closeSidebar error', err); }
     }
     function toggleSidebar(){
@@ -300,7 +296,7 @@ function initSidebar() {
 
     // attach direct handler if toggle exists
     try{
-        menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); console.debug('menuToggle clicked - toggling sidebar'); toggleSidebar(); });
+        menuToggle.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); toggleSidebar(); });
         try{ menuToggle.dataset.sidebarBound = 'true'; }catch(e){}
     } catch(e){}
 
@@ -317,7 +313,6 @@ function initSidebar() {
         const t = e.target.closest('#menu-toggle, .menu-toggle, [aria-controls="sidebar"]');
         if (t) {
             e.preventDefault();
-            console.debug('delegated toggle click detected via', t);
             toggleSidebar();
         }
     });
@@ -329,7 +324,6 @@ function initSidebar() {
             headerArea.addEventListener('click', function(e){
                 // ignore clicks on interactive children (links, buttons, inputs)
                 if (e.target.closest('a, button, input, label')) return;
-                console.debug('header fallback click detected - toggling sidebar');
                 toggleSidebar();
             });
         }
@@ -380,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSidebar();
     try{
         const mt = document.getElementById('menu-toggle');
-        console.debug('POST INIT: menu-toggle present?', !!mt, 'dataset.sidebarBound=', mt && mt.dataset ? mt.dataset.sidebarBound : undefined, 'aria-expanded=', mt && mt.getAttribute ? mt.getAttribute('aria-expanded') : undefined);
+        // post-init: menu-toggle presence recorded
     } catch(e){}
 
     // Diagnostics removed.
@@ -392,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initTestLogin();
     // 5. Tippeffekt für Hero-Überschrift (nur einfügen, nicht andere Styles ändern)
     try { 
-        console.debug('typeHeroText invoked');
         typeHeroText(); 
     } catch (e) { /* ignore if function missing */ }
     // Animation UI: removed automatic diagnostic/control buttons per user request
@@ -405,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * ändert keine bestehenden Styles oder Klassen dauerhaft.
  */
 function typeHeroText(options = {}){
-    console.debug('typeHeroText: start');
+    // start typing effect
     const speed = typeof options.speed === 'number' ? options.speed : 48; // ms per char
     const delay = typeof options.delay === 'number' ? options.delay : 220; // ms before start
 
@@ -441,20 +434,18 @@ function typeHeroText(options = {}){
 (function initStockBackground(){
     if (typeof window === 'undefined') return;
     // allow pages to disable the animation before script loads
-    try{ if (window.stockAnimDisabled) { console.debug('stock animation disabled via flag'); return; } } catch(e){}
+    try{ if (window.stockAnimDisabled) { return; } } catch(e){}
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        console.debug('stock animation skipped: prefers-reduced-motion');
         return;
     }
 
     // Only allow mounting on the site's index/root page — prevents accidental mounts
-    try{
-        const p = (window.location && window.location.pathname || '').toLowerCase();
-        const isIndexLike = p.endsWith('index.html') || p === '/' || p.endsWith('/');
-        if (!isIndexLike) {
-            console.debug('stock animation skipped: not on index/root path', p);
-            return;
-        }
+        try{
+            const p = (window.location && window.location.pathname || '').toLowerCase();
+            const isIndexLike = p.endsWith('index.html') || p === '/' || p.endsWith('/');
+            if (!isIndexLike) {
+                return;
+            }
     } catch(e){}
 
     let mounted = false;
@@ -465,7 +456,6 @@ function typeHeroText(options = {}){
         // Only mount the animation on pages that contain a hero area.
         // Prevents the canvas from being appended to document.body on other pages
         if (!document.querySelector('.hero') && !document.querySelector('.hero-wrapper')) {
-            console.debug('stock animation mount skipped: no hero present on this page');
             return;
         }
         const hero = document.querySelector('.hero');
@@ -671,7 +661,7 @@ function typeHeroText(options = {}){
             x.clearRect(0, 0, cssWidth, cssHeight);
             _frameCount++;
             if (_frameCount % 60 === 0) {
-                try { console.debug('line.frame', _frameCount, 'points', points.length, 'canvasCSS', c.width/DPR, c.height/DPR); } catch(e){}
+                // periodic frame counter (debug removed)
             }
 
             // fill white background so it matches page

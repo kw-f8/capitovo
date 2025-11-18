@@ -1235,43 +1235,46 @@ function initHeroCandles(){
 function adjustHeroCanvas() {
     const canvas = document.getElementById('hero-stock-canvas');
     const heading = document.querySelector('.hero h2');
-
-    if (canvas && heading) {
-        const headingRect = heading.getBoundingClientRect();
-        const headingWidth = headingRect.width;
-        const headingLeft = headingRect.left;
-
-        // Setze die Breite und Position des Canvas
-        canvas.style.position = 'absolute';
-        canvas.style.width = `${headingWidth}px`;
-        canvas.style.left = `${headingLeft}px`;
-        canvas.style.top = `${headingRect.bottom + 10}px`; // 10px Abstand unter der Überschrift
-
-        // Setze die interne Breite des Canvas für die Darstellung
-        const DPR = window.devicePixelRatio || 1;
-        canvas.width = Math.floor(headingWidth * DPR);
-        canvas.height = Math.floor(140 * DPR); // Feste Höhe von 140px
-
-        const ctx = canvas.getContext('2d');
-        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Beispiel: Zeichne eine Linie zur Überprüfung
-        ctx.strokeStyle = 'rgba(0, 200, 140, 0.8)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height / 2);
-        ctx.lineTo(canvas.width, canvas.height / 2);
-        ctx.stroke();
-
-        console.log('Canvas angepasst:', {
-            width: canvas.style.width,
-            left: canvas.style.left,
-            top: canvas.style.top,
-        });
-    } else {
+    if (!canvas || !heading) {
         console.warn('Canvas oder Überschrift nicht gefunden.');
+        return;
     }
+
+    const parent = canvas.parentElement || document.body;
+    const headingRect = heading.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+    const headingWidth = Math.max(120, Math.floor(headingRect.width));
+
+    // Ensure parent centers its children
+    try{ parent.style.display = 'flex'; parent.style.justifyContent = 'center'; parent.style.alignItems = 'flex-start'; }catch(e){}
+
+    // Make canvas flow normally (avoid absolute positioning which caused overlap)
+    canvas.style.position = 'relative';
+    canvas.style.left = '';
+    canvas.style.top = '';
+    canvas.style.margin = '8px 0 0';
+    canvas.style.width = headingWidth + 'px';
+
+    // Set backing buffer taking DPR into account
+    const DPR = window.devicePixelRatio || 1;
+    const cssH = Math.max(120, Math.floor(parseInt(getComputedStyle(canvas).height) || 140));
+    canvas.width = Math.max(120, Math.round(headingWidth * DPR));
+    canvas.height = Math.max(40, Math.round(cssH * DPR));
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+
+    // small visual guide for debugging (non-invasive)
+    try{
+        ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height / DPR / 2);
+        ctx.lineTo(canvas.width / DPR, canvas.height / DPR / 2);
+        ctx.stroke();
+    }catch(e){}
+
+    console.log('adjustHeroCanvas: set canvas width to', headingWidth, 'parent offset', parentRect.left);
 }
 
 // Rufe die Funktion beim Laden und bei Größenänderungen des Fensters auf

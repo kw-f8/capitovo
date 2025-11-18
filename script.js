@@ -829,6 +829,7 @@ function typeHeroText(options = {}){
 function initHeroCandles(){
     const canvas = document.getElementById('hero-stock-canvas');
     if(!canvas) return;
+    const headingEl = document.querySelector('.hero h2');
     // color / basic inputs (backwards-compatible fallbacks included)
     const colorInput = document.getElementById('hs-color'); // legacy
     const colorUpInput = document.getElementById('hs-color-up');
@@ -852,7 +853,19 @@ function initHeroCandles(){
     function resize(){
         DPR = Math.max(1, window.devicePixelRatio || 1);
         const cs = getComputedStyle(canvas);
-        let cssW = Math.floor(parseFloat(cs.width));
+        // If a heading exists, match the canvas CSS width to the heading width and center it
+        let cssW;
+        if (headingEl) {
+            const hr = headingEl.getBoundingClientRect();
+            // prefer heading width but clamp to container width
+            const parent = canvas.parentElement || document.body;
+            const parentRect = parent.getBoundingClientRect();
+            cssW = Math.min(Math.max(120, Math.floor(hr.width)), Math.floor(parentRect.width - 20));
+            canvas.style.width = cssW + 'px';
+            canvas.style.margin = '0 auto';
+        } else {
+            cssW = Math.floor(parseFloat(cs.width));
+        }
         let cssH = Math.floor(parseFloat(cs.height));
         if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 900);
         if (!cssH || isNaN(cssH)) cssH = Math.max(100, canvas.clientHeight || 260);
@@ -862,17 +875,27 @@ function initHeroCandles(){
         ctx.setTransform(DPR,0,0,DPR,0,0);
     }
 
-    // generate synthetic OHLC data
+    // deterministic PRNG (mulberry32) so chart stays identical across reloads
+    function mulberry32(a){
+        return function(){
+            var t = a += 0x6D2B79F5;
+            t = Math.imul(t ^ t >>> 15, t | 1);
+            t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        }
+    }
+    const FIXED_SEED = 271828; // constant seed for reproducible charts
     function genOHLC(count, volatility, trendPerCandle){
         const out = [];
-        let price = 100 + Math.random()*8;
+        const rng = mulberry32(FIXED_SEED);
+        let price = 100 + rng()*8;
         for(let i=0;i<count;i++){
             const open = price;
-            const jitter = (Math.random()-0.5)*volatility;
+            const jitter = (rng()-0.5)*volatility;
             const delta = (trendPerCandle || 0) + jitter;
             const close = Math.max(0.1, open + delta);
-            const high = Math.max(open, close) + Math.random()*Math.abs(volatility*0.4);
-            const low = Math.min(open, close) - Math.random()*Math.abs(volatility*0.4);
+            const high = Math.max(open, close) + rng()*Math.abs(volatility*0.4);
+            const low = Math.min(open, close) - rng()*Math.abs(volatility*0.4);
             out.push({o:open,h:high,l:low,c:close});
             price = close;
         }

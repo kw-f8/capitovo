@@ -1192,20 +1192,49 @@ function initHeroCandles(){
     setTimeout(()=>{ try{ renderCandles(); }catch(e){ console.error('initHeroCandles error', e); } }, 60);
 }
 
-// Ensure the hero canvas dynamically adjusts to the heading width and spans the full width
+// Verbesserte Funktion zur Anpassung des Canvas an die Überschrift
 function adjustHeroCanvas() {
     const canvas = document.getElementById('hero-stock-canvas');
     const heading = document.querySelector('.hero h2');
 
     if (canvas && heading) {
-        const headingWidth = heading.offsetWidth;
+        const headingRect = heading.getBoundingClientRect();
+        const headingWidth = headingRect.width;
+        const headingLeft = headingRect.left;
+
+        // Setze die Breite und Position des Canvas
+        canvas.style.position = 'absolute';
         canvas.style.width = `${headingWidth}px`;
-        canvas.width = headingWidth;
-        canvas.style.maxWidth = 'none'; // Ensure no max-width restriction
-        canvas.style.margin = '0 auto'; // Center the canvas
+        canvas.style.left = `${headingLeft}px`;
+        canvas.style.top = `${headingRect.bottom + 10}px`; // 10px Abstand unter der Überschrift
+
+        // Setze die interne Breite des Canvas für die Darstellung
+        const DPR = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(headingWidth * DPR);
+        canvas.height = Math.floor(140 * DPR); // Feste Höhe von 140px
+
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Beispiel: Zeichne eine Linie zur Überprüfung
+        ctx.strokeStyle = 'rgba(0, 200, 140, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height / 2);
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.stroke();
+
+        console.log('Canvas angepasst:', {
+            width: canvas.style.width,
+            left: canvas.style.left,
+            top: canvas.style.top,
+        });
+    } else {
+        console.warn('Canvas oder Überschrift nicht gefunden.');
     }
 }
 
-// Call the function on page load and window resize
+// Rufe die Funktion beim Laden und bei Größenänderungen des Fensters auf
 window.addEventListener('load', adjustHeroCanvas);
 window.addEventListener('resize', adjustHeroCanvas);

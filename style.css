@@ -59,6 +59,7 @@ body {
     padding-bottom: 80px; /* Reduziert den unteren Padding leicht */
     position: relative; 
     overflow: hidden; 
+    width: 100%; /* ensure hero wrapper spans full viewport width */
 }
 
 /* Zentriert den Inhalt der Seite */
@@ -161,6 +162,14 @@ header {
     text-align: center; /* Überschrift zentrieren */
 }
 
+/* Inner wrapper: constrain heading width while allowing full-bleed visuals */
+.hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
 .hero h2 {
     font-size: clamp(1.75rem, 4vw, 3.25rem);
     font-weight: 500; /* etwas fetter */
@@ -168,6 +177,22 @@ header {
     line-height: 1.08;
     color: #0f172a; /* dunklere, stärkere Farbe */
     text-align: center;
+}
+
+/* Full-bleed hero visual: fill the viewport width while remaining centered relative to page */
+#hero-visual{
+    width: 100vw; /* full viewport width */
+    margin-left: calc(50% - 50vw); /* center the full-bleed element when inside a constrained container */
+    display: block;
+    margin-top: 18px;
+    box-sizing: border-box;
+}
+
+#hero-visual canvas{
+    width: 100% !important; /* canvas CSS width matches viewport container */
+    height: 340px; /* visual height (can be adjusted) */
+    display: block;
+    max-width: none;
 }
 
 .hero p {

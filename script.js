@@ -861,10 +861,10 @@ function initHeroCandles(){
         const headingWidth = headingEl ? Math.floor(headingEl.getBoundingClientRect().width) : 0;
         let cssW;
         if (window.innerWidth < 640) {
-            // mobile: keep it slightly inset from edges
-            cssW = Math.max(240, Math.floor(Math.min(parentRect.width * 0.95, headingWidth || parentRect.width * 0.95)));
+            // mobile: use the heading width if available, otherwise 95% parent
+            cssW = headingWidth || Math.max(240, Math.floor(parentRect.width * 0.95));
         } else {
-            // desktop: prefer exact heading width; fall back to 90% parent if heading not found
+            // desktop: use the exact heading width
             cssW = headingWidth || Math.max(320, Math.floor(parentRect.width * 0.9));
         }
         // ensure parent flex centering so canvas sits centered under the heading

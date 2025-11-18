@@ -1191,3 +1191,19 @@ function initHeroCandles(){
     // initial render when layout stable
     setTimeout(()=>{ try{ renderCandles(); }catch(e){ console.error('initHeroCandles error', e); } }, 60);
 }
+
+// Ensure the hero canvas dynamically adjusts to the heading width
+function adjustHeroCanvasWidth() {
+    const canvas = document.getElementById('hero-stock-canvas');
+    const heading = document.querySelector('.hero h2');
+
+    if (canvas && heading) {
+        const headingWidth = heading.offsetWidth;
+        canvas.style.width = `${headingWidth}px`;
+        canvas.width = headingWidth;
+    }
+}
+
+// Call the function on page load and window resize
+window.addEventListener('load', adjustHeroCanvasWidth);
+window.addEventListener('resize', adjustHeroCanvasWidth);

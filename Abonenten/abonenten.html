@@ -56,8 +56,8 @@
             }
 
             .profile-card .w-16 {
-                background-color: #e0f2fe;
-                color: #0284c7;
+                background-color: #f3f4f6; /* Ursprüngliches neutrales Grau */
+                color: #6b7280; /* Ursprüngliche Textfarbe */
             }
 
             .member-grid > div h2 {
@@ -70,20 +70,17 @@
                 color: #6b7280;
             }
 
-            /* Hover-Effekte für Links und Buttons */
+            /* Entferne die Hover-Effekte für Links und Buttons */
             .cta-button, .member-grid a {
-                display: inline-block;
-                padding: 0.5rem 1rem;
-                border-radius: 8px;
-                background-color: var(--color-accent-blue);
-                color: #ffffff;
-                font-weight: 600;
-                text-align: center;
-                transition: background-color 0.3s;
+                background-color: transparent;
+                color: var(--color-accent-blue);
+                font-weight: normal;
+                text-decoration: underline;
             }
 
             .cta-button:hover, .member-grid a:hover {
-                background-color: var(--color-accent-blue-dark);
+                background-color: transparent;
+                color: var(--color-accent-blue-dark);
             }
 
             /* Verbesserte Darstellung für Downloads */

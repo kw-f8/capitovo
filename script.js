@@ -1192,19 +1192,17 @@ function initHeroCandles(){
     setTimeout(()=>{ try{ renderCandles(); }catch(e){ console.error('initHeroCandles error', e); } }, 60);
 }
 
-// Ensure the hero canvas dynamically adjusts to the heading width and centers it
+// Ensure the hero canvas dynamically adjusts to the heading width and spans the full width
 function adjustHeroCanvas() {
     const canvas = document.getElementById('hero-stock-canvas');
     const heading = document.querySelector('.hero h2');
-    const container = document.getElementById('hero-visual');
 
-    if (canvas && heading && container) {
+    if (canvas && heading) {
         const headingWidth = heading.offsetWidth;
         canvas.style.width = `${headingWidth}px`;
         canvas.width = headingWidth;
+        canvas.style.maxWidth = 'none'; // Ensure no max-width restriction
         canvas.style.margin = '0 auto'; // Center the canvas
-        container.style.display = 'flex';
-        container.style.justifyContent = 'center';
     }
 }
 

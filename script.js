@@ -905,16 +905,16 @@ function initHeroCandles(){
             const count = Math.max(6, Math.min(1000, Number(countInput?.value) || Number(document.getElementById('hs-speed')?.value) || 40));
             const vol = Math.max(0, Number(volInput?.value) || 28);
             const trend = Number(trendInput?.value) || 0; // price delta per candle
-            const candleW = Math.max(2, Number(candleWidthInput?.value) || Number(widthInput?.value) || 10);
-            const padding = Number(paddingInput?.value) || 14;
+            const candleW = Math.max(2, Number(candleWidthInput?.value) || Number(widthInput?.value) || 4);
+            const padding = Number(paddingInput?.value) || 16;
             const usableW = Math.max(40, cssW - padding*2);
-            const gap = Math.max(0, Number(gapInput?.value) || Math.floor((usableW - count * candleW) / (count + 1)) );
-            const depth = Math.max(0, Number(depthInput?.value) || Math.round(candleW * 0.6));
+            const gap = Math.max(0, Number(gapInput?.value) || 0 );
+            const depth = Math.max(0, Number(depthInput?.value) || 40);
             const showGrid = gridInput ? gridInput.checked : false;
             const showShadow = shadowInput ? shadowInput.checked : true;
 
-            const upColor = colorUpInput?.value || colorInput?.value || '#00c88c';
-            const downColor = colorDownInput?.value || '#e11d48';
+            const upColor = colorUpInput?.value || colorInput?.value || '#00a0da';
+            const downColor = colorDownInput?.value || '#858585';
 
             const ohlc = genOHLC(count, vol, trend);
             // compute price scale
@@ -977,11 +977,12 @@ function initHeroCandles(){
                 // border
                 ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.strokeRect(x+0.5, bodyTop+0.5, candleW, Math.max(1, bodyBottom - bodyTop));
 
-                // wick
+                // wick (use explicit wick width fallback)
                 ctx.beginPath();
                 ctx.moveTo(cx + candleW/2 - 0.5, yHigh);
                 ctx.lineTo(cx + candleW/2 - 0.5, yLow);
-                ctx.lineWidth = Math.max(1, Math.min(2, candleW/6));
+                const wickW = Number(document.getElementById('hs-wick')?.value) || 3;
+                ctx.lineWidth = wickW;
                 ctx.strokeStyle = 'rgba(0,0,0,0.6)';
                 ctx.stroke();
 
@@ -1038,13 +1039,13 @@ function initHeroCandles(){
     // export/import settings helpers
     function getSettings(){
         return {
-            colorUp: colorUpInput?.value || colorInput?.value || '#00c88c',
-            colorDown: colorDownInput?.value || '#e11d48',
-            candleWidth: Number(candleWidthInput?.value || widthInput?.value || 10),
-            wickWidth: Number(document.getElementById('hs-wick')?.value || 2),
-            gap: Number(gapInput?.value || 4),
-            padding: Number(paddingInput?.value || 14),
-            depth: Number(depthInput?.value || 6),
+            colorUp: colorUpInput?.value || colorInput?.value || '#00a0da',
+            colorDown: colorDownInput?.value || '#858585',
+            candleWidth: Number(candleWidthInput?.value || widthInput?.value || 4),
+            wickWidth: Number(document.getElementById('hs-wick')?.value || 3),
+            gap: Number(gapInput?.value || 0),
+            padding: Number(paddingInput?.value || 16),
+            depth: Number(depthInput?.value || 40),
             volatility: Number(volInput?.value || 28),
             trend: Number(trendInput?.value || 0),
             count: Number(countInput?.value || document.getElementById('hs-speed')?.value || 40),
@@ -1143,13 +1144,13 @@ function initHeroCandles(){
     }
 
     if(resetBtn) resetBtn.addEventListener('click', ()=>{
-        if(colorUpInput) colorUpInput.value = '#00c88c';
-        if(colorDownInput) colorDownInput.value = '#e11d48';
-        if(candleWidthInput) candleWidthInput.value = 10;
-        if(widthInput) widthInput.value = 10;
-        if(gapInput) gapInput.value = 4;
-        if(paddingInput) paddingInput.value = 14;
-        if(depthInput) depthInput.value = 6;
+        if(colorUpInput) colorUpInput.value = '#00a0da';
+        if(colorDownInput) colorDownInput.value = '#858585';
+        if(candleWidthInput) candleWidthInput.value = 4;
+        if(widthInput) widthInput.value = 4;
+        if(gapInput) gapInput.value = 0;
+        if(paddingInput) paddingInput.value = 16;
+        if(depthInput) depthInput.value = 40;
         if(volInput) volInput.value = 28;
         if(trendInput) trendInput.value = 0;
         if(countInput) countInput.value = 40;

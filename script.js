@@ -853,21 +853,24 @@ function initHeroCandles(){
     function resize(){
         DPR = Math.max(1, window.devicePixelRatio || 1);
         const cs = getComputedStyle(canvas);
-        // Prefer to stretch the canvas to most of the hero/container width
-        // and center it under the heading. This keeps it visually aligned
-        // while giving ample horizontal space for candles.
+        // Compute width based on heading width and parent container.
+        // On desktop: match the heading's width exactly and center the canvas below it.
+        // On mobile (narrow viewports): limit to 95% of the parent width.
         const parent = canvas.parentElement || document.body;
         const parentRect = parent.getBoundingClientRect();
-        // use ~95% of parent width but clamp to a sensible minimum
-        let cssW = Math.max(320, Math.floor(parentRect.width * 0.95));
-        // for very narrow headings on desktop, allow heading to be the minimum width
-        if (headingEl) {
-            const hr = headingEl.getBoundingClientRect();
-            cssW = Math.max(cssW, Math.floor(hr.width));
+        const headingWidth = headingEl ? Math.floor(headingEl.getBoundingClientRect().width) : 0;
+        let cssW;
+        if (window.innerWidth < 640) {
+            // mobile: keep it slightly inset from edges
+            cssW = Math.max(240, Math.floor(Math.min(parentRect.width * 0.95, headingWidth || parentRect.width * 0.95)));
+        } else {
+            // desktop: prefer exact heading width; fall back to 90% parent if heading not found
+            cssW = headingWidth || Math.max(320, Math.floor(parentRect.width * 0.9));
         }
-        // apply CSS width and center
+        // ensure parent flex centering so canvas sits centered under the heading
+        try{ parent.style.display = 'flex'; parent.style.justifyContent = 'center'; }catch(e){}
         canvas.style.width = cssW + 'px';
-        canvas.style.margin = '8px auto 0';
+        canvas.style.margin = '8px 0 0';
         let cssH = Math.floor(parseFloat(cs.height));
         if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 900);
         if (!cssH || isNaN(cssH)) cssH = Math.max(100, canvas.clientHeight || 260);

@@ -853,19 +853,21 @@ function initHeroCandles(){
     function resize(){
         DPR = Math.max(1, window.devicePixelRatio || 1);
         const cs = getComputedStyle(canvas);
-        // If a heading exists, match the canvas CSS width to the heading width and center it
-        let cssW;
+        // Prefer to stretch the canvas to most of the hero/container width
+        // and center it under the heading. This keeps it visually aligned
+        // while giving ample horizontal space for candles.
+        const parent = canvas.parentElement || document.body;
+        const parentRect = parent.getBoundingClientRect();
+        // use ~95% of parent width but clamp to a sensible minimum
+        let cssW = Math.max(320, Math.floor(parentRect.width * 0.95));
+        // for very narrow headings on desktop, allow heading to be the minimum width
         if (headingEl) {
             const hr = headingEl.getBoundingClientRect();
-            // prefer heading width but clamp to container width
-            const parent = canvas.parentElement || document.body;
-            const parentRect = parent.getBoundingClientRect();
-            cssW = Math.min(Math.max(120, Math.floor(hr.width)), Math.floor(parentRect.width - 20));
-            canvas.style.width = cssW + 'px';
-            canvas.style.margin = '0 auto';
-        } else {
-            cssW = Math.floor(parseFloat(cs.width));
+            cssW = Math.max(cssW, Math.floor(hr.width));
         }
+        // apply CSS width and center
+        canvas.style.width = cssW + 'px';
+        canvas.style.margin = '8px auto 0';
         let cssH = Math.floor(parseFloat(cs.height));
         if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 900);
         if (!cssH || isNaN(cssH)) cssH = Math.max(100, canvas.clientHeight || 260);

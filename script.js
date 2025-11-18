@@ -853,32 +853,24 @@ function initHeroCandles(){
     function resize(){
         DPR = Math.max(1, window.devicePixelRatio || 1);
         const cs = getComputedStyle(canvas);
+        // Compute width based on heading width and parent container.
+        // On desktop: match the heading's width exactly and center the canvas below it.
+        // On mobile (narrow viewports): limit to 95% of the parent width.
         const parent = canvas.parentElement || document.body;
         const parentRect = parent.getBoundingClientRect();
-        const headingRect = headingEl ? headingEl.getBoundingClientRect() : null;
-
-        // Decide CSS width: on desktop match heading width exactly; on mobile use 95% of parent (or heading if available)
+        const headingWidth = headingEl ? Math.floor(headingEl.getBoundingClientRect().width) : 0;
         let cssW;
         if (window.innerWidth < 640) {
-            cssW = headingRect ? Math.floor(headingRect.width) : Math.max(240, Math.floor(parentRect.width * 0.95));
+            // mobile: use the heading width if available, otherwise 95% parent
+            cssW = headingWidth || Math.max(240, Math.floor(parentRect.width * 0.95));
         } else {
-            cssW = headingRect ? Math.floor(headingRect.width) : Math.max(320, Math.floor(parentRect.width * 0.9));
+            // desktop: use the exact heading width
+            cssW = headingWidth || Math.max(320, Math.floor(parentRect.width * 0.9));
         }
-
-        // Ensure the parent can position the absolute-canvas
-        try { if (window.getComputedStyle(parent).position === 'static') parent.style.position = 'relative'; } catch(e){}
-
-        // Position canvas absolutely so it lines up exactly under the heading
-        try{
-            canvas.style.position = 'absolute';
-            const left = headingRect ? Math.max(0, Math.floor(headingRect.left - parentRect.left)) : Math.max(0, Math.floor((parentRect.width - cssW) / 2));
-            const top = headingRect ? Math.floor(headingRect.bottom - parentRect.top + 8) : 0;
-            canvas.style.left = left + 'px';
-            canvas.style.top = top + 'px';
-            canvas.style.width = cssW + 'px';
-            canvas.style.margin = '0';
-        } catch(e) { console.warn('canvas position set failed', e); }
-
+        // ensure parent flex centering so canvas sits centered under the heading
+        try{ parent.style.display = 'flex'; parent.style.justifyContent = 'center'; }catch(e){}
+        canvas.style.width = cssW + 'px';
+        canvas.style.margin = '8px 0 0';
         let cssH = Math.floor(parseFloat(cs.height));
         if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 900);
         if (!cssH || isNaN(cssH)) cssH = Math.max(100, canvas.clientHeight || 260);
@@ -1105,6 +1097,7 @@ function initHeroCandles(){
         }catch(e){ /* ignore */ }
     }
 
+
     // wire inputs -> render on change (static chart, no animation loop)
     const inputs = [colorUpInput, colorDownInput, candleWidthInput, widthInput, volInput, trendInput, countInput, gapInput, paddingInput, depthInput, gridInput, shadowInput, visibleInput];
     inputs.forEach(el => { if(!el) return; el.addEventListener('input', ()=>{ renderCandles(); }); });
@@ -1234,24 +1227,53 @@ function initHeroCandles(){
         renderCandles();
     });
 
-    // Observe heading size/position so canvas always matches it exactly
-    try{
-        if (headingEl && typeof ResizeObserver === 'function'){
-            const ro = new ResizeObserver(()=>{ try{ renderCandles(); }catch(e){} });
-            ro.observe(headingEl);
-            // keep reference for potential cleanup
-            canvas._headingResizeObserver = ro;
-        }
-    } catch(e){ /* ignore */ }
-
-    // also react to window resizes and font load completion
-    window.addEventListener('resize', ()=>{ try{ renderCandles(); }catch(e){} }, {passive:true});
-    if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(()=>{ try{ renderCandles(); }catch(e){} });
-    }
-
     // initial render when layout stable
     setTimeout(()=>{ try{ renderCandles(); }catch(e){ console.error('initHeroCandles error', e); } }, 60);
 }
 
-// (Legacy helper `adjustHeroCanvas` removed — resize handled inside initHeroCandles)
+// Verbesserte Funktion zur Anpassung des Canvas an die Überschrift
+function adjustHeroCanvas() {
+    const canvas = document.getElementById('hero-stock-canvas');
+    const heading = document.querySelector('.hero h2');
+
+    if (canvas && heading) {
+        const headingRect = heading.getBoundingClientRect();
+        const headingWidth = headingRect.width;
+        const headingLeft = headingRect.left;
+
+        // Setze die Breite und Position des Canvas
+        canvas.style.position = 'absolute';
+        canvas.style.width = `${headingWidth}px`;
+        canvas.style.left = `${headingLeft}px`;
+        canvas.style.top = `${headingRect.bottom + 10}px`; // 10px Abstand unter der Überschrift
+
+        // Setze die interne Breite des Canvas für die Darstellung
+        const DPR = window.devicePixelRatio || 1;
+        canvas.width = Math.floor(headingWidth * DPR);
+        canvas.height = Math.floor(140 * DPR); // Feste Höhe von 140px
+
+        const ctx = canvas.getContext('2d');
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Beispiel: Zeichne eine Linie zur Überprüfung
+        ctx.strokeStyle = 'rgba(0, 200, 140, 0.8)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height / 2);
+        ctx.lineTo(canvas.width, canvas.height / 2);
+        ctx.stroke();
+
+        console.log('Canvas angepasst:', {
+            width: canvas.style.width,
+            left: canvas.style.left,
+            top: canvas.style.top,
+        });
+    } else {
+        console.warn('Canvas oder Überschrift nicht gefunden.');
+    }
+}
+
+// Rufe die Funktion beim Laden und bei Größenänderungen des Fensters auf
+window.addEventListener('load', adjustHeroCanvas);
+window.addEventListener('resize', adjustHeroCanvas);

@@ -1192,18 +1192,22 @@ function initHeroCandles(){
     setTimeout(()=>{ try{ renderCandles(); }catch(e){ console.error('initHeroCandles error', e); } }, 60);
 }
 
-// Ensure the hero canvas dynamically adjusts to the heading width
-function adjustHeroCanvasWidth() {
+// Ensure the hero canvas dynamically adjusts to the heading width and centers it
+function adjustHeroCanvas() {
     const canvas = document.getElementById('hero-stock-canvas');
     const heading = document.querySelector('.hero h2');
+    const container = document.getElementById('hero-visual');
 
-    if (canvas && heading) {
+    if (canvas && heading && container) {
         const headingWidth = heading.offsetWidth;
         canvas.style.width = `${headingWidth}px`;
         canvas.width = headingWidth;
+        canvas.style.margin = '0 auto'; // Center the canvas
+        container.style.display = 'flex';
+        container.style.justifyContent = 'center';
     }
 }
 
 // Call the function on page load and window resize
-window.addEventListener('load', adjustHeroCanvasWidth);
-window.addEventListener('resize', adjustHeroCanvasWidth);
+window.addEventListener('load', adjustHeroCanvas);
+window.addEventListener('resize', adjustHeroCanvas);

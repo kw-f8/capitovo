@@ -179,21 +179,7 @@ header {
     text-align: center;
 }
 
-/* Full-bleed hero visual: fill the viewport width while remaining centered relative to page */
-#hero-visual{
-    width: 100vw; /* full viewport width */
-    margin-left: calc(50% - 50vw); /* center the full-bleed element when inside a constrained container */
-    display: block;
-    margin-top: 18px;
-    box-sizing: border-box;
-}
-
-#hero-visual canvas{
-    width: 100% !important; /* canvas CSS width matches viewport container */
-    height: 340px; /* visual height (can be adjusted) */
-    display: block;
-    max-width: none;
-}
+/* Full-bleed hero visual removed (hero canvas deleted from HTML) */
 
 .hero p {
     font-size: 1.3em;

@@ -242,41 +242,16 @@ function initSidebar() {
     // helper functions to open/close/toggle sidebar
     function openSidebar(){
         try{
-                // opening sidebar
+            // mark sidebar open and make it visible; keep styles defensive
             sidebarElement.classList.add('open');
-            // force inline transform if a different inline style blocks the CSS class
-            try{ sidebarElement.style.transform = 'translateX(0)'; } catch(e){}
-            try{ sidebarElement.style.display = 'block'; sidebarElement.style.opacity = '1'; sidebarElement.style.pointerEvents = 'auto'; sidebarElement.style.zIndex = '1000'; } catch(e){}
-            sidebarElement.setAttribute('aria-hidden','false');
+            sidebarElement.style.width = sidebarElement.style.width || '300px';
+            sidebarElement.style.transform = 'none';
+            sidebarElement.style.display = 'block';
+            sidebarElement.style.opacity = '1';
+            sidebarElement.style.pointerEvents = 'auto';
+            sidebarElement.style.zIndex = '10050';
             try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
             document.body.style.overflow = 'hidden';
-            // open complete
-
-            // Verify visibility: bounding rect and computed styles
-                try{
-                const rect = sidebarElement.getBoundingClientRect();
-                const cs = window.getComputedStyle(sidebarElement);
-
-                const visibleEnough = rect.width > 8 && rect.height > 8 && cs.display !== 'none' && cs.opacity !== '0';
-                if (!visibleEnough) {
-                    console.warn('openSidebar: sidebar not visible after opening — applying forced inline fallback styles');
-                    try{
-                        sidebarElement.style.position = 'fixed';
-                        sidebarElement.style.right = '0';
-                        sidebarElement.style.top = '0';
-                        sidebarElement.style.height = '100%';
-                        sidebarElement.style.width = sidebarElement.style.width || '300px';
-                        sidebarElement.style.transform = 'none';
-                        sidebarElement.style.display = 'block';
-                        sidebarElement.style.opacity = '1';
-                        sidebarElement.style.pointerEvents = 'auto';
-                        sidebarElement.style.zIndex = '10050';
-                    } catch(e){ console.error('openSidebar: forced style apply failed', e); }
-                    // log rect after forcing
-                    const rect2 = sidebarElement.getBoundingClientRect();
-                    // rect after forcing applied
-                }
-            } catch(e){ console.error('openSidebar: visibility check failed', e); }
         } catch(err){ console.error('openSidebar error', err); }
     }
     function closeSidebar(){
@@ -856,20 +831,29 @@ function initHeroCandles(){
         // Compute width based on heading width and parent container.
         // On desktop: match the heading's width exactly and center the canvas below it.
         // On mobile (narrow viewports): limit to 95% of the parent width.
+        // Prefer a full-bleed visual container if present (`#hero-visual`),
+        // otherwise fall back to heading width or parent size.
+        const heroVisual = document.getElementById('hero-visual');
         const parent = canvas.parentElement || document.body;
         const parentRect = parent.getBoundingClientRect();
         const headingWidth = headingEl ? Math.floor(headingEl.getBoundingClientRect().width) : 0;
         let cssW;
-        if (window.innerWidth < 640) {
-            // mobile: use the heading width if available, otherwise 95% parent
-            cssW = headingWidth || Math.max(240, Math.floor(parentRect.width * 0.95));
+        if (heroVisual) {
+            cssW = Math.max(320, Math.floor(heroVisual.getBoundingClientRect().width));
+            // ensure canvas fills the visual container visually
+            try{ canvas.style.width = '100%'; canvas.style.display = 'block'; }catch(e){}
         } else {
-            // desktop: use the exact heading width
-            cssW = headingWidth || Math.max(320, Math.floor(parentRect.width * 0.9));
+            if (window.innerWidth < 640) {
+                // mobile: use the heading width if available, otherwise 95% parent
+                cssW = headingWidth || Math.max(240, Math.floor(parentRect.width * 0.95));
+            } else {
+                // desktop: use the exact heading width
+                cssW = headingWidth || Math.max(320, Math.floor(parentRect.width * 0.9));
+            }
+            // ensure parent flex centering so canvas sits centered under the heading
+            try{ parent.style.display = 'flex'; parent.style.justifyContent = 'center'; }catch(e){}
+            canvas.style.width = cssW + 'px';
         }
-        // ensure parent flex centering so canvas sits centered under the heading
-        try{ parent.style.display = 'flex'; parent.style.justifyContent = 'center'; }catch(e){}
-        canvas.style.width = cssW + 'px';
         canvas.style.margin = '8px 0 0';
         let cssH = Math.floor(parseFloat(cs.height));
         if (!cssW || isNaN(cssW)) cssW = Math.max(200, canvas.clientWidth || 900);

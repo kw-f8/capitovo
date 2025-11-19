@@ -223,8 +223,15 @@ header {
     text-align: left;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
-    background-color: #f8f8f8; 
+    background-color: #ffffff; 
+    border: 1px solid rgba(15,23,42,0.06);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.12);
+    transition: transform .28s ease, box-shadow .28s ease;
+}
+
+.vorteil-item:hover{
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 18px 40px rgba(2,6,23,0.18);
 }
 
 .vorteil-item h4 {

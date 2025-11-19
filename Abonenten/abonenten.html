@@ -247,6 +247,9 @@
                 <p><strong>Name:</strong> <span id="acc-name">–</span></p>
                 <p><strong>Kontakt:</strong> <span id="acc-contact">–</span></p>
             </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Contact Modal (Kontaktdaten) -->
     <div id="contact-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">
@@ -346,5 +349,30 @@
         } catch(e) { /* ignore */ }
     </script>
     <script src="../script.js"></script>
+    <script>
+        // Fallback: sicherstellen, dass Klicks auf Links zu '#open-contact' das Modal öffnen
+        document.addEventListener('click', function (e) {
+            const link = e.target.closest('a[href="#open-contact"]');
+            if (!link) return;
+            e.preventDefault();
+            // prefer central function if available
+            if (typeof openContactModal === 'function') {
+                try { openContactModal(); } catch (err) { /* ignore */ }
+                return;
+            }
+            // fallback: manually show modal and populate fields
+            const modal = document.getElementById('contact-modal');
+            if (!modal) return;
+            try {
+                const data = JSON.parse(localStorage.getItem('capitovo_contact') || '{}');
+                ['name','email','phone','address'].forEach(f => {
+                    const el = document.getElementById('contact-' + f);
+                    if (el && data[f]) el.value = data[f];
+                });
+            } catch (e) { /* ignore */ }
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+    </script>
 </body>
 </html>

@@ -71,6 +71,37 @@ function closeLoginModal() {
     }
 }
 
+/** Öffnet das Kontakt-Modal und füllt das Formular (falls Daten vorhanden). */
+function openContactModal(){
+    const contactModal = document.getElementById('contact-modal');
+    const sidebar = document.getElementById('sidebar');
+    if (!contactModal) return;
+
+    // close sidebar if open
+    if (sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); }
+
+    try{
+        const data = JSON.parse(localStorage.getItem('capitovo_contact')||'{}');
+        if (data && typeof data === 'object'){
+            ['name','email','phone','address'].forEach(f => {
+                const el = document.getElementById('contact-' + f);
+                if (el && data[f]) el.value = data[f];
+            });
+        }
+    }catch(e){}
+
+    contactModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+/** Schließt das Kontakt-Modal. */
+function closeContactModal(){
+    const contactModal = document.getElementById('contact-modal');
+    if (!contactModal) return;
+    contactModal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
 
 // === ANALYSEN RENDERING LOGIK ===
 
@@ -305,36 +336,71 @@ function initSidebar() {
     } catch(e) { /* ignore */ }
 }
 
-/** Initialisiert die Modal-Steuerung mit Event Delegation. */
+/** Initialisiert die Modal-Steuerung mit Event Delegation (Login + Kontakt). */
 function initModalControl() {
     const loginModalElement = document.getElementById('login-modal');
-    
-    if (!loginModalElement) return;
+    const contactModalElement = document.getElementById('contact-modal');
 
-    // 1. Öffnen des Modals via Event Delegation für ALLE #open-login Links
+    // only enable contact-related handlers when the modal or an open link exists on the page
+    const hasContactControls = !!contactModalElement || !!document.querySelector('a[href="#open-contact"]');
+
+    // Event delegation: open login or contact modal
     document.body.addEventListener('click', (e) => {
-        // Findet den nächstgelegenen Link, der auf #open-login zeigt
-        const link = e.target.closest('a[href="#open-login"]'); 
-        
-        if (link) {
-            e.preventDefault();
-            openLoginModal();
+        const linkLogin = e.target.closest('a[href="#open-login"]');
+        if (linkLogin) { e.preventDefault(); openLoginModal(); return; }
+        if (hasContactControls) {
+            const linkContact = e.target.closest('a[href="#open-contact"]');
+            if (linkContact) { e.preventDefault(); openContactModal(); return; }
         }
     });
 
-    // 2. Schließen des Modals (Backdrop-Klick)
-    loginModalElement.addEventListener('click', (e) => {
-        if (e.target === loginModalElement) {
-            closeLoginModal();
-        }
-    });
-    
-    // 3. Schließen des Modals (ESC-Taste)
+    // Backdrop click to close login
+    if (loginModalElement) {
+        loginModalElement.addEventListener('click', (e) => {
+            if (e.target === loginModalElement) closeLoginModal();
+        });
+    }
+
+    // Backdrop click to close contact (only if modal exists)
+    if (contactModalElement) {
+        contactModalElement.addEventListener('click', (e) => {
+            if (e.target === contactModalElement) closeContactModal();
+        });
+    }
+
+    // ESC key closes any open modal (contact close only if contact exists)
     document.addEventListener('keydown', (e) => {
-        // Prüft, ob das Modal sichtbar (nicht hidden) ist, bevor geschlossen wird
-        if (e.key === 'Escape' && !loginModalElement.classList.contains('hidden')) {
-            closeLoginModal();
-        }
+        if (e.key !== 'Escape') return;
+        if (loginModalElement && !loginModalElement.classList.contains('hidden')) closeLoginModal();
+        if (hasContactControls && contactModalElement && !contactModalElement.classList.contains('hidden')) closeContactModal();
+    });
+}
+
+/** Initialisiert Kontaktformular-Handling: speichern/abbrechen */
+function initContactForm(){
+    const form = document.getElementById('contact-form');
+    if (!form) return;
+
+    const closeBtn = document.getElementById('contact-close');
+    const cancelBtn = document.getElementById('contact-cancel');
+
+    if (closeBtn) closeBtn.addEventListener('click', (e)=>{ e.preventDefault(); closeContactModal(); });
+    if (cancelBtn) cancelBtn.addEventListener('click', (e)=>{ e.preventDefault(); closeContactModal(); });
+
+    form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        const data = {
+            name: document.getElementById('contact-name')?.value || '',
+            email: document.getElementById('contact-email')?.value || '',
+            phone: document.getElementById('contact-phone')?.value || '',
+            address: document.getElementById('contact-address')?.value || ''
+        };
+        try{ localStorage.setItem('capitovo_contact', JSON.stringify(data)); } catch(e){}
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const oldText = submitBtn ? submitBtn.textContent : null;
+        if (submitBtn) submitBtn.textContent = 'Gespeichert';
+        setTimeout(()=>{ if (submitBtn && oldText) submitBtn.textContent = oldText; closeContactModal(); }, 900);
     });
 }
 
@@ -359,6 +425,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 4. NEU: Initialisiere die simulierte Login-Funktionalität
     initTestLogin();
+    // 4b. Initialisiere Kontaktdaten-Formular
+    if (document.getElementById('contact-form')) {
+        try { initContactForm(); } catch (e) { console.error('initContactForm error', e); }
+    }
     // 5. Tippeffekt für Hero-Überschrift (nur einfügen, nicht andere Styles ändern)
     try { 
         typeHeroText(); 

@@ -31,13 +31,21 @@
                 color: #111827;
             }
 
-            .abonenten-page a {
+            /* Limit generic link styles to main content/profile/sidebar only
+               so footer buttons keep the global `footer-btn` styling. */
+            .abonenten-page main a,
+            .abonenten-page .member-grid a,
+            .abonenten-page .profile-card a,
+            .abonenten-page .sidebar-nav a {
                 color: var(--color-accent-blue);
                 text-decoration: none;
                 transition: color 0.3s;
             }
 
-            .abonenten-page a:hover {
+            .abonenten-page main a:hover,
+            .abonenten-page .member-grid a:hover,
+            .abonenten-page .profile-card a:hover,
+            .abonenten-page .sidebar-nav a:hover {
                 color: var(--color-accent-blue-dark);
             }
 

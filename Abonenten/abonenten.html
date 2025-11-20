@@ -132,61 +132,27 @@
                 padding-right: 1.5rem;
             }
 
-            /* Reload-Tipp Animation */
-            .reload-tip {
-                position: relative;
-                display: flex;
-                justify-content: center;
-                pointer-events: none;
-                margin-bottom: 0.5rem;
+            /* Typing animation for the main heading */
+            .typing-text { white-space: nowrap; display: inline-block; }
+            .typing-cursor {
+                display: inline-block;
+                width: 0.6rem;
+                background: linear-gradient(180deg,#111827 0%,#374151 100%);
+                margin-left: 0.35rem;
+                border-radius: 2px;
+                animation: blink 1s steps(2, start) infinite;
+                vertical-align: text-bottom;
+                height: 1.2em;
             }
 
-            .reload-tip-inner {
-                pointer-events: auto;
-                background: linear-gradient(135deg,#111827 0%,#1f2937 100%);
-                color: #fff;
-                padding: 0.9rem 1.1rem;
-                border-radius: 12px;
-                max-width: 56rem;
-                box-shadow: 0 10px 30px rgba(31,41,55,0.15);
-                transform: translateY(-10px) scale(0.98);
-                opacity: 0;
-                display: flex;
-                align-items: flex-start;
-                gap: 0.75rem;
-                transition: transform 420ms cubic-bezier(.2,.9,.3,1), opacity 420ms ease;
+            @keyframes blink {
+                0% { opacity: 1; }
+                50% { opacity: 0; }
+                100% { opacity: 1; }
             }
 
-            .reload-tip.show .reload-tip-inner {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-
-            .reload-tip-inner strong {
-                display: block;
-                font-size: 0.95rem;
-                font-weight: 700;
-                color: #f8fafc;
-            }
-
-            .reload-tip-inner p { margin: 0; font-size: 0.95rem; color: rgba(248,250,252,0.95); }
-
-            .reload-tip-close {
-                margin-left: 0.6rem;
-                background: transparent;
-                border: none;
-                color: rgba(248,250,252,0.9);
-                font-size: 0.95rem;
-                cursor: pointer;
-                padding: 0.25rem 0.4rem;
-                border-radius: 6px;
-            }
-
-            .reload-tip.hide .reload-tip-inner {
-                transform: translateY(-8px) scale(0.98);
-                opacity: 0;
-                transition: transform 300ms ease, opacity 300ms ease;
-            }
+            /* Small visual smoothing for typed letters */
+            .typing-text .char { display: inline-block; transform-origin: left center; }
         </style>
     <header>
         <div class="header-content">
@@ -201,15 +167,12 @@
 
     <main class="max-w-6xl mx-auto p-6">
         <section class="mb-6">
-            <!-- Überschrift und persönliche Begrüßung entfernt auf Wunsch -->
-            <!-- Reload-Tipp: erscheint beim Laden der Seite -->
-            <div id="reload-tip" class="reload-tip" aria-hidden="true">
-                <div class="reload-tip-inner">
-                    <strong>Tipp</strong>
-                    <p class="mt-1">Nutze <em>Abo verwalten</em>, um Zahlungsdaten zu ändern — oder klicke auf <em>Alle anzeigen</em> für ältere Analysen.</p>
-                    <button id="reload-tip-close" class="reload-tip-close" aria-label="Tipp schließen">✕</button>
-                </div>
-            </div>
+            <!-- Animierte Überschrift: "Willkommen im Mitgliederbereich" -->
+            <h1 id="typing-heading" class="text-3xl font-extrabold mb-2" aria-live="polite">
+                <span id="typing-text" class="typing-text" aria-hidden="true"></span>
+                <span class="typing-cursor" aria-hidden="true">&nbsp;</span>
+            </h1>
+            <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
 
         <section class="member-grid">
@@ -478,37 +441,41 @@
         })();
     </script>
     <script>
-        // Reload-Tipp: show on each page load, hide after a few seconds or when closed
+        // Typing animation for the heading on page load
         (function(){
-            function showTip(){
-                const tip = document.getElementById('reload-tip');
-                if (!tip) return;
-                tip.setAttribute('aria-hidden','false');
-                tip.classList.add('show');
-                // auto hide after 6s
-                const hideTimeout = setTimeout(()=>{
-                    tip.classList.remove('show');
-                    tip.classList.add('hide');
-                    tip.setAttribute('aria-hidden','true');
-                }, 6000);
-
-                const close = document.getElementById('reload-tip-close');
-                if (close) {
-                    close.addEventListener('click', function(e){
-                        e.preventDefault();
-                        clearTimeout(hideTimeout);
-                        tip.classList.remove('show');
-                        tip.classList.add('hide');
-                        tip.setAttribute('aria-hidden','true');
-                    });
+            const text = 'Willkommen im Mitgliederbereich';
+            const speed = 45; // ms per character
+            function typeInto(el, str, cb){
+                el.innerHTML = '';
+                let i = 0;
+                function step(){
+                    if (i < str.length) {
+                        const ch = document.createElement('span');
+                        ch.className = 'char';
+                        ch.textContent = str[i++];
+                        el.appendChild(ch);
+                        setTimeout(step, speed + Math.floor(Math.random()*20));
+                    } else if (typeof cb === 'function') {
+                        cb();
+                    }
                 }
+                step();
             }
 
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', showTip);
-            } else {
-                showTip();
+            function init(){
+                const target = document.getElementById('typing-text');
+                const cursor = document.querySelector('.typing-cursor');
+                if (!target) return;
+                // ensure cursor visible
+                if (cursor) cursor.style.opacity = 1;
+                typeInto(target, text, function(){
+                    // after finished, keep cursor blinking for a short while then reduce opacity
+                    setTimeout(()=>{ if (cursor) cursor.style.opacity = 0.7; }, 800);
+                });
             }
+
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+            else init();
         })();
     </script>
 </body>

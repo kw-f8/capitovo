@@ -131,6 +131,62 @@
                 padding-left: 1.5rem; /* 24px to match Tailwind p-6 */
                 padding-right: 1.5rem;
             }
+
+            /* Reload-Tipp Animation */
+            .reload-tip {
+                position: relative;
+                display: flex;
+                justify-content: center;
+                pointer-events: none;
+                margin-bottom: 0.5rem;
+            }
+
+            .reload-tip-inner {
+                pointer-events: auto;
+                background: linear-gradient(135deg,#111827 0%,#1f2937 100%);
+                color: #fff;
+                padding: 0.9rem 1.1rem;
+                border-radius: 12px;
+                max-width: 56rem;
+                box-shadow: 0 10px 30px rgba(31,41,55,0.15);
+                transform: translateY(-10px) scale(0.98);
+                opacity: 0;
+                display: flex;
+                align-items: flex-start;
+                gap: 0.75rem;
+                transition: transform 420ms cubic-bezier(.2,.9,.3,1), opacity 420ms ease;
+            }
+
+            .reload-tip.show .reload-tip-inner {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+
+            .reload-tip-inner strong {
+                display: block;
+                font-size: 0.95rem;
+                font-weight: 700;
+                color: #f8fafc;
+            }
+
+            .reload-tip-inner p { margin: 0; font-size: 0.95rem; color: rgba(248,250,252,0.95); }
+
+            .reload-tip-close {
+                margin-left: 0.6rem;
+                background: transparent;
+                border: none;
+                color: rgba(248,250,252,0.9);
+                font-size: 0.95rem;
+                cursor: pointer;
+                padding: 0.25rem 0.4rem;
+                border-radius: 6px;
+            }
+
+            .reload-tip.hide .reload-tip-inner {
+                transform: translateY(-8px) scale(0.98);
+                opacity: 0;
+                transition: transform 300ms ease, opacity 300ms ease;
+            }
         </style>
     <header>
         <div class="header-content">
@@ -145,8 +201,15 @@
 
     <main class="max-w-6xl mx-auto p-6">
         <section class="mb-6">
-            <h1 class="text-3xl font-extrabold mb-2">Willkommen im Mitgliederbereich</h1>
-            <p id="welcome-text" class="text-gray-600">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
+            <!-- Überschrift und persönliche Begrüßung entfernt auf Wunsch -->
+            <!-- Reload-Tipp: erscheint beim Laden der Seite -->
+            <div id="reload-tip" class="reload-tip" aria-hidden="true">
+                <div class="reload-tip-inner">
+                    <strong>Tipp</strong>
+                    <p class="mt-1">Nutze <em>Abo verwalten</em>, um Zahlungsdaten zu ändern — oder klicke auf <em>Alle anzeigen</em> für ältere Analysen.</p>
+                    <button id="reload-tip-close" class="reload-tip-close" aria-label="Tipp schließen">✕</button>
+                </div>
+            </div>
         </section>
 
         <section class="member-grid">
@@ -412,6 +475,40 @@
 
             if (modal) modal.addEventListener('click', function(e){ if (e.target === modal) closeConfirm(); });
             document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeConfirm(); });
+        })();
+    </script>
+    <script>
+        // Reload-Tipp: show on each page load, hide after a few seconds or when closed
+        (function(){
+            function showTip(){
+                const tip = document.getElementById('reload-tip');
+                if (!tip) return;
+                tip.setAttribute('aria-hidden','false');
+                tip.classList.add('show');
+                // auto hide after 6s
+                const hideTimeout = setTimeout(()=>{
+                    tip.classList.remove('show');
+                    tip.classList.add('hide');
+                    tip.setAttribute('aria-hidden','true');
+                }, 6000);
+
+                const close = document.getElementById('reload-tip-close');
+                if (close) {
+                    close.addEventListener('click', function(e){
+                        e.preventDefault();
+                        clearTimeout(hideTimeout);
+                        tip.classList.remove('show');
+                        tip.classList.add('hide');
+                        tip.setAttribute('aria-hidden','true');
+                    });
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', showTip);
+            } else {
+                showTip();
+            }
         })();
     </script>
 </body>

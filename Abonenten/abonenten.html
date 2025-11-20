@@ -141,27 +141,6 @@
         </section>
 
         <section class="member-grid">
-            <!-- Left: Profile / Quick actions -->
-            <aside class="profile-card bg-white p-6 rounded-xl shadow">
-                <div class="flex items-center space-x-4 mb-4">
-                    <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-xl font-bold text-gray-600">A</div>
-                    <div>
-                        <div id="member-name" class="font-semibold">Mitglied</div>
-                        <div id="member-email" class="text-sm text-gray-500">—</div>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <a href="#open-account" class="block text-left text-primary-blue font-medium">Profil bearbeiten</a>
-                    <a href="#" class="block text-left text-accent-blue">Zahlungsinformationen</a>
-                    <a href="#" class="block text-left text-accent-blue">Rechnungen &amp; Belege</a>
-                    <a href="#" id="logout-link-2" class="block text-left text-red-600">Abmelden</a>
-                </div>
-                <div class="mt-6 pt-4 border-t text-sm text-gray-600">
-                    <div><strong>Vertragslaufzeit:</strong> 12 Monate</div>
-                    <div class="mt-1"><strong>Nächste Zahlung:</strong> 01.12.2025</div>
-                </div>
-            </aside>
-
             <!-- Middle: Analyses list (primary content) -->
             <div class="bg-white p-6 rounded-xl shadow">
                 <div class="flex items-center justify-between mb-4">
@@ -211,12 +190,7 @@
                         <span>Startseite</span>
                     </a>
                 </li>
-                <li>
-                    <a href="#" id="logout-link" class="flex items-center space-x-3 cta-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/><path d="M7 8v8"/></svg>
-                        <span>Abmelden</span>
-                    </a>
-                </li>
+                <!-- upper logout removed to avoid duplicate; keep single logout at bottom -->
                 <li>
                     <a href="#open-account" id="sidebar-account" class="flex items-center space-x-3" aria-label="Mein Konto">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -302,13 +276,13 @@
     </div>
 
     <!-- Logout Confirmation Modal -->
-    <div id="logout-confirm-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">
+    <div id="logout-confirm-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-50 backdrop-blur-xl-custom flex items-center justify-center p-4">
         <div class="w-full max-w-sm">
             <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
-                <h3 class="text-lg font-semibold mb-2">Abmelden bestätigen</h3>
-                <p class="text-sm text-gray-700 mb-4">Möchten Sie sich wirklich abmelden und zur Startseite zurückkehren?</p>
+                <h3 class="text-lg font-semibold mb-2">Abmelden</h3>
+                <p class="text-sm text-gray-700 mb-4">Möchten Sie sich wirklich abmelden? Lokale Sitzungsdaten werden entfernt.</p>
                 <div class="flex gap-3">
-                    <button id="logout-confirm-yes" class="flex-1 py-2 px-4 rounded bg-red-600 text-white">Ja, abmelden</button>
+                    <button id="logout-confirm-yes" class="flex-1 py-2 px-4 rounded bg-primary-blue text-white">Abmelden</button>
                     <button id="logout-confirm-no" class="flex-1 py-2 px-4 rounded border border-gray-300">Abbrechen</button>
                 </div>
             </div>
@@ -409,6 +383,8 @@
             function openConfirm(e){
                 if (e && e.preventDefault) e.preventDefault();
                 if (!modal) return;
+                // close sidebar if open so modal is visible
+                try{ const sb = document.getElementById('sidebar'); if (sb && sb.classList.contains('open')) { sb.classList.remove('open'); sb.setAttribute('aria-hidden','true'); } } catch(e){}
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
             }

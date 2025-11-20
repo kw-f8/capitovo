@@ -122,6 +122,15 @@
             .sidebar-nav { flex: 1 1 auto; overflow: auto; }
             .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
             .sidebar-nav ul li.logout-bottom { margin-top: auto; padding-top: 12px; }
+
+            /* Align header and main content: use same max-width and paddings so left edges line up */
+            .abonenten-page .header-content,
+            .abonenten-page main {
+                max-width: 72rem; /* matches Tailwind's max-w-6xl (72rem = 1152px) */
+                margin: 0 auto;
+                padding-left: 1.5rem; /* 24px to match Tailwind p-6 */
+                padding-right: 1.5rem;
+            }
         </style>
     <header>
         <div class="header-content">

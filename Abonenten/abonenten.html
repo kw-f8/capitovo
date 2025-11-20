@@ -167,11 +167,8 @@
 
     <main class="max-w-6xl mx-auto p-6">
         <section class="mb-6">
-            <!-- Animierte Überschrift: "Willkommen im Mitgliederbereich" -->
-            <h1 id="typing-heading" class="text-3xl font-extrabold mb-2" aria-live="polite">
-                <span id="typing-text" class="typing-text" aria-hidden="true"></span>
-                <span class="typing-cursor" aria-hidden="true">&nbsp;</span>
-            </h1>
+            <!-- Überschrift wird vom globalen Script wie auf der Startseite getippt -->
+            <h1 id="typing-heading" class="text-3xl font-extrabold mb-2">Willkommen im Mitgliederbereich</h1>
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
 
@@ -440,43 +437,6 @@
             document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeConfirm(); });
         })();
     </script>
-    <script>
-        // Typing animation for the heading on page load
-        (function(){
-            const text = 'Willkommen im Mitgliederbereich';
-            const speed = 45; // ms per character
-            function typeInto(el, str, cb){
-                el.innerHTML = '';
-                let i = 0;
-                function step(){
-                    if (i < str.length) {
-                        const ch = document.createElement('span');
-                        ch.className = 'char';
-                        ch.textContent = str[i++];
-                        el.appendChild(ch);
-                        setTimeout(step, speed + Math.floor(Math.random()*20));
-                    } else if (typeof cb === 'function') {
-                        cb();
-                    }
-                }
-                step();
-            }
-
-            function init(){
-                const target = document.getElementById('typing-text');
-                const cursor = document.querySelector('.typing-cursor');
-                if (!target) return;
-                // ensure cursor visible
-                if (cursor) cursor.style.opacity = 1;
-                typeInto(target, text, function(){
-                    // after finished, keep cursor blinking for a short while then reduce opacity
-                    setTimeout(()=>{ if (cursor) cursor.style.opacity = 0.7; }, 800);
-                });
-            }
-
-            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-            else init();
-        })();
-    </script>
+    <!-- Typing behavior is handled globally by script.js (typeElementText) -->
 </body>
 </html>

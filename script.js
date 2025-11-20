@@ -433,6 +433,13 @@ document.addEventListener('DOMContentLoaded', () => {
     try { 
         typeHeroText(); 
     } catch (e) { /* ignore if function missing */ }
+    // 5b. Wenn auf anderen Seiten ein Element mit id 'typing-heading' existiert,
+    // tippe dessen Inhalt auf die gleiche Weise wie auf der Startseite.
+    try {
+        if (document.getElementById('typing-heading')) {
+            try { typeElementText('#typing-heading', { speed: 45, delay: 140 }); } catch(e){}
+        }
+    } catch(e){}
     // 6. Hero candlestick removed per user request (no init)
     // Animation UI: removed automatic diagnostic/control buttons per user request
     // sidebar subscribe handler
@@ -469,6 +476,39 @@ function typeHeroText(options = {}){
                 clearInterval(timer);
                 // short delay then remove caret
                 setTimeout(() => h2.classList.remove('typing-caret'), 300);
+            }
+        }, speed);
+    }, delay);
+}
+
+/**
+ * Tippt den Text eines Elements (wie auf der Startseite) Zeichen für Zeichen ein.
+ * selector: CSS-Selector oder DOM-Element
+ */
+function typeElementText(selector, options = {}){
+    const speed = typeof options.speed === 'number' ? options.speed : 48;
+    const delay = typeof options.delay === 'number' ? options.delay : 120;
+
+    let el = null;
+    if (typeof selector === 'string') el = document.querySelector(selector);
+    else if (selector instanceof Element) el = selector;
+    if (!el) return;
+
+    const full = el.textContent || '';
+    if (!full.trim() || el.dataset.typed === 'true') return;
+    el.dataset.typed = 'true';
+    el.originalText = full;
+    el.textContent = '';
+    el.classList.add('typing-caret');
+
+    let i = 0;
+    setTimeout(() => {
+        const timer = setInterval(() => {
+            el.textContent += full.charAt(i);
+            i++;
+            if (i >= full.length) {
+                clearInterval(timer);
+                setTimeout(()=> el.classList.remove('typing-caret'), 300);
             }
         }, speed);
     }, delay);

@@ -153,6 +153,22 @@
 
             /* Small visual smoothing for typed letters */
             .typing-text .char { display: inline-block; transform-origin: left center; }
+
+            /* Member analyses grid: high-end cards */
+            .member-analyses-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            @media (min-width: 640px) { .member-analyses-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+            @media (min-width: 1024px) { .member-analyses-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+            .member-card { border-radius: 12px; overflow: hidden; }
+            .member-card img { display: block; width: 100%; height: auto; }
+            .member-card h3 { margin: 0; }
+
+            /* utility: clamp 3 lines (with fallback) */
+            .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.25rem; max-height: calc(1.25rem * 3); }
         </style>
     <header>
         <div class="header-content">
@@ -273,20 +289,11 @@
                 // personalize welcome
                 const welcome = document.getElementById('welcome-text');
                 if (welcome) welcome.textContent = `Willkommen, ${sess.email}`;
-                // load analyses dynamically (max 6)
+                // member-analyses wird von script.js geladen (hochwertige Karten)
+                // hier nur Begrüßung personalisieren
                 const container = document.getElementById('member-analyses');
                 if (container) {
-                    fetch('../data/analysen.json')
-                    .then(r => r.ok ? r.json() : Promise.reject(r.status))
-                    .then(data => {
-                        const list = data.slice(0,6).map(a => {
-                            return `<div class="p-2 border rounded-sm bg-gray-50"><a href="${a.link}" class="text-sm font-medium text-primary-blue">${a.title}</a><div class="text-xs text-gray-600">${a.category}</div></div>`;
-                        }).join('');
-                        container.innerHTML = list || '<p class="text-sm text-gray-500">Keine Analysen verfügbar.</p>';
-                    })
-                    .catch(()=>{
-                        container.innerHTML = '<p class="text-sm text-gray-500">Analysen konnten nicht geladen werden.</p>';
-                    });
+                    // Platzhalter bleibt bis script.js die Karten rendert
                 }
             } catch(e){ window.location.href = '../index.html'; }
         })();

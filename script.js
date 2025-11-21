@@ -110,6 +110,58 @@ function createAnalysisArticle(analysis) {
     `;
 }
 
+/** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */
+function createMemberAnalysisCard(a){
+    // Fallback values
+    const title = a.title || 'Unbenannte Analyse';
+    const summary = a.summary || '';
+    const img = a.image || 'data/vorschaubilder/placeholder.png';
+    const category = a.category || 'Analyse';
+    const link = a.link || '#';
+    const date = a.date || '';
+    const author = a.author || '';
+
+    return `
+    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1">
+        <a href="${link}" class="block">
+            <div class="relative h-52 md:h-44 lg:h-56 overflow-hidden bg-gray-100">
+                <img src="${img}" alt="Vorschaubild ${title}" class="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105">
+                <span class="absolute left-4 top-4 inline-block bg-gradient-to-r from-primary-blue to-blue-400 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">${category}</span>
+            </div>
+            <div class="p-5">
+                <h3 class="text-lg md:text-xl font-semibold text-gray-900 leading-tight mb-2">${title}</h3>
+                <p class="text-sm text-gray-600 line-clamp-3 mb-4">${summary}</p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                    <div class="flex items-center gap-3">
+                        <span>${author || 'capitovo'}</span>
+                        ${date ? `<span>• ${date}</span>` : ''}
+                    </div>
+                    <span class="text-primary-blue font-medium">Jetzt lesen →</span>
+                </div>
+            </div>
+        </a>
+    </article>
+    `;
+}
+
+/** Lädt die Analysen speziell für die Abonnenten-Seite und rendert hochwertige Karten. */
+async function loadAndRenderMemberAnalyses(){
+    const container = document.getElementById('member-analyses');
+    if (!container) return;
+    const cacheBuster = `?t=${new Date().getTime()}`;
+    try{
+        const res = await fetch('data/analysen.json' + cacheBuster);
+        if (!res.ok) throw new Error('Fetch fehlgeschlagen');
+        const data = await res.json();
+        // render up to 12 analyses in a responsive grid
+        const html = `<div class="member-analyses-grid">` + data.slice(0,12).map(d => createMemberAnalysisCard(d)).join('') + `</div>`;
+        container.innerHTML = html;
+    }catch(err){
+        console.error('Fehler beim Laden der Member-Analysen', err);
+        container.innerHTML = '<p class="text-sm text-gray-500">Analysen konnten nicht geladen werden.</p>';
+    }
+}
+
 /** Lädt die Analysen aus JSON und rendert sie im Grid. */
 async function loadAndRenderAnalyses() {
     const analysisGrid = document.getElementById('analysis-grid');
@@ -415,6 +467,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 1. Lade die Analysen
     loadAndRenderAnalyses();
+    // 1b. Wenn die Abonnenten-Seite ein spezielles Grid hat, lade dort hochwertige Karten
+    try { if (document.getElementById('member-analyses')) loadAndRenderMemberAnalyses(); } catch(e){}
     
     // 2. Initialisiere Sidebar und Navigation
     initSidebar();

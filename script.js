@@ -115,9 +115,14 @@ function createMemberAnalysisCard(a){
     // Fallback values
     const title = a.title || 'Unbenannte Analyse';
     const summary = a.summary || '';
-    const img = a.image || 'data/vorschaubilder/placeholder.png';
+    // Resolve relative paths correctly when page sits in /Abonenten/
+    const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+    const base = isInAbonenten ? '../' : '';
+    const rawImg = a.image || 'data/vorschaubilder/placeholder.png';
+    const img = (/^(https?:)?\/\//i.test(rawImg) || rawImg.startsWith('/')) ? rawImg : (base + rawImg);
     const category = a.category || 'Analyse';
-    const link = a.link || '#';
+    const rawLink = a.link || '#';
+    const link = (/^(https?:)?\/\//i.test(rawLink) || rawLink.startsWith('/')) ? rawLink : (base + rawLink);
     const date = a.date || '';
     const author = a.author || '';
 

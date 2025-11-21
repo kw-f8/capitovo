@@ -87,6 +87,40 @@ function openContactModal(){
                 const el = document.getElementById('contact-' + f);
                 if (el && data[f]) el.value = data[f];
             });
+
+            // populate payment fields (masking full values)
+            try{
+                const pm = data.payment && data.payment.method ? data.payment.method : '';
+                const select = document.getElementById('contact-payment-method');
+                if (select) {
+                    select.value = pm;
+                    // trigger change so initContactForm's listener shows correct groups
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+
+                if (pm === 'card' && data.payment.card_last4) {
+                    const nameEl = document.getElementById('contact-card-name');
+                    if (nameEl) nameEl.value = data.payment.card_name || '';
+                    const numEl = document.getElementById('contact-card-number');
+                    if (numEl) {
+                        numEl.value = '';
+                        numEl.placeholder = '•••• •••• •••• ' + (data.payment.card_last4 || '');
+                    }
+                }
+
+                if (pm === 'sepa' && data.payment.iban_last4) {
+                    const ibanEl = document.getElementById('contact-iban');
+                    if (ibanEl) {
+                        ibanEl.value = '';
+                        ibanEl.placeholder = '•••• ' + data.payment.iban_last4;
+                    }
+                }
+
+                if (pm === 'paypal' && data.payment.paypal_email) {
+                    const ppEl = document.getElementById('contact-paypal-email');
+                    if (ppEl) ppEl.value = data.payment.paypal_email;
+                }
+            }catch(e){}
         }
     }catch(e){}
 

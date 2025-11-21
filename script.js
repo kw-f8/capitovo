@@ -71,70 +71,9 @@ function closeLoginModal() {
     }
 }
 
-/** Öffnet das Kontakt-Modal und füllt das Formular (falls Daten vorhanden). */
-function openContactModal(){
-    const contactModal = document.getElementById('contact-modal');
-    const sidebar = document.getElementById('sidebar');
-    if (!contactModal) return;
-
-    // close sidebar if open
-    if (sidebar && sidebar.classList.contains('open')) { sidebar.classList.remove('open'); sidebar.setAttribute('aria-hidden','true'); }
-
-    try{
-        const data = JSON.parse(localStorage.getItem('capitovo_contact')||'{}');
-        if (data && typeof data === 'object'){
-            ['name','email','phone','address'].forEach(f => {
-                const el = document.getElementById('contact-' + f);
-                if (el && data[f]) el.value = data[f];
-            });
-
-            // populate payment fields (masking full values)
-            try{
-                const pm = data.payment && data.payment.method ? data.payment.method : '';
-                const select = document.getElementById('contact-payment-method');
-                if (select) {
-                    select.value = pm;
-                    // trigger change so initContactForm's listener shows correct groups
-                    select.dispatchEvent(new Event('change', { bubbles: true }));
-                }
-
-                if (pm === 'card' && data.payment.card_last4) {
-                    const nameEl = document.getElementById('contact-card-name');
-                    if (nameEl) nameEl.value = data.payment.card_name || '';
-                    const numEl = document.getElementById('contact-card-number');
-                    if (numEl) {
-                        numEl.value = '';
-                        numEl.placeholder = '•••• •••• •••• ' + (data.payment.card_last4 || '');
-                    }
-                }
-
-                if (pm === 'sepa' && data.payment.iban_last4) {
-                    const ibanEl = document.getElementById('contact-iban');
-                    if (ibanEl) {
-                        ibanEl.value = '';
-                        ibanEl.placeholder = '•••• ' + data.payment.iban_last4;
-                    }
-                }
-
-                if (pm === 'paypal' && data.payment.paypal_email) {
-                    const ppEl = document.getElementById('contact-paypal-email');
-                    if (ppEl) ppEl.value = data.payment.paypal_email;
-                }
-            }catch(e){}
-        }
-    }catch(e){}
-
-    contactModal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-/** Schließt das Kontakt-Modal. */
-function closeContactModal(){
-    const contactModal = document.getElementById('contact-modal');
-    if (!contactModal) return;
-    contactModal.classList.add('hidden');
-    document.body.style.overflow = '';
-}
+// Kontakt-Modale wurden entfernt: Kontakt wird jetzt über `Abonenten/kontaktdaten.html` verwaltet.
+// Die alten `openContactModal` / `closeContactModal` Helfer wurden bewusst entfernt,
+// damit keine veralteten Modal-Aufrufe mehr erfolgen können.
 
 
 // === ANALYSEN RENDERING LOGIK ===

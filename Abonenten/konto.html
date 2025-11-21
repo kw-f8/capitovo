@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — Mein Konto</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="bg-white text-gray-900 abonenten-page">
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="./abonenten.html">
+                    <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <a href="./abonenten.html" class="ml-auto text-sm text-accent-blue">Zurück</a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6">
+        <h1 class="text-2xl font-extrabold mb-4">Mein Konto</h1>
+
+        <section class="bg-white p-6 rounded-xl shadow mb-6">
+            <div class="space-y-3 text-sm text-gray-800">
+                <p><strong>E-Mail:</strong> <span id="page-acc-email">–</span></p>
+                <p><strong>Name:</strong> <span id="page-acc-name">–</span></p>
+                <p><strong>Kontakt:</strong> <span id="page-acc-contact">–</span></p>
+                <p><strong>Zahlung:</strong> <span id="page-acc-payment">–</span></p>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <a href="./kontaktdaten.html" class="py-2 px-4 rounded bg-primary-blue text-white">Kontaktdaten bearbeiten</a>
+                <a href="./abonenten.html" id="page-logout-link" class="py-2 px-4 rounded border border-gray-300">Zurück zum Mitgliederbereich</a>
+            </div>
+        </section>
+
+        <section class="bg-white p-6 rounded-xl shadow">
+            <h2 class="text-lg font-semibold mb-3">Abonnement-Informationen</h2>
+            <p class="text-sm text-gray-700">Status: <strong class="text-green-600">Aktiv</strong></p>
+            <p class="text-sm text-gray-700 mt-1">Nächste Abbuchung: <strong>01.12.2025</strong></p>
+        </section>
+    </main>
+
+    <footer class="site-footer border-t py-6 mt-12">
+        <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
+            <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
+            <div class="footer-links">
+                <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Populate account info from localStorage (reuses the same data keys)
+        (function(){
+            try{
+                const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
+                const contact = JSON.parse(localStorage.getItem('capitovo_contact')||'{}') || {};
+                document.getElementById('page-acc-email').textContent = sess.email || (contact.email || '–');
+                document.getElementById('page-acc-name').textContent = sess.name || (contact.name || '–');
+                const contactLine = [contact.phone, contact.address].filter(Boolean).join(' — ');
+                document.getElementById('page-acc-contact').textContent = contactLine || '–';
+                const payEl = document.getElementById('page-acc-payment');
+                if (payEl && contact.payment) {
+                    const p = contact.payment;
+                    if (p.method === 'card' && p.card_last4) payEl.textContent = `Karte •••• ${p.card_last4}` + (p.card_name ? ` ( ${p.card_name} )` : '');
+                    else if (p.method === 'sepa' && p.iban_last4) payEl.textContent = `IBAN •••• ${p.iban_last4}`;
+                    else if (p.method === 'paypal' && p.paypal_email) payEl.textContent = `PayPal: ${p.paypal_email}`;
+                    else payEl.textContent = '–';
+                }
+            } catch(e) { /* ignore */ }
+        })();
+    </script>
+</body>
+</html>

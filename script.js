@@ -389,19 +389,54 @@ function initContactForm(){
 
     form.addEventListener('submit', (e)=>{
         e.preventDefault();
+        // collect contact data
+        const rawCard = (document.getElementById('contact-card-number')?.value || '').replace(/\s+/g,'');
+        const rawIban = (document.getElementById('contact-iban')?.value || '').replace(/\s+/g,'');
+        const paymentMethod = (document.getElementById('contact-payment-method')?.value || '');
+
+        const payment = { method: paymentMethod };
+        if (paymentMethod === 'card' && rawCard.length >= 4) {
+            payment.card_last4 = rawCard.slice(-4);
+            payment.card_name = document.getElementById('contact-card-name')?.value || '';
+            // Do NOT store full card number or CVC
+        } else if (paymentMethod === 'sepa' && rawIban.length >= 4) {
+            payment.iban_last4 = rawIban.slice(-4);
+        } else if (paymentMethod === 'paypal') {
+            payment.paypal_email = document.getElementById('contact-paypal-email')?.value || '';
+        }
+
         const data = {
             name: document.getElementById('contact-name')?.value || '',
             email: document.getElementById('contact-email')?.value || '',
             phone: document.getElementById('contact-phone')?.value || '',
-            address: document.getElementById('contact-address')?.value || ''
+            address: document.getElementById('contact-address')?.value || '',
+            payment: payment,
+            savedAt: Date.now()
         };
-        try{ localStorage.setItem('capitovo_contact', JSON.stringify(data)); } catch(e){}
+
+        try{ localStorage.setItem('capitovo_contact', JSON.stringify(data)); } catch(e){ console.error('Speichern fehlgeschlagen', e); }
 
         const submitBtn = form.querySelector('button[type="submit"]');
         const oldText = submitBtn ? submitBtn.textContent : null;
         if (submitBtn) submitBtn.textContent = 'Gespeichert';
         setTimeout(()=>{ if (submitBtn && oldText) submitBtn.textContent = oldText; closeContactModal(); }, 900);
     });
+    
+    // toggle visible payment fields based on selected method
+    const pm = document.getElementById('contact-payment-method');
+    function updatePaymentFields(){
+        const v = pm?.value || '';
+        const card = document.getElementById('payment-card-fields');
+        const sepa = document.getElementById('payment-sepa-fields');
+        const pp = document.getElementById('payment-paypal-fields');
+        if (card) card.classList.toggle('hidden', v !== 'card');
+        if (sepa) sepa.classList.toggle('hidden', v !== 'sepa');
+        if (pp) pp.classList.toggle('hidden', v !== 'paypal');
+    }
+    if (pm) {
+        pm.addEventListener('change', updatePaymentFields);
+        updatePaymentFields();
+    }
 }
 
 

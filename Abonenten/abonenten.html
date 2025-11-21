@@ -33,10 +33,11 @@
 
             /* Limit generic link styles to main content/profile/sidebar only
                so footer buttons keep the global `footer-btn` styling. */
+            /* Main-area links and cards keep accent blue; exclude sidebar links so
+               the global sidebar styling from `style.css` applies unchanged. */
             .abonenten-page main a,
             .abonenten-page .member-grid a,
-            .abonenten-page .profile-card a,
-            .abonenten-page .sidebar-nav a {
+            .abonenten-page .profile-card a {
                 color: var(--color-accent-blue);
                 text-decoration: none;
                 transition: color 0.3s;
@@ -44,8 +45,7 @@
 
             .abonenten-page main a:hover,
             .abonenten-page .member-grid a:hover,
-            .abonenten-page .profile-card a:hover,
-            .abonenten-page .sidebar-nav a:hover {
+            .abonenten-page .profile-card a:hover {
                 color: var(--color-accent-blue-dark);
             }
 
@@ -78,15 +78,18 @@
                 color: #6b7280;
             }
 
-            /* Entferne die Hover-Effekte für Links und Buttons */
-            .cta-button, .member-grid a {
+            /* Keep CTA/button underline only for main content; sidebar buttons should
+               use the global sidebar styles from `style.css` (white text, no underline). */
+            .abonenten-page main .cta-button,
+            .member-grid a {
                 background-color: transparent;
                 color: var(--color-accent-blue);
-                font-weight: normal;
+                font-weight: 600;
                 text-decoration: underline;
             }
 
-            .cta-button:hover, .member-grid a:hover {
+            .abonenten-page main .cta-button:hover,
+            .member-grid a:hover {
                 background-color: transparent;
                 color: var(--color-accent-blue-dark);
             }
@@ -117,11 +120,10 @@
                     top: 0;
                 }
             }
-            /* Sidebar adjustments: allow placing logout at the bottom */
-            .sidebar { display: flex; flex-direction: column; }
-            .sidebar-nav { flex: 1 1 auto; overflow: auto; }
-            .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
-            .sidebar-nav ul li.logout-bottom { margin-top: auto; padding-top: 12px; }
+                /* Remove local sidebar layout overrides so the global `.sidebar` rules
+                    from `style.css` control appearance and typography like on Startseite. */
+                /* If logout needs to sit at the bottom keep a small helper class only: */
+                .sidebar-nav ul li.logout-bottom { margin-top: auto; padding-top: 12px; }
 
             /* Align header and main content: use same max-width and paddings so left edges line up */
             .abonenten-page .header-content,

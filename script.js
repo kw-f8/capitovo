@@ -129,16 +129,16 @@ function createMemberAnalysisCard(a){
     return `
     <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1">
         <a href="${link}" class="block">
-            <div class="relative h-52 md:h-44 lg:h-56 overflow-hidden bg-gray-100">
+                <div class="relative h-52 md:h-44 lg:h-56 overflow-hidden bg-gray-100">
                 <img src="${img}" alt="Vorschaubild ${title}" class="w-full h-full object-cover transition-transform duration-400 group-hover:scale-105">
-                <span class="absolute left-4 top-4 inline-block bg-gradient-to-r from-primary-blue to-blue-400 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">${category}</span>
+                <span class="absolute left-4 top-4 inline-block bg-blue-50 text-primary-blue text-xs font-semibold px-3 py-1 rounded-full shadow-sm border border-blue-100">${category}</span>
             </div>
             <div class="p-5">
                 <h3 class="text-lg md:text-xl font-semibold text-gray-900 leading-tight mb-2">${title}</h3>
                 <p class="text-sm text-gray-600 line-clamp-3 mb-4">${summary}</p>
                 <div class="flex items-center justify-between text-xs text-gray-500">
                     <div class="flex items-center gap-3">
-                        <span>${author || 'capitovo'}</span>
+                        ${author ? `<span class="text-gray-600">${author}</span>` : ''}
                         ${date ? `<span>• ${date}</span>` : ''}
                     </div>
                     <span class="text-primary-blue font-medium">Jetzt lesen →</span>

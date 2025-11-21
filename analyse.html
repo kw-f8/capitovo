@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — Analyse</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white text-gray-900">
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+        </div>
+    </header>
+
+    <main class="py-12">
+        <div id="analysis-detail" class="px-6"></div>
+    </main>
+
+    <footer class="site-footer border-t py-6 mt-12">
+        <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
+            <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
+            <div class="footer-links">
+                <a href="Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
+        <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
+        <nav class="sidebar-nav" aria-label="Hauptnavigation">
+            <ul>
+                <li><a href="#open-login" id="sidebar-login" class="flex items-center space-x-3"><span>Login</span></a></li>
+                <li><a href="#analysen" class="flex items-center space-x-3"><span>Analysen</span></a></li>
+                <li><a href="Abonenten/kontaktdaten.html" id="sidebar-contact" class="flex items-center space-x-3"><span>Kontaktdaten</span></a></li>
+                <li><a href="#faq" class="flex items-center space-x-3"><span>FAQ</span></a></li>
+                <li><a href="#abo" class="sidebar-cta" style="margin-top:12px;">Jetzt Abonnieren</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

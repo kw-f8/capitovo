@@ -80,10 +80,10 @@ function closeLoginModal() {
  * Hinweis: Verwendet 'text-blue-500', da 'text-accent-blue' eine Custom-Klasse ist, 
  * die Tailwind ggf. nicht kennt, falls sie nicht in der config.js ist.
  */
-function createAnalysisArticle(analysis) {
+function createAnalysisArticle(analysis, idx){
     // Verwendung des neuen, von Ihnen genehmigten HTML-Templates, angepasst an die Datenstruktur
     return `
-        <a href="${analysis.link}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] overflow-hidden group">
+        <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block transition-all duration-300 hover:shadow-2xl hover:scale-[1.01] overflow-hidden group">
             
             <div class="w-full h-40 bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${analysis.image}" alt="Vorschaubild für ${analysis.title}" 
@@ -111,7 +111,7 @@ function createAnalysisArticle(analysis) {
 }
 
 /** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */
-function createMemberAnalysisCard(a){
+function createMemberAnalysisCard(a, idx){
     // Fallback values
     const title = a.title || 'Unbenannte Analyse';
     const summary = a.summary || '';
@@ -121,8 +121,8 @@ function createMemberAnalysisCard(a){
     const rawImg = a.image || 'data/vorschaubilder/placeholder.png';
     const img = (/^(https?:)?\/\//i.test(rawImg) || rawImg.startsWith('/')) ? rawImg : (base + rawImg);
     const category = a.category || 'Analyse';
-    const rawLink = a.link || '#';
-    const link = (/^(https?:)?\/\//i.test(rawLink) || rawLink.startsWith('/')) ? rawLink : (base + rawLink);
+    const rawLink = a.link || '';
+    const link = computeAnalysisLink(a, idx, base);
     const date = a.date || '';
     const author = a.author || '';
 
@@ -149,6 +149,23 @@ function createMemberAnalysisCard(a){
     `;
 }
 
+/** Compute a detail-link for an analysis. Uses numeric index when available. */
+function computeAnalysisLink(a, idx, baseOverride){
+    const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+    const base = typeof baseOverride === 'string' ? baseOverride : (isInAbonenten ? '../' : '');
+    // If the analysis already provides an absolute or root link, use it
+    const raw = (a && a.link) ? String(a.link) : '';
+    if (!raw || raw === '#open-login') {
+        // default detail page using index if passed, else fallback to login trigger
+        if (typeof idx === 'number' && Number.isFinite(idx)) {
+            return base + 'analyse.html?id=' + encodeURIComponent(String(idx));
+        }
+        return raw || (base + 'analyse.html');
+    }
+    if (/^(https?:)?\/\//i.test(raw) || raw.startsWith('/')) return raw;
+    return base + raw;
+}
+
 /** Lädt die Analysen speziell für die Abonnenten-Seite und rendert hochwertige Karten. */
 async function loadAndRenderMemberAnalyses(){
     const container = document.getElementById('member-analyses');
@@ -163,7 +180,7 @@ async function loadAndRenderMemberAnalyses(){
         if (!res.ok) throw new Error('Fetch fehlgeschlagen');
         const data = await res.json();
         // render up to 12 analyses in a responsive grid
-        const html = `<div class="member-analyses-grid">` + data.slice(0,12).map(d => createMemberAnalysisCard(d)).join('') + `</div>`;
+        const html = `<div class="member-analyses-grid">` + data.slice(0,12).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
         container.innerHTML = html;
     }catch(err){
         console.error('Fehler beim Laden der Member-Analysen', err);
@@ -189,9 +206,9 @@ async function loadAndRenderAnalyses() {
         const analyses = await response.json(); 
         
         // Erzeugt das HTML und fügt es in das Grid ein (lädt max. 6)
-        const analysisHTML = analyses.slice(0, 6) 
-                                     .map(createAnalysisArticle)
-                                     .join('');
+        const analysisHTML = analyses.slice(0, 6)
+                         .map((d,i) => createAnalysisArticle(d,i))
+                         .join('');
         
         analysisGrid.innerHTML = analysisHTML;
 
@@ -512,7 +529,68 @@ document.addEventListener('DOMContentLoaded', () => {
     // Animation UI: removed automatic diagnostic/control buttons per user request
     // sidebar subscribe handler
     try { initSidebarSubscribeHandler(); } catch (e) { /* ignore */ }
+    // 1c. If we're on a detail page placeholder, render the analysis
+    try { if (document.getElementById('analysis-detail')) renderAnalysisDetail(); } catch(e){}
 });
+
+/** Render the analysis detail page when `#analysis-detail` exists. */
+async function renderAnalysisDetail(){
+    const container = document.getElementById('analysis-detail');
+    if (!container) return;
+    const params = new URLSearchParams(window.location.search || '');
+    const idRaw = params.get('id');
+    const cacheBuster = `?t=${new Date().getTime()}`;
+    const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+    const dataPath = (isInAbonenten ? '../' : '') + 'data/analysen.json' + cacheBuster;
+
+    try{
+        const res = await fetch(dataPath);
+        if (!res.ok) throw new Error('Fetch fehlgeschlagen');
+        const data = await res.json();
+        const idx = idRaw ? parseInt(idRaw,10) : NaN;
+        const analysis = (Number.isFinite(idx) && idx >= 0 && idx < data.length) ? data[idx] : null;
+        if (!analysis) {
+            container.innerHTML = `<div class="p-6 bg-white rounded-xl shadow"> <h2 class="text-xl font-semibold">Analyse nicht gefunden</h2><p class="text-sm text-gray-600">Entweder ist die Analyse nicht verfügbar oder die ID ist ungültig.</p><p class="mt-4"><a href="#" onclick="history.back();return false;" class="text-accent-blue">Zurück</a></p></div>`;
+            return;
+        }
+
+        // build HTML — uses `content` when present, otherwise summary
+        const title = analysis.title || 'Untitled';
+        const category = analysis.category || '';
+        const author = analysis.author || '';
+        const date = analysis.date || '';
+        const imgRaw = analysis.image || 'data/vorschaubilder/placeholder.png';
+        const img = (/^(https?:)?\/\//i.test(imgRaw) || imgRaw.startsWith('/')) ? imgRaw : ((isInAbonenten ? '../' : '') + imgRaw);
+        const bodyHtml = analysis.content ? analysis.content : `<p class="text-gray-700">${(analysis.summary || '')}</p>`;
+
+        const html = `
+            <article class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
+                <div class="mb-4">
+                    <a href="#" onclick="history.back();return false;" class="text-accent-blue text-sm">← Zurück</a>
+                </div>
+                <header class="mb-6">
+                    <p class="text-xs font-semibold uppercase text-primary-blue mb-2">${category}</p>
+                    <h1 class="text-3xl font-extrabold text-gray-900 mb-3">${title}</h1>
+                    <div class="text-sm text-gray-500">
+                        ${author ? `<span class=\"mr-2\">${author}</span>` : ''}
+                        ${date ? `<span>• ${date}</span>` : ''}
+                    </div>
+                </header>
+                <div class="mb-6">
+                    <img src="${img}" alt="${title}" class="w-full rounded-lg object-cover">
+                </div>
+                <div class="prose max-w-none text-gray-700">
+                    ${bodyHtml}
+                </div>
+            </article>
+        `;
+
+        container.innerHTML = html;
+    }catch(e){
+        console.error('Fehler beim Laden der Analyse-Detailseite', e);
+        container.innerHTML = '<p class="text-sm text-red-500">Die Analyse konnte nicht geladen werden.</p>';
+    }
+}
 
 /**
  * Tippt die Hero-Überschrift Zeichen für Zeichen ein. Nur fügt Verhalten hinzu,

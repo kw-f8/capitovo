@@ -375,17 +375,17 @@ function initModalControl() {
     const loginModalElement = document.getElementById('login-modal');
     const contactModalElement = document.getElementById('contact-modal');
 
-    // only enable contact-related handlers when the modal or an open link exists on the page
-    const hasContactControls = !!contactModalElement || !!document.querySelector('a[href="#open-contact"]');
+    // only enable contact-related handlers when the modal exists on the page
+    // Note: we no longer treat `a[href="#open-contact"]` as a modal trigger —
+    // Links should navigate to a dedicated Kontaktseite instead.
+    const hasContactControls = !!contactModalElement;
 
     // Event delegation: open login or contact modal
     document.body.addEventListener('click', (e) => {
         const linkLogin = e.target.closest('a[href="#open-login"]');
         if (linkLogin) { e.preventDefault(); openLoginModal(); return; }
-        if (hasContactControls) {
-            const linkContact = e.target.closest('a[href="#open-contact"]');
-            if (linkContact) { e.preventDefault(); openContactModal(); return; }
-        }
+        // Kontakt-Links are not intercepted here anymore. They should be full links
+        // to a Kontaktseite (e.g. `Abonenten/kontaktdaten.html`).
     });
 
     // Backdrop click to close login

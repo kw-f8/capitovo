@@ -262,92 +262,7 @@
         </div>
     </div>
 
-    <!-- Contact Modal (Kontaktdaten) -->
-    <div id="contact-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">
-        <div class="w-full max-w-lg">
-            <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200 relative">
-                <button id="contact-close" aria-label="Kontakt schließen" class="absolute top-3 right-3 text-gray-600">&times;</button>
-                <h2 class="text-2xl font-semibold text-gray-900 mb-4 text-center">Kontaktdaten bearbeiten</h2>
-
-                <form id="contact-form" class="space-y-4">
-                    <div>
-                        <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                        <input id="contact-name" name="name" type="text" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="Ihr Name">
-                    </div>
-
-                    <div>
-                        <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">E-Mail</label>
-                        <input id="contact-email" name="email" type="email" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="ihre.adresse@example.com">
-                    </div>
-
-                    <div>
-                        <label for="contact-phone" class="block text-sm font-medium text-gray-700 mb-1">Telefon</label>
-                        <input id="contact-phone" name="phone" type="tel" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="z. B. +49 30 1234567">
-                    </div>
-
-                    <div>
-                        <label for="contact-address" class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
-                        <input id="contact-address" name="address" type="text" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="Straße, PLZ, Ort">
-                    </div>
-
-                    <!-- Zahlungsinformationen -->
-                    <fieldset class="border-t pt-4">
-                        <legend class="text-sm font-semibold text-gray-800 mb-2">Zahlungsinformationen</legend>
-
-                        <div class="mb-3">
-                            <label for="contact-payment-method" class="block text-sm font-medium text-gray-700 mb-1">Zahlungsart</label>
-                            <select id="contact-payment-method" name="payment_method" class="w-full p-3 border border-gray-300 rounded-md bg-white text-gray-900">
-                                <option value="card">Kreditkarte</option>
-                                <option value="sepa">SEPA / IBAN</option>
-                                <option value="paypal">PayPal</option>
-                            </select>
-                        </div>
-
-                        <div id="payment-card-fields" class="space-y-3">
-                            <div>
-                                <label for="contact-card-name" class="block text-sm font-medium text-gray-700 mb-1">Karteninhaber</label>
-                                <input id="contact-card-name" name="card_name" type="text" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="Max Mustermann">
-                            </div>
-                            <div>
-                                <label for="contact-card-number" class="block text-sm font-medium text-gray-700 mb-1">Karten‑Nummer (wird nicht vollständig gespeichert)</label>
-                                <input id="contact-card-number" name="card_number" type="text" inputmode="numeric" autocomplete="cc-number" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="4242 4242 4242 4242">
-                            </div>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label for="contact-card-exp" class="block text-sm font-medium text-gray-700 mb-1">Ablauf (MM/JJ)</label>
-                                    <input id="contact-card-exp" name="card_exp" type="text" placeholder="MM/YY" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900">
-                                </div>
-                                <div>
-                                    <label for="contact-card-cvc" class="block text-sm font-medium text-gray-700 mb-1">CVC</label>
-                                    <input id="contact-card-cvc" name="card_cvc" type="password" inputmode="numeric" placeholder="CVC" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="payment-sepa-fields" class="space-y-3 hidden">
-                            <div>
-                                <label for="contact-iban" class="block text-sm font-medium text-gray-700 mb-1">IBAN (wird nur teilweise gespeichert)</label>
-                                <input id="contact-iban" name="iban" type="text" inputmode="text" autocomplete="off" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="DE89 3704 0044 0532 0130 00">
-                            </div>
-                        </div>
-
-                        <div id="payment-paypal-fields" class="space-y-3 hidden">
-                            <div>
-                                <label for="contact-paypal-email" class="block text-sm font-medium text-gray-700 mb-1">PayPal‑E‑Mail</label>
-                                <input id="contact-paypal-email" name="paypal_email" type="email" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-900" placeholder="ihre-paypal@adresse.de">
-                            </div>
-                        </div>
-                    </fieldset>
-
-                    <div class="flex gap-3">
-                        <button type="submit" class="flex-1 py-3 px-4 rounded-md bg-primary-blue text-white">Speichern</button>
-                        <button type="button" id="contact-cancel" class="flex-1 py-3 px-4 rounded-md border border-gray-300">Abbrechen</button>
-                    </div>
-                </form>
-            </div>
-            <p class="mt-4 text-center text-sm text-gray-500">Ihre Daten werden lokal im Browser gespeichert. Kreditkarten- und IBAN‑Nummern werden nur maskiert (z. B. letzte 4 Ziffern) gespeichert — vollständige Kartendaten sollten aus Sicherheitsgründen nicht lokal abgelegt werden.</p>
-        </div>
-    </div>
+    <!-- Kontakt wird nun über die eigene Seite Abonenten/kontaktdaten.html verwaltet. -->
 
     <!-- Logout Confirmation Modal -->
     <div id="logout-confirm-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-50 backdrop-blur-xl-custom flex items-center justify-center p-4">
@@ -440,31 +355,6 @@
         } catch(e) { /* ignore */ }
     </script>
     <script src="../script.js"></script>
-    <script>
-        // Fallback: sicherstellen, dass Klicks auf Links zu '#open-contact' das Modal öffnen
-        document.addEventListener('click', function (e) {
-            const link = e.target.closest('a[href="#open-contact"]');
-            if (!link) return;
-            e.preventDefault();
-            // prefer central function if available
-            if (typeof openContactModal === 'function') {
-                try { openContactModal(); } catch (err) { /* ignore */ }
-                return;
-            }
-            // fallback: manually show modal and populate fields
-            const modal = document.getElementById('contact-modal');
-            if (!modal) return;
-            try {
-                const data = JSON.parse(localStorage.getItem('capitovo_contact') || '{}');
-                ['name','email','phone','address'].forEach(f => {
-                    const el = document.getElementById('contact-' + f);
-                    if (el && data[f]) el.value = data[f];
-                });
-            } catch (e) { /* ignore */ }
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        });
-        
         // Logout: open confirmation modal, then clear session and redirect on confirm
         (function(){
             const modal = document.getElementById('logout-confirm-modal');

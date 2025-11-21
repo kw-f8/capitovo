@@ -71,10 +71,7 @@ function closeLoginModal() {
     }
 }
 
-// Kontakt-Modale wurden entfernt: Kontakt wird jetzt über `Abonenten/kontaktdaten.html` verwaltet.
-// Die alten `openContactModal` / `closeContactModal` Helfer wurden bewusst entfernt,
-// damit keine veralteten Modal-Aufrufe mehr erfolgen können.
-
+// Kontaktverwaltung: Verwendung einer dedizierten Seite `Abonenten/kontaktdaten.html`.
 
 // === ANALYSEN RENDERING LOGIK ===
 

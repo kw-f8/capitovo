@@ -150,7 +150,11 @@ async function loadAndRenderMemberAnalyses(){
     if (!container) return;
     const cacheBuster = `?t=${new Date().getTime()}`;
     try{
-        const res = await fetch('data/analysen.json' + cacheBuster);
+        // Resolve correct relative path depending on current page location.
+        // Pages inside `Abonenten/` need to fetch from `../data/analysen.json`.
+        const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+        const dataPath = (isInAbonenten ? '../' : '') + 'data/analysen.json' + cacheBuster;
+        const res = await fetch(dataPath);
         if (!res.ok) throw new Error('Fetch fehlgeschlagen');
         const data = await res.json();
         // render up to 12 analyses in a responsive grid

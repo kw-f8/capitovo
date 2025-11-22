@@ -17,14 +17,17 @@
         .alle-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
 
         /* Hero */
+        /* Use the same white background as cards so the hero visually belongs to the page.
+           If you prefer the boxed hero removed entirely, tell me and I remove the element. */
         .page-hero {
-            background: linear-gradient(90deg, rgba(2,6,23,0.02), rgba(0,145,214,0.03));
+            background: var(--page-white);
             border-radius: 12px;
-            padding: 1.75rem 1.25rem;
+            padding: 1.25rem 1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
             margin-bottom: 1rem;
+            border: 1px solid rgba(15,23,42,0.04);
         }
         .page-hero .lede { color: #0f172a; font-size: 1.6rem; font-weight: 700; margin: 0; }
         .page-hero .sub { color: #475569; margin: 0; }

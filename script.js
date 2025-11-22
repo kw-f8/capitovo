@@ -188,6 +188,76 @@ async function loadAndRenderMemberAnalyses(){
     }
 }
 
+/** Initialize the full overview page with filtering, sorting and search. */
+async function initAllAnalysesPage(){
+    const grid = document.getElementById('all-analyses-grid');
+    const sortSelect = document.getElementById('sort-select');
+    const sectorSelect = document.getElementById('sector-select');
+    const searchInput = document.getElementById('search-input');
+    const clearBtn = document.getElementById('search-clear');
+
+    if (!grid) return;
+
+    const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+    const dataPath = (isInAbonenten ? '../' : '') + 'data/analysen.json';
+
+    let data = [];
+    try{
+        const res = await fetch(dataPath + `?t=${Date.now()}`);
+        if (!res.ok) throw new Error('fetch failed');
+        data = await res.json();
+    }catch(e){ console.error(e); grid.innerHTML = '<p class="text-red-500">Analysen konnten nicht geladen werden.</p>'; return; }
+
+    // populate sector select
+    const sectors = Array.from(new Set(data.map(d => (d.category || '').toString().trim()).filter(Boolean))).sort();
+    sectors.forEach(s => {
+        const opt = document.createElement('option'); opt.value = s; opt.textContent = s; sectorSelect.appendChild(opt);
+    });
+
+    function renderList(filterOpts = {}){
+        const q = (filterOpts.q || '').toLowerCase().trim();
+        const sector = (filterOpts.sector || '').trim();
+        const sort = filterOpts.sort || 'newest';
+
+        let items = data.slice();
+        // filter sector
+        if (sector) items = items.filter(i => (i.category||'').toLowerCase() === sector.toLowerCase());
+        // search
+        if (q) items = items.filter(i => ((i.title||'') + ' ' + (i.summary||'') + ' ' + (i.category||'')).toLowerCase().includes(q));
+
+        // sort: try to use `date` field; if missing, keep original order
+        if (sort === 'newest'){
+            items.sort((a,b)=>{
+                const da = a.date ? Date.parse(a.date) : 0;
+                const db = b.date ? Date.parse(b.date) : 0;
+                return (db - da) || 0;
+            });
+        } else {
+            items.sort((a,b)=>{
+                const da = a.date ? Date.parse(a.date) : 0;
+                const db = b.date ? Date.parse(b.date) : 0;
+                return (da - db) || 0;
+            });
+        }
+
+        // render
+        if (!items.length) { grid.innerHTML = '<p class="text-gray-500">Keine Analysen gefunden.</p>'; return; }
+        grid.innerHTML = '<div class="member-analyses-grid">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
+    }
+
+    // wire controls
+    function readAndRender(){
+        renderList({ q: searchInput?.value || '', sector: sectorSelect?.value || '', sort: sortSelect?.value || 'newest' });
+    }
+    sortSelect?.addEventListener('change', readAndRender);
+    sectorSelect?.addEventListener('change', readAndRender);
+    searchInput?.addEventListener('input', () => { readAndRender(); });
+    clearBtn?.addEventListener('click', (e)=>{ e.preventDefault(); if (searchInput) searchInput.value=''; readAndRender(); });
+
+    // initial render
+    renderList({ q: '', sector: '', sort: 'newest' });
+}
+
 /** Lädt die Analysen aus JSON und rendert sie im Grid. */
 async function loadAndRenderAnalyses() {
     const analysisGrid = document.getElementById('analysis-grid');

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — Alle Analysen</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="bg-white text-gray-900 abonenten-page">
+
+<header>
+    <div class="header-content">
+        <div class="logo">
+            <a href="../index.html">
+                <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+            </a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+    </div>
+</header>
+
+<main class="max-w-6xl mx-auto p-6">
+    <section class="mb-6">
+        <h1 class="text-3xl font-extrabold mb-2">Alle Analysen</h1>
+        <p class="text-gray-600">Durchsuche und filtere alle veröffentlichten Analysen.</p>
+    </section>
+
+    <section class="bg-white p-6 rounded-xl shadow mb-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <label for="sort-select" class="text-sm font-medium text-gray-700">Sortieren:</label>
+                <select id="sort-select" class="border rounded px-3 py-2">
+                    <option value="newest">Neueste zuerst</option>
+                    <option value="oldest">Älteste zuerst</option>
+                </select>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <label for="sector-select" class="text-sm font-medium text-gray-700">Sektor:</label>
+                <select id="sector-select" class="border rounded px-3 py-2">
+                    <option value="">Alle</option>
+                </select>
+            </div>
+
+            <div class="flex items-center gap-3 flex-1 md:flex-initial">
+                <label for="search-input" class="sr-only">Suche</label>
+                <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full md:w-96 border rounded px-3 py-2">
+                <button id="search-clear" class="ml-2 px-3 py-2 border rounded">Löschen</button>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div id="all-analyses-grid" class="member-analyses-grid"></div>
+    </section>
+</main>
+
+<footer class="site-footer border-t py-6 mt-12">
+    <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
+        <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
+        <div class="footer-links">
+            <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+            <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+            <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+        </div>
+    </div>
+</footer>
+
+<div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
+    <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
+    <nav class="sidebar-nav" aria-label="Hauptnavigation">
+        <ul>
+            <li>
+                <a href="../Abonenten/konto.html" class="flex items-center space-x-3"><span>Mein Konto</span></a>
+            </li>
+            <li>
+                <a href="./alle_analysen.html" class="flex items-center space-x-3"><span>Alle Analysen</span></a>
+            </li>
+            <li>
+                <a href="../index.html" class="flex items-center space-x-3"><span>Startseite</span></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<script src="../script.js"></script>
+<script>
+    // initialization for this page: the global script checks for #all-analyses-grid
+    document.addEventListener('DOMContentLoaded', function(){
+        try { if (document.getElementById('all-analyses-grid')) initAllAnalysesPage(); } catch(e){ console.error(e); }
+    });
+</script>
+</body>
+</html>

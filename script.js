@@ -650,8 +650,7 @@ async function renderAnalysisDetail(){
                     <a href="#" onclick="history.back();return false;" class="text-accent-blue text-sm">← Zurück</a>
                 </div>
                 <header class="mb-6">
-                    <p class="text-xs font-semibold uppercase text-primary-blue mb-2">${category}</p>
-                    <h1 class="text-3xl font-extrabold text-gray-900 mb-3">${title}</h1>
+                        <h1 class="text-3xl font-extrabold text-gray-900 mb-3">${title}</h1>
                     <div class="text-sm text-gray-500">
                         ${author ? `<span class=\"mr-2\">${author}</span>` : ''}
                         ${date ? `<span>• ${date}</span>` : ''}

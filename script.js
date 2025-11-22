@@ -645,19 +645,20 @@ async function renderAnalysisDetail(){
         const bodyHtml = analysis.content ? analysis.content : `<p class="text-gray-700">${(analysis.summary || '')}</p>`;
 
         const html = `
-            <article class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
+            <article class="max-w-4xl mx-auto">
                 <div class="mb-4">
                     <a href="#" onclick="history.back();return false;" class="text-accent-blue text-sm">← Zurück</a>
                 </div>
-                <header class="mb-6">
-                        <h1 class="text-3xl font-extrabold text-gray-900 mb-3">${title}</h1>
+                <header class="mb-2">
+                    <p class="text-xs font-semibold uppercase text-primary-blue mb-2">${category}</p>
+                    <h1 class="text-3xl font-extrabold text-gray-900 mb-3">${title}</h1>
                     <div class="text-sm text-gray-500">
                         ${author ? `<span class=\"mr-2\">${author}</span>` : ''}
                         ${date ? `<span>• ${date}</span>` : ''}
                     </div>
                 </header>
                 <div class="mb-6">
-                    <img src="${img}" alt="${title}" class="w-full rounded-lg object-cover">
+                    <img src="${img}" alt="${title}" class="w-full object-cover">
                 </div>
                 <div class="prose max-w-none text-gray-700">
                     ${bodyHtml}

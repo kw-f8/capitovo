@@ -16,21 +16,7 @@
         /* match global header container: 1200px and 20px horizontal padding */
         .alle-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
 
-        /* Hero */
-        /* Use the same white background as cards so the hero visually belongs to the page.
-           If you prefer the boxed hero removed entirely, tell me and I remove the element. */
-        .page-hero {
-            background: var(--page-white);
-            border-radius: 12px;
-            padding: 1.25rem 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(15,23,42,0.04);
-        }
-        .page-hero .lede { color: #0f172a; font-size: 1.6rem; font-weight: 700; margin: 0; }
-        .page-hero .sub { color: #475569; margin: 0; }
+        /* Hero removed — page heading intentionally omitted to keep layout compact */
 
         /* Sticky filter row with soft backdrop */
         .filter-bar { position: sticky; top: 84px; z-index: 40; background: rgba(255,255,255,0.96); padding: 0.6rem 0; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); margin-bottom: 1rem; }
@@ -95,11 +81,6 @@
 
 <main>
     <div class="alle-layout">
-        <section class="page-hero">
-            <h1 class="lede">Alle Analysen</h1>
-            <p class="sub">Durchsuche, filtere und sortiere unsere vollständige Analyse‑Bibliothek — optimiert für Abonnenten.</p>
-        </section>
-
         <div class="filter-bar">
             <div class="alle-layout">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">

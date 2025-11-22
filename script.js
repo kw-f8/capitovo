@@ -155,12 +155,16 @@ function computeAnalysisLink(a, idx, baseOverride){
     const base = typeof baseOverride === 'string' ? baseOverride : (isInAbonenten ? '../' : '');
     // If the analysis already provides an absolute or root link, use it
     const raw = (a && a.link) ? String(a.link) : '';
-    if (!raw || raw === '#open-login') {
-        // default detail page using index if passed, else fallback to login trigger
+    // If no explicit link is provided, fall back to the detail page.
+    if (!raw) {
         if (typeof idx === 'number' && Number.isFinite(idx)) {
             return base + 'analyse.html?id=' + encodeURIComponent(String(idx));
         }
-        return raw || (base + 'analyse.html');
+        return base + 'analyse.html';
+    }
+    // Preserve explicit modal trigger '#open-login' so clicks open the login modal.
+    if (raw === '#open-login') {
+        return '#open-login';
     }
     if (/^(https?:)?\/\//i.test(raw) || raw.startsWith('/')) return raw;
     return base + raw;

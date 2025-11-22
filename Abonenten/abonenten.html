@@ -122,8 +122,12 @@
             }
                 /* Remove local sidebar layout overrides so the global `.sidebar` rules
                     from `style.css` control appearance and typography like on Startseite. */
-                /* If logout needs to sit at the bottom keep a small helper class only: */
-                .sidebar-nav ul li.logout-bottom { margin-top: auto; padding-top: 12px; }
+                /* Sidebar nav: keep links stacked and ensure logout sits at the bottom */
+                .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
+                .sidebar-nav ul li { display: block; }
+                .sidebar-nav ul li.logout-bottom { margin-top: auto; padding: 0; }
+                .sidebar-nav ul li.logout-bottom a.logout-link { display: flex; align-items: center; gap: 10px; padding: 12px 0; color: #f8fafc; text-decoration: none; }
+                .sidebar-nav ul li.logout-bottom a.logout-link svg { display: block; }
 
             /* Align header and main content: use same max-width and paddings so left edges line up */
             .abonenten-page .header-content,
@@ -243,8 +247,12 @@
                 
                 <!-- Logout button moved to bottom via .logout-bottom -->
                 <li class="logout-bottom">
-                    <a href="#" id="logout-link" class="flex items-center space-x-3 cta-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/><path d="M7 8v8"/></svg>
+                    <a href="#" id="logout-link" class="logout-link" aria-label="Abmelden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <path d="M16 17l5-5-5-5" />
+                            <path d="M21 12H9" />
+                        </svg>
                         <span>Abmelden</span>
                     </a>
                 </li>

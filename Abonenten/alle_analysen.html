@@ -13,7 +13,8 @@
         body { background: var(--muted-white); }
         main { background: transparent; }
         .alle-hero, .filter-bar, .member-card { background: var(--page-white); background-clip: padding-box; }
-        .alle-layout { max-width: 72rem; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; box-sizing: border-box; }
+        /* match global header container: 1200px and 20px horizontal padding */
+        .alle-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
 
         /* Hero */
         .page-hero {
@@ -33,9 +34,9 @@
 
         /* Cards */
         /* Use responsive auto-fit grid so cards keep sensible min width and don't get squashed */
-        .member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: start; }
+        .member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
 
-        .member-card { border-radius: 12px; overflow: hidden; background: var(--page-white); border: 1px solid rgba(15,23,42,0.04); transition: transform .28s ease, box-shadow .28s ease; display:flex; flex-direction:column; }
+        .member-card { border-radius: 12px; overflow: hidden; background: var(--page-white); border: 1px solid rgba(15,23,42,0.04); transition: transform .28s ease, box-shadow .28s ease; display:flex; flex-direction:column; height:100%; }
         .member-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(2,6,23,0.12); }
         .member-card .media { position: relative; height: 220px; overflow: hidden; flex-shrink:0; }
         .member-card .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -45,10 +46,13 @@
         .card-body { padding: 1rem; display:flex; flex-direction:column; gap:0.5rem; flex:1 1 auto; }
         .card-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
         .card-excerpt { color: #6b7280; margin-bottom: 0.75rem; line-height: 1.35; }
+        /* Ensure excerpts don't blow out one card's height — clamp to 3 lines */
+        .card-excerpt { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
 
         /* Align header and main content to the same left column (logo left edge) */
-        header .header-content, main { max-width: 72rem; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; box-sizing: border-box; }
+        /* Use same container sizing as global .header-content (1200px / 20px) to match logo */
+        header .header-content, main { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">

@@ -162,8 +162,15 @@ function computeAnalysisLink(a, idx, baseOverride){
         }
         return base + 'analyse.html';
     }
-    // Preserve explicit modal trigger '#open-login' so clicks open the login modal.
+    // Preserve explicit modal trigger '#open-login' on public pages,
+    // but on members pages (inside /Abonenten/) treat it as a link to the detail page.
     if (raw === '#open-login') {
+        if (isInAbonenten) {
+            if (typeof idx === 'number' && Number.isFinite(idx)) {
+                return base + 'analyse.html?id=' + encodeURIComponent(String(idx));
+            }
+            return base + 'analyse.html';
+        }
         return '#open-login';
     }
     if (/^(https?:)?\/\//i.test(raw) || raw.startsWith('/')) return raw;

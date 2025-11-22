@@ -11,26 +11,29 @@
         :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
         /* page background and unified white tones */
         body { background: var(--muted-white); }
-        main { background: transparent; }
+        main { background: transparent; padding-top: 18px; }
         .alle-hero, .filter-bar, .member-card { background: var(--page-white); background-clip: padding-box; }
         /* match global header container: 1200px and 20px horizontal padding */
         .alle-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
 
-        /* Hero removed — page heading intentionally omitted to keep layout compact */
+        /* Top heading: give more breathing room and responsive type scale */
+        .alle-heading { margin: 0 0 18px 0; padding-top: 12px; padding-bottom: 6px; }
+        .alle-heading .lede { margin:0; font-weight:700; color:#0f172a; font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.05; }
+        .alle-heading .sub { margin-top: 8px; color:#475569; font-size: 1rem; max-width: 70ch; }
 
-        /* Sticky filter row with soft backdrop */
-        .filter-bar { position: sticky; top: 84px; z-index: 40; background: rgba(255,255,255,0.96); padding: 0.6rem 0; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); margin-bottom: 1rem; }
+        /* Sticky filter row with soft backdrop. Increase top to avoid overlap on smaller viewports. */
+        .filter-bar { position: sticky; top: 110px; z-index: 40; background: rgba(255,255,255,0.96); padding: 0.7rem 0; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); margin-bottom: 1rem; }
 
         /* Filter controls: visual polish without changing the overall box size */
         .filter-bar .alle-layout .flex { align-items: center; gap: 0.75rem; }
-        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.9rem; margin-right: 6px; }
+        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.95rem; margin-right: 6px; }
         .filter-bar select, .filter-bar input[type="search"], .filter-bar button {
-            height: 36px;
+            height: 40px;
             padding: 0 12px;
             border-radius: 8px;
             border: 1px solid rgba(15,23,42,0.08);
             background: var(--page-white);
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             color: #0f172a;
             line-height: 1;
             box-shadow: none;
@@ -40,7 +43,8 @@
         .filter-bar #search-clear { background: transparent; border: 1px solid rgba(15,23,42,0.06); padding: 0 12px; border-radius: 8px; cursor: pointer; }
         /* keep select and input visually compact on small screens */
         @media (max-width: 640px) {
-            .filter-bar select, .filter-bar input[type="search"], .filter-bar button { height: 34px; font-size: 0.92rem; }
+            .filter-bar select, .filter-bar input[type="search"], .filter-bar button { height: 36px; font-size: 0.92rem; }
+            .filter-bar { top: 92px; }
         }
 
         /* Cards */
@@ -87,9 +91,9 @@
 
 <main>
     <div class="alle-layout">
-        <div class="alle-heading" style="margin-bottom:10px;">
-            <h1 class="lede" style="margin:0; font-size:1.6rem; font-weight:700; color:#0f172a;">Alle Analysen</h1>
-            <p class="sub" style="margin:6px 0 0 0; color:#475569;">Durchsuche, filtere und sortiere unsere vollständige Analyse‑Bibliothek — optimiert für Abonnenten.</p>
+        <div class="alle-heading">
+            <h1 class="lede">Alle Analysen</h1>
+            <p class="sub">Durchsuche, filtere und sortiere unsere vollständige Analyse‑Bibliothek — optimiert für Abonnenten.</p>
         </div>
 
         

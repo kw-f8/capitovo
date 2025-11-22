@@ -647,7 +647,7 @@ async function renderAnalysisDetail(){
         const html = `
             <article class="max-w-4xl mx-auto">
                 <div class="mb-4">
-                    <a href="#" onclick="history.back();return false;" class="text-accent-blue text-sm">← Zurück</a>
+                    <a href="${isInAbonenten ? 'alle_analysen.html' : 'Abonenten/alle_analysen.html'}" onclick="try{ if(history.length>1 && document.referrer){ const ref=new URL(document.referrer); if(ref.origin===location.origin){ history.back(); return false; } } }catch(e){}" class="text-accent-blue text-sm">← Zurück</a>
                 </div>
                 <header class="mb-2">
                     <p class="text-xs font-semibold uppercase text-primary-blue mb-2">${category}</p>

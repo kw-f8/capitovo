@@ -1,0 +1,14 @@
+{
+  "id": "example-2025-template",
+  "slug": "example-2025-template",
+  "title": "Titel der Analyse — Kurz und prägnant",
+  "summary": "Kurze Zusammenfassung (1–2 Sätze) für die Kachel / Vorschau.",
+  "content": "<p>Voller Artikelinhalt in HTML. Verwenden Sie nur erlaubte Tags: p, h1-h4, ul, ol, li, a, table, tr, td, th, strong, em, br.</p>",
+  "category": "FINANZEN & MÄRKTE",
+  "tags": ["Value", "Turnaround"],
+  "image": "data/vorschaubilder/example.png",
+  "link": "#open-login",
+  "date": "2025-11-22",
+  "author": "Ihr Autor",
+  "published": true
+}

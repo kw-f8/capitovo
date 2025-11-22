@@ -610,9 +610,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // Animation UI: removed automatic diagnostic/control buttons per user request
     // sidebar subscribe handler
     try { initSidebarSubscribeHandler(); } catch (e) { /* ignore */ }
+    // 7. Init global logout handlers (works across pages even if modal markup missing)
+    try { initLogoutHandlers(); } catch (e) { console.error('initLogoutHandlers error', e); }
     // 1c. If we're on a detail page placeholder, render the analysis
     try { if (document.getElementById('analysis-detail')) renderAnalysisDetail(); } catch(e){}
 });
+
+/** Initialisiert Logout-Handler auf allen Seiten.
+ * Falls ein `#logout-confirm-modal` vorhanden ist, verwendet er dieses,
+ * ansonsten zeigt er ein einfaches `confirm()` an.
+ */
+function initLogoutHandlers(){
+    const modal = document.getElementById('logout-confirm-modal');
+    const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+    const redirectPath = isInAbonenten ? '../index.html' : 'index.html';
+
+    function doLogout(){
+        try{ localStorage.removeItem('capitovo_session'); }catch(e){}
+        // clear any other session-like keys if present
+        try{ localStorage.removeItem('capitovo_contact'); }catch(e){}
+        window.location.href = redirectPath;
+    }
+
+    const links = Array.from(document.querySelectorAll('a.logout-link'));
+    if (!links.length) return;
+
+    if (modal) {
+        const yesBtn = document.getElementById('logout-confirm-yes');
+        const noBtn = document.getElementById('logout-confirm-no');
+        function openConfirm(){ modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function closeConfirm(){ modal.classList.add('hidden'); document.body.style.overflow = ''; }
+        if (yesBtn) yesBtn.addEventListener('click', function(e){ e.preventDefault(); closeConfirm(); doLogout(); });
+        if (noBtn) noBtn.addEventListener('click', function(e){ e.preventDefault(); closeConfirm(); });
+        links.forEach(l => l.addEventListener('click', function(e){ e.preventDefault(); openConfirm(); }));
+    } else {
+        links.forEach(l => l.addEventListener('click', function(e){
+            e.preventDefault();
+            if (window.confirm('Möchten Sie sich wirklich abmelden?')) {
+                doLogout();
+            }
+        }));
+    }
+}
 
 /** Render the analysis detail page when `#analysis-detail` exists. */
 async function renderAnalysisDetail(){

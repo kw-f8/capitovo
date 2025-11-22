@@ -6,6 +6,45 @@
     <title>capitovo — Alle Analysen</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Page-local layout: align header and main with logo's left edge */
+        .alle-layout { max-width: 72rem; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+
+        /* Hero */
+        .page-hero {
+            background: linear-gradient(90deg, rgba(2,6,23,0.02), rgba(0,145,214,0.03));
+            border-radius: 12px;
+            padding: 1.75rem 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .page-hero .lede { color: #0f172a; font-size: 1.6rem; font-weight: 700; margin: 0; }
+        .page-hero .sub { color: #475569; margin: 0; }
+
+        /* Sticky filter row with soft backdrop */
+        .filter-bar { position: sticky; top: 84px; z-index: 40; background: rgba(255,255,255,0.9); padding: 0.6rem; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); margin-bottom: 1rem; }
+
+        /* Cards */
+        .member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+        @media (min-width: 640px) { .member-analyses-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+        @media (min-width: 1024px) { .member-analyses-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+
+        .member-card { border-radius: 12px; overflow: hidden; background: #ffffff; border: 1px solid rgba(15,23,42,0.04); transition: transform .28s ease, box-shadow .28s ease; }
+        .member-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(2,6,23,0.12); }
+        .member-card .media { position: relative; height: 220px; overflow: hidden; }
+        .member-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+        .member-card:hover img { transform: scale(1.06); }
+        .category-pill { position: absolute; left: 12px; top: 12px; background: rgba(255,255,255,0.86); color: var(--color-accent-blue); padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.75rem; box-shadow: 0 4px 10px rgba(2,6,23,0.06); }
+        .card-body { padding: 1rem; }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
+        .card-excerpt { color: #6b7280; margin-bottom: 0.75rem; line-height: 1.35; }
+        .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
+
+        /* Align header and main content to the same left column (logo left edge) */
+        header .header-content, main { max-width: 72rem; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+    </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
 
@@ -20,40 +59,42 @@
     </div>
 </header>
 
-<main class="max-w-6xl mx-auto p-6">
-    <section class="mb-6">
-        <h1 class="text-3xl font-extrabold mb-2">Alle Analysen</h1>
-        <p class="text-gray-600">Durchsuche und filtere alle veröffentlichten Analysen.</p>
-    </section>
+<main>
+    <div class="alle-layout">
+        <section class="page-hero">
+            <h1 class="lede">Alle Analysen</h1>
+            <p class="sub">Durchsuche, filtere und sortiere unsere vollständige Analyse‑Bibliothek — optimiert für Abonnenten.</p>
+        </section>
 
-    <section class="bg-white p-6 rounded-xl shadow mb-6">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <label for="sort-select" class="text-sm font-medium text-gray-700">Sortieren:</label>
-                <select id="sort-select" class="border rounded px-3 py-2">
-                    <option value="newest">Neueste zuerst</option>
-                    <option value="oldest">Älteste zuerst</option>
-                </select>
-            </div>
+        <div class="filter-bar">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 alle-layout">
+                <div class="flex items-center gap-3">
+                    <label for="sort-select" class="text-sm font-medium text-gray-700">Sortieren:</label>
+                    <select id="sort-select" class="border rounded px-3 py-2">
+                        <option value="newest">Neueste zuerst</option>
+                        <option value="oldest">Älteste zuerst</option>
+                    </select>
+                </div>
 
-            <div class="flex items-center gap-3">
-                <label for="sector-select" class="text-sm font-medium text-gray-700">Sektor:</label>
-                <select id="sector-select" class="border rounded px-3 py-2">
-                    <option value="">Alle</option>
-                </select>
-            </div>
+                <div class="flex items-center gap-3">
+                    <label for="sector-select" class="text-sm font-medium text-gray-700">Sektor:</label>
+                    <select id="sector-select" class="border rounded px-3 py-2">
+                        <option value="">Alle</option>
+                    </select>
+                </div>
 
-            <div class="flex items-center gap-3 flex-1 md:flex-initial">
-                <label for="search-input" class="sr-only">Suche</label>
-                <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full md:w-96 border rounded px-3 py-2">
-                <button id="search-clear" class="ml-2 px-3 py-2 border rounded">Löschen</button>
+                <div class="flex items-center gap-3 flex-1 md:flex-initial">
+                    <label for="search-input" class="sr-only">Suche</label>
+                    <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full md:w-96 border rounded px-3 py-2">
+                    <button id="search-clear" class="ml-2 px-3 py-2 border rounded">Löschen</button>
+                </div>
             </div>
         </div>
-    </section>
 
-    <section>
-        <div id="all-analyses-grid" class="member-analyses-grid"></div>
-    </section>
+        <section>
+            <div id="all-analyses-grid" class="member-analyses-grid"></div>
+        </section>
+    </div>
 </main>
 
 <footer class="site-footer border-t py-6 mt-12">

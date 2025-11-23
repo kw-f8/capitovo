@@ -1,204 +1,185 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
-  <title id="title">capitovo Candlestick Chart</title>
-  <desc id="desc">Realistische Candlesticks mit feinem Grid und gleitendem Trendverlauf.</desc>
+  <title id="title">capitovo Candlestick Illustration</title>
+  <desc id="desc">Minimalistische Kerzen mit diagonalen Schatten, wie in der Designvorlage dargestellt.</desc>
   <defs>
-    <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f8fbff" />
-      <stop offset="100%" stop-color="#eef1f9" />
+    <linearGradient id="bgFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fdfdfd" />
+      <stop offset="100%" stop-color="#f5f6f8" />
     </linearGradient>
-    <linearGradient id="bullBody" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#8cd7ff" />
-      <stop offset="100%" stop-color="#1b78dc" />
-    </linearGradient>
-    <linearGradient id="bearBody" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fbb6b9" />
-      <stop offset="100%" stop-color="#ef4444" />
-    </linearGradient>
-    <linearGradient id="wickGradient" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1f2738" stop-opacity="0.82" />
-      <stop offset="100%" stop-color="#101726" stop-opacity="0.92" />
-    </linearGradient>
-    <linearGradient id="frameStroke" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#d5dcec" />
-      <stop offset="100%" stop-color="#c5cddd" />
-    </linearGradient>
-    <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#1d7fe5" stop-opacity="0.38" />
-      <stop offset="100%" stop-color="#1d7fe5" stop-opacity="0" />
-    </linearGradient>
-    <filter id="candleShadow" x="-20%" y="-25%" width="140%" height="170%">
-      <feDropShadow dx="0" dy="10" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.16" />
-    </filter>
-    <clipPath id="chartAreaClip">
-      <rect x="0" y="0" width="1108" height="230" rx="24" />
-    </clipPath>
+    <path id="shadow-shape" d="M-6 -4 L10 2 L10 18 L-6 10 Z" fill="#d3d9e3" opacity="0.55" />
   </defs>
 
-  <rect width="1200" height="360" fill="url(#bgGradient)" />
+  <rect width="1200" height="360" fill="url(#bgFade)" />
 
-  <g transform="translate(46 48)">
-    <rect width="1108" height="230" rx="24" fill="#ffffff" stroke="url(#frameStroke)" stroke-width="1.5" />
-    <g clip-path="url(#chartAreaClip)">
-      <g stroke="#e6ecf6" stroke-width="1">
-        <line x1="0" y1="24" x2="1108" y2="24" />
-        <line x1="0" y1="66" x2="1108" y2="66" />
-        <line x1="0" y1="108" x2="1108" y2="108" />
-        <line x1="0" y1="150" x2="1108" y2="150" />
-        <line x1="0" y1="192" x2="1108" y2="192" />
-        <line x1="0" y1="230" x2="1108" y2="230" />
+  <g transform="translate(40 58)">
+    <path d="M40 152 C160 48 320 32 440 144 C520 220 660 232 760 148 C876 48 1030 60 1120 140" fill="none" stroke="#e3e7ee" stroke-width="6" stroke-linecap="round" />
+    <path d="M40 152 C160 48 320 32 440 144 C520 220 660 232 760 148 C876 48 1030 60 1120 140" fill="none" stroke="#d7dce5" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 12" />
+
+    <g stroke="#0f172a" stroke-width="1.6" stroke-linecap="round">
+      <g transform="translate(40 0)">
+        <use href="#shadow-shape" transform="translate(0 136)" />
+        <line x1="0" y1="40" x2="0" y2="136" />
+        <rect x="-4" y="48" width="8" height="26" rx="2.4" fill="#1b7ad8" />
       </g>
-      <g stroke="#eff3fa" stroke-width="1">
-        <line x1="184.6" y1="0" x2="184.6" y2="230" />
-        <line x1="369.2" y1="0" x2="369.2" y2="230" />
-        <line x1="553.8" y1="0" x2="553.8" y2="230" />
-        <line x1="738.4" y1="0" x2="738.4" y2="230" />
-        <line x1="923" y1="0" x2="923" y2="230" />
+      <g transform="translate(70 0)">
+        <use href="#shadow-shape" transform="translate(0 140)" />
+        <line x1="0" y1="44" x2="0" y2="140" />
+        <rect x="-4" y="50" width="8" height="22" rx="2.4" fill="#98a4b5" />
       </g>
-
-      <path d="M0 230 L0 212 L32 218 L64 202 L96 190 L128 200 L160 182 L192 174 L224 178 L256 160 L288 150 L320 144 L352 152 L384 134 L416 124 L448 132 L480 114 L512 104 L544 112 L576 94 L608 84 L640 92 L672 74 L704 68 L736 78 L768 60 L800 52 L832 60 L864 44 L896 38 L928 48 L960 32 L992 24 L1024 34 L1056 18 L1088 12 L1088 230 Z" fill="url(#areaFill)" opacity="0.8" />
-      <path d="M0 212 L32 218 L64 202 L96 190 L128 200 L160 182 L192 174 L224 178 L256 160 L288 150 L320 144 L352 152 L384 134 L416 124 L448 132 L480 114 L512 104 L544 112 L576 94 L608 84 L640 92 L672 74 L704 68 L736 78 L768 60 L800 52 L832 60 L864 44 L896 38 L928 48 L960 32 L992 24 L1024 34 L1056 18 L1088 12" fill="none" stroke="#1d7fe5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-
-      <g filter="url(#candleShadow)">
-        <g transform="translate(0 0)">
-          <line x1="8" y1="206" x2="8" y2="228" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="212" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(32 0)">
-          <line x1="8" y1="204" x2="8" y2="226" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="212" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(64 0)">
-          <line x1="8" y1="194" x2="8" y2="228" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="202" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(96 0)">
-          <line x1="8" y1="182" x2="8" y2="212" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="190" width="16" height="14" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(128 0)">
-          <line x1="8" y1="186" x2="8" y2="206" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="194" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(160 0)">
-          <line x1="8" y1="174" x2="8" y2="208" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="182" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(192 0)">
-          <line x1="8" y1="166" x2="8" y2="192" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="174" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(224 0)">
-          <line x1="8" y1="168" x2="8" y2="186" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="174" width="16" height="4" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(256 0)">
-          <line x1="8" y1="152" x2="8" y2="186" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="160" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(288 0)">
-          <line x1="8" y1="142" x2="8" y2="170" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="150" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(320 0)">
-          <line x1="8" y1="136" x2="8" y2="162" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="144" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(352 0)">
-          <line x1="8" y1="138" x2="8" y2="158" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="146" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(384 0)">
-          <line x1="8" y1="126" x2="8" y2="160" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="134" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(416 0)">
-          <line x1="8" y1="118" x2="8" y2="144" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="124" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(448 0)">
-          <line x1="8" y1="118" x2="8" y2="140" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="126" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(480 0)">
-          <line x1="8" y1="106" x2="8" y2="138" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="114" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(512 0)">
-          <line x1="8" y1="98" x2="8" y2="124" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="104" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(544 0)">
-          <line x1="8" y1="100" x2="8" y2="120" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="106" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(576 0)">
-          <line x1="8" y1="88" x2="8" y2="120" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="94" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(608 0)">
-          <line x1="8" y1="78" x2="8" y2="108" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="84" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(640 0)">
-          <line x1="8" y1="80" x2="8" y2="100" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="86" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(672 0)">
-          <line x1="8" y1="68" x2="8" y2="100" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="74" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(704 0)">
-          <line x1="8" y1="62" x2="8" y2="86" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="68" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(736 0)">
-          <line x1="8" y1="64" x2="8" y2="84" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="70" width="16" height="8" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(768 0)">
-          <line x1="8" y1="54" x2="8" y2="86" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="60" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(800 0)">
-          <line x1="8" y1="46" x2="8" y2="74" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="52" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(832 0)">
-          <line x1="8" y1="48" x2="8" y2="70" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="54" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(864 0)">
-          <line x1="8" y1="38" x2="8" y2="70" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="44" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(896 0)">
-          <line x1="8" y1="32" x2="8" y2="58" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="38" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(928 0)">
-          <line x1="8" y1="34" x2="8" y2="56" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="40" width="16" height="8" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(960 0)">
-          <line x1="8" y1="26" x2="8" y2="54" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="32" width="16" height="16" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(992 0)">
-          <line x1="8" y1="20" x2="8" y2="46" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="24" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(1024 0)">
-          <line x1="8" y1="20" x2="8" y2="42" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="26" width="16" height="8" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(1056 0)">
-          <line x1="8" y1="14" x2="8" y2="44" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="18" width="16" height="16" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
-        <g transform="translate(1088 0)">
-          <line x1="8" y1="8" x2="8" y2="34" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
-          <rect x="0" y="12" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
-        </g>
+      <g transform="translate(100 0)">
+        <use href="#shadow-shape" transform="translate(0 144)" />
+        <line x1="0" y1="48" x2="0" y2="144" />
+        <rect x="-4" y="60" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(130 0)">
+        <use href="#shadow-shape" transform="translate(0 148)" />
+        <line x1="0" y1="52" x2="0" y2="148" />
+        <rect x="-4" y="60" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(160 0)">
+        <use href="#shadow-shape" transform="translate(0 152)" />
+        <line x1="0" y1="56" x2="0" y2="152" />
+        <rect x="-4" y="62" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(190 0)">
+        <use href="#shadow-shape" transform="translate(0 156)" />
+        <line x1="0" y1="60" x2="0" y2="156" />
+        <rect x="-4" y="72" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(220 0)">
+        <use href="#shadow-shape" transform="translate(0 160)" />
+        <line x1="0" y1="64" x2="0" y2="160" />
+        <rect x="-4" y="72" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(250 0)">
+        <use href="#shadow-shape" transform="translate(0 164)" />
+        <line x1="0" y1="68" x2="0" y2="164" />
+        <rect x="-4" y="74" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(280 0)">
+        <use href="#shadow-shape" transform="translate(0 168)" />
+        <line x1="0" y1="72" x2="0" y2="168" />
+        <rect x="-4" y="84" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(310 0)">
+        <use href="#shadow-shape" transform="translate(0 172)" />
+        <line x1="0" y1="76" x2="0" y2="172" />
+        <rect x="-4" y="84" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(340 0)">
+        <use href="#shadow-shape" transform="translate(0 176)" />
+        <line x1="0" y1="80" x2="0" y2="176" />
+        <rect x="-4" y="86" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(370 0)">
+        <use href="#shadow-shape" transform="translate(0 180)" />
+        <line x1="0" y1="84" x2="0" y2="180" />
+        <rect x="-4" y="96" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(400 0)">
+        <use href="#shadow-shape" transform="translate(0 184)" />
+        <line x1="0" y1="88" x2="0" y2="184" />
+        <rect x="-4" y="96" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(430 0)">
+        <use href="#shadow-shape" transform="translate(0 188)" />
+        <line x1="0" y1="92" x2="0" y2="188" />
+        <rect x="-4" y="98" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(460 0)">
+        <use href="#shadow-shape" transform="translate(0 192)" />
+        <line x1="0" y1="96" x2="0" y2="192" />
+        <rect x="-4" y="108" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(490 0)">
+        <use href="#shadow-shape" transform="translate(0 196)" />
+        <line x1="0" y1="100" x2="0" y2="196" />
+        <rect x="-4" y="108" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(520 0)">
+        <use href="#shadow-shape" transform="translate(0 200)" />
+        <line x1="0" y1="104" x2="0" y2="200" />
+        <rect x="-4" y="110" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(550 0)">
+        <use href="#shadow-shape" transform="translate(0 196)" />
+        <line x1="0" y1="100" x2="0" y2="196" />
+        <rect x="-4" y="112" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(580 0)">
+        <use href="#shadow-shape" transform="translate(0 192)" />
+        <line x1="0" y1="96" x2="0" y2="192" />
+        <rect x="-4" y="104" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(610 0)">
+        <use href="#shadow-shape" transform="translate(0 188)" />
+        <line x1="0" y1="92" x2="0" y2="188" />
+        <rect x="-4" y="98" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(640 0)">
+        <use href="#shadow-shape" transform="translate(0 184)" />
+        <line x1="0" y1="88" x2="0" y2="184" />
+        <rect x="-4" y="100" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(670 0)">
+        <use href="#shadow-shape" transform="translate(0 180)" />
+        <line x1="0" y1="84" x2="0" y2="180" />
+        <rect x="-4" y="92" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(700 0)">
+        <use href="#shadow-shape" transform="translate(0 176)" />
+        <line x1="0" y1="80" x2="0" y2="176" />
+        <rect x="-4" y="86" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(730 0)">
+        <use href="#shadow-shape" transform="translate(0 172)" />
+        <line x1="0" y1="76" x2="0" y2="172" />
+        <rect x="-4" y="88" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(760 0)">
+        <use href="#shadow-shape" transform="translate(0 168)" />
+        <line x1="0" y1="72" x2="0" y2="168" />
+        <rect x="-4" y="80" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(790 0)">
+        <use href="#shadow-shape" transform="translate(0 164)" />
+        <line x1="0" y1="68" x2="0" y2="164" />
+        <rect x="-4" y="74" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(820 0)">
+        <use href="#shadow-shape" transform="translate(0 160)" />
+        <line x1="0" y1="64" x2="0" y2="160" />
+        <rect x="-4" y="76" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(850 0)">
+        <use href="#shadow-shape" transform="translate(0 156)" />
+        <line x1="0" y1="60" x2="0" y2="156" />
+        <rect x="-4" y="68" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(880 0)">
+        <use href="#shadow-shape" transform="translate(0 152)" />
+        <line x1="0" y1="56" x2="0" y2="152" />
+        <rect x="-4" y="62" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(910 0)">
+        <use href="#shadow-shape" transform="translate(0 148)" />
+        <line x1="0" y1="52" x2="0" y2="148" />
+        <rect x="-4" y="64" width="8" height="24" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(940 0)">
+        <use href="#shadow-shape" transform="translate(0 144)" />
+        <line x1="0" y1="48" x2="0" y2="144" />
+        <rect x="-4" y="56" width="8" height="26" rx="2.4" fill="#1b7ad8" />
+      </g>
+      <g transform="translate(970 0)">
+        <use href="#shadow-shape" transform="translate(0 140)" />
+        <line x1="0" y1="44" x2="0" y2="140" />
+        <rect x="-4" y="50" width="8" height="22" rx="2.4" fill="#98a4b5" />
+      </g>
+      <g transform="translate(1000 0)">
+        <use href="#shadow-shape" transform="translate(0 136)" />
+        <line x1="0" y1="40" x2="0" y2="136" />
+        <rect x="-4" y="52" width="8" height="24" rx="2.4" fill="#1b7ad8" />
       </g>
     </g>
   </g>

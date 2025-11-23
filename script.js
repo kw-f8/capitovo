@@ -88,8 +88,8 @@ const ScrollReveal = (() => {
     function ensureObserver() {
         if (observer || !supportsIO || prefersReducedMotion()) return;
         observer = new IntersectionObserver(handleIntersect, {
-            threshold: 0.18,
-            rootMargin: '0px 0px -12% 0px'
+            threshold: 0.12,
+            rootMargin: '0px 0px -18% 0px'
         });
     }
 
@@ -121,7 +121,7 @@ const ScrollReveal = (() => {
         if (!reduced) ensureObserver();
 
         const useStagger = !!options.stagger;
-        const baseDelay = Number.isFinite(options.baseDelay) ? Number(options.baseDelay) : 100;
+        const baseDelay = Number.isFinite(options.baseDelay) ? Number(options.baseDelay) : 70;
         const offset = Number.isFinite(options.offset) ? Number(options.offset) : 0;
         const explicitDelay = Number.isFinite(options.delay) ? Number(options.delay) : null;
 
@@ -231,7 +231,7 @@ const ScrollReveal = (() => {
 function createAnalysisArticle(analysis, idx){
     // Verwendung des neuen, von Ihnen genehmigten HTML-Templates, angepasst an die Datenstruktur
     return `
-            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up" data-scroll-distance="36" data-scroll-duration="950">
+            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up" data-scroll-distance="18" data-scroll-duration="620">
             
             <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${analysis.image}" alt="Vorschaubild für ${analysis.title}" 
@@ -275,7 +275,7 @@ function createMemberAnalysisCard(a, idx){
     const author = a.author || '';
 
     return `
-    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up" data-scroll-distance="34" data-scroll-duration="900">
+    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up" data-scroll-distance="18" data-scroll-duration="640">
         <a href="${link}" class="block">
                 <div class="media">
                     <img src="${img}" alt="Vorschaubild ${title}" class="w-full h-full object-cover">
@@ -341,7 +341,7 @@ async function loadAndRenderMemberAnalyses(){
         // render up to 12 analyses in a responsive grid
         const html = `<div class="member-analyses-grid">` + data.slice(0,12).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
         container.innerHTML = html;
-        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 120 }); } catch(err) { /* ignore */ }
+        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }catch(err){
         console.error('Fehler beim Laden der Member-Analysen', err);
         container.innerHTML = '<p class="text-sm text-gray-500">Analysen konnten nicht geladen werden.</p>';
@@ -403,7 +403,7 @@ async function initAllAnalysesPage(){
         // render
         if (!items.length) { grid.innerHTML = '<p class="text-gray-500">Keine Analysen gefunden.</p>'; return; }
         grid.innerHTML = '<div class="member-analyses-grid">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
-        try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 130 }); } catch(err) { /* ignore */ }
+        try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }
 
     // wire controls
@@ -442,7 +442,7 @@ async function loadAndRenderAnalyses() {
                          .join('');
         
         analysisGrid.innerHTML = analysisHTML;
-        try { ScrollReveal.add(analysisGrid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 130 }); } catch(err) { /* ignore */ }
+        try { ScrollReveal.add(analysisGrid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
 
     } catch (error) {
         console.error("Fehler beim Laden der Analysen:", error);

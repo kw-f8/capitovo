@@ -1,162 +1,203 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
-  <title id="title">capitovo Candlestick Illustration</title>
-  <desc id="desc">Stilisierte Börsenkerzen in einem weichen Auf und Ab mit blauen Akzenten und Schatten.</desc>
+  <title id="title">capitovo Candlestick Chart</title>
+  <desc id="desc">Realistische Candlesticks mit feinem Grid und gleitendem Trendverlauf.</desc>
   <defs>
-    <linearGradient id="bodyGrey" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#d8deea" />
-      <stop offset="55%" stop-color="#8a94aa" />
-      <stop offset="100%" stop-color="#51596a" />
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8fbff" />
+      <stop offset="100%" stop-color="#eef1f9" />
     </linearGradient>
-    <linearGradient id="bodyBlue" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#8fd0ff" />
-      <stop offset="55%" stop-color="#3c8ed7" />
-      <stop offset="100%" stop-color="#215eaa" />
+    <linearGradient id="bullBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8cd7ff" />
+      <stop offset="100%" stop-color="#1b78dc" />
     </linearGradient>
-    <linearGradient id="wick" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#2a3142" stop-opacity="0.75" />
-      <stop offset="100%" stop-color="#151924" stop-opacity="0.95" />
+    <linearGradient id="bearBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbb6b9" />
+      <stop offset="100%" stop-color="#ef4444" />
     </linearGradient>
-    <filter id="candleShadow" x="-20%" y="-20%" width="140%" height="160%">
-      <feDropShadow dx="10" dy="16" stdDeviation="8" flood-color="#101623" flood-opacity="0.18" />
+    <linearGradient id="wickGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f2738" stop-opacity="0.82" />
+      <stop offset="100%" stop-color="#101726" stop-opacity="0.92" />
+    </linearGradient>
+    <linearGradient id="frameStroke" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d5dcec" />
+      <stop offset="100%" stop-color="#c5cddd" />
+    </linearGradient>
+    <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1d7fe5" stop-opacity="0.38" />
+      <stop offset="100%" stop-color="#1d7fe5" stop-opacity="0" />
+    </linearGradient>
+    <filter id="candleShadow" x="-20%" y="-25%" width="140%" height="170%">
+      <feDropShadow dx="0" dy="10" stdDeviation="6" flood-color="#0f172a" flood-opacity="0.16" />
     </filter>
+    <clipPath id="chartAreaClip">
+      <rect x="0" y="0" width="1108" height="230" rx="24" />
+    </clipPath>
   </defs>
 
-  <rect width="1200" height="360" fill="#ffffff" />
+  <rect width="1200" height="360" fill="url(#bgGradient)" />
 
-  <g transform="translate(70 48)">
-    <g fill="none" stroke="#f1f4f9" stroke-width="1">
-      <path d="M-20 252 Q 140 168 260 168 T 520 250 T 780 292 T 1040 210 T 1260 180" opacity="0.35" />
-    </g>
+  <g transform="translate(46 48)">
+    <rect width="1108" height="230" rx="24" fill="#ffffff" stroke="url(#frameStroke)" stroke-width="1.5" />
+    <g clip-path="url(#chartAreaClip)">
+      <g stroke="#e6ecf6" stroke-width="1">
+        <line x1="0" y1="24" x2="1108" y2="24" />
+        <line x1="0" y1="66" x2="1108" y2="66" />
+        <line x1="0" y1="108" x2="1108" y2="108" />
+        <line x1="0" y1="150" x2="1108" y2="150" />
+        <line x1="0" y1="192" x2="1108" y2="192" />
+        <line x1="0" y1="230" x2="1108" y2="230" />
+      </g>
+      <g stroke="#eff3fa" stroke-width="1">
+        <line x1="184.6" y1="0" x2="184.6" y2="230" />
+        <line x1="369.2" y1="0" x2="369.2" y2="230" />
+        <line x1="553.8" y1="0" x2="553.8" y2="230" />
+        <line x1="738.4" y1="0" x2="738.4" y2="230" />
+        <line x1="923" y1="0" x2="923" y2="230" />
+      </g>
 
-    <g filter="url(#candleShadow)">
-      <g transform="translate(0,205)">
+      <path d="M0 230 L0 212 L32 218 L64 202 L96 190 L128 200 L160 182 L192 174 L224 178 L256 160 L288 150 L320 144 L352 152 L384 134 L416 124 L448 132 L480 114 L512 104 L544 112 L576 94 L608 84 L640 92 L672 74 L704 68 L736 78 L768 60 L800 52 L832 60 L864 44 L896 38 L928 48 L960 32 L992 24 L1024 34 L1056 18 L1088 12 L1088 230 Z" fill="url(#areaFill)" opacity="0.8" />
+      <path d="M0 212 L32 218 L64 202 L96 190 L128 200 L160 182 L192 174 L224 178 L256 160 L288 150 L320 144 L352 152 L384 134 L416 124 L448 132 L480 114 L512 104 L544 112 L576 94 L608 84 L640 92 L672 74 L704 68 L736 78 L768 60 L800 52 L832 60 L864 44 L896 38 L928 48 L960 32 L992 24 L1024 34 L1056 18 L1088 12" fill="none" stroke="#1d7fe5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+      <g filter="url(#candleShadow)">
         <g transform="translate(0 0)">
-          <line x1="0" y1="-102" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-68" width="16" height="68" rx="4" fill="url(#bodyGrey)" />
+          <line x1="8" y1="206" x2="8" y2="228" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="212" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(36 -7)">
-          <line x1="0" y1="-114" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-74" width="16" height="74" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(32 0)">
+          <line x1="8" y1="204" x2="8" y2="226" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="212" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(72 -13)">
-          <line x1="0" y1="-126" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-80" width="16" height="80" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(64 0)">
+          <line x1="8" y1="194" x2="8" y2="228" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="202" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(108 -17)">
-          <line x1="0" y1="-132" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-84" width="16" height="84" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(96 0)">
+          <line x1="8" y1="182" x2="8" y2="212" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="190" width="16" height="14" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(144 -20)">
-          <line x1="0" y1="-128" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-78" width="16" height="78" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(128 0)">
+          <line x1="8" y1="186" x2="8" y2="206" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="194" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(180 -15)">
-          <line x1="0" y1="-120" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-70" width="16" height="70" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(160 0)">
+          <line x1="8" y1="174" x2="8" y2="208" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="182" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(216  -5)">
-          <line x1="0" y1="-108" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-64" width="16" height="64" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(192 0)">
+          <line x1="8" y1="166" x2="8" y2="192" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="174" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(252 5)">
-          <line x1="0" y1="-100" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-58" width="16" height="58" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(224 0)">
+          <line x1="8" y1="168" x2="8" y2="186" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="174" width="16" height="4" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(288 15)">
-          <line x1="0" y1="-96" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-60" width="16" height="60" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(256 0)">
+          <line x1="8" y1="152" x2="8" y2="186" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="160" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(324 27)">
-          <line x1="0" y1="-102" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-66" width="16" height="66" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(288 0)">
+          <line x1="8" y1="142" x2="8" y2="170" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="150" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(360 35)">
-          <line x1="0" y1="-106" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-68" width="16" height="68" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(320 0)">
+          <line x1="8" y1="136" x2="8" y2="162" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="144" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(396 47)">
-          <line x1="0" y1="-112" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-74" width="16" height="74" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(352 0)">
+          <line x1="8" y1="138" x2="8" y2="158" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="146" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(432 55)">
-          <line x1="0" y1="-116" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-76" width="16" height="76" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(384 0)">
+          <line x1="8" y1="126" x2="8" y2="160" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="134" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(468 63)">
-          <line x1="0" y1="-112" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-72" width="16" height="72" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(416 0)">
+          <line x1="8" y1="118" x2="8" y2="144" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="124" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(504 71)">
-          <line x1="0" y1="-110" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-70" width="16" height="70" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(448 0)">
+          <line x1="8" y1="118" x2="8" y2="140" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="126" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(540 77)">
-          <line x1="0" y1="-106" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-68" width="16" height="68" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(480 0)">
+          <line x1="8" y1="106" x2="8" y2="138" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="114" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(576 83)">
-          <line x1="0" y1="-100" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-64" width="16" height="64" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(512 0)">
+          <line x1="8" y1="98" x2="8" y2="124" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="104" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(612 77)">
-          <line x1="0" y1="-104" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-66" width="16" height="66" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(544 0)">
+          <line x1="8" y1="100" x2="8" y2="120" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="106" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(648 70)">
-          <line x1="0" y1="-110" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-70" width="16" height="70" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(576 0)">
+          <line x1="8" y1="88" x2="8" y2="120" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="94" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(684 61)">
-          <line x1="0" y1="-112" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-72" width="16" height="72" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(608 0)">
+          <line x1="8" y1="78" x2="8" y2="108" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="84" width="16" height="12" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(720 50)">
-          <line x1="0" y1="-114" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-74" width="16" height="74" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(640 0)">
+          <line x1="8" y1="80" x2="8" y2="100" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="86" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(756 39)">
-          <line x1="0" y1="-112" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-70" width="16" height="70" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(672 0)">
+          <line x1="8" y1="68" x2="8" y2="100" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="74" width="16" height="20" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(792 27)">
-          <line x1="0" y1="-106" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-66" width="16" height="66" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(704 0)">
+          <line x1="8" y1="62" x2="8" y2="86" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="68" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(828 15)">
-          <line x1="0" y1="-104" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-64" width="16" height="64" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(736 0)">
+          <line x1="8" y1="64" x2="8" y2="84" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="70" width="16" height="8" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(864 3)">
-          <line x1="0" y1="-112" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-68" width="16" height="68" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(768 0)">
+          <line x1="8" y1="54" x2="8" y2="86" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="60" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(900 -7)">
-          <line x1="0" y1="-120" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-72" width="16" height="72" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(800 0)">
+          <line x1="8" y1="46" x2="8" y2="74" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="52" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(936 -15)">
-          <line x1="0" y1="-124" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-74" width="16" height="74" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(832 0)">
+          <line x1="8" y1="48" x2="8" y2="70" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="54" width="16" height="6" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(972 -23)">
-          <line x1="0" y1="-130" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-78" width="16" height="78" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(864 0)">
+          <line x1="8" y1="38" x2="8" y2="70" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="44" width="16" height="18" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(1008 -27)">
-          <line x1="0" y1="-132" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-80" width="16" height="80" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(896 0)">
+          <line x1="8" y1="32" x2="8" y2="58" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="38" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(1044 -25)">
-          <line x1="0" y1="-126" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-76" width="16" height="76" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(928 0)">
+          <line x1="8" y1="34" x2="8" y2="56" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="40" width="16" height="8" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(1080 -19)">
-          <line x1="0" y1="-120" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-72" width="16" height="72" rx="4" fill="url(#bodyBlue)" />
+        <g transform="translate(960 0)">
+          <line x1="8" y1="26" x2="8" y2="54" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="32" width="16" height="16" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
-        <g transform="translate(1116 -11)">
-          <line x1="0" y1="-116" x2="0" y2="12" stroke="url(#wick)" stroke-width="4" stroke-linecap="round" />
-          <rect x="-8" y="-70" width="16" height="70" rx="4" fill="url(#bodyGrey)" />
+        <g transform="translate(992 0)">
+          <line x1="8" y1="20" x2="8" y2="46" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="24" width="16" height="10" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
+        </g>
+        <g transform="translate(1024 0)">
+          <line x1="8" y1="20" x2="8" y2="42" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="26" width="16" height="8" rx="3" fill="url(#bearBody)" stroke="#0f172a" stroke-opacity="0.08" />
+        </g>
+        <g transform="translate(1056 0)">
+          <line x1="8" y1="14" x2="8" y2="44" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="18" width="16" height="16" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
+        </g>
+        <g transform="translate(1088 0)">
+          <line x1="8" y1="8" x2="8" y2="34" stroke="url(#wickGradient)" stroke-width="2.2" stroke-linecap="round" />
+          <rect x="0" y="12" width="16" height="8" rx="3" fill="url(#bullBody)" stroke="#0f172a" stroke-opacity="0.08" />
         </g>
       </g>
     </g>

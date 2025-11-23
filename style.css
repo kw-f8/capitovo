@@ -600,12 +600,12 @@ details[open] .details-marker {
 
 .scroll-reveal {
     opacity: 0;
-    transform: translate3d(0, var(--sr-distance, 24px), 0);
-    transition-property: opacity, transform;
-    transition-duration: var(--sr-duration, 0.9s);
-    transition-timing-function: var(--sr-ease, cubic-bezier(0.22, 1, 0.36, 1));
+    transform: translate3d(0, var(--sr-distance, 18px), 0);
+    transition: transform var(--sr-duration, 0.55s) var(--sr-ease, cubic-bezier(0.22, 0.61, 0.36, 1)),
+                opacity var(--sr-duration, 0.55s) var(--sr-ease, cubic-bezier(0.22, 0.61, 0.36, 1));
     transition-delay: var(--sr-delay, 0ms);
     will-change: opacity, transform;
+    backface-visibility: hidden;
 }
 
 .scroll-reveal.sr-visible {
@@ -614,27 +614,23 @@ details[open] .details-marker {
 }
 
 .scroll-reveal[data-scroll="fade-up"] {
-    transform: translate3d(0, var(--sr-distance, 32px), 0);
+    transform: translate3d(0, var(--sr-distance, 18px), 0);
 }
 
 .scroll-reveal[data-scroll="slide-left"] {
-    transform: translate3d(var(--sr-distance, 36px), 0, 0);
+    transform: translate3d(var(--sr-distance, 22px), 0, 0);
 }
 
 .scroll-reveal[data-scroll="slide-right"] {
-    transform: translate3d(calc(var(--sr-distance, 36px) * -1), 0, 0);
+    transform: translate3d(calc(var(--sr-distance, 22px) * -1), 0, 0);
 }
 
 .scroll-reveal[data-scroll="zoom-in"] {
-    transform: scale(var(--sr-scale, 0.96));
-}
-
-.scroll-reveal.sr-visible[data-scroll="zoom-in"] {
-    transform: scale(1);
+    transform: translate3d(0, var(--sr-distance, 14px), 0) scale(var(--sr-scale, 0.96));
 }
 
 .scroll-reveal[data-scroll="zoom-in"].sr-visible {
-    transform: scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {

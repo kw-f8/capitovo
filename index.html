@@ -22,11 +22,11 @@
         }
 
           /* Hero image styling */
-          .hero { position: relative; overflow: hidden; min-height: 46vh; display:flex; align-items:center; }
-          .hero-media { position: absolute; inset: 0; z-index: 0; }
-          .hero-image { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.95) contrast(0.98); }
-          .hero-inner { position: relative; z-index: 2; width:100%; text-align: center; padding: 3rem 1rem; }
-          .hero h2 { color: var(--hero-heading-color, #0f172a); font-size: clamp(1.75rem, 3.5vw, 2.25rem); }
+          .hero { position: relative; overflow: visible; min-height: 36vh; display:block; padding: 3rem 1rem 2rem; }
+          .hero-inner { position: relative; z-index: 2; width:100%; max-width:1200px; margin:0 auto; text-align: left; padding: 0 1rem; }
+          .hero h2 { color: var(--hero-heading-color, #0f172a); font-size: clamp(2.25rem, 4.6vw, 3.25rem); line-height:1.05; margin:0; font-weight:800; }
+          .hero-graphic { margin-top: 1.25rem; width:100%; }
+          .hero-image { width:100%; height:auto; display:block; object-fit:contain; filter: saturate(0.95) contrast(0.98); }
     </style>
 </head>
 <body>
@@ -46,14 +46,14 @@
         </header>
 
         <section class="hero" aria-label="Hero Bereich">
-            <div class="hero-media" aria-hidden="true">
-                <picture>
-                    <source srcset="data/vorschaubilder/hero-chart.svg" type="image/svg+xml">
-                    <img src="data/vorschaubilder/hero.png" alt="capitovo Chart Vorschau" class="hero-image">
-                </picture>
-            </div>
             <div class="hero-inner">
                 <h2>Marktführer von morgen erkennen</h2>
+                <div class="hero-graphic" aria-hidden="true">
+                    <picture>
+                        <source srcset="data/vorschaubilder/hero-chart.svg" type="image/svg+xml">
+                        <img src="data/vorschaubilder/hero.png" alt="capitovo Chart Vorschau" class="hero-image">
+                    </picture>
+                </div>
             </div>
         </section>
     </div> 

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-Generiert aus einem Screenshot (Chart) eine vereinfachte Vektor-SVG-Kurve.
+Generiert aus einem Screenshot (Chart) eine vereinfachte Vektor-SVG-Darstellung.
 
 Usage:
     python tools/generate_chart_svg.py input.png output.svg
 
-Das Skript versucht, die dominante Kontur zu finden, die als Kurve interpretiert wird.
-Wenn keine Kontur vorhanden ist, fällt es auf eine X-Median-Ansatz über Kantenpunkte zurück.
-Das Ergebnis ist ein sauberes, beschriftungsfreies SVG mit einer einzelnen Pfad-Linie.
+Das Skript versucht automatisch, ob ein einfacher Linienpfad oder ein Kerzenchart
+erzeugt werden kann. Für Kerzen (Candlesticks) wird die Grafik in vertikale
+Segmente unterteilt und pro Segment ein Docht (wick) + Körper (body) gezeichnet.
+Das Ergebnis ist ein beschriftungsfreies SVG ohne Achsen oder Rahmen.
 """
 import sys
 import os
@@ -96,6 +97,107 @@ def build_svg_path(points, size, stroke='#0ea5a4'):
     return svg
 
 
+def build_candlestick_svg(img, edges, size, samples=80):
+    h, w = size[1], size[0]
+    # determine active chart area by column projection
+    col_sum = edges.sum(axis=0)
+    active = np.where(col_sum > (np.max(col_sum) * 0.02))[0]
+    if active.size == 0:
+        # fallback to full width
+        x0, x1 = 0, w
+    else:
+        x0, x1 = int(active[0]), int(active[-1])
+
+    # number of samples (candles)
+    samples = min(max(20, samples), max(20, (x1 - x0) // 2))
+    step = max(1, (x1 - x0) / samples)
+
+    candles = []
+    for i in range(samples):
+        xa = int(x0 + i * step)
+        xb = int(x0 + (i + 1) * step)
+        if xb <= xa:
+            xb = xa + 1
+        slice_edges = edges[:, xa:xb]
+        ys, xs = np.where(slice_edges > 0)
+        if ys.size == 0:
+            continue
+        ys_global = ys
+        min_y = int(np.min(ys_global))
+        max_y = int(np.max(ys_global))
+
+        # attempt to find body by clustering into two vertical clusters
+        try:
+            from sklearn.cluster import KMeans
+            use_kmeans = True
+        except Exception:
+            use_kmeans = False
+
+        body_top = None
+        body_bottom = None
+        if use_kmeans and ys.size >= 4:
+            # apply kmeans to y positions
+            ys_vals = ys_global.reshape(-1,1).astype(float)
+            kmeans = KMeans(n_clusters=2, random_state=0).fit(ys_vals)
+            centers = sorted([c[0] for c in kmeans.cluster_centers_])
+            body_top = int(centers[0])
+            body_bottom = int(centers[1])
+        else:
+            # fallback: body around median with small height
+            med = int(np.median(ys_global))
+            body_half = max(2, int((max_y - min_y) * 0.12))
+            body_top = max(0, med - body_half)
+            body_bottom = min(h, med + body_half)
+
+        x_center = (xa + xb) / 2.0
+
+        # sample color from original image in the body area
+        bgr = img[ max(0, body_top):min(h, body_bottom), max(0, xa):min(w, xb) ]
+        color = '#0ea5a4'
+        try:
+            if bgr.size > 0:
+                avg = np.mean(bgr.reshape(-1,3), axis=0)
+                # convert BGR to rgb
+                r,g,b = int(avg[2]), int(avg[1]), int(avg[0])
+                # simple heuristic: greenish vs reddish
+                if g > r and g > b:
+                    color = '#16a34a'
+                elif r > g and r > b:
+                    color = '#ef4444'
+                else:
+                    color = '#0ea5a4'
+        except Exception:
+            color = '#0ea5a4'
+
+        candles.append({
+            'x': x_center,
+            'wick_top': min_y,
+            'wick_bottom': max_y,
+            'body_top': body_top,
+            'body_bottom': body_bottom,
+            'color': color,
+            'width': max(3, int((xb - xa) * 0.6))
+        })
+
+    # build SVG elements
+    elems = []
+    for c in candles:
+        x = c['x']
+        # wick
+        elems.append(f'<line x1="{x:.2f}" y1="{c["wick_top"]}" x2="{x:.2f}" y2="{c["wick_bottom"]}" stroke="{c["color"]}" stroke-width="1.2" stroke-linecap="round" />')
+        # body (rect)
+        bw = c['width']
+        bx = x - bw/2.0
+        bh = max(1, c['body_bottom'] - c['body_top'])
+        elems.append(f'<rect x="{bx:.2f}" y="{c["body_top"]}" width="{bw:.2f}" height="{bh:.2f}" fill="{c["color"]}" stroke="{c["color"]}" />')
+
+    svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" preserveAspectRatio="xMidYMid meet">\n'
+    for e in elems:
+        svg += '  ' + e + '\n'
+    svg += '</svg>'
+    return svg
+
+
 def main():
     if len(sys.argv) < 3:
         print('Usage: generate_chart_svg.py input.png output.svg', file=sys.stderr)
@@ -103,6 +205,31 @@ def main():
     inp = sys.argv[1]
     out = sys.argv[2]
 
+    img = cv2.imread(inp)
+    if img is None:
+        print('Eingabebild nicht gefunden oder kann nicht gelesen werden.', file=sys.stderr)
+        sys.exit(1)
+    h, w = img.shape[:2]
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5,5), 0)
+    edges = cv2.Canny(blur, 50, 150)
+    kernel = np.ones((3,3), np.uint8)
+    edges = cv2.dilate(edges, kernel, iterations=1)
+
+    # Try candlestick rendering first
+    try:
+        svg = build_candlestick_svg(img, edges, (w,h), samples=100)
+        # if svg contains rectangles/lines, assume candlestick succeeded
+        if '<rect' in svg or '<line' in svg:
+            with open(out, 'w', encoding='utf-8') as f:
+                f.write(svg)
+            print('SVG (candlestick) geschrieben:', out)
+            return
+    except Exception as e:
+        # ignore and fallback to curve
+        pass
+
+    # Fallback: try curve extraction
     pts, size = extract_curve_points(inp)
     if not pts:
         print('Keine Kurvenpunkte gefunden.', file=sys.stderr)

@@ -231,7 +231,7 @@ const ScrollReveal = (() => {
 function createAnalysisArticle(analysis, idx){
     // Verwendung des neuen, von Ihnen genehmigten HTML-Templates, angepasst an die Datenstruktur
     return `
-            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up" data-scroll-distance="18" data-scroll-duration="620">
+            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
             
             <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${analysis.image}" alt="Vorschaubild für ${analysis.title}" 
@@ -275,7 +275,7 @@ function createMemberAnalysisCard(a, idx){
     const author = a.author || '';
 
     return `
-    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up" data-scroll-distance="18" data-scroll-duration="640">
+    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up">
         <a href="${link}" class="block">
                 <div class="media">
                     <img src="${img}" alt="Vorschaubild ${title}" class="w-full h-full object-cover">

@@ -115,6 +115,15 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
     samples = min(max(20, samples), max(20, max(20, int((x1 - x0) / 6))))
     step = max(1, float(x1 - x0) / float(samples))
 
+    # compute robust vertical bounds of the chart (avoid outliers from UI shadows)
+    ys_all, xs_all = np.where(edges > 0)
+    if ys_all.size:
+        y_min_global = int(np.percentile(ys_all, 2))
+        y_max_global = int(np.percentile(ys_all, 98))
+    else:
+        y_min_global = 0
+        y_max_global = h
+
     candles = []
     for i in range(samples):
         xa = int(x0 + i * step)
@@ -126,8 +135,16 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
         if ys.size == 0:
             continue
         ys_global = ys
-        min_y = int(np.min(ys_global))
-        max_y = int(np.max(ys_global))
+        # derive robust low/high within this slice using percentiles to avoid stray pixels
+        if ys_global.size:
+            min_y = int(np.percentile(ys_global, 5))
+            max_y = int(np.percentile(ys_global, 95))
+        else:
+            continue
+
+        # clamp to global robust bounds to avoid extremely tall wicks caused by artifacts
+        min_y = max(y_min_global, min_y)
+        max_y = min(y_max_global, max_y)
 
         # attempt to find body by simple 1D clustering (avoid scipy/sklearn dependency)
         body_top = None
@@ -147,11 +164,21 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
             body_top = None
 
         if body_top is None or body_bottom is None:
-            # fallback: body around median with small height
+            # fallback: body around median with small height relative to the slice range
             med = int(np.median(ys_global))
-            body_half = max(2, int((max_y - min_y) * 0.12))
-            body_top = max(0, med - body_half)
-            body_bottom = min(h, med + body_half)
+            slice_range = max(2, max_y - min_y)
+            body_half = max(2, int(slice_range * 0.12))
+            body_top = max(min_y, med - body_half)
+            body_bottom = min(max_y, med + body_half)
+
+        # limit body height to a reasonable fraction of the overall chart height to avoid extreme bars
+        max_body_px = max(6, int((y_max_global - y_min_global) * 0.35))
+        if (body_bottom - body_top) > max_body_px:
+            # center body around median with capped half-height
+            med = int((body_top + body_bottom) / 2)
+            half = max_body_px // 2
+            body_top = max(y_min_global, med - half)
+            body_bottom = min(y_max_global, med + half)
 
         x_center = (xa + xb) / 2.0
 

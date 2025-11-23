@@ -97,7 +97,7 @@ def build_svg_path(points, size, stroke='#0ea5a4'):
     return svg
 
 
-def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), padding=(40,28)):
+def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), padding=(40,28), invert_trend=False):
     h, w = size[1], size[0]
     out_w, out_h = out_size
     pad_x, pad_y = padding
@@ -199,12 +199,17 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
     for c in candles:
         # map center x
         x = pad_x + (c['x'] - src_x0) * scale_x
-        # map wick
-        wy1 = pad_y + (c['wick_top'] / float(h)) * dst_vspan
-        wy2 = pad_y + (c['wick_bottom'] / float(h)) * dst_vspan
-        # map body
-        by1 = pad_y + (c['body_top'] / float(h)) * dst_vspan
-        by2 = pad_y + (c['body_bottom'] / float(h)) * dst_vspan
+        # map wick and body Y coordinates, optionally invert vertically to flip trend
+        if invert_trend:
+            wy1 = pad_y + (1.0 - (c['wick_top'] / float(h))) * dst_vspan
+            wy2 = pad_y + (1.0 - (c['wick_bottom'] / float(h))) * dst_vspan
+            by1 = pad_y + (1.0 - (c['body_top'] / float(h))) * dst_vspan
+            by2 = pad_y + (1.0 - (c['body_bottom'] / float(h))) * dst_vspan
+        else:
+            wy1 = pad_y + (c['wick_top'] / float(h)) * dst_vspan
+            wy2 = pad_y + (c['wick_bottom'] / float(h)) * dst_vspan
+            by1 = pad_y + (c['body_top'] / float(h)) * dst_vspan
+            by2 = pad_y + (c['body_bottom'] / float(h)) * dst_vspan
         # map width
         orig_w = c['width']
         bw = max(2.0, orig_w * scale_x * 0.85)
@@ -254,7 +259,8 @@ def main():
 
     # Try candlestick rendering first
     try:
-        svg = build_candlestick_svg(img, edges, (w,h), samples=100)
+        # generate candlestick SVG and invert trend so the output shows an up-trend
+        svg = build_candlestick_svg(img, edges, (w,h), samples=100, out_size=(1200,360), padding=(40,28), invert_trend=True)
         # if svg contains rectangles/lines, assume candlestick succeeded
         if '<rect' in svg or '<line' in svg:
             with open(out, 'w', encoding='utf-8') as f:

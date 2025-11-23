@@ -139,6 +139,10 @@ const ScrollReveal = (() => {
             if (reduced || !supportsIO) {
                 el.classList.add(visibleClass);
                 el.style.removeProperty('--sr-delay');
+                el.style.removeProperty('--sr-duration');
+                el.style.removeProperty('--sr-distance');
+                el.style.removeProperty('--sr-ease');
+                el.style.removeProperty('--sr-scale');
                 return;
             }
 
@@ -146,6 +150,34 @@ const ScrollReveal = (() => {
                 el.style.setProperty('--sr-delay', `${delayValue}ms`);
             } else {
                 el.style.removeProperty('--sr-delay');
+            }
+
+            const durationAttr = el.dataset.scrollDuration ? parseInt(el.dataset.scrollDuration, 10) : NaN;
+            if (Number.isFinite(durationAttr) && durationAttr > 0) {
+                el.style.setProperty('--sr-duration', `${durationAttr}ms`);
+            } else {
+                el.style.removeProperty('--sr-duration');
+            }
+
+            const distanceAttr = el.dataset.scrollDistance ? parseInt(el.dataset.scrollDistance, 10) : NaN;
+            if (Number.isFinite(distanceAttr)) {
+                el.style.setProperty('--sr-distance', `${distanceAttr}px`);
+            } else {
+                el.style.removeProperty('--sr-distance');
+            }
+
+            const scaleAttr = el.dataset.scrollScale ? parseFloat(el.dataset.scrollScale) : NaN;
+            if (Number.isFinite(scaleAttr) && scaleAttr > 0 && scaleAttr <= 1) {
+                el.style.setProperty('--sr-scale', `${scaleAttr}`);
+            } else {
+                el.style.removeProperty('--sr-scale');
+            }
+
+            const easeAttr = el.dataset.scrollEase;
+            if (easeAttr) {
+                el.style.setProperty('--sr-ease', easeAttr);
+            } else {
+                el.style.removeProperty('--sr-ease');
             }
 
             if (observer) observer.observe(el);
@@ -167,6 +199,10 @@ const ScrollReveal = (() => {
                 document.querySelectorAll(`.${baseClass}`).forEach(el => {
                     el.classList.add(visibleClass);
                     el.style.removeProperty('--sr-delay');
+                    el.style.removeProperty('--sr-duration');
+                    el.style.removeProperty('--sr-distance');
+                    el.style.removeProperty('--sr-ease');
+                    el.style.removeProperty('--sr-scale');
                 });
             } else if (supportsIO) {
                 ensureObserver();
@@ -195,7 +231,7 @@ const ScrollReveal = (() => {
 function createAnalysisArticle(analysis, idx){
     // Verwendung des neuen, von Ihnen genehmigten HTML-Templates, angepasst an die Datenstruktur
     return `
-            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up" data-scroll-distance="36" data-scroll-duration="950">
             
             <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${analysis.image}" alt="Vorschaubild für ${analysis.title}" 
@@ -239,7 +275,7 @@ function createMemberAnalysisCard(a, idx){
     const author = a.author || '';
 
     return `
-    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up">
+    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up" data-scroll-distance="34" data-scroll-duration="900">
         <a href="${link}" class="block">
                 <div class="media">
                     <img src="${img}" alt="Vorschaubild ${title}" class="w-full h-full object-cover">
@@ -305,7 +341,7 @@ async function loadAndRenderMemberAnalyses(){
         // render up to 12 analyses in a responsive grid
         const html = `<div class="member-analyses-grid">` + data.slice(0,12).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
         container.innerHTML = html;
-        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 90 }); } catch(err) { /* ignore */ }
+        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 120 }); } catch(err) { /* ignore */ }
     }catch(err){
         console.error('Fehler beim Laden der Member-Analysen', err);
         container.innerHTML = '<p class="text-sm text-gray-500">Analysen konnten nicht geladen werden.</p>';
@@ -367,7 +403,7 @@ async function initAllAnalysesPage(){
         // render
         if (!items.length) { grid.innerHTML = '<p class="text-gray-500">Keine Analysen gefunden.</p>'; return; }
         grid.innerHTML = '<div class="member-analyses-grid">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
-        try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 90 }); } catch(err) { /* ignore */ }
+        try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 130 }); } catch(err) { /* ignore */ }
     }
 
     // wire controls
@@ -406,7 +442,7 @@ async function loadAndRenderAnalyses() {
                          .join('');
         
         analysisGrid.innerHTML = analysisHTML;
-        try { ScrollReveal.add(analysisGrid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
+        try { ScrollReveal.add(analysisGrid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 130 }); } catch(err) { /* ignore */ }
 
     } catch (error) {
         console.error("Fehler beim Laden der Analysen:", error);

@@ -249,7 +249,10 @@
             <ul>
                 <li>
                     <a href="#open-login" id="sidebar-login" class="flex items-center space-x-3">
-                        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
+                                    <path d="M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                         <span>Login</span>
                     </a>
                 </li>
@@ -328,6 +331,23 @@
     <!-- Contact Modal (Kontaktdaten) -->
     <!-- Kontakt-Modal entfernt von der Startseite; jetzt nur in Abonenten/abonenten.html -->
 
+    <script>
+        (function(){
+            try {
+                const nav = (performance.getEntriesByType && performance.getEntriesByType('navigation') && performance.getEntriesByType('navigation')[0]) || {};
+                const isReload = nav.type === 'reload' || (performance && performance.navigation && performance.navigation.type === 1);
+                if (isReload) {
+                    // Ensure page starts at top after a full reload and remove any hash
+                    window.scrollTo(0,0);
+                    if (window.location.hash) {
+                        history.replaceState(null, '', window.location.pathname + window.location.search);
+                    }
+                }
+            } catch(e) {
+                /* ignore */
+            }
+        })();
+    </script>
     <script src="script.js"></script>
 </body>
 </html>

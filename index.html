@@ -13,13 +13,20 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
-        /* Slightly increase vertical spacing between main sections on the homepage
-           (adds extra breathing room between Pricing, Vorteile, FAQ, etc.) */
-        main > section { margin-top: 2.5rem; margin-bottom: 3rem; }
+          /* Slightly increase vertical spacing between main sections on the homepage
+              (adds extra breathing room between Pricing, Vorteile, FAQ, etc.) */
+          main > section { margin-top: 2.5rem; margin-bottom: 3rem; }
         /* Larger spacing on wider screens */
         @media (min-width: 768px) {
             main > section { margin-top: 3.5rem; margin-bottom: 4rem; }
         }
+
+          /* Hero image styling */
+          .hero { position: relative; overflow: hidden; min-height: 46vh; display:flex; align-items:center; }
+          .hero-media { position: absolute; inset: 0; z-index: 0; }
+          .hero-image { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.95) contrast(0.98); }
+          .hero-inner { position: relative; z-index: 2; width:100%; text-align: center; padding: 3rem 1rem; }
+          .hero h2 { color: var(--hero-heading-color, #0f172a); font-size: clamp(1.75rem, 3.5vw, 2.25rem); }
     </style>
 </head>
 <body>
@@ -38,11 +45,13 @@
             </div>
         </header>
 
-        <section class="hero">
+        <section class="hero" aria-label="Hero Bereich">
+            <div class="hero-media" aria-hidden="true">
+                <img src="data/vorschaubilder/hero-chart.svg" alt="capitovo Chart Vorschau" class="hero-image">
+            </div>
             <div class="hero-inner">
                 <h2>Marktführer von morgen erkennen</h2>
             </div>
-            <!-- Hero stock graphic removed per request -->
         </section>
     </div> 
     

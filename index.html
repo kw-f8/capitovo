@@ -12,6 +12,14 @@
         #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
+        /* Slightly increase vertical spacing between main sections on the homepage
+           (adds extra breathing room between Pricing, Vorteile, FAQ, etc.) */
+        main > section { margin-top: 2.5rem; margin-bottom: 3rem; }
+        /* Larger spacing on wider screens */
+        @media (min-width: 768px) {
+            main > section { margin-top: 3.5rem; margin-bottom: 4rem; }
+        }
     </style>
 </head>
 <body>

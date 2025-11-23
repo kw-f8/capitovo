@@ -97,8 +97,10 @@ def build_svg_path(points, size, stroke='#0ea5a4'):
     return svg
 
 
-def build_candlestick_svg(img, edges, size, samples=80):
+def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), padding=(40,28)):
     h, w = size[1], size[0]
+    out_w, out_h = out_size
+    pad_x, pad_y = padding
     # determine active chart area by column projection (be generous with threshold)
     col_sum = edges.sum(axis=0)
     max_col = np.max(col_sum) if col_sum.size else 0
@@ -109,7 +111,7 @@ def build_candlestick_svg(img, edges, size, samples=80):
     else:
         x0, x1 = int(active[0]), int(active[-1])
 
-    # number of samples (candles) - choose a reasonable number based on width
+    # number of samples (candles) - choose based on width, but not too many
     samples = min(max(20, samples), max(20, max(20, int((x1 - x0) / 6))))
     step = max(1, float(x1 - x0) / float(samples))
 
@@ -178,22 +180,44 @@ def build_candlestick_svg(img, edges, size, samples=80):
             'body_top': body_top,
             'body_bottom': body_bottom,
             'color': color,
-            'width': max(3, int((xb - xa) * 0.6))
+            'width': max(3, int((xb - xa) * 0.6)),
+            'orig_xa': xa,
+            'orig_xb': xb
         })
 
-    # build SVG elements
-    elems = []
-    for c in candles:
-        x = c['x']
-        # wick
-        elems.append(f'<line x1="{x:.2f}" y1="{c["wick_top"]}" x2="{x:.2f}" y2="{c["wick_bottom"]}" stroke="{c["color"]}" stroke-width="1.2" stroke-linecap="round" />')
-        # body (rect)
-        bw = c['width']
-        bx = x - bw/2.0
-        bh = max(1, c['body_bottom'] - c['body_top'])
-        elems.append(f'<rect x="{bx:.2f}" y="{c["body_top"]}" width="{bw:.2f}" height="{bh:.2f}" fill="{c["color"]}" stroke="{c["color"]}" />')
+    # compute scaling mapping from original x range [x0,x1] to [pad_x, out_w-pad_x]
+    src_x0, src_x1 = x0, x1
+    src_span = max(1, src_x1 - src_x0)
+    dst_span = max(1, out_w - 2 * pad_x)
+    scale_x = float(dst_span) / float(src_span)
+    # vertical scaling: map original [0,h] to [pad_y, out_h - pad_y]
+    dst_vspan = max(1, out_h - 2 * pad_y)
 
-    svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" preserveAspectRatio="xMidYMid meet">\n'
+    elems = []
+    # background card (white, rounded)
+    elems.append(f'<rect x="0" y="0" width="{out_w}" height="{out_h}" rx="12" fill="#ffffff" />')
+
+    for c in candles:
+        # map center x
+        x = pad_x + (c['x'] - src_x0) * scale_x
+        # map wick
+        wy1 = pad_y + (c['wick_top'] / float(h)) * dst_vspan
+        wy2 = pad_y + (c['wick_bottom'] / float(h)) * dst_vspan
+        # map body
+        by1 = pad_y + (c['body_top'] / float(h)) * dst_vspan
+        by2 = pad_y + (c['body_bottom'] / float(h)) * dst_vspan
+        # map width
+        orig_w = c['width']
+        bw = max(2.0, orig_w * scale_x * 0.85)
+
+        # wick
+        elems.append(f'<line x1="{x:.2f}" y1="{wy1:.2f}" x2="{x:.2f}" y2="{wy2:.2f}" stroke="{c["color"]}" stroke-width="1.6" stroke-linecap="round" />')
+        # body (rect)
+        bx = x - bw / 2.0
+        bh = max(1.0, by2 - by1)
+        elems.append(f'<rect x="{bx:.2f}" y="{by1:.2f}" width="{bw:.2f}" height="{bh:.2f}" fill="{c["color"]}" stroke="{c["color"]}" />')
+
+    svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {out_w} {out_h}" preserveAspectRatio="xMidYMid meet">\n'
     for e in elems:
         svg += '  ' + e + '\n'
     svg += '</svg>'

@@ -172,7 +172,7 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
             body_bottom = min(max_y, med + body_half)
 
         # limit body height to a reasonable fraction of the overall chart height to avoid extreme bars
-        max_body_px = max(6, int((y_max_global - y_min_global) * 0.35))
+        max_body_px = max(6, int((y_max_global - y_min_global) * 0.18))
         if (body_bottom - body_top) > max_body_px:
             # center body around median with capped half-height
             med = int((body_top + body_bottom) / 2)
@@ -218,25 +218,30 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
     src_span = max(1, src_x1 - src_x0)
     dst_span = max(1, out_w - 2 * pad_x)
     scale_x = float(dst_span) / float(src_span)
-    # vertical scaling: map original [0,h] to [pad_y, out_h - pad_y]
-    dst_vspan = max(1, out_h - 2 * pad_y)
+    # vertical scaling: map robust source vertical bounds [y_min_global,y_max_global]
+    # into a compressed destination vertical span (e.g. 70% of available) and center it
+    src_y0, src_y1 = y_min_global, y_max_global
+    src_y_span = max(1, src_y1 - src_y0)
+    full_vspan = max(1, out_h - 2 * pad_y)
+    dst_vspan = max(1, int(full_vspan * 0.70))
+    v_offset = pad_y + (full_vspan - dst_vspan) / 2.0
 
     elems = []
 
     for c in candles:
         # map center x
         x = pad_x + (c['x'] - src_x0) * scale_x
-        # map wick and body Y coordinates, optionally invert vertically to flip trend
+        # map wick and body Y coordinates relative to robust src_y0..src_y1 range
         if invert_trend:
-            wy1 = pad_y + (1.0 - (c['wick_top'] / float(h))) * dst_vspan
-            wy2 = pad_y + (1.0 - (c['wick_bottom'] / float(h))) * dst_vspan
-            by1 = pad_y + (1.0 - (c['body_top'] / float(h))) * dst_vspan
-            by2 = pad_y + (1.0 - (c['body_bottom'] / float(h))) * dst_vspan
+            wy1 = v_offset + (1.0 - ((c['wick_top'] - src_y0) / float(src_y_span))) * dst_vspan
+            wy2 = v_offset + (1.0 - ((c['wick_bottom'] - src_y0) / float(src_y_span))) * dst_vspan
+            by1 = v_offset + (1.0 - ((c['body_top'] - src_y0) / float(src_y_span))) * dst_vspan
+            by2 = v_offset + (1.0 - ((c['body_bottom'] - src_y0) / float(src_y_span))) * dst_vspan
         else:
-            wy1 = pad_y + (c['wick_top'] / float(h)) * dst_vspan
-            wy2 = pad_y + (c['wick_bottom'] / float(h)) * dst_vspan
-            by1 = pad_y + (c['body_top'] / float(h)) * dst_vspan
-            by2 = pad_y + (c['body_bottom'] / float(h)) * dst_vspan
+            wy1 = v_offset + ((c['wick_top'] - src_y0) / float(src_y_span)) * dst_vspan
+            wy2 = v_offset + ((c['wick_bottom'] - src_y0) / float(src_y_span)) * dst_vspan
+            by1 = v_offset + ((c['body_top'] - src_y0) / float(src_y_span)) * dst_vspan
+            by2 = v_offset + ((c['body_bottom'] - src_y0) / float(src_y_span)) * dst_vspan
         # map width
         orig_w = c['width']
         bw = max(2.0, orig_w * scale_x * 0.85)

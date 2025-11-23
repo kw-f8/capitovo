@@ -99,18 +99,19 @@ def build_svg_path(points, size, stroke='#0ea5a4'):
 
 def build_candlestick_svg(img, edges, size, samples=80):
     h, w = size[1], size[0]
-    # determine active chart area by column projection
+    # determine active chart area by column projection (be generous with threshold)
     col_sum = edges.sum(axis=0)
-    active = np.where(col_sum > (np.max(col_sum) * 0.02))[0]
+    max_col = np.max(col_sum) if col_sum.size else 0
+    active = np.where(col_sum > (max_col * 0.005))[0]
     if active.size == 0:
         # fallback to full width
         x0, x1 = 0, w
     else:
         x0, x1 = int(active[0]), int(active[-1])
 
-    # number of samples (candles)
-    samples = min(max(20, samples), max(20, (x1 - x0) // 2))
-    step = max(1, (x1 - x0) / samples)
+    # number of samples (candles) - choose a reasonable number based on width
+    samples = min(max(20, samples), max(20, max(20, int((x1 - x0) / 6))))
+    step = max(1, float(x1 - x0) / float(samples))
 
     candles = []
     for i in range(samples):
@@ -126,23 +127,24 @@ def build_candlestick_svg(img, edges, size, samples=80):
         min_y = int(np.min(ys_global))
         max_y = int(np.max(ys_global))
 
-        # attempt to find body by clustering into two vertical clusters
-        try:
-            from sklearn.cluster import KMeans
-            use_kmeans = True
-        except Exception:
-            use_kmeans = False
-
+        # attempt to find body by simple 1D clustering (avoid scipy/sklearn dependency)
         body_top = None
         body_bottom = None
-        if use_kmeans and ys.size >= 4:
-            # apply kmeans to y positions
-            ys_vals = ys_global.reshape(-1,1).astype(float)
-            kmeans = KMeans(n_clusters=2, random_state=0).fit(ys_vals)
-            centers = sorted([c[0] for c in kmeans.cluster_centers_])
-            body_top = int(centers[0])
-            body_bottom = int(centers[1])
-        else:
+        try:
+            if ys.size >= 6:
+                # histogram-based two-peak approximation
+                span = max(2, max_y - min_y)
+                bins = min(40, span)
+                hist, bin_edges = np.histogram(ys_global, bins=bins)
+                peaks = np.argsort(hist)[-2:]
+                centers = sorted([int((bin_edges[p] + bin_edges[p+1]) / 2.0) for p in peaks])
+                if len(centers) == 2:
+                    body_top = centers[0]
+                    body_bottom = centers[1]
+        except Exception:
+            body_top = None
+
+        if body_top is None or body_bottom is None:
             # fallback: body around median with small height
             med = int(np.median(ys_global))
             body_half = max(2, int((max_y - min_y) * 0.12))

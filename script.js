@@ -71,6 +71,118 @@ function closeLoginModal() {
     }
 }
 
+// Lightweight scroll-triggered reveal helper.
+const ScrollReveal = (() => {
+    const baseClass = 'scroll-reveal';
+    const visibleClass = 'sr-visible';
+    const supportsIO = typeof window !== 'undefined' && 'IntersectionObserver' in window;
+    const reduceMotionQuery = (typeof window !== 'undefined' && window.matchMedia)
+        ? window.matchMedia('(prefers-reduced-motion: reduce)')
+        : null;
+    let observer = null;
+
+    function prefersReducedMotion() {
+        return reduceMotionQuery ? reduceMotionQuery.matches : false;
+    }
+
+    function ensureObserver() {
+        if (observer || !supportsIO || prefersReducedMotion()) return;
+        observer = new IntersectionObserver(handleIntersect, {
+            threshold: 0.18,
+            rootMargin: '0px 0px -12% 0px'
+        });
+    }
+
+    function handleIntersect(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add(visibleClass);
+                entry.target.style.removeProperty('--sr-delay');
+                if (observer) observer.unobserve(entry.target);
+            }
+        });
+    }
+
+    function toArray(elements) {
+        if (!elements) return [];
+        if (elements instanceof Element) return [elements];
+        if (typeof elements.length === 'number') return Array.from(elements); // NodeList, HTMLCollection, Array-like
+        return [];
+    }
+
+    function prepare(el) {
+        if (!el.classList.contains(baseClass)) el.classList.add(baseClass);
+    }
+
+    function add(elements, options = {}) {
+        const nodes = toArray(elements);
+        if (!nodes.length) return;
+        const reduced = prefersReducedMotion();
+        if (!reduced) ensureObserver();
+
+        const useStagger = !!options.stagger;
+        const baseDelay = Number.isFinite(options.baseDelay) ? Number(options.baseDelay) : 100;
+        const offset = Number.isFinite(options.offset) ? Number(options.offset) : 0;
+        const explicitDelay = Number.isFinite(options.delay) ? Number(options.delay) : null;
+
+        nodes.forEach((el, index) => {
+            if (!(el instanceof Element)) return;
+            prepare(el);
+            const attrDelay = parseInt(el.dataset.scrollDelay || '0', 10) || 0;
+            let delayValue = attrDelay;
+            if (explicitDelay !== null) {
+                delayValue = explicitDelay;
+            } else if (useStagger) {
+                delayValue = offset + index * baseDelay + attrDelay;
+            }
+
+            if (reduced || !supportsIO) {
+                el.classList.add(visibleClass);
+                el.style.removeProperty('--sr-delay');
+                return;
+            }
+
+            if (delayValue > 0) {
+                el.style.setProperty('--sr-delay', `${delayValue}ms`);
+            } else {
+                el.style.removeProperty('--sr-delay');
+            }
+
+            if (observer) observer.observe(el);
+        });
+    }
+
+    function init(selector) {
+        add(document.querySelectorAll(selector || '[data-scroll]'));
+    }
+
+    if (reduceMotionQuery) {
+        const listener = () => {
+            const reduced = prefersReducedMotion();
+            if (reduced) {
+                if (observer) {
+                    observer.disconnect();
+                    observer = null;
+                }
+                document.querySelectorAll(`.${baseClass}`).forEach(el => {
+                    el.classList.add(visibleClass);
+                    el.style.removeProperty('--sr-delay');
+                });
+            } else if (supportsIO) {
+                ensureObserver();
+                add(document.querySelectorAll('[data-scroll]'));
+            }
+        };
+        if (typeof reduceMotionQuery.addEventListener === 'function') {
+            reduceMotionQuery.addEventListener('change', listener);
+        } else if (typeof reduceMotionQuery.addListener === 'function') {
+            reduceMotionQuery.addListener(listener);
+        }
+    }
+
+    return { init, add };
+})();
+
 // Kontaktverwaltung: Verwendung einer dedizierten Seite `Abonenten/kontaktdaten.html`.
 
 // === ANALYSEN RENDERING LOGIK ===
@@ -83,7 +195,7 @@ function closeLoginModal() {
 function createAnalysisArticle(analysis, idx){
     // Verwendung des neuen, von Ihnen genehmigten HTML-Templates, angepasst an die Datenstruktur
     return `
-            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group">
+            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
             
             <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${analysis.image}" alt="Vorschaubild für ${analysis.title}" 
@@ -127,7 +239,7 @@ function createMemberAnalysisCard(a, idx){
     const author = a.author || '';
 
     return `
-    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1">
+    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up">
         <a href="${link}" class="block">
                 <div class="media">
                     <img src="${img}" alt="Vorschaubild ${title}" class="w-full h-full object-cover">
@@ -193,6 +305,7 @@ async function loadAndRenderMemberAnalyses(){
         // render up to 12 analyses in a responsive grid
         const html = `<div class="member-analyses-grid">` + data.slice(0,12).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
         container.innerHTML = html;
+        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 90 }); } catch(err) { /* ignore */ }
     }catch(err){
         console.error('Fehler beim Laden der Member-Analysen', err);
         container.innerHTML = '<p class="text-sm text-gray-500">Analysen konnten nicht geladen werden.</p>';
@@ -254,6 +367,7 @@ async function initAllAnalysesPage(){
         // render
         if (!items.length) { grid.innerHTML = '<p class="text-gray-500">Keine Analysen gefunden.</p>'; return; }
         grid.innerHTML = '<div class="member-analyses-grid">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
+        try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 90 }); } catch(err) { /* ignore */ }
     }
 
     // wire controls
@@ -292,6 +406,7 @@ async function loadAndRenderAnalyses() {
                          .join('');
         
         analysisGrid.innerHTML = analysisHTML;
+        try { ScrollReveal.add(analysisGrid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
 
     } catch (error) {
         console.error("Fehler beim Laden der Analysen:", error);
@@ -583,7 +698,8 @@ function initContactForm(){
 
 // === HAUPT-LOGIK ===
 document.addEventListener('DOMContentLoaded', () => {
-    
+    ScrollReveal.init();
+
     // 1. Lade die Analysen
     loadAndRenderAnalyses();
     // 1b. Wenn die Abonnenten-Seite ein spezielles Grid hat, lade dort hochwertige Karten

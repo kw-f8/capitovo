@@ -155,23 +155,24 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
 
         x_center = (xa + xb) / 2.0
 
-        # sample color from original image in the body area
+        # sample color from original image in the body area and determine up/down
         bgr = img[ max(0, body_top):min(h, body_bottom), max(0, xa):min(w, xb) ]
-        color = '#0ea5a4'
+        # default colors: up = aqua/blue, down = gray
+        up_color = '#06b6d4'   # cyan-500-like
+        down_color = '#6b7280' # gray-500
+        color = up_color
         try:
             if bgr.size > 0:
                 avg = np.mean(bgr.reshape(-1,3), axis=0)
                 # convert BGR to rgb
-                r,g,b = int(avg[2]), int(avg[1]), int(avg[0])
-                # simple heuristic: greenish vs reddish
-                if g > r and g > b:
-                    color = '#16a34a'
-                elif r > g and r > b:
-                    color = '#ef4444'
+                r,g,b = float(avg[2]), float(avg[1]), float(avg[0])
+                # decide up/down by green vs red dominance (original screenshot uses blue-ish up, gray down)
+                if g > r + 6 or b > r + 6:
+                    color = up_color
                 else:
-                    color = '#0ea5a4'
+                    color = down_color
         except Exception:
-            color = '#0ea5a4'
+            color = up_color
 
         candles.append({
             'x': x_center,
@@ -208,18 +209,23 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
         orig_w = c['width']
         bw = max(2.0, orig_w * scale_x * 0.85)
 
-        # wick (use a neutral dark stroke for wicks)
+        # wick (thin neutral stroke)
         wick_color = '#374151'
-        elems.append(f'<line x1="{x:.2f}" y1="{wy1:.2f}" x2="{x:.2f}" y2="{wy2:.2f}" stroke="{wick_color}" stroke-width="1.2" stroke-linecap="round" />')
-        # shadow behind body (subtle, offset)
-        shadow_offset = 8.0
+        elems.append(f'<line x1="{x:.2f}" y1="{wy1:.2f}" x2="{x:.2f}" y2="{wy2:.2f}" stroke="{wick_color}" stroke-width="1.0" stroke-linecap="round" />')
+        # shadow layers behind body (two soft offsets to mimic the blurred stacked shadows in the screenshot)
+        shadow_offset1 = 6.0
+        shadow_offset2 = 12.0
         bx = x - bw / 2.0
         bh = max(1.0, by2 - by1)
-        sx = bx + shadow_offset
-        sy = by1 + shadow_offset
-        elems.append(f'<rect x="{sx:.2f}" y="{sy:.2f}" width="{bw:.2f}" height="{bh:.2f}" rx="1.5" fill="#000000" opacity="0.06" />')
-        # body (rounded, slightly translucent)
-        elems.append(f'<rect x="{bx:.2f}" y="{by1:.2f}" width="{bw:.2f}" height="{bh:.2f}" rx="1.5" fill="{c["color"]}" fill-opacity="0.95" stroke="none" />')
+        sx1 = bx + shadow_offset1
+        sy1 = by1 + shadow_offset1
+        sx2 = bx + shadow_offset2
+        sy2 = by1 + shadow_offset2
+        elems.append(f'<rect x="{sx2:.2f}" y="{sy2:.2f}" width="{bw:.2f}" height="{bh:.2f}" rx="2" fill="#000000" opacity="0.03" />')
+        elems.append(f'<rect x="{sx1:.2f}" y="{sy1:.2f}" width="{bw:.2f}" height="{bh:.2f}" rx="1.8" fill="#000000" opacity="0.06" />')
+        # body (rounded, slightly translucent). choose up/down color
+        body_opacity = 0.92
+        elems.append(f'<rect x="{bx:.2f}" y="{by1:.2f}" width="{bw:.2f}" height="{bh:.2f}" rx="2" fill="{color}" fill-opacity="{body_opacity}" stroke="none" />')
 
     svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {out_w} {out_h}" preserveAspectRatio="xMidYMid meet">\n'
     for e in elems:

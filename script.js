@@ -463,6 +463,18 @@ function initSidebar() {
             });
         }
     } catch(e) { /* ignore */ }
+
+    // Close sidebar when clicking outside of it (but ignore clicks on the toggle)
+    document.addEventListener('click', function(e){
+        try{
+            if (!sidebarElement.classList.contains('open')) return;
+            const clickedInside = !!e.target.closest('#sidebar');
+            const clickedToggle = !!e.target.closest('#menu-toggle') || !!e.target.closest('.menu-toggle') || !!e.target.closest('[aria-controls="sidebar"]');
+            if (!clickedInside && !clickedToggle) {
+                closeSidebar();
+            }
+        } catch(err) { /* ignore */ }
+    });
 }
 
 /** Initialisiert die Modal-Steuerung mit Event Delegation (Login + Kontakt). */

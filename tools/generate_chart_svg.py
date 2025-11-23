@@ -194,8 +194,6 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
     dst_vspan = max(1, out_h - 2 * pad_y)
 
     elems = []
-    # background card (white, rounded)
-    elems.append(f'<rect x="0" y="0" width="{out_w}" height="{out_h}" rx="12" fill="#ffffff" />')
 
     for c in candles:
         # map center x
@@ -210,12 +208,18 @@ def build_candlestick_svg(img, edges, size, samples=80, out_size=(1200,360), pad
         orig_w = c['width']
         bw = max(2.0, orig_w * scale_x * 0.85)
 
-        # wick
-        elems.append(f'<line x1="{x:.2f}" y1="{wy1:.2f}" x2="{x:.2f}" y2="{wy2:.2f}" stroke="{c["color"]}" stroke-width="1.6" stroke-linecap="round" />')
-        # body (rect)
+        # wick (use a neutral dark stroke for wicks)
+        wick_color = '#374151'
+        elems.append(f'<line x1="{x:.2f}" y1="{wy1:.2f}" x2="{x:.2f}" y2="{wy2:.2f}" stroke="{wick_color}" stroke-width="1.2" stroke-linecap="round" />')
+        # shadow behind body (subtle, offset)
+        shadow_offset = 8.0
         bx = x - bw / 2.0
         bh = max(1.0, by2 - by1)
-        elems.append(f'<rect x="{bx:.2f}" y="{by1:.2f}" width="{bw:.2f}" height="{bh:.2f}" fill="{c["color"]}" stroke="{c["color"]}" />')
+        sx = bx + shadow_offset
+        sy = by1 + shadow_offset
+        elems.append(f'<rect x="{sx:.2f}" y="{sy:.2f}" width="{bw:.2f}" height="{bh:.2f}" rx="1.5" fill="#000000" opacity="0.06" />')
+        # body (rounded, slightly translucent)
+        elems.append(f'<rect x="{bx:.2f}" y="{by1:.2f}" width="{bw:.2f}" height="{bh:.2f}" rx="1.5" fill="{c["color"]}" fill-opacity="0.95" stroke="none" />')
 
     svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {out_w} {out_h}" preserveAspectRatio="xMidYMid meet">\n'
     for e in elems:

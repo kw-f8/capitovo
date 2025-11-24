@@ -757,6 +757,10 @@ function typeHeroText(options = {}){
     // don't run if already empty or already typed
     if(!full.trim() || h2.dataset.typed === 'true') return;
 
+    // Reserve space to prevent layout shift
+    const height = h2.offsetHeight;
+    h2.style.minHeight = `${height}px`;
+
     h2.dataset.typed = 'true';
     h2.originalText = full;
     h2.textContent = '';

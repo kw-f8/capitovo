@@ -591,7 +591,7 @@ function initSidebar() {
     }
 
     // close when clicking any internal nav link
-    const navLinks = sidebarElement.querySelectorAll('a:not([href="#open-login"])');
+    const navLinks = sidebarElement.querySelectorAll('a');
     navLinks.forEach(link => link.addEventListener('click', () => { closeSidebar(); }));
 
     // delegation fallback: handle clicks on dynamically created / differently marked toggles

@@ -32,22 +32,50 @@
                 </p>
             </div>
             <form class="mt-8 space-y-6" action="#" method="POST">
-                <div class="rounded-md shadow-sm -space-y-px">
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Vollständiger Name</label>
-                        <input id="name" name="name" type="text" autocomplete="name" required class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Max Mustermann">
+                <div class="space-y-5">
+                    <div class="relative">
+                        <input id="name" name="name" type="text" autocomplete="name" required 
+                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                               placeholder="Vollständiger Name">
+                        <label for="name" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Vollständiger Name
+                        </label>
                     </div>
-                    <div class="mb-4">
-                        <label for="email-address" class="block text-sm font-medium text-gray-700 mb-1">E-Mail Adresse</label>
-                        <input id="email-address" name="email" type="email" autocomplete="email" required class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="name@beispiel.de">
+                    <div class="relative">
+                        <input id="email-address" name="email" type="email" autocomplete="email" required 
+                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                               placeholder="E-Mail Adresse">
+                        <label for="email-address" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            E-Mail Adresse
+                        </label>
                     </div>
-                    <div class="mb-4">
-                        <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Passwort</label>
-                        <input id="password" name="password" type="password" autocomplete="new-password" required class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="••••••••">
+                    <div class="relative">
+                        <input id="password" name="password" type="password" autocomplete="new-password" required 
+                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                               placeholder="Passwort">
+                        <label for="password" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Passwort
+                        </label>
                     </div>
-                    <div class="mb-4">
-                        <label for="password-confirm" class="block text-sm font-medium text-gray-700 mb-1">Passwort bestätigen</label>
-                        <input id="password-confirm" name="password-confirm" type="password" autocomplete="new-password" required class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="••••••••">
+                    <div class="relative">
+                        <input id="password-confirm" name="password-confirm" type="password" autocomplete="new-password" required 
+                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                               placeholder="Passwort bestätigen">
+                        <label for="password-confirm" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Passwort bestätigen
+                        </label>
                     </div>
                 </div>
 

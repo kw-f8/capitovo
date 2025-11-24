@@ -111,6 +111,82 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('registration-form');
+            const password = document.getElementById('password');
+            const confirm = document.getElementById('password-confirm');
+            const errorMsg = document.getElementById('password-match-error');
+            const submitBtn = document.getElementById('register-button');
+            const confirmLabel = document.querySelector('label[for="password-confirm"]');
+
+            function validateForm() {
+                const p1 = password.value;
+                const p2 = confirm.value;
+                let passwordsMatch = true;
+
+                // 1. Passwort-Vergleich
+                if (p2.length > 0) {
+                    if (p1 !== p2) {
+                        passwordsMatch = false;
+                        // Fehler anzeigen
+                        confirm.classList.remove('border-gray-300', 'focus:border-accent-blue', 'focus:ring-accent-blue');
+                        confirm.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                        errorMsg.classList.remove('hidden');
+                        if(confirmLabel) {
+                            confirmLabel.classList.add('text-red-500');
+                            confirmLabel.classList.remove('peer-focus:text-accent-blue');
+                            confirmLabel.classList.add('peer-focus:text-red-500');
+                        }
+                    } else {
+                        // Kein Fehler
+                        confirm.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                        confirm.classList.add('border-gray-300', 'focus:border-accent-blue', 'focus:ring-accent-blue');
+                        errorMsg.classList.add('hidden');
+                        if(confirmLabel) {
+                            confirmLabel.classList.remove('text-red-500');
+                            confirmLabel.classList.remove('peer-focus:text-red-500');
+                            confirmLabel.classList.add('peer-focus:text-accent-blue');
+                        }
+                    }
+                } else {
+                    // Reset wenn leer
+                    confirm.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                    confirm.classList.add('border-gray-300', 'focus:border-accent-blue', 'focus:ring-accent-blue');
+                    errorMsg.classList.add('hidden');
+                    if(confirmLabel) {
+                        confirmLabel.classList.remove('text-red-500');
+                        confirmLabel.classList.remove('peer-focus:text-red-500');
+                        confirmLabel.classList.add('peer-focus:text-accent-blue');
+                    }
+                }
+
+                // 2. Button Status
+                // CheckValidity prüft 'required', 'email' etc.
+                const isFormValid = form.checkValidity();
+                
+                if (isFormValid && passwordsMatch && p1 === p2 && p1.length > 0) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.add('bg-primary-blue', 'hover:bg-blue-700');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
+                }
+            }
+
+            // Event Listeners
+            if(form) {
+                const inputs = form.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.addEventListener('input', validateForm);
+                    input.addEventListener('change', validateForm);
+                    input.addEventListener('keyup', validateForm);
+                });
+            }
+        });
+    </script>
+    <script src="script.js?v=2"></script>
 </body>
 </html>

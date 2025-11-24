@@ -606,14 +606,26 @@ function initRegistrationFormValidation() {
     const inputs = form.querySelectorAll('input');
     const password = document.getElementById('password');
     const confirm = document.getElementById('password-confirm');
+    const errorMsg = document.getElementById('password-match-error');
 
     function validate() {
         // Custom password match check - must be done BEFORE checkValidity
         if (password && confirm) {
-            if (password.value !== confirm.value) {
+            // Nur prüfen, wenn im Bestätigungsfeld etwas steht
+            if (confirm.value && password.value !== confirm.value) {
                 confirm.setCustomValidity("Passwörter stimmen nicht überein");
+                
+                // Fehler-Styles anwenden
+                confirm.classList.remove('border-gray-300', 'focus:border-accent-blue', 'focus:ring-accent-blue');
+                confirm.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                if (errorMsg) errorMsg.classList.remove('hidden');
             } else {
                 confirm.setCustomValidity("");
+                
+                // Fehler-Styles entfernen (Normalzustand)
+                confirm.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
+                confirm.classList.add('border-gray-300', 'focus:border-accent-blue', 'focus:ring-accent-blue');
+                if (errorMsg) errorMsg.classList.add('hidden');
             }
         }
 

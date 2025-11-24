@@ -596,6 +596,52 @@ function initContactForm(){
     }
 }
 
+/** Initialisiert die Validierung des Registrierungsformulars. */
+function initRegistrationFormValidation() {
+    const form = document.getElementById('registration-form');
+    const button = document.getElementById('register-button');
+    
+    if (!form || !button) return;
+
+    const inputs = form.querySelectorAll('input');
+    const password = document.getElementById('password');
+    const confirm = document.getElementById('password-confirm');
+
+    function validate() {
+        // Custom password match check - must be done BEFORE checkValidity
+        if (password && confirm) {
+            if (password.value !== confirm.value) {
+                confirm.setCustomValidity("Passwörter stimmen nicht überein");
+            } else {
+                confirm.setCustomValidity("");
+            }
+        }
+
+        // Check standard HTML5 validity (required, email format, etc.)
+        // This now includes the custom validity set above
+        let isValid = form.checkValidity();
+
+        if (isValid) {
+            button.disabled = false;
+            button.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            button.classList.add('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-accent-blue');
+        } else {
+            button.disabled = true;
+            button.classList.add('bg-gray-400', 'cursor-not-allowed');
+            button.classList.remove('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-accent-blue');
+        }
+    }
+
+    // Attach listeners to all inputs to trigger validation on change
+    inputs.forEach(input => {
+        input.addEventListener('input', validate);
+        input.addEventListener('change', validate);
+    });
+    
+    // Initial check
+    validate();
+}
+
 
 // === HAUPT-LOGIK ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -631,6 +677,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('contact-form')) {
         try { initContactForm(); } catch (e) { console.error('initContactForm error', e); }
     }
+    // 4c. Initialisiere Registrierungs-Validierung
+    initRegistrationFormValidation();
     // 5. Tippeffekt für Hero-Überschrift (nur einfügen, nicht andere Styles ändern)
     try { 
         typeHeroText(); 

@@ -607,6 +607,7 @@ function initRegistrationFormValidation() {
     const password = document.getElementById('password');
     const confirm = document.getElementById('password-confirm');
     const errorMsg = document.getElementById('password-match-error');
+    const confirmLabel = form.querySelector('label[for="password-confirm"]');
 
     function validate() {
         // Custom password match check - must be done BEFORE checkValidity
@@ -618,14 +619,35 @@ function initRegistrationFormValidation() {
                 // Fehler-Styles anwenden
                 confirm.classList.remove('border-gray-300', 'focus:border-accent-blue', 'focus:ring-accent-blue');
                 confirm.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
-                if (errorMsg) errorMsg.classList.remove('hidden');
+                
+                if (errorMsg) {
+                    errorMsg.classList.remove('hidden');
+                    errorMsg.style.display = 'block';
+                }
+                
+                if (confirmLabel) {
+                    confirmLabel.classList.add('text-red-500');
+                    confirmLabel.classList.remove('peer-focus:text-accent-blue');
+                    confirmLabel.classList.add('peer-focus:text-red-500');
+                }
+
             } else {
                 confirm.setCustomValidity("");
                 
                 // Fehler-Styles entfernen (Normalzustand)
                 confirm.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500');
                 confirm.classList.add('border-gray-300', 'focus:border-accent-blue', 'focus:ring-accent-blue');
-                if (errorMsg) errorMsg.classList.add('hidden');
+                
+                if (errorMsg) {
+                    errorMsg.classList.add('hidden');
+                    errorMsg.style.display = 'none';
+                }
+
+                if (confirmLabel) {
+                    confirmLabel.classList.remove('text-red-500');
+                    confirmLabel.classList.remove('peer-focus:text-red-500');
+                    confirmLabel.classList.add('peer-focus:text-accent-blue');
+                }
             }
         }
 
@@ -648,6 +670,8 @@ function initRegistrationFormValidation() {
     inputs.forEach(input => {
         input.addEventListener('input', validate);
         input.addEventListener('change', validate);
+        input.addEventListener('blur', validate);
+        input.addEventListener('keyup', validate);
     });
     
     // Initial check

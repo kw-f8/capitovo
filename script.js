@@ -8,10 +8,17 @@ function openLoginModal() {
     const sidebar = document.getElementById('sidebar');
 
     if (loginModal) {
-        // Schließt die Sidebar, falls sie geöffnet ist
-        if (sidebar && sidebar.classList.contains('open')) {
-            sidebar.classList.remove('open'); 
+        // Schließt die Sidebar und setzt Styles zurück
+        if (sidebar) {
+            sidebar.classList.remove('open');
+            sidebar.style.transform = '';
+            sidebar.style.display = '';
+            sidebar.style.opacity = '';
+            sidebar.style.pointerEvents = '';
+            sidebar.setAttribute('aria-hidden', 'true');
         }
+        const menuToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle');
+        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
         
         // Stellt sicher, dass alle alten Fehlermeldungen entfernt werden
         const existingError = loginModal.querySelector('#login-error-message');

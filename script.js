@@ -617,6 +617,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 3. Initialisiere Modal-Steuerung
     initModalControl();
+
+    // Check for hash to open login modal automatically
+    if (window.location.hash === '#open-login') {
+        setTimeout(() => {
+            openLoginModal();
+        }, 100);
+    }
     
     // 4. NEU: Initialisiere die simulierte Login-Funktionalität
     initTestLogin();

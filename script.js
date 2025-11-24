@@ -88,8 +88,8 @@ const ScrollReveal = (() => {
     function ensureObserver() {
         if (observer || !supportsIO || prefersReducedMotion()) return;
         observer = new IntersectionObserver(handleIntersect, {
-            threshold: 0.12,
-            rootMargin: '0px 0px -18% 0px'
+            threshold: 0.05,
+            rootMargin: '0px 0px -50px 0px'
         });
     }
 

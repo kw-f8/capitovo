@@ -128,7 +128,7 @@ function openSubscriptionModal() {
     let modal = document.getElementById('subscription-modal');
     if (!modal) {
         const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-        const pricingLink = isInAbonenten ? '../index.html#pricing' : 'index.html#pricing';
+        const pricingLink = isInAbonenten ? '../checkout.html?plan=premium' : 'checkout.html?plan=premium';
         
         modal = document.createElement('div');
         modal.id = 'subscription-modal';

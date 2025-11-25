@@ -399,6 +399,37 @@
             document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeConfirm(); });
         })();
     </script>
+    <script>
+        // Intercept clicks on "Alle Analysen" links to enforce subscription check
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select links pointing to alle_analysen.html (both relative and absolute if needed)
+            const links = document.querySelectorAll('a[href="./alle_analysen.html"], a[href="alle_analysen.html"]');
+            
+            links.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    let hasAccess = false;
+                    try {
+                        const sess = JSON.parse(localStorage.getItem('capitovo_session') || '{}');
+                        // Check for valid subscription or test user
+                        if (sess.email === 'test@capitovo.de' || (sess.subscription && sess.subscription !== 'none')) {
+                            hasAccess = true;
+                        }
+                    } catch(err) { console.error(err); }
+
+                    if (!hasAccess) {
+                        e.preventDefault();
+                        // Use the global modal function from script.js
+                        if (typeof openSubscriptionModal === 'function') {
+                            openSubscriptionModal();
+                        } else {
+                            // Fallback if script.js hasn't loaded for some reason
+                            alert('Für den Zugriff auf diese Analyse benötigen Sie ein aktives Abonnement.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
     <!-- Typing behavior is handled globally by script.js (typeElementText) -->
 </body>
 </html>

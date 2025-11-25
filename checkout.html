@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - capitovo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <a href="index.html" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Abbrechen
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Form -->
+            <div class="md:col-span-2 space-y-8 bg-white p-8 rounded-xl shadow-xl border border-gray-200">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-900">
+                        Bestellung abschließen
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600">
+                        Bitte geben Sie Ihre Daten ein, um das Abonnement zu aktivieren.
+                    </p>
+                </div>
+
+                <form id="checkout-form" class="space-y-6">
+                    
+                    <!-- Personal Info -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Persönliche Daten</h3>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="relative">
+                                <input id="checkout-name" name="name" type="text" required 
+                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                                       placeholder="Vollständiger Name">
+                                <label for="checkout-name" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                    Vollständiger Name
+                                </label>
+                            </div>
+                            <div class="relative">
+                                <input id="checkout-email" name="email" type="email" required 
+                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                                       placeholder="E-Mail Adresse">
+                                <label for="checkout-email" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                    E-Mail Adresse
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Zahlungsmethode</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="pay-card" name="payment-method" type="radio" value="card" checked class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-card" class="ml-3 block text-sm font-medium text-gray-700">
+                                    Kreditkarte
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="pay-paypal" name="payment-method" type="radio" value="paypal" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-paypal" class="ml-3 block text-sm font-medium text-gray-700">
+                                    PayPal
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="pay-sepa" name="payment-method" type="radio" value="sepa" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-sepa" class="ml-3 block text-sm font-medium text-gray-700">
+                                    SEPA Lastschrift
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Payment Fields -->
+                        <div id="payment-details" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+                            <!-- Card Fields -->
+                            <div id="card-fields" class="space-y-4">
+                                <div class="relative">
+                                    <input type="text" id="card-number" placeholder="Kartennummer" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" id="card-expiry" placeholder="MM / JJ" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                    <input type="text" id="card-cvc" placeholder="CVC" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                </div>
+                            </div>
+                            <!-- PayPal Info -->
+                            <div id="paypal-fields" class="hidden text-sm text-gray-600">
+                                Sie werden nach dem Klick auf "Kostenpflichtig bestellen" zu PayPal weitergeleitet.
+                            </div>
+                            <!-- SEPA Fields -->
+                            <div id="sepa-fields" class="hidden space-y-4">
+                                <input type="text" id="sepa-iban" placeholder="IBAN" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                <input type="text" id="sepa-owner" placeholder="Kontoinhaber" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center pt-4">
+                        <input id="checkout-terms" name="terms" type="checkbox" required class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300 rounded">
+                        <label for="checkout-terms" class="ml-2 block text-sm text-gray-900">
+                            Ich stimme den <a href="Rechtliches/agb.html" target="_blank" class="text-accent-blue hover:underline">AGB</a> zu und bestätige den Kauf.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150">
+                        Kostenpflichtig bestellen
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right Column: Summary -->
+            <div class="md:col-span-1">
+                <div class="bg-gray-50 p-6 rounded-xl shadow-lg border border-gray-200 sticky top-24">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">Zusammenfassung</h3>
+                    <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-200">
+                        <div>
+                            <h4 id="summary-plan-name" class="font-semibold text-gray-800">Premium Abo</h4>
+                            <p class="text-sm text-gray-500">Monatliche Abrechnung</p>
+                        </div>
+                        <div id="summary-plan-price" class="font-bold text-gray-900">€ 189,-</div>
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-bold text-gray-900">
+                        <span>Gesamt</span>
+                        <span id="summary-total">€ 189,-</span>
+                    </div>
+                    <div class="mt-6 text-xs text-gray-500">
+                        Alle Preise inkl. gesetzl. MwSt. Das Abonnement ist jederzeit kündbar.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer mt-auto">
+        <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+            <div class="footer-links flex items-center gap-3">
+                <a href="Rechtliches/impressum.html" class="footer-btn" target="_blank">Impressum</a>
+                <a href="Rechtliches/datenschutz.html" class="footer-btn" target="_blank">Datenschutz</a>
+                <a href="Rechtliches/agb.html" class="footer-btn" target="_blank">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=5"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Parse URL Params
+            const params = new URLSearchParams(window.location.search);
+            const plan = params.get('plan') || 'premium'; // default to premium
+            
+            const plans = {
+                'basic': { name: 'Basic Abo', price: '€ 99,-', period: 'Monatliche Abrechnung' },
+                'premium': { name: 'Premium Abo', price: '€ 189,-', period: 'Monatliche Abrechnung' },
+                'lifetime': { name: 'Lifetime Zugang', price: '€ 4999,-', period: 'Einmalige Zahlung' }
+            };
+
+            const selected = plans[plan] || plans['premium'];
+
+            // Update Summary
+            document.getElementById('summary-plan-name').textContent = selected.name;
+            document.getElementById('summary-plan-price').textContent = selected.price;
+            document.getElementById('summary-total').textContent = selected.price;
+            document.querySelector('#summary-plan-name + p').textContent = selected.period;
+
+            // Pre-fill email if logged in
+            try {
+                const sess = JSON.parse(localStorage.getItem('capitovo_session') || '{}');
+                if (sess.email) {
+                    document.getElementById('checkout-email').value = sess.email;
+                    // Maybe make it readonly if we want to force the logged in user
+                    // document.getElementById('checkout-email').readOnly = true;
+                }
+            } catch(e) {}
+
+            // Payment Method Toggle
+            const radios = document.getElementsByName('payment-method');
+            const cardFields = document.getElementById('card-fields');
+            const paypalFields = document.getElementById('paypal-fields');
+            const sepaFields = document.getElementById('sepa-fields');
+
+            function updatePaymentFields() {
+                cardFields.classList.add('hidden');
+                paypalFields.classList.add('hidden');
+                sepaFields.classList.add('hidden');
+
+                const val = document.querySelector('input[name="payment-method"]:checked').value;
+                if (val === 'card') cardFields.classList.remove('hidden');
+                if (val === 'paypal') paypalFields.classList.remove('hidden');
+                if (val === 'sepa') sepaFields.classList.remove('hidden');
+            }
+
+            radios.forEach(r => r.addEventListener('change', updatePaymentFields));
+            updatePaymentFields(); // init
+
+            // Handle Submit
+            const form = document.getElementById('checkout-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Simulate processing
+                const btn = form.querySelector('button[type="submit"]');
+                const originalText = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = 'Verarbeite Zahlung...';
+                btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+
+                setTimeout(() => {
+                    // Success!
+                    // Create or update session
+                    const email = document.getElementById('checkout-email').value;
+                    const name = document.getElementById('checkout-name').value;
+                    
+                    // Update session in localStorage
+                    const sess = {
+                        email: email,
+                        name: name,
+                        subscription: plan, // 'basic', 'premium', 'lifetime'
+                        ts: Date.now()
+                    };
+                    localStorage.setItem('capitovo_session', JSON.stringify(sess));
+
+                    // Redirect to member area
+                    window.location.href = 'Abonenten/abonenten.html';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>

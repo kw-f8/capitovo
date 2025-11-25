@@ -661,47 +661,70 @@
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-3xl font-bold text-gray-900 text-center mb-12" data-scroll="fade-up">Kontakt aufnehmen</h2>
                 
-                <div data-scroll="fade-up" data-scroll-delay="40">
+                <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-8 md:p-12" data-scroll="fade-up" data-scroll-delay="40">
                     <form id="contact-form" action="#" method="POST" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">Vollständiger Name</label>
+                            <div class="relative">
                                 <input type="text" id="contact-name" name="name" required
-                                    class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="Ihr Name">
+                                    class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                    placeholder="Vollständiger Name">
+                                <label for="contact-name" 
+                                       class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                              peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                              peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                    Vollständiger Name
+                                </label>
                             </div>
-                            <div>
-                                <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <div class="relative">
                                 <input type="email" id="contact-email" name="email" required
-                                    class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="ihre@email.de">
+                                    class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                    placeholder="Email">
+                                <label for="contact-email" 
+                                       class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                              peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                              peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                    Email
+                                </label>
                             </div>
                         </div>
 
-                        <div>
-                            <label for="contact-category" class="block text-sm font-medium text-gray-700 mb-1">Supportkategorie</label>
+                        <div class="relative">
                             <select id="contact-category" name="category" required
-                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 bg-white focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
                                 <option value="" disabled selected>Bitte wählen Sie ein Thema</option>
                                 <option value="allgemein">Allgemeine Anfrage</option>
                                 <option value="support">Technischer Support</option>
                                 <option value="billing">Rechnung & Abo</option>
                                 <option value="feedback">Feedback</option>
                             </select>
+                            <label for="contact-category" 
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-accent-blue">
+                                Supportkategorie
+                            </label>
                         </div>
 
-                        <div>
-                            <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1">Nachricht</label>
+                        <div class="relative">
                             <textarea id="contact-message" name="message" rows="4" required
-                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                placeholder="Ihre Nachricht an uns..."></textarea>
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Nachricht"></textarea>
+                            <label for="contact-message" 
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Nachricht
+                            </label>
                         </div>
 
-                        <div>
-                            <label for="contact-captcha" class="block text-sm font-medium text-gray-700 mb-1">Sicherheitsfrage: Was ist 3 + 2?</label>
+                        <div class="relative">
                             <input type="number" id="contact-captcha" name="captcha" required
-                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                placeholder="Ergebnis">
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Sicherheitsfrage: Was ist 3 + 2?">
+                            <label for="contact-captcha" 
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Sicherheitsfrage: Was ist 3 + 2?
+                            </label>
                         </div>
 
                         <div class="text-center">

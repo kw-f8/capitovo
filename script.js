@@ -139,30 +139,54 @@ function createMemberAnalysisCard(a, idx){
     const date = a.date || '';
     const author = a.author || '';
 
-    return `
-        <a href="${link}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
-            
-            <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
-                <img src="${img}" alt="Vorschaubild für ${title}" 
-                     class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
+    // --- Check Subscription ---
+    let hasAccess = false;
+    try {
+        const sess = JSON.parse(localStorage.getItem('capitovo_session') || '{}');
+        // Grant access if subscription is present and not 'none'. 
+        // Also fallback for legacy session of 'test@capitovo.de' if needed.
+        if (sess.email === 'test@capitovo.de' || (sess.subscription && sess.subscription !== 'none')) {
+            hasAccess = true;
+        }
+    } catch(e) {}
+
+    // If locked: redirect to pricing (or show modal) and blur content
+    const finalLink = hasAccess ? link : (isInAbonenten ? '../index.html#pricing' : 'index.html#pricing');
+    const blurClass = hasAccess ? '' : 'filter blur-sm select-none pointer-events-none';
+    const lockOverlay = hasAccess ? '' : `
+        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] transition-opacity duration-300 hover:bg-white/40">
+            <div class="bg-white p-3 rounded-full shadow-xl mb-2">
+                <svg class="w-8 h-8 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
-            
-            <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
-                ${category}
-            </p>
-            
-            <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
-                ${title}
-            </h4>
-            
-            <p class="text-sm text-gray-600 mb-4 line-clamp-3">
-                ${summary}
-            </p>
-            
-            <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
-                Jetzt lesen →
-            </span>
-            
+            <span class="bg-primary-blue text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">Abo benötigt</span>
+        </div>
+    `;
+
+    return `
+        <a href="${finalLink}" class="relative bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+            ${lockOverlay}
+            <div class="${blurClass} transition duration-300 h-full flex flex-col">
+                <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center flex-shrink-0">
+                    <img src="${img}" alt="Vorschaubild für ${title}" 
+                         class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
+                </div>
+                
+                <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
+                    ${category}
+                </p>
+                
+                <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
+                    ${title}
+                </h4>
+                
+                <p class="text-sm text-gray-600 mb-4 line-clamp-3 flex-grow">
+                    ${summary}
+                </p>
+                
+                <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center mt-auto">
+                    Jetzt lesen →
+                </span>
+            </div>
         </a>
     `;
 }
@@ -325,8 +349,11 @@ async function loadAndRenderAnalyses() {
 
 /** Initialisiert die simulierte Login-Funktionalität. */
 function initTestLogin() {
-    const TEST_EMAIL = 'test@capitovo.de';
-    const TEST_PASSWORD = 'passwort123';
+    // Simulierter Benutzer-Datenbank
+    const USERS = {
+        'test@capitovo.de': { pass: 'passwort123', sub: 'premium' },
+        'noabo@capitovo.de': { pass: 'passwort123', sub: 'none' }
+    };
     
     const loginModal = document.getElementById('login-modal');
     if (!loginModal) return;
@@ -334,43 +361,39 @@ function initTestLogin() {
     const loginForm = loginModal.querySelector('form');
     if (!loginForm) return;
 
-    // Eingabefelder abrufen (muss nur einmal erfolgen)
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
 
     loginForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Verhindert das Standard-Formular-Senden
+        event.preventDefault();
 
-        const enteredEmail = emailInput.value;
-        const enteredPassword = passwordInput.value; // <-- HIER KORRIGIERT
+        const enteredEmail = (emailInput.value || '').trim();
+        const enteredPassword = passwordInput.value;
         
-        // Fehlermeldungen von vorherigen Versuchen entfernen
         const existingError = loginModal.querySelector('#login-error-message');
-        if (existingError) {
-            existingError.remove();
-        }
+        if (existingError) existingError.remove();
         
         const submitButton = loginModal.querySelector('button[type="submit"]');
 
-        // Überprüfung der Testdaten
-        if (enteredEmail === TEST_EMAIL && enteredPassword === TEST_PASSWORD) {
-            // **ERFOLGREICHE ANMELDUNG (SIMULIERT)**
-            try{ localStorage.setItem('capitovo_session', JSON.stringify({ email: enteredEmail, ts: Date.now() })); }catch(e){}
-            // Weiterleitung zum Mitgliederbereich (Pfad korrekt auf Groß-/Kleinschreibung achten)
+        const user = USERS[enteredEmail];
+
+        if (user && user.pass === enteredPassword) {
+            // Erfolgreiche Anmeldung
+            try{ 
+                localStorage.setItem('capitovo_session', JSON.stringify({ 
+                    email: enteredEmail, 
+                    subscription: user.sub, 
+                    ts: Date.now() 
+                })); 
+            }catch(e){}
             window.location.href = 'Abonenten/abonenten.html';
             return;
         } else {
-            
-            // **FEHLERHAFTE ANMELDUNG**
-            
-            // Fehlermeldung erstellen und einfügen
+            // Fehlerhafte Anmeldung
             const errorMessage = document.createElement('p');
             errorMessage.id = 'login-error-message';
-            // Styling für Fehlermeldung
             errorMessage.className = 'text-red-500 text-sm mt-3 text-center'; 
-            errorMessage.textContent = 'Fehler: Ungültige E-Mail oder Passwort. Verwenden Sie test@capitovo.de / passwort123';
-            
-            // Die Meldung unter dem Button einfügen
+            errorMessage.textContent = 'Fehler: Ungültige E-Mail oder Passwort.';
             submitButton.parentNode.insertBefore(errorMessage, submitButton.nextSibling);
         }
     });

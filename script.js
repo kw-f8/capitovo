@@ -123,6 +123,43 @@ function createAnalysisArticle(analysis, idx){
     `;
 }
 
+/** Öffnet ein Modal, das den Nutzer auffordert, ein Abo abzuschließen. */
+function openSubscriptionModal() {
+    let modal = document.getElementById('subscription-modal');
+    if (!modal) {
+        const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+        const pricingLink = isInAbonenten ? '../index.html#pricing' : 'index.html#pricing';
+        
+        modal = document.createElement('div');
+        modal.id = 'subscription-modal';
+        modal.className = 'hidden fixed inset-0 z-[1002] bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4';
+        modal.innerHTML = `
+            <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100 border border-gray-200">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-50 mb-4">
+                    <svg class="h-6 w-6 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h3 class="text-lg leading-6 font-bold text-gray-900 mb-2">Abo erforderlich</h3>
+                <p class="text-sm text-gray-500 mb-6">
+                    Für den Zugriff auf diese Analyse benötigen Sie ein aktives Abonnement.
+                </p>
+                <div class="flex flex-col gap-3">
+                    <a href="${pricingLink}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-blue text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
+                        Jetzt abonnieren
+                    </a>
+                    <button type="button" onclick="document.getElementById('subscription-modal').classList.add('hidden')" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                        Abbrechen
+                    </button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) modal.classList.add('hidden');
+        });
+    }
+    modal.classList.remove('hidden');
+}
+
 /** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */
 function createMemberAnalysisCard(a, idx){
     // Fallback values
@@ -150,20 +187,22 @@ function createMemberAnalysisCard(a, idx){
         }
     } catch(e) {}
 
-    // If locked: redirect to pricing (or show modal) and blur content
-    const finalLink = hasAccess ? link : (isInAbonenten ? '../index.html#pricing' : 'index.html#pricing');
+    // If locked: use a dummy link and attach onclick handler
+    const finalLink = hasAccess ? link : '#';
+    const onclickAttr = hasAccess ? '' : 'onclick="event.preventDefault(); openSubscriptionModal();"';
+    
     const blurClass = hasAccess ? '' : 'filter blur-sm select-none pointer-events-none';
+    // Removed text span, kept icon
     const lockOverlay = hasAccess ? '' : `
         <div class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] transition-opacity duration-300 hover:bg-white/40">
-            <div class="bg-white p-3 rounded-full shadow-xl mb-2">
+            <div class="bg-white p-3 rounded-full shadow-xl">
                 <svg class="w-8 h-8 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
-            <span class="bg-primary-blue text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">Abo benötigt</span>
         </div>
     `;
 
     return `
-        <a href="${finalLink}" class="relative bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+        <a href="${finalLink}" ${onclickAttr} class="relative bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
             ${lockOverlay}
             <div class="${blurClass} transition duration-300 h-full flex flex-col">
                 <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center flex-shrink-0">

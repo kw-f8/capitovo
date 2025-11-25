@@ -140,25 +140,30 @@ function createMemberAnalysisCard(a, idx){
     const author = a.author || '';
 
     return `
-    <article class="member-card bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform duration-300 transform hover:-translate-y-1" data-scroll="fade-up">
-        <a href="${link}" class="block">
-                <div class="media">
-                    <img src="${img}" alt="Vorschaubild ${title}" class="w-full h-full object-cover">
-                    <span class="category-pill">${category}</span>
-                </div>
-            <div class="card-body">
-                <h3 class="card-title">${title}</h3>
-                <p class="card-excerpt">${summary}</p>
-                <div class="card-meta">
-                    <div class="left-meta">
-                        ${author ? `<span class="text-gray-600">${author}</span>` : ''}
-                        ${date ? `<span>• ${date}</span>` : ''}
-                    </div>
-                    <div class="right-meta"><span class="text-primary-blue font-medium">Jetzt lesen →</span></div>
-                </div>
+        <a href="${link}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+            
+            <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
+                <img src="${img}" alt="Vorschaubild für ${title}" 
+                     class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
             </div>
+            
+            <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
+                ${category}
+            </p>
+            
+            <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
+                ${title}
+            </h4>
+            
+            <p class="text-sm text-gray-600 mb-4 line-clamp-3">
+                ${summary}
+            </p>
+            
+            <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
+                Jetzt lesen →
+            </span>
+            
         </a>
-    </article>
     `;
 }
 
@@ -204,7 +209,7 @@ async function loadAndRenderMemberAnalyses(){
         if (!res.ok) throw new Error('Fetch fehlgeschlagen');
         const data = await res.json();
         // render up to 12 analyses in a responsive grid
-        const html = `<div class="member-analyses-grid">` + data.slice(0,12).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
+        const html = `<div class="grid md:grid-cols-3 gap-8">` + data.slice(0,12).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
         container.innerHTML = html;
         try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }catch(err){
@@ -267,7 +272,7 @@ async function initAllAnalysesPage(){
 
         // render
         if (!items.length) { grid.innerHTML = '<p class="text-gray-500">Keine Analysen gefunden.</p>'; return; }
-        grid.innerHTML = '<div class="member-analyses-grid">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
+        grid.innerHTML = '<div class="grid md:grid-cols-3 gap-8">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
         try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }
 

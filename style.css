@@ -436,7 +436,9 @@ details[open] .details-marker {
 }
 
 /* News-Kästen: Inhalt linksbündig, Überschriften zentriert */
-#analysis-grid > * {
+#analysis-grid > *,
+#member-analyses .grid > *,
+#all-analyses-grid .grid > * {
     text-align: left;
     /* make each news item look like the subscription cards */
     background: #ffffff;
@@ -448,13 +450,17 @@ details[open] .details-marker {
 }
 
 /* hover effect matching the Abo-Karten */
-#analysis-grid > *:hover{
+#analysis-grid > *:hover,
+#member-analyses .grid > *:hover,
+#all-analyses-grid .grid > *:hover {
     transform: translateY(-8px) scale(1.01);
     box-shadow: 0 18px 40px rgba(2,6,23,0.18);
 }
 
 /* Kategorien (z. B. Technologie, Nachhaltigkeit) in den News-Karten zentrieren */
-#analysis-grid > * .text-xs.uppercase {
+#analysis-grid > * .text-xs.uppercase,
+#member-analyses .grid > * .text-xs.uppercase,
+#all-analyses-grid .grid > * .text-xs.uppercase {
     text-align: center;
     display: block;
 }
@@ -465,7 +471,9 @@ details[open] .details-marker {
 #analysis-grid > * h3,
 #analysis-grid > * h4,
 #analysis-grid > * .card-title,
-#analysis-grid > * .title {
+#analysis-grid > * .title,
+#member-analyses .grid > * h4,
+#all-analyses-grid .grid > * h4 {
   text-align: center;
 }
 
@@ -475,12 +483,16 @@ details[open] .details-marker {
 #analysis-grid > * li,
 #analysis-grid > * .meta,
 #analysis-grid > * a,
-#analysis-grid > * button {
+#analysis-grid > * button,
+#member-analyses .grid > * p,
+#all-analyses-grid .grid > * p {
   text-align: left;
 }
 
 /* Optional: etwas Innenabstand für bessere Lesbarkeit */
-#analysis-grid > * {
+#analysis-grid > *,
+#member-analyses .grid > *,
+#all-analyses-grid .grid > * {
   padding: 1rem;
 }
 

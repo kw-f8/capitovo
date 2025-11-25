@@ -132,9 +132,13 @@ function openSubscriptionModal() {
         
         modal = document.createElement('div');
         modal.id = 'subscription-modal';
-        modal.className = 'hidden fixed inset-0 z-[1002] bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4';
+        // Use backdrop-blur-xl-custom for consistent look with login modal
+        // Ensure z-index is very high to cover everything including sidebar if needed
+        // Add pointer-events-auto to ensure it captures all clicks/hovers
+        modal.className = 'hidden fixed inset-0 z-[10050] backdrop-blur-xl-custom bg-black bg-opacity-75 flex items-center justify-center p-4 pointer-events-auto';
+        
         modal.innerHTML = `
-            <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100 border border-gray-200">
+            <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100 border border-gray-200 relative z-[10051]">
                 <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-50 mb-4">
                     <svg class="h-6 w-6 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </div>
@@ -146,18 +150,30 @@ function openSubscriptionModal() {
                     <a href="${pricingLink}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-blue text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
                         Jetzt abonnieren
                     </a>
-                    <button type="button" onclick="document.getElementById('subscription-modal').classList.add('hidden')" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                    <button type="button" id="close-subscription-modal" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
                         Abbrechen
                     </button>
                 </div>
             </div>
         `;
         document.body.appendChild(modal);
+        
+        // Close handlers
+        const close = () => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
+        };
+        
         modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.classList.add('hidden');
+            if (e.target === modal) close();
         });
+        
+        const btn = modal.querySelector('#close-subscription-modal');
+        if(btn) btn.addEventListener('click', close);
     }
+    
     modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Block scrolling
 }
 
 /** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */

@@ -250,8 +250,8 @@
             if(verificationForm) {
                 verificationForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    alert('Code bestätigt! (Dies ist eine Demo)');
-                    // Here you would redirect or log the user in
+                    // Redirect to homepage with login modal open
+                    window.location.href = 'index.html#open-login';
                 });
             }
         });

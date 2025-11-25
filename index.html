@@ -731,8 +731,8 @@
                         </div>
 
                         <div class="text-center">
-                            <button type="submit"
-                                class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150">
+                            <button type="submit" id="contact-submit" disabled
+                                class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gray-400 cursor-not-allowed transition duration-150">
                                 Nachricht senden
                             </button>
                         </div>
@@ -777,7 +777,9 @@
                     </li>
                     <li>
                         <a href="#pricing" class="flex items-center space-x-3">
-                            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 10v8a2 2 0 0 1-2 2H7l-5-5V4a2 2 0 0 1 2-2h8l9 8z" stroke="currentColor" stroke-width="1" stroke-linejoin="round" stroke-linecap="round"/></svg>
+                            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" stroke="currentColor"/>
+                            </svg>
                             <span>Preise</span>
                         </a>
                     </li>
@@ -789,7 +791,9 @@
                     </li>
                     <li>
                         <a href="#faq" class="flex items-center space-x-3">
-                            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1"/><path d="M9.5 9.5c0-1.5 1.5-2 2.5-2s2.5.5 2.5 2c0 1-1 1.5-1.5 2S12 13 12 14" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" stroke="currentColor"/>
+                            </svg>
                             <span>FAQ</span>
                         </a>
                     </li>
@@ -882,13 +886,55 @@
     </script>
     <script src="script.js"></script>
     <script>
-        document.getElementById('contact-form').addEventListener('submit', function(e) {
-            var captchaInput = document.getElementById('contact-captcha');
-            if (captchaInput.value !== '5') {
-                e.preventDefault();
-                alert('Bitte beantworten Sie die Sicherheitsfrage korrekt (3 + 2 = 5).');
-                captchaInput.focus();
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contact-form');
+            if (!contactForm) return;
+
+            const submitBtn = document.getElementById('contact-submit');
+            const inputs = contactForm.querySelectorAll('input, select, textarea');
+            const captchaInput = document.getElementById('contact-captcha');
+
+            function validateContactForm() {
+                let isValid = true;
+                
+                // Check if all required fields are filled
+                inputs.forEach(input => {
+                    if (input.hasAttribute('required') && !input.value.trim()) {
+                        isValid = false;
+                    }
+                });
+
+                // Check Captcha specifically
+                if (captchaInput && captchaInput.value.trim() !== '5') {
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.add('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-blue-500');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.remove('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-blue-500');
+                }
             }
+
+            inputs.forEach(input => {
+                input.addEventListener('input', validateContactForm);
+                input.addEventListener('change', validateContactForm);
+            });
+
+            // Initial check
+            validateContactForm();
+
+            contactForm.addEventListener('submit', function(e) {
+                if (captchaInput && captchaInput.value !== '5') {
+                    e.preventDefault();
+                    alert('Bitte beantworten Sie die Sicherheitsfrage korrekt (3 + 2 = 5).');
+                    captchaInput.focus();
+                }
+            });
         });
     </script>
 </body>

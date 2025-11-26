@@ -482,10 +482,9 @@
                     <div class="absolute inset-0 flex items-center justify-center bg-slate-50">
                         <svg id="world-map" viewBox="0 0 1000 500" class="w-full h-full transition-all duration-700 ease-in-out" xmlns="http://www.w3.org/2000/svg" style="background-color: #f8fafc;">
                             <defs>
-                                <!-- Realistic Paper Shadow -->
                                 <filter id="paper-shadow" x="-50%" y="-50%" width="200%" height="200%">
                                     <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-                                    <feOffset in="blur" dx="3" dy="4" result="offsetBlur"/>
+                                    <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/>
                                     <feFlood flood-color="#000000" flood-opacity="0.1" result="shadowColor"/>
                                     <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
                                     <feMerge>
@@ -493,7 +492,6 @@
                                         <feMergeNode in="SourceGraphic"/>
                                     </feMerge>
                                 </filter>
-                                <!-- Glow for markers -->
                                 <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                                     <feGaussianBlur stdDeviation="2" result="blur" />
                                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
@@ -520,37 +518,34 @@
                                 }
                             </style>
                             
-                            <!-- Background Click Area -->
                             <rect width="1000" height="500" fill="transparent" onclick="resetZoom()" />
 
-                            <!-- Realistic Continents (Detailed) -->
                             <g id="continents">
                                 <!-- North America -->
                                 <path id="region-na" class="land" onclick="zoomTo('na')" 
-                                      d="M 80,60 L 120,50 L 160,40 L 220,35 L 280,35 L 340,45 L 370,70 L 380,100 L 360,130 L 330,150 L 310,180 L 290,220 L 270,250 L 250,260 L 230,250 L 210,240 L 190,220 L 160,190 L 130,160 L 100,130 L 80,100 Z" />
+                                      d="M150,30 L120,35 L90,45 L70,60 L60,90 L55,120 L65,150 L80,170 L100,190 L120,210 L140,230 L160,240 L180,250 L200,245 L220,230 L240,210 L260,190 L280,170 L300,150 L320,130 L340,110 L360,90 L370,70 L350,50 L320,40 L280,30 L240,25 L200,25 Z M80,70 L90,65 L100,70 L95,80 L85,80 Z" />
                                 
                                 <!-- South America -->
                                 <path id="region-sa" class="land" onclick="zoomTo('sa')" 
-                                      d="M 230,250 L 280,240 L 350,260 L 380,320 L 350,420 L 320,500 L 280,420 L 260,320 L 230,250 Z" />
+                                      d="M240,250 L260,245 L280,245 L300,250 L320,260 L340,270 L360,290 L370,310 L380,340 L370,370 L360,400 L340,440 L320,480 L300,490 L280,470 L260,430 L250,390 L240,350 L235,300 Z" />
                                 
                                 <!-- Europe -->
                                 <path id="region-eu" class="land" onclick="zoomTo('eu')" 
-                                      d="M 440,140 L 450,100 L 480,60 L 520,60 L 550,100 L 530,140 L 510,150 L 490,140 L 440,140 Z" />
+                                      d="M430,140 L440,110 L460,90 L480,70 L500,65 L520,70 L540,90 L550,120 L540,140 L520,150 L500,155 L480,150 L460,145 L440,145 Z" />
                                 
                                 <!-- Africa -->
                                 <path id="region-af" class="land" onclick="zoomTo('af')" 
-                                      d="M 440,160 L 420,200 L 440,250 L 500,400 L 560,300 L 580,240 L 520,170 L 440,160 Z" />
+                                      d="M430,160 L450,155 L480,155 L510,160 L530,170 L550,190 L560,220 L570,260 L560,300 L540,350 L520,390 L500,400 L480,390 L460,360 L440,320 L430,280 L420,240 L420,200 Z" />
                                 
                                 <!-- Asia -->
                                 <path id="region-as" class="land" onclick="zoomTo('as')" 
-                                      d="M 540,200 L 600,60 L 800,50 L 900,140 L 850,150 L 820,200 L 800,300 L 750,250 L 700,220 L 680,260 L 650,220 L 580,220 L 540,200 Z" />
+                                      d="M550,140 L560,100 L580,80 L620,60 L680,50 L740,50 L800,60 L860,80 L900,120 L920,160 L900,200 L880,240 L850,280 L800,300 L750,310 L700,300 L650,280 L600,250 L580,200 L560,170 Z" />
                                 
                                 <!-- Australia -->
                                 <path id="region-au" class="land" onclick="zoomTo('au')" 
-                                      d="M 780,350 L 820,330 L 880,360 L 840,420 L 780,350 Z" />
+                                      d="M760,340 L780,330 L820,320 L860,330 L890,350 L900,380 L890,410 L870,430 L840,440 L800,430 L770,400 Z" />
                             </g>
 
-                            <!-- Market Points (Subtle) -->
                             <g id="markers">
                                 <circle cx="290" cy="160" r="4" class="market-marker"><title>New York</title></circle>
                                 <text x="305" y="164" class="market-text">New York</text>

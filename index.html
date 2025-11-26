@@ -480,12 +480,12 @@
                 
                 <div class="relative w-full max-w-5xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100" style="padding-bottom: 50%;">
                     <div class="absolute inset-0 flex items-center justify-center bg-slate-50">
-                        <svg id="world-map" viewBox="82.992 45.607 2528.5721 1238.9154" class="w-full h-full transition-all duration-700 ease-in-out" xmlns="http://www.w3.org/2000/svg" style="background-color: #f8fafc;">
+                        <svg id="world-map" viewBox="82.992 0 2528.5721 1300" class="w-full h-full transition-all duration-700 ease-in-out" xmlns="http://www.w3.org/2000/svg" style="background-color: #f8fafc;">
                             <defs>
                                 <filter id="paper-shadow" x="-50%" y="-50%" width="200%" height="200%">
-                                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-                                    <feOffset in="blur" dx="2" dy="3" result="offsetBlur"/>
-                                    <feFlood flood-color="#000000" flood-opacity="0.1" result="shadowColor"/>
+                                    <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+                                    <feOffset in="blur" dx="4" dy="6" result="offsetBlur"/>
+                                    <feFlood flood-color="#000000" flood-opacity="0.25" result="shadowColor"/>
                                     <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
                                     <feMerge>
                                         <feMergeNode in="shadow"/>
@@ -500,8 +500,7 @@
                             <style>
                                 .land { 
                                     fill: #ffffff; 
-                                    stroke: #3b82f6; 
-                                    stroke-width: 2px;
+                                    /* stroke removed */
                                     filter: url(#paper-shadow);
                                     transition: transform 0.3s ease, fill 0.3s ease; 
                                     cursor: pointer; 

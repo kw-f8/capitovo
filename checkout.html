@@ -26,10 +26,70 @@
     </header>
 
     <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="max-w-4xl w-full space-y-8">
             
+            <!-- Top: Plans (formerly Summary) -->
+            <div class="w-full">
+                <div class="bg-blue-50 p-6 rounded-xl shadow-lg border border-blue-100">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6">Ihr Abo-Modell</h3>
+                    
+                    <!-- Plan Selection Cards -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8" id="plan-selection-container">
+                        <!-- Basic -->
+                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm hover:border-blue-300 transition-all duration-200" data-plan="basic">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-gray-900">Basic</span>
+                                <span class="font-bold text-gray-900">€ 99,-</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Monatliche Abrechnung</p>
+                        </div>
+
+                        <!-- Premium -->
+                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-blue-500 bg-blue-50 p-4 shadow-md transition-all duration-200" data-plan="premium">
+                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-[10px] font-bold uppercase py-0.5 px-2 rounded-full shadow-sm">
+                                Empfohlen
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-blue-900">Premium</span>
+                                <span class="font-bold text-blue-900">€ 189,-</span>
+                            </div>
+                            <p class="text-xs text-blue-700 mt-1">Monatliche Abrechnung</p>
+                        </div>
+
+                        <!-- Lifetime -->
+                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm hover:border-blue-300 transition-all duration-200" data-plan="lifetime">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-gray-900">Lifetime</span>
+                                <span class="font-bold text-gray-900">€ 4999,-</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Einmalige Zahlung</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-600">Zwischensumme</span>
+                            <span id="summary-subtotal" class="font-medium">€ 189,-</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xl font-extrabold text-gray-900 mt-4">
+                            <span>Gesamt</span>
+                            <span id="summary-total">€ 189,-</span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500 text-right">
+                            inkl. MwSt.
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-gray-50 rounded p-3 text-xs text-gray-500 flex items-start">
+                        <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>14 Tage Geld-zurück-Garantie für alle Neukunden.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom: Form -->
             <!-- Left Column: Form -->
-            <div class="md:col-span-2 space-y-8 bg-white p-8 rounded-xl shadow-xl border border-gray-200">
+            <div class="w-full space-y-8 bg-white p-8 rounded-xl shadow-xl border border-gray-200">
                 <div>
                     <h2 class="text-2xl font-extrabold text-gray-900">
                         Bestellung abschließen
@@ -123,65 +183,6 @@
                         Kostenpflichtig bestellen
                     </button>
                 </form>
-            </div>
-
-            <!-- Right Column: Summary -->
-            <div class="md:col-span-1">
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 sticky top-24">
-                    <h3 class="text-lg font-bold text-gray-900 mb-6">Ihr Abo-Modell</h3>
-                    
-                    <!-- Plan Selection Cards -->
-                    <div class="space-y-3 mb-8" id="plan-selection-container">
-                        <!-- Basic -->
-                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm hover:border-blue-300 transition-all duration-200" data-plan="basic">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-gray-900">Basic</span>
-                                <span class="font-bold text-gray-900">€ 99,-</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Monatliche Abrechnung</p>
-                        </div>
-
-                        <!-- Premium -->
-                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-blue-500 bg-blue-50 p-4 shadow-md transition-all duration-200" data-plan="premium">
-                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-[10px] font-bold uppercase py-0.5 px-2 rounded-full shadow-sm">
-                                Empfohlen
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-blue-900">Premium</span>
-                                <span class="font-bold text-blue-900">€ 189,-</span>
-                            </div>
-                            <p class="text-xs text-blue-700 mt-1">Monatliche Abrechnung</p>
-                        </div>
-
-                        <!-- Lifetime -->
-                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm hover:border-blue-300 transition-all duration-200" data-plan="lifetime">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-gray-900">Lifetime</span>
-                                <span class="font-bold text-gray-900">€ 4999,-</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Einmalige Zahlung</p>
-                        </div>
-                    </div>
-
-                    <div class="border-t border-gray-200 pt-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-gray-600">Zwischensumme</span>
-                            <span id="summary-subtotal" class="font-medium">€ 189,-</span>
-                        </div>
-                        <div class="flex justify-between items-center text-xl font-extrabold text-gray-900 mt-4">
-                            <span>Gesamt</span>
-                            <span id="summary-total">€ 189,-</span>
-                        </div>
-                        <div class="mt-2 text-xs text-gray-500 text-right">
-                            inkl. MwSt.
-                        </div>
-                    </div>
-                    
-                    <div class="mt-6 bg-gray-50 rounded p-3 text-xs text-gray-500 flex items-start">
-                        <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span>14 Tage Geld-zurück-Garantie für alle Neukunden.</span>
-                    </div>
-                </div>
             </div>
 
         </div>

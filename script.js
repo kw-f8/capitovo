@@ -135,10 +135,11 @@ function openSubscriptionModal() {
         // Use backdrop-blur-xl-custom for consistent look with login modal
         // Ensure z-index is very high to cover everything including sidebar if needed
         // Add pointer-events-auto to ensure it captures all clicks/hovers
-        modal.className = 'hidden fixed inset-0 z-[10050] backdrop-blur-xl-custom bg-black bg-opacity-75 flex items-center justify-center p-4 pointer-events-auto';
+        modal.className = 'hidden fixed inset-0 backdrop-blur-xl-custom bg-black bg-opacity-75 flex items-center justify-center p-4 pointer-events-auto';
+        modal.style.zIndex = '10050';
         
         modal.innerHTML = `
-            <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100 border border-gray-200 relative z-[10051]">
+            <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100 border border-gray-200 relative" style="z-index: 10051;">
                 <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-50 mb-4">
                     <svg class="h-6 w-6 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                 </div>

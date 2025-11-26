@@ -486,49 +486,60 @@
                                     <feGaussianBlur stdDeviation="2" result="blur" />
                                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
                                 </filter>
+                                <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                                    <circle cx="1" cy="1" r="1" fill="#e2e8f0" />
+                                </pattern>
                             </defs>
                             <style>
-                                .land { fill: #cbd5e1; stroke: white; stroke-width: 1; transition: fill 0.3s; cursor: pointer; }
-                                .land:hover { fill: #94a3b8; }
-                                .market-marker { fill: #3B82F6; filter: url(#glow); animation: pulse 2s infinite; pointer-events: none; }
-                                .market-text { font-family: sans-serif; font-size: 14px; font-weight: bold; fill: #1e293b; pointer-events: none; text-shadow: 0 1px 2px white; }
+                                .land { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; transition: all 0.3s ease; cursor: pointer; }
+                                .land:hover { fill: #e2e8f0; stroke: #94a3b8; }
+                                .market-marker { fill: #0ea5e9; filter: url(#glow); animation: pulse 2s infinite; pointer-events: none; }
+                                .market-text { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; fill: #334155; pointer-events: none; text-shadow: 0 1px 2px white; }
                                 @keyframes pulse {
-                                    0% { opacity: 0.6; r: 6; }
-                                    50% { opacity: 1; r: 9; }
-                                    100% { opacity: 0.6; r: 6; }
+                                    0% { opacity: 0.6; r: 4; }
+                                    50% { opacity: 1; r: 7; }
+                                    100% { opacity: 0.6; r: 4; }
                                 }
                             </style>
                             
-                            <!-- Background for reset zoom -->
-                            <rect width="1000" height="500" fill="transparent" onclick="resetZoom()" />
+                            <!-- Background Grid -->
+                            <rect width="1000" height="500" fill="url(#grid)" onclick="resetZoom()" />
 
-                            <!-- Simplified Continents (Abstract) -->
-                            <path id="region-na" class="land" onclick="zoomTo('na')" d="M150,100 Q250,80 300,150 L280,250 L200,220 L120,150 Z" /> <!-- NA -->
-                            <path id="region-sa" class="land" onclick="zoomTo('sa')" d="M290,260 L350,260 L360,380 L300,420 L260,320 Z" /> <!-- SA -->
-                            <path id="region-eu" class="land" onclick="zoomTo('eu')" d="M460,110 L520,100 L540,160 L500,170 L470,150 Z" /> <!-- EU -->
-                            <path id="region-af" class="land" onclick="zoomTo('af')" d="M460,190 L540,190 L560,300 L500,350 L450,250 Z" /> <!-- AF -->
-                            <path id="region-as" class="land" onclick="zoomTo('as')" d="M550,100 L750,100 L800,200 L700,250 L600,200 L560,150 Z" /> <!-- AS -->
-                            <path id="region-au" class="land" onclick="zoomTo('au')" d="M750,320 L850,320 L840,380 L760,370 Z" /> <!-- AU -->
+                            <!-- Minimalist Continents -->
+                            <g id="continents">
+                                <!-- North America -->
+                                <path id="region-na" class="land" onclick="zoomTo('na')" d="M 80,60 L 200,40 L 320,40 L 380,100 L 300,240 L 260,270 L 220,250 L 180,200 L 80,140 Z" />
+                                <!-- South America -->
+                                <path id="region-sa" class="land" onclick="zoomTo('sa')" d="M 260,270 L 360,270 L 390,340 L 330,480 L 290,450 L 260,340 Z" />
+                                <!-- Europe -->
+                                <path id="region-eu" class="land" onclick="zoomTo('eu')" d="M 440,90 L 510,80 L 560,90 L 540,150 L 490,160 L 440,140 Z" />
+                                <!-- Africa -->
+                                <path id="region-af" class="land" onclick="zoomTo('af')" d="M 440,170 L 540,170 L 590,260 L 540,410 L 490,390 L 410,260 Z" />
+                                <!-- Asia -->
+                                <path id="region-as" class="land" onclick="zoomTo('as')" d="M 560,90 L 800,90 L 900,160 L 850,310 L 700,330 L 600,260 L 560,160 Z" />
+                                <!-- Australia -->
+                                <path id="region-au" class="land" onclick="zoomTo('au')" d="M 780,360 L 900,360 L 900,460 L 780,430 Z" />
+                            </g>
 
                             <!-- Market Points -->
                             <g id="markers">
-                                <circle cx="260" cy="160" r="6" class="market-marker"><title>New York (NYSE/NASDAQ)</title></circle>
-                                <text x="275" y="165" class="market-text">New York</text>
+                                <circle cx="280" cy="150" r="5" class="market-marker"><title>New York (NYSE/NASDAQ)</title></circle>
+                                <text x="295" y="155" class="market-text">New York</text>
 
-                                <circle cx="500" cy="140" r="6" class="market-marker" style="animation-delay: 0.5s;"><title>Frankfurt (DAX)</title></circle>
-                                <text x="515" y="145" class="market-text">Frankfurt</text>
+                                <circle cx="500" cy="120" r="5" class="market-marker" style="animation-delay: 0.5s;"><title>Frankfurt (DAX)</title></circle>
+                                <text x="515" y="125" class="market-text">Frankfurt</text>
                                 
-                                <circle cx="470" cy="130" r="6" class="market-marker" style="animation-delay: 0.7s;"><title>London (LSE)</title></circle>
+                                <circle cx="460" cy="110" r="5" class="market-marker" style="animation-delay: 0.7s;"><title>London (LSE)</title></circle>
                             </g>
                             
                             <!-- Connection Lines -->
-                            <path d="M260,160 Q380,100 500,140" fill="none" stroke="#3B82F6" stroke-width="2" stroke-dasharray="5,5" opacity="0.4">
-                                <animate attributeName="stroke-dashoffset" from="100" to="0" dur="2s" repeatCount="indefinite" />
+                            <path d="M 280,150 Q 390,80 500,120" fill="none" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.6">
+                                <animate attributeName="stroke-dashoffset" from="100" to="0" dur="3s" repeatCount="indefinite" />
                             </path>
                         </svg>
                         
                         <!-- Reset Button -->
-                        <button onclick="resetZoom()" class="absolute bottom-4 right-4 bg-white px-3 py-1 rounded shadow text-sm font-medium text-gray-600 hover:text-gray-900">
+                        <button onclick="resetZoom()" class="absolute bottom-4 right-4 bg-white px-3 py-1 rounded shadow text-sm font-medium text-gray-600 hover:text-gray-900 border border-gray-200">
                             Karte zurücksetzen
                         </button>
                     </div>
@@ -541,9 +552,12 @@
                     let viewBox = "0 0 1000 500";
                     
                     switch(region) {
-                        case 'na': viewBox = "100 80 250 200"; break; // North America
-                        case 'eu': viewBox = "440 90 120 100"; break; // Europe
-                        case 'as': viewBox = "540 80 280 200"; break; // Asia
+                        case 'na': viewBox = "50 30 350 250"; break; // North America
+                        case 'sa': viewBox = "240 260 170 240"; break; // South America
+                        case 'eu': viewBox = "420 70 160 110"; break; // Europe
+                        case 'af': viewBox = "400 160 200 260"; break; // Africa
+                        case 'as': viewBox = "550 80 360 260"; break; // Asia
+                        case 'au': viewBox = "760 340 160 140"; break; // Australia
                         default: viewBox = "0 0 1000 500";
                     }
                     

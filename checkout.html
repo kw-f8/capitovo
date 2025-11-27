@@ -40,66 +40,21 @@
                 <div class="bg-blue-50 p-6 rounded-xl shadow-lg border border-blue-100">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Ihr Abo-Modell</h3>
                     
-                    <!-- Plan Selection Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8" id="plan-selection-container">
-                        <!-- Basic -->
-                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm hover:border-blue-300 transition-all duration-200" data-plan="basic">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-gray-900">Basic</span>
-                                <span class="font-bold text-gray-900">€ 99,-</span>
+                    <!-- Selected Plan Display -->
+                    <div id="selected-plan-display" class="bg-white border-2 border-blue-500 rounded-xl p-6 mb-8 shadow-md flex flex-col md:flex-row justify-between items-center">
+                        <div>
+                            <h4 class="text-sm text-gray-500 uppercase tracking-wide font-semibold">Gewähltes Abo</h4>
+                            <div class="flex items-baseline mt-1">
+                                <span id="display-plan-name" class="text-2xl font-bold text-gray-900">Premium</span>
+                                <span id="display-plan-price" class="ml-3 text-xl font-medium text-blue-600">€ 189,-</span>
+                                <span class="ml-1 text-gray-500" id="display-plan-period">/ Monat</span>
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">Monatliche Abrechnung</p>
-                            
-                            <!-- Expandable Content -->
-                            <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-60 opacity-0 group-hover:opacity-100">
-                                <ul class="mt-3 text-xs space-y-1 text-gray-600 list-disc list-inside border-t pt-2 border-gray-100">
-                                    <li>Wöchentliche Markt-Bulletins</li>
-                                    <li>2 exklusive Aktienanalysen / Monat</li>
-                                    <li>Zugang zum Performance-Dashboard</li>
-                                    <li>Exklusive Webinare & Q&A</li>
-                                </ul>
-                            </div>
+                            <p id="display-plan-desc" class="text-sm text-gray-500 mt-2">Alle Premium-Funktionen inklusive.</p>
                         </div>
-
-                        <!-- Premium -->
-                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-blue-500 bg-blue-50 p-4 shadow-md transition-all duration-200" data-plan="premium">
-                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-[10px] font-bold uppercase py-0.5 px-2 rounded-full shadow-sm">
-                                Empfohlen
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-blue-900">Premium</span>
-                                <span class="font-bold text-blue-900">€ 189,-</span>
-                            </div>
-                            <p class="text-xs text-blue-700 mt-1">Monatliche Abrechnung</p>
-                            
-                            <!-- Expandable Content -->
-                            <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-60 opacity-0 group-hover:opacity-100">
-                                <ul class="mt-3 text-xs space-y-1 text-blue-800 list-disc list-inside border-t pt-2 border-blue-200">
-                                    <li>Alle Basic-Funktionen</li>
-                                    <li><strong>Alle</strong> exklusiven Analysen (4+/Monat)</li>
-                                    <li>Zugang zum Performance-Dashboard</li>
-                                    <li>14-tägige Geld-zurück-Garantie</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Lifetime -->
-                        <div class="plan-option group relative cursor-pointer rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm hover:border-blue-300 transition-all duration-200" data-plan="lifetime">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-gray-900">Lifetime</span>
-                                <span class="font-bold text-gray-900">€ 4999,-</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Einmalige Zahlung</p>
-                            
-                            <!-- Expandable Content -->
-                            <div class="max-h-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-60 opacity-0 group-hover:opacity-100">
-                                <ul class="mt-3 text-xs space-y-1 text-gray-600 list-disc list-inside border-t pt-2 border-gray-100">
-                                    <li>Alle Premium-Funktionen</li>
-                                    <li>Lebenslanger Zugang (inkl. Updates)</li>
-                                    <li>Priorisierter E-Mail-Support</li>
-                                    <li>Kein monatliches Abo mehr nötig</li>
-                                </ul>
-                            </div>
+                        <div class="mt-4 md:mt-0">
+                            <button onclick="openPlanModal()" class="text-sm text-blue-600 font-medium hover:text-blue-800 underline">
+                                Anderes Abo wählen
+                            </button>
                         </div>
                     </div>
 
@@ -252,47 +207,108 @@
             </button>
           </div>
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
                 <!-- Basic -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between hover:shadow-xl transition-shadow">
+                <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300">
                     <div>
                         <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
-                        <p class="text-gray-500 mb-6">Der solide Einstieg.</p>
-                        <div class="text-3xl font-extrabold text-gray-900 mb-6">€ 99,- <span class="text-lg font-normal text-gray-500">/ Monat</span></div>
-                        <ul class="text-left space-y-3 mb-8 text-gray-700 text-sm">
-                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Wöchentliche Markt-Bulletins</li>
-                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>2 exklusive Aktienanalysen / Monat</li>
+                        <p class="text-gray-500 mb-6">Der Einstieg in tiefgehende Marktanalysen.</p>
+                        <div class="text-4xl font-extrabold text-gray-900 mb-8">
+                            € 99,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
+                        </div>
+                        <ul class="text-left space-y-3 mb-10 text-gray-700">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Wöchentliche Markt-Bulletins
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                2 exklusive Aktienanalysen / Monat
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Zugang zum Performance-Dashboard
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                Exklusive Webinare & Q&A
+                            </li>
                         </ul>
                     </div>
-                    <button onclick="selectPlanFromModal('basic')" class="w-full block py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Wählen</button>
+                    <button onclick="selectPlanFromModal('basic')" class="w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150">
+                        Wählen
+                    </button>
                 </div>
+
                 <!-- Premium -->
-                <div class="bg-blue-600 rounded-xl shadow-xl border border-blue-600 p-6 flex flex-col justify-between transform scale-105 z-10">
+                <div class="bg-primary-blue rounded-xl shadow-2xl border border-blue-600 p-8 flex flex-col justify-between transform scale-105 z-10">
                     <div class="relative">
-                        <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
+                        <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">
+                            Empfohlen
+                        </span>
                         <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
-                        <p class="text-blue-100 mb-6">Der entscheidende Vorteil.</p>
-                        <div class="text-3xl font-extrabold text-white mb-6">€ 189,- <span class="text-lg font-normal text-blue-200">/ Monat</span></div>
-                        <ul class="text-left space-y-3 mb-8 text-white text-sm">
-                            <li class="flex items-start"><svg class="w-5 h-5 text-yellow-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Alle Basic-Funktionen</li>
-                            <li class="flex items-start"><svg class="w-5 h-5 text-yellow-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><strong>Alle</strong> Analysen (4+/Monat)</li>
-                            <li class="flex items-start"><svg class="w-5 h-5 text-yellow-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Performance-Dashboard</li>
+                        <p class="text-blue-200 mb-6">Ihr entscheidender Vorteil am Markt, alle Analysen.</p>
+                        <div class="text-4xl font-extrabold text-white mb-8">
+                            € 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span>
+                        </div>
+                        <ul class="text-left space-y-3 mb-10 text-white">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Alle Basic-Funktionen
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                **Alle** exklusiven Aktienanalysen (4+ / Monat)
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Zugang zum Performance-Dashboard
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Exklusive Webinare & Q&A
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                14-tägige Geld-zurück-Garantie
+                            </li>
                         </ul>
                     </div>
-                    <button onclick="selectPlanFromModal('premium')" class="w-full block py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50">Wählen</button>
+                    <button onclick="selectPlanFromModal('premium')" class="w-full block py-3 px-8 border border-white rounded-lg shadow-lg text-base font-medium text-primary-blue bg-white hover:bg-blue-100 transition duration-150">
+                        Wählen
+                    </button>
                 </div>
+                
                 <!-- Lifetime -->
-                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between hover:shadow-xl transition-shadow">
+                <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300">
                     <div>
                         <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
-                        <p class="text-gray-500 mb-6">Einmal zahlen, immer profitieren.</p>
-                        <div class="text-3xl font-extrabold text-gray-900 mb-6">€ 4999,- <span class="text-lg font-normal text-gray-500">/ Einmalig</span></div>
-                        <ul class="text-left space-y-3 mb-8 text-gray-700 text-sm">
-                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Alle Premium-Funktionen</li>
-                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Lebenslanger Zugang</li>
+                        <p class="text-gray-500 mb-6">Einmal zahlen, lebenslang profitieren und sparen.</p>
+                        <div class="text-4xl font-extrabold text-gray-900 mb-8">
+                            € 4999,- <span class="text-xl font-normal text-gray-500">/ Einmalig</span>
+                        </div>
+                        <ul class="text-left space-y-3 mb-10 text-gray-700">
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Alle Premium-Funktionen
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Lebenslanger Zugang (inkl. Updates)
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Priorisierter E-Mail-Support
+                            </li>
+                            <li class="flex items-start">
+                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Kein monatliches Abo mehr nötig
+                            </li>
                         </ul>
                     </div>
-                    <button onclick="selectPlanFromModal('lifetime')" class="w-full block py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Wählen</button>
+                    <button onclick="selectPlanFromModal('lifetime')" class="w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150">
+                        Wählen
+                    </button>
                 </div>
             </div>
           </div>
@@ -314,13 +330,10 @@
         }
 
         window.selectPlanFromModal = function(plan) {
-            const option = document.querySelector(`.plan-option[data-plan="${plan}"]`);
-            if (option) {
-                option.click();
+            if (window.updateCheckoutSummary) {
+                window.updateCheckoutSummary(plan);
             }
             closePlanModal();
-            // Optional: Scroll to the selection area to show it changed
-            // document.getElementById('plan-selection-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -329,62 +342,52 @@
             let currentPlan = params.get('plan') || 'premium'; // default to premium
             
             const plans = {
-                'basic': { price: '€ 99,-' },
-                'premium': { price: '€ 189,-' },
-                'lifetime': { price: '€ 4999,-' }
+                'basic': { 
+                    name: 'Basic',
+                    price: '€ 99,-', 
+                    period: '/ Monat',
+                    desc: 'Wöchentliche Markt-Bulletins & 2 Analysen.'
+                },
+                'premium': { 
+                    name: 'Premium',
+                    price: '€ 189,-', 
+                    period: '/ Monat',
+                    desc: 'Alle Premium-Funktionen inklusive.'
+                },
+                'lifetime': { 
+                    name: 'Lifetime',
+                    price: '€ 4999,-', 
+                    period: '/ Einmalig',
+                    desc: 'Einmal zahlen, lebenslang profitieren.'
+                }
             };
 
             // Ensure valid plan
             if (!plans[currentPlan]) currentPlan = 'premium';
 
-            const planOptions = document.querySelectorAll('.plan-option');
             const totalEl = document.getElementById('summary-total');
             const subtotalEl = document.getElementById('summary-subtotal');
+            
+            // New display elements
+            const dispName = document.getElementById('display-plan-name');
+            const dispPrice = document.getElementById('display-plan-price');
+            const dispPeriod = document.getElementById('display-plan-period');
+            const dispDesc = document.getElementById('display-plan-desc');
 
-            function updateSummary(planKey) {
+            window.updateCheckoutSummary = function(planKey) {
                 const p = plans[planKey];
                 if (!p) return;
                 
                 currentPlan = planKey;
                 
-                // Update UI selection
-                planOptions.forEach(opt => {
-                    const isSelected = opt.dataset.plan === planKey;
-                    const title = opt.querySelector('span:first-child');
-                    const price = opt.querySelector('span:last-child');
-                    const desc = opt.querySelector('p');
-
-                    if (isSelected) {
-                        // Apply selected styles
-                        opt.classList.remove('border-gray-200', 'bg-white', 'hover:border-blue-300');
-                        opt.classList.add('border-blue-500', 'bg-blue-50', 'ring-1', 'ring-blue-500');
-                        
-                        title.classList.remove('text-gray-900');
-                        title.classList.add('text-blue-900');
-                        
-                        price.classList.remove('text-gray-900');
-                        price.classList.add('text-blue-900');
-                        
-                        desc.classList.remove('text-gray-500');
-                        desc.classList.add('text-blue-700');
-                    } else {
-                        // Reset classes
-                        opt.classList.remove('border-blue-500', 'bg-blue-50', 'ring-1', 'ring-blue-500');
-                        opt.classList.add('border-gray-200', 'bg-white', 'hover:border-blue-300');
-                        
-                        title.classList.remove('text-blue-900');
-                        title.classList.add('text-gray-900');
-                        
-                        price.classList.remove('text-blue-900');
-                        price.classList.add('text-gray-900');
-                        
-                        desc.classList.remove('text-blue-700');
-                        desc.classList.add('text-gray-500');
-                    }
-                });
+                // Update UI
+                if(dispName) dispName.textContent = p.name;
+                if(dispPrice) dispPrice.textContent = p.price;
+                if(dispPeriod) dispPeriod.textContent = p.period;
+                if(dispDesc) dispDesc.textContent = p.desc;
                 
                 // Update totals
-                totalEl.textContent = p.price;
+                if(totalEl) totalEl.textContent = p.price;
                 if(subtotalEl) subtotalEl.textContent = p.price;
                 
                 // Update URL without reload
@@ -394,14 +397,7 @@
             }
 
             // Init
-            updateSummary(currentPlan);
-
-            // Listen for clicks
-            planOptions.forEach(opt => {
-                opt.addEventListener('click', () => {
-                    updateSummary(opt.dataset.plan);
-                });
-            });
+            window.updateCheckoutSummary(currentPlan);
 
             // Pre-fill email if logged in
             try {

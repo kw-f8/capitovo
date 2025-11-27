@@ -145,11 +145,10 @@
                         </div>
 
                         <!-- Discount Code -->
-                        <div class="mt-4 mb-4">
-                            <label for="discount-code" class="sr-only">Rabattcode</label>
+                        <div class="mt-4 mb-2">
                             <div class="flex space-x-2">
-                                <input type="text" id="discount-code" name="discount-code" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border" placeholder="Rabattcode">
-                                <button type="button" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">Einlösen</button>
+                                <input type="text" id="discount-code" name="discount-code" class="block w-full bg-gray-50 border border-gray-200 rounded-md text-sm px-3 py-2 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-gray-400 transition-colors" placeholder="Rabattcode eingeben">
+                                <button type="button" class="text-gray-400 hover:text-gray-700 px-3 py-2 text-sm font-medium transition-colors">Einlösen</button>
                             </div>
                         </div>
 
@@ -313,7 +312,10 @@
                     
                     if (key === planKey) {
                         // Selected
-                        card.classList.remove('border-transparent');
+                        card.classList.remove('border-transparent', 'opacity-60', 'scale-95');
+                        card.classList.add('scale-105', 'z-20', 'shadow-2xl');
+                        card.style.filter = 'none';
+
                         if (key === 'premium') {
                              card.classList.add('border-yellow-400');
                         } else {
@@ -325,8 +327,10 @@
                         btn.classList.add('bg-gray-900', 'text-white', 'border-transparent', 'cursor-default', 'shadow-inner');
                     } else {
                         // Not selected
-                        card.classList.add('border-transparent');
-                        card.classList.remove('border-blue-500', 'border-yellow-400');
+                        card.classList.add('border-transparent', 'opacity-60', 'scale-95');
+                        card.classList.remove('border-blue-500', 'border-yellow-400', 'scale-105', 'z-10', 'z-20', 'shadow-2xl');
+                        card.style.filter = 'blur(1.5px) brightness(0.95)';
+
                         btn.textContent = 'Wählen';
                         
                         // Reset classes

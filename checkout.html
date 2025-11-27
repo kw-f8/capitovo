@@ -44,7 +44,7 @@
                                 
                                 <button type="button" onclick="toggleDetails(event)" class="details-btn w-full text-center text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
 
-                                <div class="plan-details hidden w-full">
+                                <div class="plan-details invisible w-full">
                                     <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
                                         <li class="flex items-start">
                                             <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -81,7 +81,7 @@
 
                                 <button type="button" onclick="toggleDetails(event)" class="details-btn w-full text-center text-sm text-white font-medium hover:text-blue-100 underline mb-6 focus:outline-none">Details ansehen</button>
 
-                                <div class="plan-details hidden w-full">
+                                <div class="plan-details invisible w-full">
                                     <ul class="text-left space-y-3 mb-10 text-white w-full">
                                         <li class="flex items-start">
                                             <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -119,7 +119,7 @@
 
                                 <button type="button" onclick="toggleDetails(event)" class="details-btn w-full text-center text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
 
-                                <div class="plan-details hidden w-full">
+                                <div class="plan-details invisible w-full">
                                     <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
                                         <li class="flex items-start">
                                             <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
@@ -289,19 +289,19 @@
             const allDetails = document.querySelectorAll('.plan-details');
             const allBtns = document.querySelectorAll('.details-btn');
             
-            // Check if currently hidden (check the first one)
-            const isHidden = allDetails[0].classList.contains('hidden');
+            // Check if currently invisible (check the first one)
+            const isInvisible = allDetails[0].classList.contains('invisible');
             
             allDetails.forEach(el => {
-                if (isHidden) {
-                    el.classList.remove('hidden');
+                if (isInvisible) {
+                    el.classList.remove('invisible');
                 } else {
-                    el.classList.add('hidden');
+                    el.classList.add('invisible');
                 }
             });
 
             allBtns.forEach(btn => {
-                btn.textContent = isHidden ? 'Details verbergen' : 'Details ansehen';
+                btn.textContent = isInvisible ? 'Details verbergen' : 'Details ansehen';
             });
         }
 

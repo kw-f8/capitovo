@@ -28,6 +28,13 @@
     <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-7xl w-full space-y-8">
             
+            <div class="text-center mb-4">
+                <button onclick="openPlanModal()" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform transform hover:scale-105">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    Abo-Modelle vergleichen & wählen
+                </button>
+            </div>
+
             <!-- Top: Plans (formerly Summary) -->
             <div class="w-full">
                 <div class="bg-blue-50 p-6 rounded-xl shadow-lg border border-blue-100">
@@ -229,8 +236,93 @@
         </div>
     </footer>
 
+    <!-- Plan Selection Modal -->
+    <div id="plan-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" onclick="closePlanModal()"></div>
+        <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full">
+          <div class="bg-gray-50 px-4 py-3 sm:px-6 flex justify-between items-center border-b border-gray-200">
+            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">Wählen Sie Ihr Abo</h3>
+            <button type="button" class="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none" onclick="closePlanModal()">
+              <span class="sr-only">Schließen</span>
+              <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Basic -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between hover:shadow-xl transition-shadow">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+                        <p class="text-gray-500 mb-6">Der solide Einstieg.</p>
+                        <div class="text-3xl font-extrabold text-gray-900 mb-6">€ 99,- <span class="text-lg font-normal text-gray-500">/ Monat</span></div>
+                        <ul class="text-left space-y-3 mb-8 text-gray-700 text-sm">
+                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Wöchentliche Markt-Bulletins</li>
+                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>2 exklusive Aktienanalysen / Monat</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPlanFromModal('basic')" class="w-full block py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Wählen</button>
+                </div>
+                <!-- Premium -->
+                <div class="bg-blue-600 rounded-xl shadow-xl border border-blue-600 p-6 flex flex-col justify-between transform scale-105 z-10">
+                    <div class="relative">
+                        <span class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
+                        <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
+                        <p class="text-blue-100 mb-6">Der entscheidende Vorteil.</p>
+                        <div class="text-3xl font-extrabold text-white mb-6">€ 189,- <span class="text-lg font-normal text-blue-200">/ Monat</span></div>
+                        <ul class="text-left space-y-3 mb-8 text-white text-sm">
+                            <li class="flex items-start"><svg class="w-5 h-5 text-yellow-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Alle Basic-Funktionen</li>
+                            <li class="flex items-start"><svg class="w-5 h-5 text-yellow-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><strong>Alle</strong> Analysen (4+/Monat)</li>
+                            <li class="flex items-start"><svg class="w-5 h-5 text-yellow-400 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Performance-Dashboard</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPlanFromModal('premium')" class="w-full block py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50">Wählen</button>
+                </div>
+                <!-- Lifetime -->
+                <div class="bg-white rounded-xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between hover:shadow-xl transition-shadow">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
+                        <p class="text-gray-500 mb-6">Einmal zahlen, immer profitieren.</p>
+                        <div class="text-3xl font-extrabold text-gray-900 mb-6">€ 4999,- <span class="text-lg font-normal text-gray-500">/ Einmalig</span></div>
+                        <ul class="text-left space-y-3 mb-8 text-gray-700 text-sm">
+                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Alle Premium-Funktionen</li>
+                            <li class="flex items-start"><svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Lebenslanger Zugang</li>
+                        </ul>
+                    </div>
+                    <button onclick="selectPlanFromModal('lifetime')" class="w-full block py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">Wählen</button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="script.js?v=5"></script>
     <script>
+        // Modal functions
+        window.openPlanModal = function() {
+            document.getElementById('plan-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        window.closePlanModal = function() {
+            document.getElementById('plan-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        window.selectPlanFromModal = function(plan) {
+            const option = document.querySelector(`.plan-option[data-plan="${plan}"]`);
+            if (option) {
+                option.click();
+            }
+            closePlanModal();
+            // Optional: Scroll to the selection area to show it changed
+            // document.getElementById('plan-selection-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             // 1. Parse URL Params
             const params = new URLSearchParams(window.location.search);

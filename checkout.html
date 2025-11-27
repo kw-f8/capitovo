@@ -343,13 +343,6 @@
                 'lifetime': { price: '€ 4999,-' }
             };
 
-            // Check URL params
-            const params = new URLSearchParams(window.location.search);
-            const planParam = params.get('plan');
-            if (planParam && plans[planParam]) {
-                window.updateCheckoutSummary(planParam);
-            }
-
             const totalEl = document.getElementById('summary-total');
             const subtotalEl = document.getElementById('summary-subtotal');
             
@@ -467,6 +460,78 @@
                     window.location.href = 'Abonenten/abonenten.html';
                 }, 1500);
             });
+
+            // Validation Logic
+            const submitBtn = document.querySelector('#checkout-form button[type="submit"]');
+            const formInputs = document.querySelectorAll('#checkout-form input, #checkout-form select');
+            
+            function validateForm() {
+                let isValid = true;
+                
+                // 1. Plan selected?
+                if (!currentPlan) isValid = false;
+
+                // 2. Required fields
+                const requiredIds = ['checkout-name', 'checkout-email', 'checkout-street', 'checkout-zip', 'checkout-city', 'checkout-country', 'checkout-terms'];
+                requiredIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (el.type === 'checkbox') {
+                            if (!el.checked) isValid = false;
+                        } else {
+                            if (!el.value.trim()) isValid = false;
+                        }
+                    }
+                });
+
+                // 3. Payment fields
+                const methodInput = document.querySelector('input[name="payment-method"]:checked');
+                if (methodInput) {
+                    const method = methodInput.value;
+                    if (method === 'card') {
+                        if (!document.getElementById('card-number').value.trim()) isValid = false;
+                        if (!document.getElementById('card-expiry').value.trim()) isValid = false;
+                        if (!document.getElementById('card-cvc').value.trim()) isValid = false;
+                    } else if (method === 'sepa') {
+                        if (!document.getElementById('sepa-iban').value.trim()) isValid = false;
+                        if (!document.getElementById('sepa-owner').value.trim()) isValid = false;
+                    }
+                }
+
+                // Update Button
+                if (isValid) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.add('bg-primary-blue', 'hover:bg-blue-700');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
+                }
+            }
+
+            // Attach listeners
+            formInputs.forEach(input => {
+                input.addEventListener('input', validateForm);
+                input.addEventListener('change', validateForm);
+            });
+
+            // Hook into plan selection
+            const originalUpdateSummary = window.updateCheckoutSummary;
+            window.updateCheckoutSummary = function(planKey) {
+                originalUpdateSummary(planKey);
+                validateForm();
+            };
+            
+            // Initial validation
+            validateForm();
+
+            // Check URL params
+            const params = new URLSearchParams(window.location.search);
+            const planParam = params.get('plan');
+            if (planParam && plans[planParam]) {
+                window.updateCheckoutSummary(planParam);
+            }
         });
     </script>
 </body>

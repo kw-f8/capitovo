@@ -155,7 +155,7 @@
                         </div>
                     </div>
                     
-                    <div class="mt-6 bg-gray-50 rounded p-3 text-xs text-gray-500 space-y-2">
+                    <div class="mt-6 text-xs text-gray-500 space-y-2">
                         <div class="flex items-start">
                             <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                             <span>14 Tage Geld-zurück-Garantie für alle Neukunden.</span>
@@ -304,6 +304,13 @@
                 'lifetime': { price: '€ 4999,-' }
             };
 
+            // Check URL params
+            const params = new URLSearchParams(window.location.search);
+            const planParam = params.get('plan');
+            if (planParam && plans[planParam]) {
+                window.updateCheckoutSummary(planParam);
+            }
+
             const totalEl = document.getElementById('summary-total');
             const subtotalEl = document.getElementById('summary-subtotal');
             
@@ -320,7 +327,7 @@
                     
                     if (key === planKey) {
                         // Selected
-                        card.classList.remove('border-transparent', 'opacity-60', 'scale-95');
+                        card.classList.remove('border-transparent');
                         card.classList.add('scale-105', 'z-20', 'shadow-2xl');
                         card.style.filter = 'none';
 
@@ -335,9 +342,10 @@
                         btn.classList.add('bg-gray-900', 'text-white', 'border-transparent', 'cursor-default', 'shadow-inner');
                     } else {
                         // Not selected
-                        card.classList.add('border-transparent', 'opacity-60', 'scale-95');
+                        card.classList.add('border-transparent');
                         card.classList.remove('border-blue-500', 'border-yellow-400', 'scale-105', 'z-10', 'z-20', 'shadow-2xl');
-                        card.style.filter = 'blur(1.5px) brightness(0.95)';
+                        // Removed blur and opacity reduction to keep cards visible like on start page
+                        card.style.filter = 'none';
 
                         btn.textContent = 'Wählen';
                         

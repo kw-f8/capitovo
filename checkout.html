@@ -38,12 +38,11 @@
                         <div id="card-basic" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('basic')">
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
-                                <p class="text-gray-500 mb-6">Der Einstieg in tiefgehende Marktanalysen.</p>
                                 <div class="text-4xl font-extrabold text-gray-900 mb-4">
                                     € 99,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
                                 </div>
                                 
-                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details & Funktionen anzeigen</button>
+                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
 
                                 <div class="plan-details hidden">
                                     <ul class="text-left space-y-3 mb-10 text-gray-700">
@@ -76,12 +75,11 @@
                                     Empfohlen
                                 </span>
                                 <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
-                                <p class="text-blue-200 mb-6">Ihr entscheidender Vorteil am Markt, alle Analysen.</p>
                                 <div class="text-4xl font-extrabold text-white mb-4">
                                     € 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span>
                                 </div>
 
-                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-white font-medium hover:text-blue-100 underline mb-6 focus:outline-none">Details & Funktionen anzeigen</button>
+                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-white font-medium hover:text-blue-100 underline mb-6 focus:outline-none">Details ansehen</button>
 
                                 <div class="plan-details hidden">
                                     <ul class="text-left space-y-3 mb-10 text-white">
@@ -115,12 +113,11 @@
                         <div id="card-lifetime" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('lifetime')">
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
-                                <p class="text-gray-500 mb-6">Einmal zahlen, lebenslang profitieren und sparen.</p>
                                 <div class="text-4xl font-extrabold text-gray-900 mb-4">
                                     € 4999,- <span class="text-xl font-normal text-gray-500">/ Einmalig</span>
                                 </div>
 
-                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details & Funktionen anzeigen</button>
+                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
 
                                 <div class="plan-details hidden">
                                     <ul class="text-left space-y-3 mb-10 text-gray-700">
@@ -304,7 +301,7 @@
             });
 
             allBtns.forEach(btn => {
-                btn.textContent = isHidden ? 'Details verbergen' : 'Details & Funktionen anzeigen';
+                btn.textContent = isHidden ? 'Details verbergen' : 'Details ansehen';
             });
         }
 
@@ -340,20 +337,12 @@
                              card.classList.add('border-blue-500');
                         }
                         btn.textContent = 'Ausgewählt';
-                        btn.classList.add('bg-green-600', 'text-white', 'hover:bg-green-700', 'border-transparent');
-                        btn.classList.remove('bg-white', 'text-gray-900', 'text-primary-blue', 'border-gray-300', 'border-white');
+                        // Removed "weird color" styling (green background)
                     } else {
                         // Not selected
                         card.classList.add('border-transparent');
                         card.classList.remove('border-blue-500', 'border-yellow-400');
                         btn.textContent = 'Wählen';
-                        
-                        btn.classList.remove('bg-green-600', 'text-white', 'hover:bg-green-700', 'border-transparent');
-                        if (key === 'premium') {
-                            btn.classList.add('bg-white', 'text-primary-blue', 'border-white');
-                        } else {
-                            btn.classList.add('bg-white', 'text-gray-900', 'border-gray-300');
-                        }
                     }
                 });
                 

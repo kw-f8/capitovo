@@ -531,12 +531,14 @@
             // Initial validation
             validateForm();
 
-            // Check URL params
+            // Check URL params - REMOVED to prevent auto-selection on load
+            /*
             const params = new URLSearchParams(window.location.search);
             const planParam = params.get('plan');
             if (planParam && plans[planParam]) {
                 window.updateCheckoutSummary(planParam);
             }
+            */
         });
     </script>
 </body>

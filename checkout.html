@@ -162,7 +162,11 @@
                         </div>
                         <div class="flex items-start">
                             <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>Monatlich kündbar</span>
+                            <span>Monatlich und einfach kündbar</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Keine versteckten Kosten</span>
                         </div>
                         <div class="flex items-start">
                             <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -284,7 +288,7 @@
                             </div>
                             <!-- PayPal Info -->
                             <div id="paypal-fields" class="hidden text-sm text-gray-600">
-                                Sie werden nach dem Klick auf "Kostenpflichtig bestellen" zu PayPal weitergeleitet.
+                                Sie werden nach dem Klick auf "Kostenpflichtiges Abonnement jetzt abschließen" zu PayPal weitergeleitet.
                             </div>
                             <!-- SEPA Fields -->
                             <div id="sepa-fields" class="hidden space-y-4">
@@ -302,7 +306,7 @@
                     </div>
 
                     <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150">
-                        Kostenpflichtig bestellen
+                        Kostenpflichtiges Abonnement jetzt abschließen
                     </button>
 
                     <div class="text-center mt-4">
@@ -359,7 +363,7 @@
                     
                     if (key === planKey) {
                         // Selected
-                        card.classList.remove('border-transparent');
+                        card.classList.remove('border-transparent', 'opacity-60', 'scale-95');
                         card.classList.add('scale-105', 'z-20', 'shadow-2xl');
                         card.style.filter = 'none';
 

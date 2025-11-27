@@ -42,10 +42,10 @@
                                     € 99,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
                                 </div>
                                 
-                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
+                                <button type="button" onclick="toggleDetails(event)" class="details-btn w-full text-center text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
 
-                                <div class="plan-details hidden">
-                                    <ul class="text-left space-y-3 mb-10 text-gray-700">
+                                <div class="plan-details hidden w-full">
+                                    <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
                                         <li class="flex items-start">
                                             <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                             Wöchentliche Markt-Bulletins
@@ -65,7 +65,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <button class="w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
+                            <button class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
                         </div>
 
                         <!-- Premium -->
@@ -79,10 +79,10 @@
                                     € 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span>
                                 </div>
 
-                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-white font-medium hover:text-blue-100 underline mb-6 focus:outline-none">Details ansehen</button>
+                                <button type="button" onclick="toggleDetails(event)" class="details-btn w-full text-center text-sm text-white font-medium hover:text-blue-100 underline mb-6 focus:outline-none">Details ansehen</button>
 
-                                <div class="plan-details hidden">
-                                    <ul class="text-left space-y-3 mb-10 text-white">
+                                <div class="plan-details hidden w-full">
+                                    <ul class="text-left space-y-3 mb-10 text-white w-full">
                                         <li class="flex items-start">
                                             <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                             Alle Basic-Funktionen
@@ -106,7 +106,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <button class="w-full block py-3 px-8 border border-white rounded-lg shadow-lg text-base font-medium text-primary-blue bg-white hover:bg-blue-100 transition duration-150 mt-4">Wählen</button>
+                            <button class="select-plan-btn w-full block py-3 px-8 border border-white rounded-lg shadow-lg text-base font-medium text-primary-blue bg-white hover:bg-blue-100 transition duration-150 mt-4">Wählen</button>
                         </div>
                         
                         <!-- Lifetime -->
@@ -117,10 +117,10 @@
                                     € 4999,- <span class="text-xl font-normal text-gray-500">/ Einmalig</span>
                                 </div>
 
-                                <button type="button" onclick="toggleDetails(event)" class="details-btn text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
+                                <button type="button" onclick="toggleDetails(event)" class="details-btn w-full text-center text-sm text-blue-600 font-medium hover:text-blue-800 underline mb-6 focus:outline-none">Details ansehen</button>
 
-                                <div class="plan-details hidden">
-                                    <ul class="text-left space-y-3 mb-10 text-gray-700">
+                                <div class="plan-details hidden w-full">
+                                    <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
                                         <li class="flex items-start">
                                             <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                             Alle Premium-Funktionen
@@ -140,7 +140,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <button class="w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
+                            <button class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
                         </div>
                     </div>
 
@@ -326,7 +326,7 @@
                 // Update UI Cards
                 ['basic', 'premium', 'lifetime'].forEach(key => {
                     const card = document.getElementById(`card-${key}`);
-                    const btn = card.querySelector('button');
+                    const btn = card.querySelector('.select-plan-btn');
                     
                     if (key === planKey) {
                         // Selected
@@ -337,12 +337,23 @@
                              card.classList.add('border-blue-500');
                         }
                         btn.textContent = 'Ausgewählt';
-                        // Removed "weird color" styling (green background)
+                        // Professional "Selected" state: Dark/Neutral, clear indication
+                        btn.classList.remove('bg-white', 'text-gray-900', 'text-primary-blue', 'border-gray-300', 'border-white', 'hover:bg-gray-100', 'hover:bg-blue-100');
+                        btn.classList.add('bg-gray-900', 'text-white', 'border-transparent', 'cursor-default', 'shadow-inner');
                     } else {
                         // Not selected
                         card.classList.add('border-transparent');
                         card.classList.remove('border-blue-500', 'border-yellow-400');
                         btn.textContent = 'Wählen';
+                        
+                        // Reset classes
+                        btn.classList.remove('bg-gray-900', 'text-white', 'border-transparent', 'cursor-default', 'shadow-inner');
+                        
+                        if (key === 'premium') {
+                            btn.classList.add('bg-white', 'text-primary-blue', 'border-white', 'hover:bg-blue-100');
+                        } else {
+                            btn.classList.add('bg-white', 'text-gray-900', 'border-gray-300', 'hover:bg-gray-100');
+                        }
                     }
                 });
                 

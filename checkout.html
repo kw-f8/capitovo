@@ -204,6 +204,45 @@
                                     E-Mail Adresse
                                 </label>
                             </div>
+                            
+                            <!-- Address Fields -->
+                            <div class="relative">
+                                <input id="checkout-street" name="street" type="text" required 
+                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                                       placeholder="Straße und Hausnummer">
+                                <label for="checkout-street" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                    Straße und Hausnummer
+                                </label>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="relative">
+                                    <input id="checkout-zip" name="zip" type="text" required 
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                                           placeholder="PLZ">
+                                    <label for="checkout-zip" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                        PLZ
+                                    </label>
+                                </div>
+                                <div class="relative">
+                                    <input id="checkout-city" name="city" type="text" required 
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                                           placeholder="Stadt">
+                                    <label for="checkout-city" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                        Stadt
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <select id="checkout-country" name="country" required 
+                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                                    <option value="DE">Deutschland</option>
+                                    <option value="AT">Österreich</option>
+                                    <option value="CH">Schweiz</option>
+                                </select>
+                                <label for="checkout-country" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                    Land
+                                </label>
+                            </div>
                         </div>
                     </div>
 
@@ -342,10 +381,9 @@
                         btn.classList.add('bg-gray-900', 'text-white', 'border-transparent', 'cursor-default', 'shadow-inner');
                     } else {
                         // Not selected
-                        card.classList.add('border-transparent');
+                        card.classList.add('border-transparent', 'opacity-60', 'scale-95');
                         card.classList.remove('border-blue-500', 'border-yellow-400', 'scale-105', 'z-10', 'z-20', 'shadow-2xl');
-                        // Removed blur and opacity reduction to keep cards visible like on start page
-                        card.style.filter = 'none';
+                        card.style.filter = 'blur(1.5px) brightness(0.95)';
 
                         btn.textContent = 'Wählen';
                         

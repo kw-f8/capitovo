@@ -146,7 +146,12 @@
                 const contact = JSON.parse(localStorage.getItem('capitovo_contact')||'{}') || {};
                 
                 // Name & Email
-                const name = sess.name || contact.name || '–';
+                let name = sess.name || contact.name;
+                if (!name && (contact.firstname || contact.lastname)) {
+                    name = ((contact.firstname || '') + ' ' + (contact.lastname || '')).trim();
+                }
+                name = name || '–';
+                
                 document.getElementById('page-acc-email').textContent = sess.email || contact.email || '–';
                 document.getElementById('page-acc-name').textContent = name;
                 
@@ -160,8 +165,19 @@
                 // Contact
                 // Try to build address from individual fields if available, else fallback
                 let addressParts = [];
-                if (contact.street) addressParts.push(contact.street);
-                if (contact.zip || contact.city) addressParts.push((contact.zip || '') + ' ' + (contact.city || ''));
+                
+                // Street & House Number
+                if (contact.street) {
+                    let streetLine = contact.street;
+                    if (contact.houseno) streetLine += ' ' + contact.houseno;
+                    addressParts.push(streetLine);
+                }
+                
+                // Zip & City
+                if (contact.zip || contact.city) {
+                    addressParts.push((contact.zip || '') + ' ' + (contact.city || ''));
+                }
+                
                 if (contact.country) addressParts.push(contact.country);
                 
                 let contactLine = addressParts.join('<br>');

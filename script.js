@@ -193,6 +193,22 @@ function createMemberAnalysisCard(a, idx){
     const date = a.date || '';
     const author = a.author || '';
 
+    // --- Favorites Logic ---
+    const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
+    const isFav = favorites.includes(title);
+    const heartFill = isFav ? 'currentColor' : 'none';
+    const heartColor = isFav ? 'text-red-500' : 'text-gray-400';
+    
+    const favButton = `
+        <button onclick="toggleFavorite(event, '${title.replace(/'/g, "\\'")}')" 
+                class="absolute top-4 right-4 z-30 p-2 rounded-full bg-white/90 hover:bg-white shadow-sm transition-all duration-200 hover:scale-110"
+                title="${isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}">
+            <svg class="w-5 h-5 ${heartColor}" fill="${heartFill}" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+        </button>
+    `;
+
     // --- Check Subscription ---
     let hasAccess = false;
     try {
@@ -221,6 +237,7 @@ function createMemberAnalysisCard(a, idx){
     return `
         <a href="${finalLink}" ${onclickAttr} class="relative bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
             ${lockOverlay}
+            ${favButton}
             <div class="${blurClass} transition duration-300 h-full flex flex-col">
                 <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center flex-shrink-0">
                     <img src="${img}" alt="Vorschaubild für ${title}" 
@@ -245,6 +262,43 @@ function createMemberAnalysisCard(a, idx){
             </div>
         </a>
     `;
+}
+
+/** Toggle favorite status of an analysis. */
+function toggleFavorite(event, title) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    let favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
+    const index = favorites.indexOf(title);
+    
+    if (index === -1) {
+        favorites.push(title);
+    } else {
+        favorites.splice(index, 1);
+    }
+    
+    localStorage.setItem('capitovo_favorites', JSON.stringify(favorites));
+    
+    // Update UI icon immediately
+    const btn = event.currentTarget;
+    const heart = btn.querySelector('svg');
+    if (index === -1) {
+        // Added
+        heart.setAttribute('fill', 'currentColor');
+        heart.classList.add('text-red-500');
+        heart.classList.remove('text-gray-400');
+        btn.title = 'Aus Favoriten entfernen';
+    } else {
+        // Removed
+        heart.setAttribute('fill', 'none');
+        heart.classList.remove('text-red-500');
+        heart.classList.add('text-gray-400');
+        btn.title = 'Zu Favoriten hinzufügen';
+    }
+
+    // Trigger event for filter updates
+    document.dispatchEvent(new CustomEvent('favorites-updated'));
 }
 
 /** Compute a detail-link for an analysis. Uses numeric index when available. */
@@ -288,8 +342,16 @@ async function loadAndRenderMemberAnalyses(){
         const res = await fetch(dataPath);
         if (!res.ok) throw new Error('Fetch fehlgeschlagen');
         const data = await res.json();
-        // render up to 12 analyses in a responsive grid
-        const html = `<div class="grid md:grid-cols-3 gap-8">` + data.slice(0,12).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
+        
+        // Sort by date descending (newest first)
+        data.sort((a,b) => {
+            const da = a.date ? Date.parse(a.date) : 0;
+            const db = b.date ? Date.parse(b.date) : 0;
+            return (db - da) || 0;
+        });
+
+        // render up to 6 analyses in a responsive grid
+        const html = `<div class="grid md:grid-cols-3 gap-8">` + data.slice(0,6).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
         container.innerHTML = html;
         try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }catch(err){
@@ -305,11 +367,22 @@ async function initAllAnalysesPage(){
     const sectorSelect = document.getElementById('sector-select');
     const searchInput = document.getElementById('search-input');
     const clearBtn = document.getElementById('search-clear');
+    const favToggle = document.getElementById('favorites-toggle');
 
     if (!grid) return;
 
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
     const dataPath = (isInAbonenten ? '../' : '') + 'data/analysen.json';
+
+    // Check URL params for initial filter
+    const urlParams = new URLSearchParams(window.location.search);
+    let showFavoritesOnly = urlParams.get('filter') === 'favorites';
+    
+    // Update toggle button state if present
+    if (favToggle && showFavoritesOnly) {
+        favToggle.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
+        favToggle.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+    }
 
     let data = [];
     try{
@@ -328,8 +401,16 @@ async function initAllAnalysesPage(){
         const q = (filterOpts.q || '').toLowerCase().trim();
         const sector = (filterOpts.sector || '').trim();
         const sort = filterOpts.sort || 'newest';
+        const onlyFavs = filterOpts.onlyFavs || false;
 
         let items = data.slice();
+        
+        // filter favorites
+        if (onlyFavs) {
+            const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
+            items = items.filter(i => favorites.includes(i.title));
+        }
+
         // filter sector
         if (sector) items = items.filter(i => (i.category||'').toLowerCase() === sector.toLowerCase());
         // search
@@ -351,22 +432,63 @@ async function initAllAnalysesPage(){
         }
 
         // render
-        if (!items.length) { grid.innerHTML = '<p class="text-gray-500">Keine Analysen gefunden.</p>'; return; }
+        if (!items.length) { 
+            grid.innerHTML = onlyFavs 
+                ? '<div class="col-span-3 text-center py-12"><p class="text-gray-500 mb-2">Keine Favoriten gefunden.</p><p class="text-sm text-gray-400">Markieren Sie Analysen mit dem Herz-Symbol, um sie hier zu sehen.</p></div>' 
+                : '<p class="text-gray-500">Keine Analysen gefunden.</p>'; 
+            return; 
+        }
         grid.innerHTML = '<div class="grid md:grid-cols-3 gap-8">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
         try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }
 
     // wire controls
     function readAndRender(){
-        renderList({ q: searchInput?.value || '', sector: sectorSelect?.value || '', sort: sortSelect?.value || 'newest' });
+        renderList({ 
+            q: searchInput?.value || '', 
+            sector: sectorSelect?.value || '', 
+            sort: sortSelect?.value || 'newest',
+            onlyFavs: showFavoritesOnly
+        });
     }
+    
     sortSelect?.addEventListener('change', readAndRender);
     sectorSelect?.addEventListener('change', readAndRender);
     searchInput?.addEventListener('input', () => { readAndRender(); });
     clearBtn?.addEventListener('click', (e)=>{ e.preventDefault(); if (searchInput) searchInput.value=''; readAndRender(); });
+    
+    // Favorites Toggle Handler
+    if (favToggle) {
+        favToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            showFavoritesOnly = !showFavoritesOnly;
+            
+            // Update Button UI
+            if (showFavoritesOnly) {
+                favToggle.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
+                favToggle.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
+                // Update URL without reload
+                const url = new URL(window.location);
+                url.searchParams.set('filter', 'favorites');
+                window.history.pushState({}, '', url);
+            } else {
+                favToggle.classList.remove('bg-red-50', 'text-red-600', 'border-red-200');
+                favToggle.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+                const url = new URL(window.location);
+                url.searchParams.delete('filter');
+                window.history.pushState({}, '', url);
+            }
+            readAndRender();
+        });
+    }
+
+    // Listen for favorite updates (from card clicks) to refresh list if in favorites mode
+    document.addEventListener('favorites-updated', () => {
+        if (showFavoritesOnly) readAndRender();
+    });
 
     // initial render
-    renderList({ q: '', sector: '', sort: 'newest' });
+    readAndRender();
 }
 
 /** Lädt die Analysen aus JSON und rendert sie im Grid. */

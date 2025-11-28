@@ -20,9 +20,15 @@
             /* keep the logo image as-is but ensure it doesn't stick */
             .header-logo { position: relative; }
 
+            /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
+            #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+            #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+            /* Provide a subtle visible focus for keyboard users */
+            #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
             /* Verbesserte Farbpalette und Typografie */
             .abonenten-page {
-                background-color: #f9fafb;
+                background-color: #ffffff;
                 color: #1f2937;
                 font-family: 'Inter', sans-serif;
             }

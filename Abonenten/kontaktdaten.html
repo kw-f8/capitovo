@@ -56,6 +56,7 @@
 
                         <div class="relative mb-3">
                             <select id="contact-payment-method" name="payment_method" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                                <option value="" disabled selected>Bitte auswählen</option>
                                 <option value="card">Kreditkarte</option>
                                 <option value="sepa">SEPA / IBAN</option>
                                 <option value="paypal">PayPal</option>
@@ -172,6 +173,38 @@
             if (backLink) {
                 backLink.href = './konto.html';
             }
+        }
+
+        // Populate form from localStorage
+        try {
+            const contact = JSON.parse(localStorage.getItem('capitovo_contact') || '{}');
+            
+            if (contact.name) document.getElementById('contact-name').value = contact.name;
+            if (contact.email) document.getElementById('contact-email').value = contact.email;
+            if (contact.phone) document.getElementById('contact-phone').value = contact.phone;
+            if (contact.address) document.getElementById('contact-address').value = contact.address;
+
+            const paymentSelect = document.getElementById('contact-payment-method');
+            if (paymentSelect) {
+                if (contact.payment && contact.payment.method) {
+                    paymentSelect.value = contact.payment.method;
+                    
+                    // Populate specific payment fields if available
+                    if (contact.payment.method === 'card') {
+                        if (contact.payment.card_name) document.getElementById('contact-card-name').value = contact.payment.card_name;
+                    } else if (contact.payment.method === 'paypal') {
+                        if (contact.payment.paypal_email) document.getElementById('contact-paypal-email').value = contact.payment.paypal_email;
+                    }
+                } else {
+                    // Ensure "Bitte auswählen" is selected if no payment method
+                    paymentSelect.value = "";
+                }
+                // Trigger change event to update UI (show/hide fields)
+                paymentSelect.dispatchEvent(new Event('change'));
+            }
+
+        } catch (e) {
+            console.error('Error populating form:', e);
         }
     </script>
 </body>

@@ -30,7 +30,7 @@
         <section class="member-grid">
             <div class="bg-white p-6 rounded-xl shadow">
                 <!-- Contact form inline (same fields as modal) -->
-                <form id="contact-form" class="space-y-4">
+                <form id="contact-form" class="space-y-4" autocomplete="off">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="relative">
                             <input id="contact-firstname" name="firstname" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Vorname">
@@ -77,8 +77,8 @@
                         <legend class="text-sm font-semibold text-gray-800 mb-2">Zahlungsinformationen</legend>
 
                         <div class="relative mb-3">
-                            <select id="contact-payment-method" name="payment_method" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
-                                <option value="" disabled selected>Bitte auswählen</option>
+                            <select id="contact-payment-method" name="payment_method" autocomplete="off" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                                <option value="" selected>Bitte auswählen</option>
                                 <option value="card">Kreditkarte</option>
                                 <option value="sepa">SEPA / IBAN</option>
                                 <option value="paypal">PayPal</option>
@@ -237,6 +237,7 @@
                 } else {
                     // Ensure "Bitte auswählen" is selected if no payment method
                     paymentSelect.value = "";
+                    paymentSelect.selectedIndex = 0; // Force selection of first option
                 }
                 // Trigger change event to update UI (show/hide fields)
                 paymentSelect.dispatchEvent(new Event('change'));

@@ -142,9 +142,9 @@
                                 <p>Unser Support-Team ist für Sie da. Schreiben Sie uns einfach eine E-Mail.</p>
                             </div>
                             <div class="mt-3">
-                                <a href="mailto:support@capitovo.de" class="text-sm font-medium text-blue-800 hover:text-blue-600 underline">
-                                    Kontakt aufnehmen &rarr;
-                                </a>
+                                                        <a href="#" id="open-contact-modal" class="text-sm font-medium text-blue-800 hover:text-blue-600 underline">
+                            Kontakt aufnehmen &rarr;
+                        </a>
                             </div>
                         </div>
                     </div>
@@ -311,5 +311,176 @@
             </ul>
         </nav>
     </div>
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 relative overflow-hidden max-h-[90vh] overflow-y-auto">
+            <!-- Close Button -->
+            <button id="close-contact-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="p-8 md:p-10">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Kontakt aufnehmen</h2>
+                
+                <form id="contact-form-modal" action="#" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <input type="text" id="contact-name" name="name" required
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Ihr Name">
+                            <label for="contact-name" 
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihr Name
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="contact-email" name="email" required
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Ihre E-Mail">
+                            <label for="contact-email" 
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihre E-Mail
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <select id="contact-category" name="category" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                            <option value="" disabled selected>Bitte wählen</option>
+                            <option value="support">Technischer Support</option>
+                            <option value="billing">Rechnung & Abo</option>
+                            <option value="feedback">Feedback & Vorschläge</option>
+                            <option value="other">Sonstiges</option>
+                        </select>
+                        <label for="contact-category" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Kategorie
+                        </label>
+                    </div>
+
+                    <div class="relative">
+                        <textarea id="contact-message" name="message" rows="4" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                            placeholder="Ihre Nachricht"></textarea>
+                        <label for="contact-message" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Ihre Nachricht
+                        </label>
+                    </div>
+
+                    <div class="relative">
+                        <input type="number" id="contact-captcha" name="captcha" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                            placeholder="Sicherheitsfrage: Was ist 3 + 2?">
+                        <label for="contact-captcha" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Sicherheitsfrage: Was ist 3 + 2?
+                        </label>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" id="contact-submit" disabled
+                            class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gray-400 cursor-not-allowed transition duration-150">
+                            Nachricht senden
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Contact Modal Logic
+        const openContactModalBtn = document.getElementById('open-contact-modal');
+        const closeContactModalBtn = document.getElementById('close-contact-modal');
+        const contactModal = document.getElementById('contact-modal');
+        const contactForm = document.getElementById('contact-form-modal');
+        const contactCaptcha = document.getElementById('contact-captcha');
+        const contactSubmit = document.getElementById('contact-submit');
+
+        if (openContactModalBtn && contactModal) {
+            openContactModalBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                contactModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling
+            });
+
+            const closeModal = () => {
+                contactModal.classList.add('hidden');
+                document.body.style.overflow = ''; // Restore scrolling
+            };
+
+            closeContactModalBtn.addEventListener('click', closeModal);
+            
+            // Close on click outside
+            contactModal.addEventListener('click', (e) => {
+                if (e.target === contactModal) {
+                    closeModal();
+                }
+            });
+
+            // Escape key to close
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !contactModal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        }
+
+        // Captcha Logic
+        if (contactCaptcha && contactSubmit) {
+            contactCaptcha.addEventListener('input', function() {
+                if (this.value === '5') {
+                    contactSubmit.disabled = false;
+                    contactSubmit.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                    contactSubmit.classList.add('bg-accent-blue', 'hover:bg-blue-700');
+                } else {
+                    contactSubmit.disabled = true;
+                    contactSubmit.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    contactSubmit.classList.remove('bg-accent-blue', 'hover:bg-blue-700');
+                }
+            });
+        }
+
+        // Form Submission (Mock)
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const btn = contactSubmit;
+                const originalText = btn.innerText;
+                
+                btn.disabled = true;
+                btn.innerText = 'Wird gesendet...';
+                
+                // Simulate sending
+                setTimeout(() => {
+                    btn.innerText = 'Gesendet!';
+                    btn.classList.remove('bg-accent-blue', 'hover:bg-blue-700');
+                    btn.classList.add('bg-green-600');
+                    
+                    setTimeout(() => {
+                        contactModal.classList.add('hidden');
+                        document.body.style.overflow = '';
+                        contactForm.reset();
+                        btn.innerText = originalText;
+                        btn.classList.remove('bg-green-600');
+                        btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        btn.disabled = true;
+                    }, 1500);
+                }, 1000);
+            });
+        }
+    </script>
 </body>
 </html>

@@ -375,6 +375,7 @@ async function initAllAnalysesPage(){
     const grid = document.getElementById('all-analyses-grid');
     const sortSelect = document.getElementById('sort-select');
     const sectorSelect = document.getElementById('sector-select');
+    const stockSelect = document.getElementById('stock-select');
     const searchInput = document.getElementById('search-input');
     const clearBtn = document.getElementById('search-clear');
     const favToggle = document.getElementById('favorites-toggle');
@@ -411,9 +412,16 @@ async function initAllAnalysesPage(){
         const opt = document.createElement('option'); opt.value = s; opt.textContent = s; sectorSelect.appendChild(opt);
     });
 
+    // populate stock select (with titles)
+    const stocks = Array.from(new Set(data.map(d => (d.title || '').toString().trim()).filter(Boolean))).sort();
+    stocks.forEach(s => {
+        const opt = document.createElement('option'); opt.value = s; opt.textContent = s; stockSelect.appendChild(opt);
+    });
+
     function renderList(filterOpts = {}){
         const q = (filterOpts.q || '').toLowerCase().trim();
         const sector = (filterOpts.sector || '').trim();
+        const stock = (filterOpts.stock || '').trim();
         const sort = filterOpts.sort || 'newest';
         const onlyFavs = filterOpts.onlyFavs || false;
 
@@ -427,6 +435,8 @@ async function initAllAnalysesPage(){
 
         // filter sector
         if (sector) items = items.filter(i => (i.category||'').toLowerCase() === sector.toLowerCase());
+        // filter stock/title
+        if (stock) items = items.filter(i => (i.title||'').toLowerCase() === stock.toLowerCase());
         // search
         if (q) items = items.filter(i => ((i.title||'') + ' ' + (i.summary||'') + ' ' + (i.category||'')).toLowerCase().includes(q));
 
@@ -461,6 +471,7 @@ async function initAllAnalysesPage(){
         renderList({ 
             q: searchInput?.value || '', 
             sector: sectorSelect?.value || '', 
+            stock: stockSelect?.value || '', 
             sort: sortSelect?.value || 'newest',
             onlyFavs: showFavoritesOnly
         });
@@ -468,6 +479,7 @@ async function initAllAnalysesPage(){
     
     sortSelect?.addEventListener('change', readAndRender);
     sectorSelect?.addEventListener('change', readAndRender);
+    stockSelect?.addEventListener('change', readAndRender);
     searchInput?.addEventListener('input', () => { readAndRender(); });
     clearBtn?.addEventListener('click', (e)=>{ e.preventDefault(); if (searchInput) searchInput.value=''; readAndRender(); });
     

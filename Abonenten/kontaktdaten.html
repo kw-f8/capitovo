@@ -101,7 +101,7 @@
 
                     <div class="flex gap-3">
                         <button type="submit" class="flex-1 py-3 px-4 rounded-md bg-primary-blue text-white">Speichern</button>
-                        <a href="./abonenten.html" class="flex-1 py-3 px-4 rounded-md border border-gray-300 inline-flex items-center justify-center">Zurück</a>
+                        <a href="./abonenten.html" id="back-link" class="flex-1 py-3 px-4 rounded-md border border-gray-300 inline-flex items-center justify-center">Zurück</a>
                     </div>
                 </form>
             </div>
@@ -162,5 +162,17 @@
             </ul>
         </nav>
     </div>
+    <script>
+        // Check for 'ref' parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref');
+        
+        if (ref === 'account') {
+            const backLink = document.getElementById('back-link');
+            if (backLink) {
+                backLink.href = './konto.html';
+            }
+        }
+    </script>
 </body>
 </html>

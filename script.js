@@ -408,17 +408,16 @@ function initTestLogin() {
     // Simulierter Benutzer-Datenbank
     const USERS = {
         'test@capitovo.de': { pass: 'passwort123', sub: 'premium' },
-        'test@capitoo.de': { pass: 'passwort123', sub: 'premium' },
         'noabo@capitovo.de': { pass: 'passwort123', sub: 'none' }
     };
     
     // Pre-defined contact data for specific users
     const USER_CONTACTS = {
-        'test@capitoo.de': {
+        'test@capitovo.de': {
             name: 'Kevin Waibel',
             firstname: 'Kevin',
             lastname: 'Waibel',
-            email: 'test@capitoo.de',
+            email: 'test@capitovo.de',
             phone: '+1234567890',
             address: 'Musterstraße 1, 88400 Biberach',
             street: 'Musterstraße',

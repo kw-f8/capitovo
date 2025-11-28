@@ -22,9 +22,15 @@
     </header>
 
     <main class="max-w-6xl mx-auto p-6">
-        <section class="mb-6">
-            <h1 class="text-3xl font-extrabold mb-2">Kontaktdaten bearbeiten</h1>
-            <p class="text-gray-600">Aktualisiere hier deine Kontaktdaten und Zahlungsinformationen.</p>
+        <section class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-extrabold text-gray-900">Kontaktdaten bearbeiten</h1>
+                <p class="text-gray-500 mt-1">Aktualisiere hier deine Kontaktdaten und Zahlungsinformationen.</p>
+            </div>
+            <a href="./abonenten.html" id="back-link" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Zurück
+            </a>
         </section>
 
         <section class="member-grid">
@@ -122,9 +128,8 @@
                         </div>
                     </fieldset>
 
-                    <div class="flex gap-3">
-                        <button type="submit" class="flex-1 py-3 px-4 rounded-md bg-primary-blue text-white">Speichern</button>
-                        <a href="./abonenten.html" id="back-link" class="flex-1 py-3 px-4 rounded-md border border-gray-300 inline-flex items-center justify-center">Zurück</a>
+                    <div class="pt-2">
+                        <button type="submit" class="w-full py-3 px-4 rounded-md bg-primary-blue text-white font-medium hover:bg-blue-700 transition-colors shadow-sm">Speichern</button>
                     </div>
                 </form>
             </div>

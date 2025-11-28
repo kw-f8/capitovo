@@ -106,7 +106,10 @@
                         </div>
                         
                         <!-- Lifetime -->
-                        <div id="card-lifetime" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('lifetime')">
+                        <div id="card-lifetime" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden" onclick="selectPlan('lifetime')">
+                            <div class="absolute top-0 right-0 bg-gradient-to-l from-yellow-400 to-yellow-200 text-gray-900 text-xs font-bold px-3 py-1 rounded-bl-lg shadow-sm">
+                                BEST VALUE
+                            </div>
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
                                 <div class="text-4xl font-extrabold text-gray-900 mb-4">
@@ -141,14 +144,14 @@
                     <div class="border-t border-gray-200 pt-4">
                         <div class="flex justify-between items-center mb-2">
                             <span class="text-gray-600">Zwischensumme</span>
-                            <span id="summary-subtotal" class="font-medium">-</span>
+                            <span id="summary-subtotal" class="font-medium">€ 0,-</span>
                         </div>
 
 
 
                         <div class="flex justify-between items-center text-xl font-extrabold text-gray-900 mt-4">
                             <span>Gesamt</span>
-                            <span id="summary-total">Bitte wählen</span>
+                            <span id="summary-total">€ 0,-</span>
                         </div>
                         <div class="mt-2 text-xs text-gray-500 text-right">
                             inkl. MwSt.
@@ -250,26 +253,46 @@
                         </div>
                     </div>
 
+                    <!-- Plan Summary Box -->
+                    <div id="checkout-plan-summary" class="hidden bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+                        <h4 class="text-sm font-semibold text-blue-900 uppercase tracking-wider mb-2">Gewähltes Abo</h4>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-700 font-medium" id="summary-plan-name">Premium</span>
+                            <span class="text-gray-900 font-bold" id="summary-plan-price">€ 189,- / Monat</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm text-gray-600">
+                            <span>Zahlungsbeginn:</span>
+                            <span>Heute</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm text-gray-600">
+                            <span>Geld-zurück-Garantie:</span>
+                            <span>14 Tage</span>
+                        </div>
+                    </div>
+
                     <!-- Payment Method -->
                     <div class="space-y-4">
                         <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Zahlungsmethode</h3>
                         <div class="space-y-2">
                             <div class="flex items-center">
                                 <input id="pay-card" name="payment-method" type="radio" value="card" checked class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
-                                <label for="pay-card" class="ml-3 block text-sm font-medium text-gray-700">
-                                    Kreditkarte
+                                <label for="pay-card" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">Kreditkarte</span>
+                                    <svg class="h-6 w-auto text-gray-600" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M35 0H3C1.3 0 0 1.3 0 3V21C0 22.7 1.3 24 3 24H35C36.7 24 38 22.7 38 21V3C38 1.3 36.7 0 35 0Z" fill="#F5F5F7"/><path d="M35 1H3C1.9 1 1 1.9 1 3V21C1 22.1 1.9 23 3 23H35C36.1 23 37 22.1 37 21V3C37 1.9 36.1 1 35 1Z" stroke="#E5E5E5" stroke-width="2"/><path d="M0 6H38V10H0V6Z" fill="#333333"/><rect x="4" y="14" width="22" height="4" rx="1" fill="#E5E5E5"/><rect x="29" y="14" width="5" height="4" rx="1" fill="#E5E5E5"/></svg>
                                 </label>
                             </div>
                             <div class="flex items-center">
                                 <input id="pay-paypal" name="payment-method" type="radio" value="paypal" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
-                                <label for="pay-paypal" class="ml-3 block text-sm font-medium text-gray-700">
-                                    PayPal
+                                <label for="pay-paypal" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">PayPal</span>
+                                    <svg class="h-6 w-auto" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.05 6.5C19.6 4.5 17.8 3 15.5 3H7.5C6.7 3 6 3.7 6 4.5V19.5C6 20.3 6.7 21 7.5 21H10.5L11.5 15H14.5C17.5 15 20 12.5 20 9.5C20 8.4 19.7 7.4 19.2 6.5H20.05Z" fill="#003087"/><path d="M17.5 6.5C17.05 4.5 15.25 3 12.95 3H7.5C6.7 3 6 3.7 6 4.5V15H9.5L10.5 9H13.5C16.5 9 19 11.5 19 14.5C19 15.6 18.7 16.6 18.2 17.5H19.05C21.25 17.5 23 15.75 23 13.5C23 9.6 20.5 6.5 17.5 6.5Z" fill="#009cde"/><path d="M9.5 15L8.5 21H11.5L12.5 15H9.5Z" fill="#003087"/></svg>
                                 </label>
                             </div>
                             <div class="flex items-center">
                                 <input id="pay-sepa" name="payment-method" type="radio" value="sepa" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
-                                <label for="pay-sepa" class="ml-3 block text-sm font-medium text-gray-700">
-                                    SEPA Lastschrift
+                                <label for="pay-sepa" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">SEPA Lastschrift</span>
+                                    <svg class="h-6 w-auto" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="38" height="24" rx="2" fill="#F5F5F7"/><path d="M6 12H32" stroke="#333" stroke-width="2"/><path d="M6 8H16" stroke="#333" stroke-width="2"/><path d="M22 16H32" stroke="#333" stroke-width="2"/></svg>
                                 </label>
                             </div>
                         </div>
@@ -279,11 +302,20 @@
                             <!-- Card Fields -->
                             <div id="card-fields" class="space-y-4">
                                 <div class="relative">
-                                    <input type="text" id="card-number" placeholder="Kartennummer" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="card-number" placeholder="Kartennummer" class="block w-full pl-10 border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <input type="text" id="card-expiry" placeholder="MM / JJ" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
                                     <input type="text" id="card-cvc" placeholder="CVC" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                </div>
+                                <div class="flex items-center text-xs text-gray-500 mt-2">
+                                    <svg class="h-4 w-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    Zahlungen werden sicher über Stripe verarbeitet (PCI-konform)
                                 </div>
                             </div>
                             <!-- PayPal Info -->
@@ -305,7 +337,12 @@
                         </label>
                     </div>
 
-                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150">
+                    <div class="flex items-center justify-center text-xs text-gray-500 mb-2 mt-6">
+                        <svg class="w-4 h-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        100% sichere Zahlung. SSL-verschlüsselt.
+                    </div>
+
+                    <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-500 cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150" disabled>
                         Kostenpflichtiges Abonnement jetzt abschließen
                     </button>
 
@@ -317,6 +354,41 @@
 
         </div>
     </main>
+
+    <!-- Mini FAQ -->
+    <div class="max-w-3xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 mb-12">
+        <h3 class="text-lg font-bold text-gray-900 mb-6 text-center">Häufig gestellte Fragen</h3>
+        <div class="grid gap-6 md:grid-cols-2">
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Kann ich jederzeit kündigen?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Ja, absolut. Sie können Ihr Abonnement jederzeit mit nur einem Klick in Ihrem Kundenkonto zum Ende der Laufzeit kündigen. Keine versteckten Fristen.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Wie erhalte ich Zugriff?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Sofort nach der erfolgreichen Zahlung werden Sie automatisch in Ihren Mitgliederbereich weitergeleitet und haben vollen Zugriff auf alle Analysen.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Gibt es eine Garantie?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Ja, wir bieten eine 14-tägige Geld-zurück-Garantie. Wenn Sie nicht zufrieden sind, erhalten Sie Ihr Geld ohne Wenn und Aber zurück.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    Welche Zahlungsmethoden gibt es?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Wir akzeptieren alle gängigen Kreditkarten (Visa, Mastercard, Amex), PayPal und SEPA-Lastschrift. Alle Zahlungen sind SSL-verschlüsselt.</p>
+            </div>
+        </div>
+    </div>
 
     <footer class="site-footer mt-auto">
         <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -399,6 +471,14 @@
                 // Update totals
                 if(totalEl) totalEl.textContent = p.price;
                 if(subtotalEl) subtotalEl.textContent = p.price;
+
+                // Update Summary Box
+                const summaryBox = document.getElementById('checkout-plan-summary');
+                if (summaryBox) {
+                    summaryBox.classList.remove('hidden');
+                    document.getElementById('summary-plan-name').textContent = planKey.charAt(0).toUpperCase() + planKey.slice(1);
+                    document.getElementById('summary-plan-price').textContent = p.price + (planKey === 'lifetime' ? ' / Einmalig' : ' / Monat');
+                }
                 
                 // Update URL without reload
                 const url = new URL(window.location);
@@ -444,7 +524,7 @@
                 const originalText = btn.textContent;
                 btn.disabled = true;
                 btn.textContent = 'Verarbeite Zahlung...';
-                btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                btn.classList.add('bg-gray-500', 'cursor-not-allowed');
 
                 setTimeout(() => {
                     // Success!
@@ -506,11 +586,11 @@
                 // Update Button
                 if (isValid) {
                     submitBtn.disabled = false;
-                    submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.remove('bg-gray-500', 'cursor-not-allowed');
                     submitBtn.classList.add('bg-primary-blue', 'hover:bg-blue-700');
                 } else {
                     submitBtn.disabled = true;
-                    submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                    submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
                     submitBtn.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
                 }
             }

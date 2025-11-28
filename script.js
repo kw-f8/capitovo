@@ -193,6 +193,16 @@ function createMemberAnalysisCard(a, idx){
     const date = a.date || '';
     const author = a.author || '';
 
+    // Extract Stock Name from Title
+    let stockName = '';
+    if (title.includes('—')) {
+        stockName = title.split('—')[0].trim();
+    } else if (title.includes(':')) {
+        stockName = title.split(':')[0].trim();
+    }
+    // If stock name is too long (likely a sentence), ignore it
+    if (stockName.length > 25) stockName = '';
+
     // --- Favorites Logic ---
     const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
     const isFav = favorites.includes(title);
@@ -245,7 +255,7 @@ function createMemberAnalysisCard(a, idx){
                 </div>
                 
                 <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
-                    ${category}
+                    ${category} ${stockName ? `<span class="text-gray-400 mx-1">•</span> <span class="text-gray-500 font-bold">${stockName}</span>` : ''}
                 </p>
                 
                 <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
@@ -1059,6 +1069,15 @@ async function renderAnalysisDetail(){
         const img = (/^(https?:)?\/\//i.test(imgRaw) || imgRaw.startsWith('/')) ? imgRaw : ((isInAbonenten ? '../' : '') + imgRaw);
         const bodyHtml = analysis.content ? analysis.content : `<p class="text-gray-700">${(analysis.summary || '')}</p>`;
 
+        // Extract Stock Name from Title
+        let stockName = '';
+        if (title.includes('—')) {
+            stockName = title.split('—')[0].trim();
+        } else if (title.includes(':')) {
+            stockName = title.split(':')[0].trim();
+        }
+        if (stockName.length > 25) stockName = '';
+
         // Favorites Logic for Detail View
         const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
         const isFav = favorites.includes(title);
@@ -1084,7 +1103,9 @@ async function renderAnalysisDetail(){
                     <div class="absolute top-0 right-0">
                         ${favButton}
                     </div>
-                    <p class="text-xs font-semibold uppercase text-primary-blue mb-2 pr-12">${category}</p>
+                    <p class="text-xs font-semibold uppercase text-primary-blue mb-2 pr-12">
+                        ${category} ${stockName ? `<span class="text-gray-400 mx-1">•</span> <span class="text-gray-500 font-bold">${stockName}</span>` : ''}
+                    </p>
                     <h1 class="text-3xl font-extrabold text-gray-900 mb-3 pr-12">${title}</h1>
                     <div class="text-sm text-gray-500">
                         ${author ? `<span class=\"mr-2\">${author}</span>` : ''}

@@ -19,7 +19,7 @@
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto p-6">
+    <main class="max-w-[1200px] mx-auto p-6">
         <div class="mb-8 flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-extrabold text-gray-900">Mein Konto</h1>
@@ -95,7 +95,7 @@
 
             <!-- Subscription Sidebar -->
             <div class="md:col-span-1">
-                <section class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden relative">
+                <section class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden relative" id="subscription-card">
                     <div class="absolute top-0 right-0 -mt-2 -mr-2 w-24 h-24 bg-gradient-to-br from-blue-400 to-primary-blue rounded-full opacity-10 blur-xl"></div>
                     
                     <div class="p-6">
@@ -103,34 +103,29 @@
                         
                         <div class="flex items-center justify-between mb-6">
                             <div>
-                                <span class="block text-2xl font-extrabold text-gray-900" id="page-acc-plan">Premium</span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1">
-                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>
-                                    Aktiv
+                                <span class="block text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-1" id="page-acc-status">
+                                    <span class="w-2 h-2 bg-gray-500 rounded-full mr-1.5"></span>
+                                    Inaktiv
                                 </span>
                             </div>
-                            <div class="h-12 w-12 bg-blue-50 rounded-full flex items-center justify-center text-primary-blue">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <div class="h-12 w-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-400" id="page-acc-icon">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
                             </div>
                         </div>
 
-                        <div class="space-y-3 border-t border-gray-100 pt-4 mb-6">
+                        <div class="space-y-3 border-t border-gray-100 pt-4 mb-6" id="page-acc-details">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Preis</span>
-                                <span class="font-medium text-gray-900">€ 189,- / Monat</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-500">Mitglied seit</span>
-                                <span class="font-medium text-gray-900">28.11.2025</span>
+                                <span class="font-medium text-gray-900">–</span>
                             </div>
                         </div>
 
-                        <button class="w-full py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors mb-3">
-                            Rechnung herunterladen
-                        </button>
-                        <button class="w-full py-2 px-4 border border-transparent rounded-lg text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 transition-colors">
-                            Abo kündigen
-                        </button>
+                        <div id="page-acc-actions">
+                            <a href="../index.html#pricing" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                                Jetzt upgraden
+                            </a>
+                        </div>
                     </div>
                 </section>
 
@@ -219,8 +214,55 @@
 
                 // Plan
                 const planEl = document.getElementById('page-acc-plan');
+                const statusEl = document.getElementById('page-acc-status');
+                const iconEl = document.getElementById('page-acc-icon');
+                const detailsEl = document.getElementById('page-acc-details');
+                const actionsEl = document.getElementById('page-acc-actions');
+
                 if (planEl && sess.subscription) {
-                    planEl.textContent = sess.subscription.charAt(0).toUpperCase() + sess.subscription.slice(1);
+                    // Active Subscription
+                    const planName = sess.subscription.charAt(0).toUpperCase() + sess.subscription.slice(1);
+                    planEl.textContent = planName;
+                    
+                    // Update Status Badge
+                    statusEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1";
+                    statusEl.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>Aktiv';
+                    
+                    // Update Icon
+                    iconEl.className = "h-12 w-12 bg-blue-50 rounded-full flex items-center justify-center text-primary-blue";
+                    iconEl.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>';
+
+                    // Update Details
+                    let price = '€ 99,- / Monat';
+                    if (sess.subscription === 'premium') price = '€ 189,- / Monat';
+                    if (sess.subscription === 'lifetime') price = '€ 4999,- / Einmalig';
+                    
+                    // Format date
+                    const date = sess.ts ? new Date(sess.ts).toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE');
+
+                    detailsEl.innerHTML = `
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Preis</span>
+                            <span class="font-medium text-gray-900">${price}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Mitglied seit</span>
+                            <span class="font-medium text-gray-900">${date}</span>
+                        </div>
+                    `;
+
+                    // Update Actions
+                    actionsEl.innerHTML = `
+                        <button class="w-full py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors mb-3">
+                            Rechnung herunterladen
+                        </button>
+                        <button class="w-full py-2 px-4 border border-transparent rounded-lg text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 transition-colors">
+                            Abo kündigen
+                        </button>
+                    `;
+                } else {
+                    // No Subscription (Default HTML is already set to this, but ensuring consistency)
+                    // Optional: You could force the "Free" state here if needed, but HTML default handles it.
                 }
             } catch(e) { console.error(e); }
         })();

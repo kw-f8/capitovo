@@ -646,11 +646,31 @@ function initContactForm(){
             payment.paypal_email = document.getElementById('contact-paypal-email')?.value || '';
         }
 
+        const fname = document.getElementById('contact-firstname')?.value || '';
+        const lname = document.getElementById('contact-lastname')?.value || '';
+        const name = document.getElementById('contact-name')?.value || (fname + ' ' + lname).trim();
+
+        const street = document.getElementById('contact-street')?.value || '';
+        const houseno = document.getElementById('contact-houseno')?.value || '';
+        const zip = document.getElementById('contact-zip')?.value || '';
+        const city = document.getElementById('contact-city')?.value || '';
+        
+        let address = document.getElementById('contact-address')?.value || '';
+        if (!address && (street || zip || city)) {
+            address = `${street} ${houseno}, ${zip} ${city}`.trim();
+        }
+
         const data = {
-            name: document.getElementById('contact-name')?.value || '',
+            name: name,
+            firstname: fname,
+            lastname: lname,
             email: document.getElementById('contact-email')?.value || '',
             phone: document.getElementById('contact-phone')?.value || '',
-            address: document.getElementById('contact-address')?.value || '',
+            address: address,
+            street: street,
+            houseno: houseno,
+            zip: zip,
+            city: city,
             payment: payment,
             savedAt: Date.now()
         };

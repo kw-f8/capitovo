@@ -31,9 +31,15 @@
             <div class="bg-white p-6 rounded-xl shadow">
                 <!-- Contact form inline (same fields as modal) -->
                 <form id="contact-form" class="space-y-4">
-                    <div class="relative">
-                        <input id="contact-name" name="name" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Name">
-                        <label for="contact-name" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Name</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="relative">
+                            <input id="contact-firstname" name="firstname" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Vorname">
+                            <label for="contact-firstname" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Vorname</label>
+                        </div>
+                        <div class="relative">
+                            <input id="contact-lastname" name="lastname" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Nachname">
+                            <label for="contact-lastname" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Nachname</label>
+                        </div>
                     </div>
 
                     <div class="relative">
@@ -46,9 +52,25 @@
                         <label for="contact-phone" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Telefon</label>
                     </div>
 
-                    <div class="relative">
-                        <input id="contact-address" name="address" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Adresse">
-                        <label for="contact-address" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Adresse</label>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="col-span-2 relative">
+                            <input id="contact-street" name="street" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Straße">
+                            <label for="contact-street" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Straße</label>
+                        </div>
+                        <div class="relative">
+                            <input id="contact-houseno" name="houseno" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Nr.">
+                            <label for="contact-houseno" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Nr.</label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="relative">
+                            <input id="contact-zip" name="zip" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="PLZ">
+                            <label for="contact-zip" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">PLZ</label>
+                        </div>
+                        <div class="col-span-2 relative">
+                            <input id="contact-city" name="city" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Ort">
+                            <label for="contact-city" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Ort</label>
+                        </div>
                     </div>
 
                     <fieldset class="border-t pt-4">
@@ -179,10 +201,27 @@
         try {
             const contact = JSON.parse(localStorage.getItem('capitovo_contact') || '{}');
             
-            if (contact.name) document.getElementById('contact-name').value = contact.name;
+            if (contact.firstname) document.getElementById('contact-firstname').value = contact.firstname;
+            if (contact.lastname) document.getElementById('contact-lastname').value = contact.lastname;
+            
+            // Fallback: Split name if firstname/lastname not set
+            if (!contact.firstname && !contact.lastname && contact.name) {
+                const parts = contact.name.trim().split(' ');
+                if (parts.length > 1) {
+                    document.getElementById('contact-lastname').value = parts.pop();
+                    document.getElementById('contact-firstname').value = parts.join(' ');
+                } else {
+                    document.getElementById('contact-firstname').value = contact.name;
+                }
+            }
+
             if (contact.email) document.getElementById('contact-email').value = contact.email;
             if (contact.phone) document.getElementById('contact-phone').value = contact.phone;
-            if (contact.address) document.getElementById('contact-address').value = contact.address;
+            
+            if (contact.street) document.getElementById('contact-street').value = contact.street;
+            if (contact.houseno) document.getElementById('contact-houseno').value = contact.houseno;
+            if (contact.zip) document.getElementById('contact-zip').value = contact.zip;
+            if (contact.city) document.getElementById('contact-city').value = contact.city;
 
             const paymentSelect = document.getElementById('contact-payment-method');
             if (paymentSelect) {

@@ -446,7 +446,7 @@ async function initAllAnalysesPage(){
         // render
         if (!items.length) { 
             grid.innerHTML = onlyFavs 
-                ? '<div class="col-span-3 text-center py-12"><p class="text-gray-500 mb-2">Keine Favoriten gefunden.</p><p class="text-sm text-gray-400">Markieren Sie Analysen mit dem Herz-Symbol, um sie hier zu sehen.</p></div>' 
+                ? '<div class="col-span-3 text-center py-12"><p class="text-gray-500 mb-2">Keine Favoriten gefunden.</p><p class="text-sm text-gray-400">Markieren Sie Analysen mit dem Stern-Symbol, um sie hier zu sehen.</p></div>' 
                 : '<p class="text-gray-500">Keine Analysen gefunden.</p>'; 
             return; 
         }

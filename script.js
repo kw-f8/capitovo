@@ -408,7 +408,25 @@ function initTestLogin() {
     // Simulierter Benutzer-Datenbank
     const USERS = {
         'test@capitovo.de': { pass: 'passwort123', sub: 'premium' },
+        'test@capitoo.de': { pass: 'passwort123', sub: 'premium' },
         'noabo@capitovo.de': { pass: 'passwort123', sub: 'none' }
+    };
+    
+    // Pre-defined contact data for specific users
+    const USER_CONTACTS = {
+        'test@capitoo.de': {
+            name: 'Kevin Waibel',
+            firstname: 'Kevin',
+            lastname: 'Waibel',
+            email: 'test@capitoo.de',
+            phone: '+1234567890',
+            address: 'Musterstraße 1, 88400 Biberach',
+            street: 'Musterstraße',
+            houseno: '1',
+            zip: '88400',
+            city: 'Biberach',
+            payment: { method: 'card', card_last4: '4242', card_name: 'Kevin Waibel' }
+        }
     };
     
     const loginModal = document.getElementById('login-modal');
@@ -441,6 +459,14 @@ function initTestLogin() {
                     subscription: user.sub, 
                     ts: Date.now() 
                 })); 
+                
+                // Set contact data if defined for this user
+                if (USER_CONTACTS[enteredEmail]) {
+                    localStorage.setItem('capitovo_contact', JSON.stringify(USER_CONTACTS[enteredEmail]));
+                } else {
+                    // Clear contact data for other users to avoid mixup
+                    localStorage.removeItem('capitovo_contact');
+                }
             }catch(e){}
             window.location.href = 'Abonenten/abonenten.html';
             return;

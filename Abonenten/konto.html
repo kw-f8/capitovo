@@ -254,7 +254,13 @@
                     if (sess.subscription === 'lifetime') price = '€ 4999,- / Einmalig';
                     
                     // Format date
-                    const date = sess.ts ? new Date(sess.ts).toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE');
+                    const startDateObj = sess.ts ? new Date(sess.ts) : new Date();
+                    const date = startDateObj.toLocaleDateString('de-DE');
+                    
+                    // Calculate next payment (1 month later)
+                    const nextDateObj = new Date(startDateObj);
+                    nextDateObj.setMonth(nextDateObj.getMonth() + 1);
+                    const nextPaymentStr = nextDateObj.toLocaleDateString('de-DE');
 
                     detailsEl.innerHTML = `
                         <div class="flex justify-between text-sm">
@@ -264,6 +270,10 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Mitglied seit</span>
                             <span class="font-medium text-gray-900">${date}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-500">Nächste Zahlung</span>
+                            <span class="font-medium text-gray-900">${nextPaymentStr}</span>
                         </div>
                     `;
 

@@ -204,7 +204,7 @@
                 const payEditBtn = document.getElementById('page-acc-payment-edit');
 
                 if (payEl) {
-                    if (contact.payment && sess.subscription) {
+                    if (contact.payment && sess.subscription && sess.subscription !== 'none') {
                         const p = contact.payment;
                         if (p.method === 'card' && p.card_last4) payEl.textContent = `Karte •••• ${p.card_last4}`;
                         else if (p.method === 'sepa' && p.iban_last4) payEl.textContent = `IBAN •••• ${p.iban_last4}`;
@@ -228,7 +228,7 @@
                 const detailsEl = document.getElementById('page-acc-details');
                 const actionsEl = document.getElementById('page-acc-actions');
 
-                if (planEl && sess.subscription) {
+                if (planEl && sess.subscription && sess.subscription !== 'none') {
                     // Active Subscription
                     const planName = sess.subscription.charAt(0).toUpperCase() + sess.subscription.slice(1);
                     planEl.textContent = planName;

@@ -75,7 +75,7 @@
             <div class="space-y-6">
                 <section class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden relative" id="subscription-card">
                     <div class="p-6">
-                        <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Ihr Abonnement</h2>
+                        <h2 class="text-sm font-bold text-gray-400 tracking-wider mb-4">Ihr Abonnement</h2>
                         
                         <div class="mb-6">
                             <span class="block text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
@@ -102,7 +102,7 @@
 
                 <section class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                     <div class="p-6">
-                        <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Hilfe & Support</h2>
+                        <h2 class="text-sm font-bold text-gray-400 tracking-wider mb-4">Hilfe & Support</h2>
                         
                         <div>
                             <h3 class="text-base font-bold text-gray-900">Haben Sie Fragen?</h3>
@@ -139,21 +139,27 @@
                 const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
                 let contact = JSON.parse(localStorage.getItem('capitovo_contact')||'{}') || {};
                 
-                // FALLBACK: Inject test data if missing (fixes issue if user didn't re-login)
-                if (sess.email === 'test@capitovo.de' && !contact.street) {
-                    contact = {
-                        name: 'Kevin Waibel',
-                        firstname: 'Kevin',
-                        lastname: 'Waibel',
-                        email: 'test@capitovo.de',
-                        phone: '+1234567890',
-                        address: 'Musterstraße 1, 88400 Biberach',
-                        street: 'Musterstraße',
-                        houseno: '1',
-                        zip: '88400',
-                        city: 'Biberach',
-                        payment: { method: 'paypal', paypal_email: 'test@capitovo.de' }
-                    };
+                // FORCE UPDATE: Always update payment method for test@capitovo.de to PayPal
+                if (sess.email === 'test@capitovo.de') {
+                    // Update payment method to PayPal
+                    contact.payment = { method: 'paypal', paypal_email: 'test@capitovo.de' };
+                    
+                    // FALLBACK: Inject full test data if missing
+                    if (!contact.street) {
+                        contact = {
+                            name: 'Kevin Waibel',
+                            firstname: 'Kevin',
+                            lastname: 'Waibel',
+                            email: 'test@capitovo.de',
+                            phone: '+1234567890',
+                            address: 'Musterstraße 1, 88400 Biberach',
+                            street: 'Musterstraße',
+                            houseno: '1',
+                            zip: '88400',
+                            city: 'Biberach',
+                            payment: { method: 'paypal', paypal_email: 'test@capitovo.de' }
+                        };
+                    }
                     localStorage.setItem('capitovo_contact', JSON.stringify(contact));
                 }
 

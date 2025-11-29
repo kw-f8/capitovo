@@ -42,8 +42,8 @@
             line-height: 1;
             box-shadow: none;
         }
-        .filter-bar select, .filter-bar input[type="date"] { appearance: none; -webkit-appearance: none; -moz-appearance: none; height: 40px; }
-        .filter-bar input[type="date"] { font-size: 0.98rem; line-height: 1; }
+        .filter-bar select, .filter-bar input[type="date"] { appearance: none; -webkit-appearance: none; -moz-appearance: none; height: 40px; padding: 0 12px; }
+        .filter-bar input[type="date"] { font-size: 0.98rem; line-height: 1; box-sizing: border-box; }
         .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; height: 40px; }
         .filter-bar #filter-toggle { white-space: nowrap; flex-shrink: 0; }
         .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; min-width: 158px; }
@@ -182,12 +182,12 @@
 
                         <div>
                             <label for="date-from" class="block text-sm font-medium text-gray-700 mb-1">Zeitraum von</label>
-                            <input type="date" id="date-from" class="w-full border rounded px-3 py-2">
+                            <input type="date" id="date-from" class="w-full border rounded px-3">
                         </div>
 
                         <div>
                             <label for="date-to" class="block text-sm font-medium text-gray-700 mb-1">Zeitraum bis</label>
-                            <input type="date" id="date-to" class="w-full border rounded px-3 py-2">
+                            <input type="date" id="date-to" class="w-full border rounded px-3">
                         </div>
 
                         <div>

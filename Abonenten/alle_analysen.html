@@ -7,6 +7,12 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <style>
+        /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
+        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+        /* Provide a subtle visible focus for keyboard users */
+        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
         /* Page-local layout: align header and main with logo's left edge */
         :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
         /* page background and unified white tones */

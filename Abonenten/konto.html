@@ -205,6 +205,15 @@
                 
                 document.getElementById('page-acc-contact').innerHTML = contactLine || 'Keine Adresse hinterlegt';
 
+                // Calculate next payment date (used in both sections)
+                let nextPaymentStr = '';
+                if (sess.subscription && sess.subscription !== 'none') {
+                    const startDateObj = sess.ts ? new Date(sess.ts) : new Date();
+                    const nextDateObj = new Date(startDateObj);
+                    nextDateObj.setMonth(nextDateObj.getMonth() + 1);
+                    nextPaymentStr = nextDateObj.toLocaleDateString('de-DE');
+                }
+
                 // Payment
                 const payEl = document.getElementById('page-acc-payment');
                 const billingDateEl = document.getElementById('page-acc-billing-date');
@@ -218,8 +227,8 @@
                         else if (p.method === 'paypal' && p.paypal_email) payEl.textContent = `PayPal: ${p.paypal_email}`;
                         else payEl.textContent = 'Standard-Zahlungsmethode';
                         
-                        // Show billing date and edit button only if subscription exists
-                        billingDateEl.textContent = 'Nächste Abbuchung am 01.12.2025';
+                        // Show billing date (use same date as in subscription card)
+                        billingDateEl.textContent = `Nächste Abbuchung am ${nextPaymentStr}`;
                         if(payEditBtn) payEditBtn.classList.remove('hidden');
                     } else {
                         payEl.textContent = 'Keine Zahlungsmethode hinterlegt';
@@ -251,11 +260,6 @@
                     // Format date
                     const startDateObj = sess.ts ? new Date(sess.ts) : new Date();
                     const date = startDateObj.toLocaleDateString('de-DE');
-                    
-                    // Calculate next payment (1 month later)
-                    const nextDateObj = new Date(startDateObj);
-                    nextDateObj.setMonth(nextDateObj.getMonth() + 1);
-                    const nextPaymentStr = nextDateObj.toLocaleDateString('de-DE');
 
                     detailsEl.innerHTML = `
                         <div class="flex justify-between text-sm">

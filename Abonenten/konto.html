@@ -152,7 +152,7 @@
                         houseno: '1',
                         zip: '88400',
                         city: 'Biberach',
-                        payment: { method: 'card', card_last4: '4242', card_name: 'Kevin Waibel' }
+                        payment: { method: 'paypal', paypal_email: 'test@capitovo.de' }
                     };
                     localStorage.setItem('capitovo_contact', JSON.stringify(contact));
                 }
@@ -257,7 +257,7 @@
                             <span class="font-medium text-gray-900">${price}</span>
                         </div>
                         <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Nächste Zahlung</span>
+                            <span class="text-gray-500">Nächste Abbuchung</span>
                             <span class="font-medium text-gray-900">${nextPaymentStr}</span>
                         </div>
                     `;

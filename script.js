@@ -178,7 +178,7 @@ function openSubscriptionModal() {
 }
 
 /** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */
-function createMemberAnalysisCard(a, idx){
+function createMemberAnalysisCard(a, idx, showFavorites = false){
     // Fallback values
     const title = a.title || 'Unbenannte Analyse';
     const summary = a.summary || '';
@@ -214,16 +214,16 @@ function createMemberAnalysisCard(a, idx){
         }
     } catch(e) {}
 
-    // --- Favorites Logic (nur für Abo-Kunden) ---
+    // --- Favorites Logic (nur für Abo-Kunden und nur auf alle_analysen.html) ---
     let favButton = '';
-    if (hasAccess) {
+    if (hasAccess && showFavorites) {
         const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
         const isFav = favorites.includes(title);
         const starFill = isFav ? 'currentColor' : 'none';
         const starColor = isFav ? 'text-yellow-400' : 'text-gray-400';
         
         favButton = `
-            <button onclick="toggleFavorite(event, '${title.replace(/'/g, "\\'")}')" 
+            <button onclick="toggleFavorite(event, '${title.replace(/'/g, "\\'")}')"
                     class="absolute top-4 right-4 z-30 p-2 transition-all duration-200 hover:scale-110"
                     title="${isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}">
                 <svg class="w-6 h-6 ${starColor} drop-shadow-md" fill="${starFill}" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,9 +231,7 @@ function createMemberAnalysisCard(a, idx){
                 </svg>
             </button>
         `;
-    }
-
-    // If locked: use a dummy link and attach onclick handler
+    }    // If locked: use a dummy link and attach onclick handler
     const finalLink = hasAccess ? link : '#';
     const onclickAttr = hasAccess ? '' : 'onclick="event.preventDefault(); openSubscriptionModal();"';
     
@@ -363,8 +361,8 @@ async function loadAndRenderMemberAnalyses(){
             return (db - da) || 0;
         });
 
-        // render up to 6 analyses in a responsive grid
-        const html = `<div class="grid md:grid-cols-3 gap-8">` + data.slice(0,6).map((d,i) => createMemberAnalysisCard(d,i)).join('') + `</div>`;
+        // render up to 6 analyses in a responsive grid (ohne Favoriten-Sterne auf abonenten.html)
+        const html = `<div class="grid md:grid-cols-3 gap-8">` + data.slice(0,6).map((d,i) => createMemberAnalysisCard(d,i,false)).join('') + `</div>`;
         container.innerHTML = html;
         try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }catch(err){
@@ -494,7 +492,7 @@ async function initAllAnalysesPage(){
                 : '<p class="text-gray-500">Keine Analysen gefunden.</p>'; 
             return; 
         }
-        grid.innerHTML = '<div class="grid md:grid-cols-3 gap-8">' + items.map((it, idx) => createMemberAnalysisCard(it, idx)).join('') + '</div>';
+        grid.innerHTML = '<div class="grid md:grid-cols-3 gap-8">' + items.map((it, idx) => createMemberAnalysisCard(it, idx, true)).join('') + '</div>';
         try { ScrollReveal.add(grid.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }
 

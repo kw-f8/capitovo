@@ -115,7 +115,16 @@
                 <div class="flex flex-col gap-3">
                     <div class="filter-row">
                         <div class="flex items-center gap-3">
-                            <label for="sort-select" class="text-sm font-medium text-gray-700">Sortieren:</label>
+                            <label for="sort-select" class="text-sm font-medium text-gray-700" title="Sortieren">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 5h10"></path>
+                                    <path d="M11 9h7"></path>
+                                    <path d="M11 13h4"></path>
+                                    <circle cx="6" cy="6" r="3"></circle>
+                                    <circle cx="6" cy="18" r="3"></circle>
+                                    <path d="M20 18h-4"></path>
+                                </svg>
+                            </label>
                             <select id="sort-select" class="border rounded px-3 py-2">
                                 <option value="newest">Neueste zuerst</option>
                                 <option value="oldest">Älteste zuerst</option>

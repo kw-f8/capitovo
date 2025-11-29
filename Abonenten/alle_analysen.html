@@ -39,12 +39,12 @@
             line-height: 1;
             box-shadow: none;
         }
-        .filter-bar select { appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 140px; flex-shrink: 0; }
-        .filter-bar #sort-select { min-width: 160px; }
-        .filter-bar #sector-select { min-width: 140px; }
-        .filter-bar #stock-select { min-width: 180px; max-width: 240px; }
+        .filter-bar select { appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 130px; flex-shrink: 0; }
+        .filter-bar #sector-select { min-width: 130px; }
+        .filter-bar #stock-select { min-width: 160px; max-width: 220px; }
         .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; }
-        .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; max-width: 400px; }
+        .filter-bar #sort-toggle { white-space: nowrap; flex-shrink: 0; min-width: auto; }
+        .filter-bar input[type="search"] { min-width: 180px; flex: 1 1 auto; max-width: 350px; }
         .filter-bar #search-clear { background: transparent; border: 1px solid rgba(15,23,42,0.06); padding: 0 12px; border-radius: 8px; cursor: pointer; }
         /* keep select and input visually compact on small screens */
         @media (max-width: 1200px) {
@@ -143,18 +143,12 @@
                             <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full border rounded px-3 py-2">
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <label for="sort-select" class="text-sm font-medium text-gray-700" title="Sortieren">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M8 6L8 18M8 18L4 14M8 18L12 14"></path>
-                                    <path d="M16 18L16 6M16 6L20 10M16 6L12 10"></path>
-                                </svg>
-                            </label>
-                            <select id="sort-select" class="border rounded px-3 py-2">
-                                <option value="newest">Neueste zuerst</option>
-                                <option value="oldest">Älteste zuerst</option>
-                            </select>
-                        </div>
+                        <button id="sort-toggle" class="flex items-center gap-2 border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors" title="Sortierung ändern">
+                            <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 6h18M3 12h12M3 18h6"></path>
+                            </svg>
+                            <span id="sort-label" class="text-sm font-medium">Neueste</span>
+                        </button>
                     </div>
                 </div>
             </div>

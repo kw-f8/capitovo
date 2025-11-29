@@ -373,12 +373,16 @@ async function loadAndRenderMemberAnalyses(){
 /** Initialize the full overview page with filtering, sorting and search. */
 async function initAllAnalysesPage(){
     const grid = document.getElementById('all-analyses-grid');
-    const sortSelect = document.getElementById('sort-select');
+    const sortToggle = document.getElementById('sort-toggle');
+    const sortIcon = document.getElementById('sort-icon');
+    const sortLabel = document.getElementById('sort-label');
     const sectorSelect = document.getElementById('sector-select');
     const stockSelect = document.getElementById('stock-select');
     const searchInput = document.getElementById('search-input');
     const clearBtn = document.getElementById('search-clear');
     const favToggle = document.getElementById('favorites-toggle');
+    
+    let currentSort = 'newest';
 
     if (!grid) return;
 
@@ -472,12 +476,30 @@ async function initAllAnalysesPage(){
             q: searchInput?.value || '', 
             sector: sectorSelect?.value || '', 
             stock: stockSelect?.value || '', 
-            sort: sortSelect?.value || 'newest',
+            sort: currentSort,
             onlyFavs: showFavoritesOnly
         });
     }
     
-    sortSelect?.addEventListener('change', readAndRender);
+    // Sort toggle handler
+    if (sortToggle) {
+        sortToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentSort = currentSort === 'newest' ? 'oldest' : 'newest';
+            
+            // Update icon and label
+            if (currentSort === 'newest') {
+                sortIcon.innerHTML = '<path d="M3 6h18M3 12h12M3 18h6"></path>';
+                sortLabel.textContent = 'Neueste';
+            } else {
+                sortIcon.innerHTML = '<path d="M3 18h18M3 12h12M3 6h6"></path>';
+                sortLabel.textContent = 'Älteste';
+            }
+            
+            readAndRender();
+        });
+    }
+    
     sectorSelect?.addEventListener('change', readAndRender);
     stockSelect?.addEventListener('change', readAndRender);
     searchInput?.addEventListener('input', () => { readAndRender(); });

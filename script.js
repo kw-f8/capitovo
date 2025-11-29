@@ -203,22 +203,6 @@ function createMemberAnalysisCard(a, idx){
     // If stock name is too long (likely a sentence), ignore it
     if (stockName.length > 25) stockName = '';
 
-    // --- Favorites Logic ---
-    const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
-    const isFav = favorites.includes(title);
-    const starFill = isFav ? 'currentColor' : 'none';
-    const starColor = isFav ? 'text-yellow-400' : 'text-gray-400';
-    
-    const favButton = `
-        <button onclick="toggleFavorite(event, '${title.replace(/'/g, "\\'")}')" 
-                class="absolute top-4 right-4 z-30 p-2 transition-all duration-200 hover:scale-110"
-                title="${isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}">
-            <svg class="w-6 h-6 ${starColor} drop-shadow-md" fill="${starFill}" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-            </svg>
-        </button>
-    `;
-
     // --- Check Subscription ---
     let hasAccess = false;
     try {
@@ -229,6 +213,25 @@ function createMemberAnalysisCard(a, idx){
             hasAccess = true;
         }
     } catch(e) {}
+
+    // --- Favorites Logic (nur für Abo-Kunden) ---
+    let favButton = '';
+    if (hasAccess) {
+        const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
+        const isFav = favorites.includes(title);
+        const starFill = isFav ? 'currentColor' : 'none';
+        const starColor = isFav ? 'text-yellow-400' : 'text-gray-400';
+        
+        favButton = `
+            <button onclick="toggleFavorite(event, '${title.replace(/'/g, "\\'")}')" 
+                    class="absolute top-4 right-4 z-30 p-2 transition-all duration-200 hover:scale-110"
+                    title="${isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}">
+                <svg class="w-6 h-6 ${starColor} drop-shadow-md" fill="${starFill}" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+            </button>
+        `;
+    }
 
     // If locked: use a dummy link and attach onclick handler
     const finalLink = hasAccess ? link : '#';

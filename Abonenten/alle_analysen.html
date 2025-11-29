@@ -25,8 +25,9 @@
         .filter-bar { position: sticky; top: 110px; z-index: 40; background: rgba(255,255,255,0.96); padding: 0.7rem 0; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); margin-bottom: 1rem; }
 
         /* Filter controls: visual polish without changing the overall box size */
-        .filter-bar .alle-layout .flex { align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.95rem; margin-right: 6px; }
+        .filter-bar .alle-layout > .flex { align-items: stretch; gap: 0.75rem; }
+        .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.95rem; margin-right: 6px; white-space: nowrap; }
         .filter-bar select, .filter-bar input[type="search"], .filter-bar button {
             height: 40px;
             padding: 0 12px;
@@ -38,15 +39,24 @@
             line-height: 1;
             box-shadow: none;
         }
-        .filter-bar select { appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 180px; }
-        .filter-bar #stock-select { min-width: 220px; max-width: 320px; }
-        .filter-bar input[type="search"] { min-width: 160px; max-width: 520px; }
+        .filter-bar select { appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 150px; }
+        .filter-bar #sort-select { min-width: 170px; }
+        .filter-bar #sector-select { min-width: 150px; }
+        .filter-bar #stock-select { min-width: 200px; max-width: 280px; }
+        .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; }
+        .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; max-width: 520px; }
         .filter-bar #search-clear { background: transparent; border: 1px solid rgba(15,23,42,0.06); padding: 0 12px; border-radius: 8px; cursor: pointer; }
         /* keep select and input visually compact on small screens */
+        @media (max-width: 1024px) {
+            .filter-row { flex-direction: column; align-items: stretch; width: 100%; }
+            .filter-row > div { width: 100%; }
+            .filter-bar select { width: 100%; max-width: 100%; }
+            .filter-bar #favorites-toggle { width: 100%; justify-content: center; }
+            .filter-bar input[type="search"] { width: 100%; max-width: 100%; }
+        }
         @media (max-width: 640px) {
             .filter-bar select, .filter-bar input[type="search"], .filter-bar button { height: 36px; font-size: 0.92rem; }
             .filter-bar { top: 92px; }
-            .filter-bar #stock-select { min-width: 160px; max-width: 100%; }
         }
 
         /* Cards */
@@ -102,40 +112,42 @@
 
         <div class="filter-bar">
             <div class="alle-layout">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <label for="sort-select" class="text-sm font-medium text-gray-700">Sortieren:</label>
-                    <select id="sort-select" class="border rounded px-3 py-2">
-                        <option value="newest">Neueste zuerst</option>
-                        <option value="oldest">Älteste zuerst</option>
-                    </select>
-                </div>
+                <div class="flex flex-col gap-3">
+                    <div class="filter-row">
+                        <div class="flex items-center gap-3">
+                            <label for="sort-select" class="text-sm font-medium text-gray-700">Sortieren:</label>
+                            <select id="sort-select" class="border rounded px-3 py-2">
+                                <option value="newest">Neueste zuerst</option>
+                                <option value="oldest">Älteste zuerst</option>
+                            </select>
+                        </div>
 
-                <div class="flex items-center gap-3">
-                    <label for="sector-select" class="text-sm font-medium text-gray-700">Sektor:</label>
-                    <select id="sector-select" class="border rounded px-3 py-2">
-                        <option value="">Alle</option>
-                    </select>
-                </div>
+                        <div class="flex items-center gap-3">
+                            <label for="sector-select" class="text-sm font-medium text-gray-700">Sektor:</label>
+                            <select id="sector-select" class="border rounded px-3 py-2">
+                                <option value="">Alle</option>
+                            </select>
+                        </div>
 
-                <div class="flex items-center gap-3">
-                    <label for="stock-select" class="text-sm font-medium text-gray-700">Aktie:</label>
-                    <select id="stock-select" class="border rounded px-3 py-2">
-                        <option value="">Alle</option>
-                    </select>
-                </div>
+                        <div class="flex items-center gap-3">
+                            <label for="stock-select" class="text-sm font-medium text-gray-700">Aktie:</label>
+                            <select id="stock-select" class="border rounded px-3 py-2">
+                                <option value="">Alle</option>
+                            </select>
+                        </div>
 
-                <div class="flex items-center gap-3">
-                    <button id="favorites-toggle" class="border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-                        <span>Nur Favoriten</span>
-                    </button>
-                </div>
+                        <div class="flex items-center gap-3">
+                            <button id="favorites-toggle" class="border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                                <span>Nur Favoriten</span>
+                            </button>
+                        </div>
 
-                <div class="flex items-center gap-3 flex-1 md:flex-initial">
-                    <label for="search-input" class="sr-only">Suche</label>
-                    <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full md:w-96 border rounded px-3 py-2">
-                </div>
+                        <div class="flex items-center gap-3 flex-1">
+                            <label for="search-input" class="sr-only">Suche</label>
+                            <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full border rounded px-3 py-2">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

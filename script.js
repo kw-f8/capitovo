@@ -373,9 +373,6 @@ async function loadAndRenderMemberAnalyses(){
 /** Initialize the full overview page with filtering, sorting and search. */
 async function initAllAnalysesPage(){
     const grid = document.getElementById('all-analyses-grid');
-    const filterToggle = document.getElementById('filter-toggle');
-    const filterChevron = document.getElementById('filter-chevron');
-    const advancedFilters = document.getElementById('advanced-filters');
     const sortSelect = document.getElementById('sort-select');
     const sectorSelect = document.getElementById('sector-select');
     const riskSelect = document.getElementById('risk-select');
@@ -387,14 +384,6 @@ async function initAllAnalysesPage(){
     const clearBtn = document.getElementById('search-clear');
     const favToggle = document.getElementById('favorites-toggle');
     const resetFilters = document.getElementById('reset-filters');
-    
-    // Filter toggle handler
-    if (filterToggle) {
-        filterToggle.addEventListener('click', () => {
-            advancedFilters.classList.toggle('open');
-            filterChevron.classList.toggle('open');
-        });
-    }
 
     if (!grid) return;
 

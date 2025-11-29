@@ -283,8 +283,22 @@
 
     <script src="../script.js?v=5"></script>
     <script>
-        // Ensure the overview page initializes its JS renderer
+        // Filter toggle - muss sofort funktionieren
         document.addEventListener('DOMContentLoaded', function(){
+            const filterToggle = document.getElementById('filter-toggle');
+            const filterChevron = document.getElementById('filter-chevron');
+            const advancedFilters = document.getElementById('advanced-filters');
+            
+            if (filterToggle && advancedFilters && filterChevron) {
+                filterToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    advancedFilters.classList.toggle('open');
+                    filterChevron.classList.toggle('open');
+                    console.log('Filter toggled, open:', advancedFilters.classList.contains('open'));
+                });
+            }
+            
+            // Ensure the overview page initializes its JS renderer
             try{ if (typeof initAllAnalysesPage === 'function') initAllAnalysesPage(); } catch(e){ console.error('initAllAnalysesPage error', e); }
         });
     </script>

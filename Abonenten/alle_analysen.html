@@ -211,6 +211,19 @@
         </nav>
     </div>
 
+    <div id="logout-confirm-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-50 backdrop-blur-xl-custom flex items-center justify-center p-4">
+        <div class="w-full max-w-sm">
+            <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
+                <h3 class="text-lg font-semibold mb-2">Abmelden</h3>
+                <p class="text-sm text-gray-700 mb-4">Möchten Sie sich wirklich abmelden? Lokale Sitzungsdaten werden entfernt.</p>
+                <div class="flex gap-3">
+                    <button id="logout-confirm-yes" class="flex-1 py-2 px-4 rounded bg-primary-blue text-white">Abmelden</button>
+                    <button id="logout-confirm-no" class="flex-1 py-2 px-4 rounded border border-gray-300">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="../script.js?v=5"></script>
     <script>
         // Ensure the overview page initializes its JS renderer

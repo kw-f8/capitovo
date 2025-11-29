@@ -373,15 +373,28 @@ async function loadAndRenderMemberAnalyses(){
 /** Initialize the full overview page with filtering, sorting and search. */
 async function initAllAnalysesPage(){
     const grid = document.getElementById('all-analyses-grid');
-    const sortToggle = document.getElementById('sort-toggle');
-    const sortIcon = document.getElementById('sort-icon');
-    const sortLabel = document.getElementById('sort-label');
+    const filterToggle = document.getElementById('filter-toggle');
+    const filterChevron = document.getElementById('filter-chevron');
+    const advancedFilters = document.getElementById('advanced-filters');
+    const sortSelect = document.getElementById('sort-select');
     const sectorSelect = document.getElementById('sector-select');
+    const riskSelect = document.getElementById('risk-select');
+    const performanceSelect = document.getElementById('performance-select');
+    const typeSelect = document.getElementById('type-select');
+    const dateFrom = document.getElementById('date-from');
+    const dateTo = document.getElementById('date-to');
     const searchInput = document.getElementById('search-input');
     const clearBtn = document.getElementById('search-clear');
     const favToggle = document.getElementById('favorites-toggle');
+    const resetFilters = document.getElementById('reset-filters');
     
-    let currentSort = 'newest';
+    // Filter toggle handler
+    if (filterToggle) {
+        filterToggle.addEventListener('click', () => {
+            advancedFilters.classList.toggle('open');
+            filterChevron.classList.toggle('open');
+        });
+    }
 
     if (!grid) return;
 
@@ -418,6 +431,11 @@ async function initAllAnalysesPage(){
     function renderList(filterOpts = {}){
         const q = (filterOpts.q || '').toLowerCase().trim();
         const sector = (filterOpts.sector || '').trim();
+        const risk = (filterOpts.risk || '').trim();
+        const performance = (filterOpts.performance || '').trim();
+        const type = (filterOpts.type || '').trim();
+        const dateFromVal = filterOpts.dateFrom || '';
+        const dateToVal = filterOpts.dateTo || '';
         const sort = filterOpts.sort || 'newest';
         const onlyFavs = filterOpts.onlyFavs || false;
 
@@ -431,22 +449,50 @@ async function initAllAnalysesPage(){
 
         // filter sector
         if (sector) items = items.filter(i => (i.category||'').toLowerCase() === sector.toLowerCase());
+        
+        // filter by risk (if field exists in data)
+        if (risk) items = items.filter(i => (i.risk||'').toLowerCase() === risk.toLowerCase());
+        
+        // filter by performance (if field exists in data)
+        if (performance) items = items.filter(i => (i.performance||'').toLowerCase() === performance.toLowerCase());
+        
+        // filter by type (if field exists in data)
+        if (type) items = items.filter(i => (i.type||'').toLowerCase() === type.toLowerCase());
+        
+        // filter by date range
+        if (dateFromVal) {
+            items = items.filter(i => {
+                const itemDate = i.date ? new Date(i.date) : null;
+                return itemDate && itemDate >= new Date(dateFromVal);
+            });
+        }
+        if (dateToVal) {
+            items = items.filter(i => {
+                const itemDate = i.date ? new Date(i.date) : null;
+                return itemDate && itemDate <= new Date(dateToVal);
+            });
+        }
+        
         // search
         if (q) items = items.filter(i => ((i.title||'') + ' ' + (i.summary||'') + ' ' + (i.category||'')).toLowerCase().includes(q));
 
-        // sort: try to use `date` field; if missing, keep original order
+        // sort
         if (sort === 'newest'){
             items.sort((a,b)=>{
                 const da = a.date ? Date.parse(a.date) : 0;
                 const db = b.date ? Date.parse(b.date) : 0;
                 return (db - da) || 0;
             });
-        } else {
+        } else if (sort === 'oldest') {
             items.sort((a,b)=>{
                 const da = a.date ? Date.parse(a.date) : 0;
                 const db = b.date ? Date.parse(b.date) : 0;
                 return (da - db) || 0;
             });
+        } else if (sort === 'alpha-asc') {
+            items.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
+        } else if (sort === 'alpha-desc') {
+            items.sort((a,b)=> (b.title||'').localeCompare(a.title||''));
         }
 
         // render
@@ -465,31 +511,47 @@ async function initAllAnalysesPage(){
         renderList({ 
             q: searchInput?.value || '', 
             sector: sectorSelect?.value || '', 
-            sort: currentSort,
+            risk: riskSelect?.value || '',
+            performance: performanceSelect?.value || '',
+            type: typeSelect?.value || '',
+            dateFrom: dateFrom?.value || '',
+            dateTo: dateTo?.value || '',
+            sort: sortSelect?.value || 'newest',
             onlyFavs: showFavoritesOnly
         });
     }
     
-    // Sort toggle handler
-    if (sortToggle) {
-        sortToggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentSort = currentSort === 'newest' ? 'oldest' : 'newest';
-            
-            // Update icon and label
-            if (currentSort === 'newest') {
-                sortIcon.innerHTML = '<path d="M3 6h18M3 12h12M3 18h6"></path>';
-                sortLabel.textContent = 'Neueste';
-            } else {
-                sortIcon.innerHTML = '<path d="M3 18h18M3 12h12M3 6h6"></path>';
-                sortLabel.textContent = 'Älteste';
+    // Reset filters handler
+    if (resetFilters) {
+        resetFilters.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            if (sectorSelect) sectorSelect.value = '';
+            if (riskSelect) riskSelect.value = '';
+            if (performanceSelect) performanceSelect.value = '';
+            if (typeSelect) typeSelect.value = '';
+            if (dateFrom) dateFrom.value = '';
+            if (dateTo) dateTo.value = '';
+            if (sortSelect) sortSelect.value = 'newest';
+            showFavoritesOnly = false;
+            if (favToggle) {
+                favToggle.classList.remove('bg-red-50', 'text-red-600', 'border-red-200');
+                favToggle.classList.add('bg-white', 'text-gray-600', 'border-gray-200');
+                const span = favToggle.querySelector('span');
+                const icon = favToggle.querySelector('svg');
+                if(span) span.textContent = 'Nur Favoriten';
+                if(icon) icon.style.display = 'block';
             }
-            
             readAndRender();
         });
     }
     
+    sortSelect?.addEventListener('change', readAndRender);
     sectorSelect?.addEventListener('change', readAndRender);
+    riskSelect?.addEventListener('change', readAndRender);
+    performanceSelect?.addEventListener('change', readAndRender);
+    typeSelect?.addEventListener('change', readAndRender);
+    dateFrom?.addEventListener('change', readAndRender);
+    dateTo?.addEventListener('change', readAndRender);
     searchInput?.addEventListener('input', () => { readAndRender(); });
     clearBtn?.addEventListener('click', (e)=>{ e.preventDefault(); if (searchInput) searchInput.value=''; readAndRender(); });
     

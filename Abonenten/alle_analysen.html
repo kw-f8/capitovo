@@ -279,21 +279,29 @@
         </div>
     </div>
 
-    <script src="../script.js?v=5"></script>
+    <script src="../script.js?v=6"></script>
     <script>
         // Filter toggle - muss sofort funktionieren
         document.addEventListener('DOMContentLoaded', function(){
+            console.log('DOMContentLoaded fired');
             const filterToggle = document.getElementById('filter-toggle');
             const filterChevron = document.getElementById('filter-chevron');
             const advancedFilters = document.getElementById('advanced-filters');
             
+            console.log('Filter elements:', {filterToggle, filterChevron, advancedFilters});
+            
             if (filterToggle && advancedFilters && filterChevron) {
+                console.log('Setting up filter toggle listener');
                 filterToggle.addEventListener('click', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Filter button clicked!');
                     advancedFilters.classList.toggle('open');
                     filterChevron.classList.toggle('open');
                     console.log('Filter toggled, open:', advancedFilters.classList.contains('open'));
                 });
+            } else {
+                console.error('Missing filter elements!');
             }
             
             // Ensure the overview page initializes its JS renderer

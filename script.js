@@ -643,6 +643,17 @@ function initTestLogin() {
         }
     };
     
+    // Handle plan selection buttons
+    const planButtons = document.querySelectorAll('.plan-select-btn');
+    planButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const plan = this.getAttribute('data-plan');
+            if (plan) {
+                sessionStorage.setItem('selected_plan', plan);
+            }
+        });
+    });
+    
     const loginModal = document.getElementById('login-modal');
     if (!loginModal) return;
     
@@ -682,7 +693,18 @@ function initTestLogin() {
                     localStorage.removeItem('capitovo_contact');
                 }
             }catch(e){}
-            window.location.href = 'Abonenten/abonenten.html';
+            
+            // Check if user selected a plan before login
+            const selectedPlan = sessionStorage.getItem('selected_plan');
+            if (selectedPlan) {
+                // Clear the selected plan from session storage
+                sessionStorage.removeItem('selected_plan');
+                // Redirect to checkout with the selected plan
+                window.location.href = 'checkout.html?plan=' + selectedPlan;
+            } else {
+                // Normal redirect to member area
+                window.location.href = 'Abonenten/abonenten.html';
+            }
             return;
         } else {
             // Fehlerhafte Anmeldung

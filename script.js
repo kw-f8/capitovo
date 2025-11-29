@@ -699,8 +699,13 @@ function initTestLogin() {
             if (selectedPlan) {
                 // Clear the selected plan from session storage
                 sessionStorage.removeItem('selected_plan');
-                // Redirect to checkout with the selected plan
-                window.location.href = 'checkout.html?plan=' + selectedPlan;
+                // Only redirect to checkout if user doesn't have an active subscription
+                if (user.sub === 'none' || !user.sub) {
+                    window.location.href = 'checkout.html?plan=' + selectedPlan;
+                } else {
+                    // User already has active subscription, go to member area
+                    window.location.href = 'Abonenten/abonenten.html';
+                }
             } else {
                 // Normal redirect to member area
                 window.location.href = 'Abonenten/abonenten.html';

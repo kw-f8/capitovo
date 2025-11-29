@@ -41,7 +41,6 @@
         }
         .filter-bar select { appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 130px; flex-shrink: 0; }
         .filter-bar #sector-select { min-width: 130px; }
-        .filter-bar #stock-select { min-width: 160px; max-width: 220px; }
         .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; min-width: 158px; }
         .filter-bar #sort-toggle { white-space: nowrap; flex-shrink: 0; min-width: 120px; width: 120px; }
         .filter-bar input[type="search"] { min-width: 180px; flex: 1 1 auto; max-width: 350px; }
@@ -136,13 +135,6 @@
                             </select>
                         </div>
 
-                        <div class="flex items-center gap-3">
-                            <label for="stock-select" class="text-sm font-medium text-gray-700">Aktie:</label>
-                            <select id="stock-select" class="border rounded px-3 py-2">
-                                <option value="">Alle</option>
-                            </select>
-                        </div>
-
                         <button id="sort-toggle" class="flex items-center gap-2 border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors" title="Sortierung ändern">
                             <svg id="sort-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M3 6h18M3 12h12M3 18h6"></path>
@@ -193,7 +185,7 @@
                 </li>
                 <li>
                     <a href="./alle_analysen.html?filter=favorites" class="flex items-center space-x-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
                         <span>Meine Favoriten</span>
                     </a>
                 </li>

@@ -640,7 +640,7 @@ function initTestLogin() {
             houseno: '1',
             zip: '88400',
             city: 'Biberach',
-            payment: { method: 'card', card_last4: '4242', card_name: 'Kevin Waibel' }
+            payment: { method: 'paypal', paypal_email: 'test@capitovo.de' }
         }
     };
     

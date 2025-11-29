@@ -45,7 +45,7 @@
         .filter-bar select, .filter-bar input[type="date"] { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
         .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; }
         .filter-bar #filter-toggle { white-space: nowrap; flex-shrink: 0; }
-        .filter-bar #favorites-toggle { white-space: nowrap; }
+        .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; min-width: 158px; }
         .filter-bar #search-clear { background: transparent; border: 1px solid rgba(15,23,42,0.06); padding: 0 12px; border-radius: 8px; cursor: pointer; }
         /* keep select and input visually compact on small screens */
         @media (max-width: 1200px) {
@@ -116,12 +116,17 @@
 
         <div class="filter-bar">
             <div class="alle-layout">
-                <!-- Hauptzeile: Suche + Filter-Toggle -->
+                <!-- Hauptzeile: Suche + Favoriten + Filter-Toggle -->
                 <div class="filter-row">
                     <div class="flex items-center gap-3 flex-1">
                         <label for="search-input" class="sr-only">Suche</label>
                         <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full border rounded px-3 py-2">
                     </div>
+
+                    <button id="favorites-toggle" class="border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                        <span>Nur Favoriten</span>
+                    </button>
 
                     <button id="filter-toggle" class="flex items-center gap-2 border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -192,13 +197,6 @@
                                 <option value="alpha-asc">A-Z</option>
                                 <option value="alpha-desc">Z-A</option>
                             </select>
-                        </div>
-
-                        <div class="flex items-end">
-                            <button id="favorites-toggle" class="w-full border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 flex items-center justify-center gap-2 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-                                <span>Nur Favoriten</span>
-                            </button>
                         </div>
                     </div>
 

@@ -27,9 +27,10 @@
         /* Filter controls: visual polish without changing the overall box size */
         .filter-bar .alle-layout > .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 0; }
         .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
-        .advanced-filters { overflow: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; max-height: 0; opacity: 0; }
-        .advanced-filters.open { max-height: 500px; opacity: 1; }
-        #filter-toggle #filter-chevron.open { transform: rotate(180deg); }
+        .advanced-filters { overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; max-height: 0; opacity: 0; }
+        .advanced-filters.open { max-height: 800px; opacity: 1; }
+        #filter-chevron { transition: transform 0.3s ease; }
+        #filter-chevron.open { transform: rotate(180deg); }
         .filter-bar select, .filter-bar input[type="search"], .filter-bar button {
             height: 40px;
             padding: 0 12px;
@@ -134,7 +135,7 @@
                 </div>
 
                 <!-- Ausklappbare Filter -->
-                <div id="advanced-filters" class="advanced-filters hidden">
+                <div id="advanced-filters" class="advanced-filters">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3">
                         <div>
                             <label for="sector-select" class="block text-sm font-medium text-gray-700 mb-1">Branche/Sektor</label>

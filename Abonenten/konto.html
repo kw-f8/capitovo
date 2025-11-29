@@ -57,12 +57,9 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-medium text-gray-400 mb-1">Zahlungsmethode</label>
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <div class="text-gray-900 font-medium" id="page-acc-payment">Keine Zahlungsmethode hinterlegt</div>
-                                        <div class="text-xs text-gray-500" id="page-acc-billing-date"></div>
-                                    </div>
-                                    <button class="text-sm text-gray-500 hover:text-gray-900 underline hidden ml-2" id="page-acc-payment-edit">Ändern</button>
+                                <div>
+                                    <div class="text-gray-900 font-medium" id="page-acc-payment">Keine Zahlungsmethode hinterlegt</div>
+                                    <div class="text-xs text-gray-500" id="page-acc-billing-date"></div>
                                 </div>
                             </div>
                             <div>
@@ -80,17 +77,12 @@
                     <div class="p-6">
                         <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Ihr Abonnement</h2>
                         
-                        <div class="flex items-center justify-between mb-6">
-                            <div>
-                                <span class="block text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-1" id="page-acc-status">
-                                    <span class="w-2 h-2 bg-gray-500 rounded-full mr-1.5"></span>
-                                    Inaktiv
-                                </span>
-                            </div>
-                            <div class="h-12 w-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-400" id="page-acc-icon">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-                            </div>
+                        <div class="mb-6">
+                            <span class="block text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-1" id="page-acc-status">
+                                <span class="w-2 h-2 bg-gray-500 rounded-full mr-1.5"></span>
+                                Inaktiv
+                            </span>
                         </div>
 
                         <div class="space-y-3 border-t border-gray-100 pt-4 mb-6" id="page-acc-details">
@@ -233,7 +225,6 @@
                 // Plan
                 const planEl = document.getElementById('page-acc-plan');
                 const statusEl = document.getElementById('page-acc-status');
-                const iconEl = document.getElementById('page-acc-icon');
                 const detailsEl = document.getElementById('page-acc-details');
                 const actionsEl = document.getElementById('page-acc-actions');
 
@@ -245,10 +236,6 @@
                     // Update Status Badge
                     statusEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1";
                     statusEl.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>Aktiv';
-                    
-                    // Update Icon
-                    iconEl.className = "h-12 w-12 bg-blue-50 rounded-full flex items-center justify-center text-primary-blue";
-                    iconEl.innerHTML = '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>';
 
                     // Update Details
                     let price = '€ 99,- / Monat';
@@ -268,10 +255,6 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Preis</span>
                             <span class="font-medium text-gray-900">${price}</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Mitglied seit</span>
-                            <span class="font-medium text-gray-900">${date}</span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Nächste Zahlung</span>

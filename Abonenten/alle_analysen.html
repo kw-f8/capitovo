@@ -26,8 +26,8 @@
 
         /* Filter controls: visual polish without changing the overall box size */
         .filter-bar .alle-layout > .flex { align-items: stretch; gap: 0.75rem; }
-        .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
-        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.95rem; margin-right: 6px; white-space: nowrap; }
+        .filter-row { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.75rem; overflow-x: auto; }
+        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.95rem; margin-right: 6px; white-space: nowrap; display: flex; align-items: center; }
         .filter-bar select, .filter-bar input[type="search"], .filter-bar button {
             height: 40px;
             padding: 0 12px;
@@ -39,14 +39,17 @@
             line-height: 1;
             box-shadow: none;
         }
-        .filter-bar select { appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 150px; }
-        .filter-bar #sort-select { min-width: 170px; }
-        .filter-bar #sector-select { min-width: 150px; }
-        .filter-bar #stock-select { min-width: 200px; max-width: 280px; }
+        .filter-bar select { appearance: none; -webkit-appearance: none; -moz-appearance: none; min-width: 140px; flex-shrink: 0; }
+        .filter-bar #sort-select { min-width: 160px; }
+        .filter-bar #sector-select { min-width: 140px; }
+        .filter-bar #stock-select { min-width: 180px; max-width: 240px; }
         .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; }
-        .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; max-width: 520px; }
+        .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; max-width: 400px; }
         .filter-bar #search-clear { background: transparent; border: 1px solid rgba(15,23,42,0.06); padding: 0 12px; border-radius: 8px; cursor: pointer; }
         /* keep select and input visually compact on small screens */
+        @media (max-width: 1200px) {
+            .filter-row { flex-wrap: wrap; }
+        }
         @media (max-width: 1024px) {
             .filter-row { flex-direction: column; align-items: stretch; width: 100%; }
             .filter-row > div { width: 100%; }
@@ -115,23 +118,6 @@
                 <div class="flex flex-col gap-3">
                     <div class="filter-row">
                         <div class="flex items-center gap-3">
-                            <label for="sort-select" class="text-sm font-medium text-gray-700" title="Sortieren">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M11 5h10"></path>
-                                    <path d="M11 9h7"></path>
-                                    <path d="M11 13h4"></path>
-                                    <circle cx="6" cy="6" r="3"></circle>
-                                    <circle cx="6" cy="18" r="3"></circle>
-                                    <path d="M20 18h-4"></path>
-                                </svg>
-                            </label>
-                            <select id="sort-select" class="border rounded px-3 py-2">
-                                <option value="newest">Neueste zuerst</option>
-                                <option value="oldest">Älteste zuerst</option>
-                            </select>
-                        </div>
-
-                        <div class="flex items-center gap-3">
                             <label for="sector-select" class="text-sm font-medium text-gray-700">Sektor:</label>
                             <select id="sector-select" class="border rounded px-3 py-2">
                                 <option value="">Alle</option>
@@ -155,6 +141,19 @@
                         <div class="flex items-center gap-3 flex-1">
                             <label for="search-input" class="sr-only">Suche</label>
                             <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full border rounded px-3 py-2">
+                        </div>
+
+                        <div class="flex items-center gap-3">
+                            <label for="sort-select" class="text-sm font-medium text-gray-700" title="Sortieren">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M8 6L8 18M8 18L4 14M8 18L12 14"></path>
+                                    <path d="M16 18L16 6M16 6L20 10M16 6L12 10"></path>
+                                </svg>
+                            </label>
+                            <select id="sort-select" class="border rounded px-3 py-2">
+                                <option value="newest">Neueste zuerst</option>
+                                <option value="oldest">Älteste zuerst</option>
+                            </select>
                         </div>
                     </div>
                 </div>

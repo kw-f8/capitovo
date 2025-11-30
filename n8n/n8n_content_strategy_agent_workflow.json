@@ -1,0 +1,294 @@
+{
+  "name": "capitovo Content Strategy Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Load existing analyses\nconst fs = require('fs');\nconst analysenPath = '/workspaces/capitovo/data/analysen.json';\n\ntry {\n  const analysenData = fs.readFileSync(analysenPath, 'utf8');\n  const analysen = JSON.parse(analysenData);\n  \n  // Extract company names and tickers\n  const existingCompanies = analysen.map(a => ({\n    ticker: a.ticker,\n    company: a.company,\n    category: a.category,\n    date: a.datum\n  }));\n  \n  // Get category distribution\n  const categoryCount = {};\n  analysen.forEach(a => {\n    categoryCount[a.category] = (categoryCount[a.category] || 0) + 1;\n  });\n  \n  return {\n    json: {\n      existingCompanies: existingCompanies,\n      totalAnalyses: analysen.length,\n      categoryDistribution: categoryCount,\n      recentAnalyses: analysen.slice(-5).map(a => `${a.company} (${a.ticker})`).join(', ')\n    }\n  };\n} catch (error) {\n  return {\n    json: {\n      error: error.message,\n      existingCompanies: [],\n      totalAnalyses: 0,\n      categoryDistribution: {}\n    }\n  };\n}"
+      },
+      "id": "load-existing-analyses",
+      "name": "Load Existing Analyses",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "perplexityApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [{\"role\": \"system\", \"content\": \"Du bist ein strategischer Finanzanalyst und Content-Stratege. Deine Aufgabe ist es, die optimale nächste Analyse zu identifizieren basierend auf: 1) Marktrelevanz und Aktualität, 2) Portfolio-Diversifikation (Sektoren), 3) Investoreninteresse und Suchvolumen, 4) Aktuelle News und Entwicklungen, 5) Wachstumspotenzial. Berücksichtige bestehende Analysen um Duplikate zu vermeiden.\"}, {\"role\": \"user\", \"content\": \"📊 **Aktueller Content-Status:**\\n\\nBereits analysierte Unternehmen:\\n{{$json.recentAnalyses}}\\n\\nAnzahl Analysen gesamt: {{$json.totalAnalyses}}\\n\\nSektor-Verteilung:\\n{{JSON.stringify($json.categoryDistribution, null, 2)}}\\n\\n---\\n\\n🎯 **Aufgabe:**\\n\\nEmpfehle DIE 3 besten Unternehmen für die nächste Analyse. Priorisiere nach:\\n1️⃣ Aktuelle Marktrelevanz (News, Earnings, Produktlaunches)\\n2️⃣ Sektor-Diversifikation (unterrepräsentierte Sektoren bevorzugen)\\n3️⃣ Investoren-Nachfrage (beliebte Aktien, hohe Handelsvolumina)\\n4️⃣ Story-Potenzial (spannende Investment-Thesis)\\n5️⃣ Deutsche Relevanz (DAX, MDAX, oder für deutsche Investoren interessant)\\n\\n---\\n\\n**Antwortformat:**\\n\\n## 🥇 Top-Empfehlung\\n**Unternehmen:** [Name]\\n**Ticker:** [Symbol]\\n**Sektor:** [Kategorie]\\n**Begründung:** [2-3 Sätze warum JETZT]\\n**Aktuelle Catalysts:** [News/Events]\\n**Story:** [Investment-Thesis in 1 Satz]\\n**Priorität:** [1-10]\\n\\n## 🥈 Zweite Wahl\\n[Gleiche Struktur]\\n\\n## 🥉 Dritte Wahl\\n[Gleiche Struktur]\\n\\n## 📈 Markttrends\\n[Aktuelle Trends die Auswahl beeinflussen]\\n\\n## ⚡ Urgent Catalysts\\n[Zeitkritische Events in den nächsten 2 Wochen]\"}],\n  \"temperature\": 0.3,\n  \"max_tokens\": 2500,\n  \"search_recency_filter\": \"day\"\n}",
+        "options": {}
+      },
+      "id": "strategy-agent",
+      "name": "Content Strategy Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-api-key",
+          "name": "Perplexity API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse Strategy Agent Response\nconst response = $input.item.json.choices[0].message.content;\n\n// Extract recommendations\nfunction extractRecommendation(text, rank) {\n  const sectionRegex = new RegExp(`##\\\\s*�${rank === 1 ? '\\\\u0047' : rank === 2 ? '\\\\u0048' : '\\\\u0049'}[^#]*([\\\\s\\\\S]*?)(?=##|$)`, 'i');\n  const section = text.match(sectionRegex);\n  \n  if (!section) return null;\n  \n  const content = section[1];\n  \n  const companyMatch = content.match(/\\*\\*Unternehmen:\\*\\*\\s*([^\\n]+)/);\n  const tickerMatch = content.match(/\\*\\*Ticker:\\*\\*\\s*([^\\n]+)/);\n  const sectorMatch = content.match(/\\*\\*Sektor:\\*\\*\\s*([^\\n]+)/);\n  const reasonMatch = content.match(/\\*\\*Begründung:\\*\\*\\s*([^\\n*]+(?:\\n(?!\\*\\*)[^\\n]+)*)/);\n  const catalystsMatch = content.match(/\\*\\*Aktuelle Catalysts:\\*\\*\\s*([^\\n*]+(?:\\n(?!\\*\\*)[^\\n]+)*)/);\n  const storyMatch = content.match(/\\*\\*Story:\\*\\*\\s*([^\\n*]+)/);\n  const priorityMatch = content.match(/\\*\\*Priorität:\\*\\*\\s*(\\d+)/);\n  \n  return {\n    rank: rank,\n    company: companyMatch ? companyMatch[1].trim() : '',\n    ticker: tickerMatch ? tickerMatch[1].trim() : '',\n    sector: sectorMatch ? sectorMatch[1].trim() : '',\n    reason: reasonMatch ? reasonMatch[1].trim() : '',\n    catalysts: catalystsMatch ? catalystsMatch[1].trim() : '',\n    story: storyMatch ? storyMatch[1].trim() : '',\n    priority: priorityMatch ? parseInt(priorityMatch[1]) : 5\n  };\n}\n\nconst recommendations = [\n  extractRecommendation(response, 1),\n  extractRecommendation(response, 2),\n  extractRecommendation(response, 3)\n].filter(r => r !== null);\n\n// Extract market trends\nconst trendsMatch = response.match(/##\\s*📈\\s*Markttrends[^#]*([\\s\\S]*?)(?=##|$)/i);\nconst trends = trendsMatch ? trendsMatch[1].trim() : '';\n\n// Extract urgent catalysts\nconst urgentMatch = response.match(/##\\s*⚡\\s*Urgent Catalysts[^#]*([\\s\\S]*?)(?=##|$)/i);\nconst urgentCatalysts = urgentMatch ? urgentMatch[1].trim() : '';\n\nreturn {\n  json: {\n    recommendations: recommendations,\n    topPick: recommendations[0] || {},\n    marketTrends: trends,\n    urgentCatalysts: urgentCatalysts,\n    fullReport: response,\n    generatedAt: new Date().toISOString()\n  }\n};"
+      },
+      "id": "parse-recommendations",
+      "name": "Parse Recommendations",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "perplexityApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"messages\": [{\"role\": \"system\", \"content\": \"Du bist ein Finanzanalyst der Trendanalysen erstellt. Identifiziere aktuelle Marktthemen, die für Retail-Investoren relevant sind.\"}, {\"role\": \"user\", \"content\": \"Analysiere die aktuellen Finanznachrichten und Börsentrends der letzten 48 Stunden:\\n\\n1. Welche Sektoren/Themen dominieren die Schlagzeilen?\\n2. Welche deutschen Unternehmen sind aktuell im Fokus?\\n3. Welche US-Unternehmen haben signifikante News?\\n4. Gibt es Earnings-Releases in den nächsten 2 Wochen bei beliebten Aktien?\\n5. Welche Aktien haben ungewöhnlich hohe Handelsvolumina?\\n\\nAntwortformat:\\n**Trending Sectors:** [Liste]\\n**Hot German Stocks:** [3-5 mit Begründung]\\n**Hot US Stocks:** [3-5 mit Begründung]\\n**Upcoming Earnings:** [Liste mit Datum]\\n**High Volume Alerts:** [Auffällige Aktien]\"}],\n  \"temperature\": 0.2,\n  \"max_tokens\": 2000,\n  \"search_recency_filter\": \"day\"\n}",
+        "options": {}
+      },
+      "id": "market-intelligence",
+      "name": "Market Intelligence Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 480],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-api-key",
+          "name": "Perplexity API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse Market Intelligence\nconst response = $input.item.json.choices[0].message.content;\n\nfunction extractSection(text, keyword) {\n  const regex = new RegExp(`\\\\*\\\\*${keyword}:\\\\*\\\\*\\\\s*([^\\n*]+(?:\\n(?!\\\\*\\\\*)[^\\n]+)*)`, 'i');\n  const match = text.match(regex);\n  return match ? match[1].trim() : '';\n}\n\nreturn {\n  json: {\n    trendingSectors: extractSection(response, 'Trending Sectors'),\n    hotGermanStocks: extractSection(response, 'Hot German Stocks'),\n    hotUSStocks: extractSection(response, 'Hot US Stocks'),\n    upcomingEarnings: extractSection(response, 'Upcoming Earnings'),\n    highVolumeAlerts: extractSection(response, 'High Volume Alerts'),\n    fullReport: response\n  }\n};"
+      },
+      "id": "parse-market-intel",
+      "name": "Parse Market Intel",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 480]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Combine Strategy + Market Intelligence\nconst strategy = $('Parse Recommendations').item.json;\nconst market = $input.item.json;\n\nconst topPick = strategy.topPick;\n\nreturn {\n  json: {\n    // Top Recommendation\n    recommendation: {\n      company: topPick.company,\n      ticker: topPick.ticker,\n      sector: topPick.sector,\n      priority: topPick.priority,\n      reason: topPick.reason,\n      catalysts: topPick.catalysts,\n      story: topPick.story\n    },\n    \n    // All recommendations\n    allRecommendations: strategy.recommendations,\n    \n    // Market context\n    marketContext: {\n      trends: strategy.marketTrends,\n      urgentCatalysts: strategy.urgentCatalysts,\n      trendingSectors: market.trendingSectors,\n      hotStocks: `${market.hotGermanStocks} | ${market.hotUSStocks}`,\n      upcomingEarnings: market.upcomingEarnings\n    },\n    \n    // Full reports\n    reports: {\n      strategy: strategy.fullReport,\n      market: market.fullReport\n    },\n    \n    generatedAt: new Date().toISOString(),\n    formattedDate: new Date().toLocaleDateString('de-DE')\n  }\n};"
+      },
+      "id": "combine-insights",
+      "name": "Combine Insights",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 390]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generate Markdown Report\nconst data = $input.item.json;\nconst rec = data.recommendation;\n\nconst markdown = `# 📊 Content Strategy Report\n**Generiert am:** ${data.formattedDate}\n\n---\n\n## 🎯 TOP-EMPFEHLUNG\n\n### ${rec.company} (${rec.ticker})\n\n**Sektor:** ${rec.sector}  \n**Priorität:** ${rec.priority}/10\n\n#### 💡 Investment Story\n${rec.story}\n\n#### 📈 Begründung\n${rec.reason}\n\n#### ⚡ Aktuelle Catalysts\n${rec.catalysts}\n\n---\n\n## 🥈 Alternative Empfehlungen\n\n${data.allRecommendations.slice(1).map((r, i) => `\n### ${i + 2}. ${r.company} (${r.ticker})\n**Sektor:** ${r.sector} | **Priorität:** ${r.priority}/10  \n**Story:** ${r.story}  \n**Grund:** ${r.reason}\n`).join('\\n')}\n\n---\n\n## 📊 Marktkontext\n\n### 📈 Aktuelle Markttrends\n${data.marketContext.trends}\n\n### ⚡ Zeitkritische Catalysts\n${data.marketContext.urgentCatalysts}\n\n### 🔥 Trending Sectors\n${data.marketContext.trendingSectors}\n\n### 📅 Upcoming Earnings\n${data.marketContext.upcomingEarnings}\n\n### 🚀 Hot Stocks\n${data.marketContext.hotStocks}\n\n---\n\n## 🎬 Nächste Schritte\n\n1. **Sofort starten:** Analyse für **${rec.company} (${rec.ticker})** erstellen\n2. **Pipeline füllen:** Vorbereitung für Alternative #2 und #3\n3. **Timing beachten:** Catalysts und Earnings im Auge behalten\n4. **Sektor-Balance:** Aktuelle Verteilung prüfen\n\n---\n\n## 🤖 Workflow-Integration\n\n**Webhook-Aufruf für automatische Analyse:**\n\\`\\`\\`bash\ncurl -X POST YOUR_WEBHOOK_URL \\\\\n  -H \"Content-Type: application/json\" \\\\\n  -d '{\n    \"company\": \"${rec.company}\",\n    \"ticker\": \"${rec.ticker}\",\n    \"sector\": \"${rec.sector}\"\n  }'\n\\`\\`\\`\n\n---\n\n*Bericht generiert von capitovo Content Strategy Agent*\n`;\n\nconst fs = require('fs');\nconst reportPath = `/workspaces/capitovo/n8n/content_strategy_report_${new Date().toISOString().split('T')[0]}.md`;\nfs.writeFileSync(reportPath, markdown, 'utf8');\n\nreturn {\n  json: {\n    markdown: markdown,\n    reportPath: reportPath,\n    topCompany: rec.company,\n    topTicker: rec.ticker,\n    topSector: rec.sector\n  }\n};"
+      },
+      "id": "generate-report",
+      "name": "Generate Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 390]
+    },
+    {
+      "parameters": {
+        "content": "=📊 **Neue Content-Strategie verfügbar**\\n\\n🎯 **Top-Empfehlung:** {{$json.topCompany}} ({{$json.topTicker}})\\n🏢 **Sektor:** {{$json.topSector}}\\n\\n📄 **Report:** `{{$json.reportPath}}`\\n\\n💡 *Dies ist die optimale nächste Analyse basierend auf Marktrelevanz, Diversifikation und Investoreninteresse.*\\n\\n**Nächster Schritt:** Analyse-Workflow starten!",
+        "additionalFields": {}
+      },
+      "id": "slack-notification",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1450, 390],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-webhook",
+          "name": "Slack Webhook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$('Webhook Trigger').item.json.webhookUrl}}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"company\": \"{{$('Generate Report').item.json.topCompany}}\",\n  \"ticker\": \"{{$('Generate Report').item.json.topTicker}}\",\n  \"sector\": \"{{$('Generate Report').item.json.topSector}}\"\n}",
+        "options": {}
+      },
+      "id": "trigger-analysis-workflow",
+      "name": "Trigger Analysis Workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1450, 520],
+      "disabled": true
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Load Existing Analyses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Existing Analyses": {
+      "main": [
+        [
+          {
+            "node": "Content Strategy Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Market Intelligence Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Strategy Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Recommendations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Recommendations": {
+      "main": [
+        [
+          {
+            "node": "Combine Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market Intelligence Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Market Intel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Market Intel": {
+      "main": [
+        [
+          {
+            "node": "Combine Insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Insights": {
+      "main": [
+        [
+          {
+            "node": "Generate Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Report": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Trigger Analysis Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-11-30T00:00:00.000Z",
+  "versionId": "1"
+}

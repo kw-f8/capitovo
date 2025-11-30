@@ -1,0 +1,427 @@
+{
+  "name": "capitovo Analyse Generator (Perplexity Pro)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-analysis",
+        "responseMode": "lastNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "capitovo-analysis"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract and validate input\nconst company = $input.item.json.body.company || 'Tesla';\nconst ticker = $input.item.json.body.ticker || 'TSLA';\nconst sector = $input.item.json.body.sector || 'ZYKLISCHER KONSUM';\nconst analysisType = $input.item.json.body.analysisType || 'equity-research';\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    sector: sector,\n    analysisType: analysisType,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "process-input",
+      "name": "Process Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "perplexityApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "sonar-pro"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"Du bist ein professioneller Finanzanalyst für capitovo, ein deutsches Premium-Analyseportal. Erstelle detaillierte Equity-Research-Berichte auf Deutsch mit aktuellen Marktdaten, Finanzkennzahlen und Analystenmeinungen. Strukturiere alle Analysen konsistent nach den capitovo-Standards. Nutze Markdown-Formatierung für Überschriften (##), Tabellen und Listen.\"}, {\"role\": \"user\", \"content\": \"Erstelle einen umfassenden Equity-Research-Bericht für {{$json.company}} ({{$json.ticker}}) zum Stichtag Ende November 2025.\\n\\nStrukturiere den Bericht wie folgt:\\n\\n## Marktbewertung und Aktienperformance\\n- Aktueller Kurs und Marktkapitalisierung\\n- 52-Wochen-Hoch/Tief\\n- Kursentwicklung 2025\\n- Volatilität und Beta\\n\\n## Bewertungsmultiples und Finanzkennzahlen\\n- KGV, KBV, KUV\\n- Vergleich mit Sektor/Wettbewerb\\n- Umsatz und Profitabilität (EBITDA, EBIT, Nettogewinn)\\n- EPS und Margen\\n- Bilanzstruktur (Eigenkapital, Verschuldung)\\n\\n## Analystenerwartungen und Kursziele\\n- Durchschnittliches Kursziel\\n- Wichtigste Analystenmeinungen (mit Datum November 2025)\\n- Konsens-Rating\\n- Aufwärts-/Abwärtspotenzial\\n\\n## Dividendenpolitik\\n- Aktuelle Dividendenrendite\\n- Ausschüttungshistorie\\n- Nachhaltigkeit\\n\\n## Investitionsbewertung\\n- Stärken (als Aufzählung)\\n- Risiken (als Aufzählung)\\n- Wichtige Katalysatoren\\n\\n## Fazit und Ausblick\\n- Zusammenfassende Bewertung\\n- Anlagevotum (Kaufen/Halten/Verkaufen)\\n- Kursziele kurz-/mittel-/langfristig\\n\\nNutze aktuelle Daten vom November 2025. Füge eine Markdown-Tabelle mit den wichtigsten Kennzahlen ein. Schreibe professionell aber verständlich.\"}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.2"
+            },
+            {
+              "name": "max_tokens",
+              "value": "4000"
+            },
+            {
+              "name": "return_citations",
+              "value": "true"
+            },
+            {
+              "name": "search_recency_filter",
+              "value": "month"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "perplexity-research",
+      "name": "Perplexity Research",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-api-key",
+          "name": "Perplexity API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract Perplexity response\nconst response = $input.item.json.choices[0].message.content;\nconst citations = $input.item.json.citations || [];\nconst company = $('Process Input').item.json.company;\nconst ticker = $('Process Input').item.json.ticker;\nconst sector = $('Process Input').item.json.sector;\n\n// Parse sections from Markdown\nfunction extractSection(text, keyword) {\n  const regex = new RegExp(`##\\\\s*${keyword}[^#]*([\\\\s\\\\S]*?)(?=##|$)`, 'i');\n  const match = text.match(regex);\n  return match ? match[1].trim() : '';\n}\n\nfunction markdownToHTML(markdown) {\n  // Simple Markdown to HTML converter\n  let html = markdown\n    .replace(/### (.+)/g, '<h3>$1</h3>')\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n    .replace(/^- (.+)/gm, '<li>$1</li>')\n    .replace(/(<li>.*<\\/li>)/s, '<ul>$1</ul>')\n    .replace(/\\n\\n/g, '</p><p>')\n    .replace(/^(?!<[uh])/gm, '<p>');\n  \n  // Handle tables\n  const tableRegex = /\\|(.+)\\|\\n\\|[-\\s|]+\\|\\n((\\|.+\\|\\n?)+)/g;\n  html = html.replace(tableRegex, (match) => {\n    const lines = match.trim().split('\\n');\n    const headers = lines[0].split('|').filter(h => h.trim()).map(h => h.trim());\n    const rows = lines.slice(2).map(row => \n      row.split('|').filter(cell => cell.trim()).map(cell => cell.trim())\n    );\n    \n    let table = '<table style=\"width:100%; border-collapse:collapse; margin:1rem 0;\"><thead><tr>';\n    headers.forEach(h => {\n      table += `<th style=\"padding:10px 8px; border-bottom:2px solid rgba(15,23,42,0.1); text-align:left;\">${h}</th>`;\n    });\n    table += '</tr></thead><tbody>';\n    rows.forEach(row => {\n      table += '<tr style=\"border-bottom:1px solid rgba(15,23,42,0.05);\">';\n      row.forEach(cell => {\n        table += `<td style=\"padding:8px;\">${cell}</td>`;\n      });\n      table += '</tr>';\n    });\n    table += '</tbody></table>';\n    return table;\n  });\n  \n  return html;\n}\n\nconst sections = {\n  marktbewertung: markdownToHTML(extractSection(response, \"Marktbewertung\")),\n  finanzen: markdownToHTML(extractSection(response, \"Bewertungsmultiples|Finanzkennzahlen\")),\n  analysten: markdownToHTML(extractSection(response, \"Analysten\")),\n  dividende: markdownToHTML(extractSection(response, \"Dividende\")),\n  bewertung: markdownToHTML(extractSection(response, \"Investitionsbewertung|Bewertung\")),\n  fazit: markdownToHTML(extractSection(response, \"Fazit\"))\n};\n\n// Generate summary from first paragraph\nconst summaryMatch = response.match(/^[^#\\n]+/);\nconst summary = summaryMatch ? summaryMatch[0].trim().substring(0, 200) + '...' : `Equity-Research-Bericht zu ${company} mit aktuellen Marktdaten und Analystenmeinungen.`;\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    sector: sector,\n    content: sections,\n    summary: summary,\n    citations: citations,\n    raw: response\n  }\n};"
+      },
+      "id": "parse-response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const company = $input.item.json.company;\nconst ticker = $input.item.json.ticker;\nconst sector = $input.item.json.sector;\nconst content = $input.item.json.content;\nconst summary = $input.item.json.summary;\nconst date = new Date().toISOString().split('T')[0];\nconst filename = company.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '');\n\nconst html = `<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n    <title>capitovo — ${company} Equity Research ${date}</title>\n    <link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">\n    <link rel=\"stylesheet\" href=\"../style.css\">\n    <style>\n        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }\n        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }\n        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }\n        header { position: static !important; }\n        main { background: transparent; }\n        .analysis-article { max-width: 1000px; margin: 40px auto; padding: 0 20px; }\n        .analysis-article h1 { font-size: 2rem; margin-bottom: 0.5rem; }\n        .analysis-section { margin-top: 1.5rem; }\n        .analysis-section h2 {\n            font-size: 1.5rem;\n            font-weight: 700;\n            margin: 2rem 0 1rem;\n            color: #0f172a;\n            border-bottom: 2px solid #e2e8f0;\n            padding-bottom: 0.4rem;\n        }\n        .analysis-section h3 { font-size: 1.2rem; font-weight: 600; margin: 1.2rem 0 0.6rem; }\n        .analysis-intro { font-size: 1.05rem; color: #0f172a; }\n        table { width: 100%; border-collapse: collapse; }\n        th, td { padding: 10px 8px; }\n        thead tr { border-bottom: 2px solid rgba(15,23,42,0.08); text-align: left; }\n        tbody tr { border-bottom: 1px solid rgba(15,23,42,0.05); }\n        ul, ol { margin: 1rem 0; padding-left: 1.5rem; }\n        li { margin: 0.5rem 0; }\n    </style>\n</head>\n<body class=\"abonenten-page bg-white text-gray-900\">\n\n<header>\n    <div class=\"header-content\">\n        <div class=\"logo\">\n            <a href=\"abonenten.html\">\n                <img src=\"../caitavo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\n            </a>\n        </div>\n    </div>\n</header>\n\n<main>\n    <article class=\"analysis-article\" id=\"${filename}-analysis\">\n        <div class=\"mb-4\">\n            <a href=\"alle_analysen.html\" class=\"text-accent-blue text-sm\">← Zurück</a>\n        </div>\n\n        <div class=\"mb-2\">\n            <p class=\"text-xs font-semibold uppercase mb-2 text-slate-500\">\n                ${sector} <span class=\"text-gray-400 mx-1\">•</span> ${company.toUpperCase()} (${ticker})\n            </p>\n            <h1 class=\"text-3xl font-extrabold text-gray-900 mb-2\">Equity-Research-Bericht: ${company}</h1>\n            <div class=\"text-sm text-gray-500\">\n                <span class=\"mr-2\">capitovo Research</span>\n                <span>• ${date}</span>\n            </div>\n        </div>\n\n        <div class=\"hero-intro-wrapper\" style=\"display:flex; gap:24px; margin:24px 0 32px; align-items:center; flex-wrap:wrap;\">\n            <div class=\"analysis-hero\" style=\"flex:1; min-width:280px;\">\n                <img src=\"../data/vorschaubilder/${filename}.svg\" alt=\"${company} Analyse\" style=\"width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:10px;\" onerror=\"this.style.display='none'\">\n            </div>\n            <div style=\"flex:1; min-width:280px;\">\n                <p class=\"analysis-intro\">${summary}</p>\n            </div>\n        </div>\n\n        <section class=\"analysis-section\">\n            <h2>Marktbewertung und Aktienperformance</h2>\n            ${content.marktbewertung}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Bewertungsmultiples und Finanzkennzahlen</h2>\n            ${content.finanzen}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Analystenerwartungen und Kursziele</h2>\n            ${content.analysten}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Dividendenpolitik und Ausschüttungen</h2>\n            ${content.dividende}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Investitionsbewertung</h2>\n            ${content.bewertung}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Fazit und Ausblick</h2>\n            ${content.fazit}\n            \n            <hr style=\"margin:3rem 0; border:none; border-top:1px solid #e2e8f0;\">\n            <p style=\"font-size:0.9rem; color:#64748b;\">\n                <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.\n            </p>\n            <p style=\"font-size:0.9rem; color:#64748b;\">\n                <strong>Quellen:</strong> Generiert mit Perplexity Pro (Sonar), Marktdaten per ${date}.\n            </p>\n        </section>\n    </article>\n</main>\n\n<footer class=\"site-footer border-t py-6 mt-12\">\n    <div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\">\n        <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>\n        <div class=\"footer-links\">\n            <a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Impressum</a>\n            <a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Datenschutz</a>\n            <a href=\"../Rechtliches/haftung.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Haftungsausschluss</a>\n            <a href=\"../Rechtliches/agb.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">AGB</a>\n        </div>\n    </div>\n</footer>\n\n<div class=\"sidebar\" id=\"sidebar\" aria-hidden=\"true\" aria-label=\"Seitenmenü\">\n    <button class=\"close-button\" id=\"close-sidebar\" aria-label=\"Sidebar schließen\">&times;</button>\n    <nav class=\"sidebar-nav\" aria-label=\"Hauptnavigation\">\n        <ul>\n            <li><a href=\"abonenten.html\" class=\"flex items-center space-x-3\"><span>Dashboard</span></a></li>\n            <li><a href=\"alle_analysen.html\" class=\"flex items-center space-x-3\"><span>Alle Analysen</span></a></li>\n            <li><a href=\"konto.html\" class=\"flex items-center space-x-3\"><span>Mein Konto</span></a></li>\n            <li><a href=\"#\" id=\"logout-link\" class=\"flex items-center space-x-3\"><span>Abmelden</span></a></li>\n        </ul>\n    </nav>\n</div>\n\n<script src=\"../script.js\"></script>\n\n</body>\n</html>`;\n\nreturn {\n  json: {\n    filename: filename,\n    html: html,\n    metadata: {\n      company: company,\n      ticker: ticker,\n      sector: sector,\n      date: date,\n      summary: summary\n    }\n  }\n};"
+      },
+      "id": "generate-html",
+      "name": "Generate HTML",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "perplexityApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{$credentials.apiKey}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "sonar-pro"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"Du bist ein kritischer Finanzanalyst und Fact-Checker. Deine Aufgabe ist es, Analyseberichte auf Faktentreue, Plausibilität und Rechenfehler zu prüfen. Identifiziere: 1) Falsche Zahlen/Kennzahlen, 2) Inkonsistenzen, 3) Veraltete Daten, 4) Rechenfehler, 5) Widersprüchliche Aussagen. Gib konkrete Korrekturen.\"}, {\"role\": \"user\", \"content\": \"Prüfe folgenden Analysebericht für {{$('Process Input').item.json.company}} ({{$('Process Input').item.json.ticker}}) kritisch:\\n\\n{{$('Parse Response').item.json.raw}}\\n\\n---\\n\\nAntwortformat:\\n\\n## ✅ Verifizierte Daten\\n[Liste korrekte Zahlen/Fakten]\\n\\n## ⚠️ Identifizierte Probleme\\n[Fehler mit Korrekturvorschlägen]\\n\\n## 📊 Kennzahlen-Validierung\\n[KGV, Marktcap, Kursziele, etc. - sind diese plausibel?]\\n\\n## 💡 Verbesserungsvorschläge\\n[Was fehlt oder sollte ergänzt werden?]\\n\\n## ⭐ Quality Score\\n[0-10 Punkte mit Begründung]\"}]"
+            },
+            {
+              "name": "temperature",
+              "value": "0.1"
+            },
+            {
+              "name": "max_tokens",
+              "value": "2000"
+            },
+            {
+              "name": "search_recency_filter",
+              "value": "month"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "quality-check",
+      "name": "Quality Check Agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 480],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-api-key",
+          "name": "Perplexity API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Parse Quality Check Results\nconst response = $input.item.json.choices[0].message.content;\nconst originalData = $('Parse Response').item.json;\n\n// Extract sections\nfunction extractSection(text, keyword) {\n  const regex = new RegExp(`##\\\\s*${keyword}[^#]*([\\\\s\\\\S]*?)(?=##|$)`, 'i');\n  const match = text.match(regex);\n  return match ? match[1].trim() : '';\n}\n\n// Extract Quality Score\nconst scoreMatch = response.match(/Quality Score[\\s\\S]*?(\\d+)\\s*\\/\\s*10/);\nconst qualityScore = scoreMatch ? parseInt(scoreMatch[1]) : 5;\n\n// Extract problems\nconst problems = extractSection(response, '⚠️|Probleme|Identifizierte Probleme');\nconst suggestions = extractSection(response, '💡|Verbesserung');\nconst validations = extractSection(response, '📊|Kennzahlen');\n\nconst hasIssues = problems.length > 100 || qualityScore < 7;\n\nreturn {\n  json: {\n    company: originalData.company,\n    ticker: originalData.ticker,\n    qualityScore: qualityScore,\n    hasIssues: hasIssues,\n    problems: problems,\n    suggestions: suggestions,\n    validations: validations,\n    fullReport: response,\n    originalContent: originalData.content,\n    originalSummary: originalData.summary\n  }\n};"
+      },
+      "id": "parse-quality-check",
+      "name": "Parse Quality Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 480]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$json.qualityScore}}",
+              "operation": "larger",
+              "value2": 6
+            }
+          ]
+        }
+      },
+      "id": "check-quality-score",
+      "name": "Quality Score OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1450, 480]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Write HTML file to disk\nconst fs = require('fs');\nconst filename = $('Generate HTML').item.json.filename;\nconst html = $('Generate HTML').item.json.html;\nconst metadata = $('Generate HTML').item.json.metadata;\nconst qualityData = $input.item.json;\n\nconst filePath = `/workspaces/capitovo/Abonenten/${filename}.html`;\n\ntry {\n  // Add quality badge to HTML if score is high\n  let finalHtml = html;\n  if (qualityData.qualityScore >= 8) {\n    const badge = `<div style=\"background:#10b981;color:white;padding:8px 16px;border-radius:8px;display:inline-block;margin:1rem 0;font-size:0.9rem;font-weight:600;\">✓ Qualitätsgeprüft (${qualityData.qualityScore}/10)</div>`;\n    finalHtml = html.replace('</h1>', `</h1>\\n${badge}`);\n  }\n  \n  fs.writeFileSync(filePath, finalHtml, 'utf8');\n  \n  return {\n    json: {\n      success: true,\n      filePath: filePath,\n      filename: filename,\n      metadata: metadata,\n      qualityScore: qualityData.qualityScore,\n      message: `HTML-Datei erfolgreich erstellt: ${filename}.html (Quality: ${qualityData.qualityScore}/10)`\n    }\n  };\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message,\n      filename: filename\n    }\n  };\n}"
+      },
+      "id": "write-html-file",
+      "name": "Write HTML File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 390]
+    },
+    {
+      "parameters": {
+        "content": "=⚠️ **Analyse benötigt manuelle Überprüfung**\\n\\n📊 **Unternehmen:** {{$('Parse Quality Check').item.json.company}} ({{$('Parse Quality Check').item.json.ticker}})\\n⭐ **Quality Score:** {{$('Parse Quality Check').item.json.qualityScore}}/10\\n\\n**Identifizierte Probleme:**\\n```\\n{{$('Parse Quality Check').item.json.problems}}\\n```\\n\\n**Verbesserungsvorschläge:**\\n```\\n{{$('Parse Quality Check').item.json.suggestions}}\\n```\\n\\n❗ Bitte vor Veröffentlichung manuell überprüfen!",
+        "additionalFields": {}
+      },
+      "id": "alert-low-quality",
+      "name": "Alert: Low Quality",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1650, 570],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-webhook",
+          "name": "Slack Webhook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Read current analysen.json\nconst fs = require('fs');\nconst path = '/workspaces/capitovo/data/analysen.json';\n\ntry {\n  const currentData = JSON.parse(fs.readFileSync(path, 'utf8'));\n  const metadata = $input.item.json.metadata;\n  const filename = $input.item.json.filename;\n  \n  // Create new entry\n  const newEntry = {\n    id: `${metadata.ticker.toLowerCase()}-${metadata.date}`,\n    category: metadata.sector,\n    title: `${metadata.company}: Equity-Research-Bericht`,\n    summary: metadata.summary,\n    link: `Abonenten/${filename}.html`,\n    image: `data/vorschaubilder/${filename}.svg`,\n    date: metadata.date,\n    author: \"capitovo Research\",\n    tags: [metadata.company, metadata.ticker, metadata.sector, \"Equity Research\"],\n    published: true\n  };\n  \n  // Add to beginning of array\n  currentData.unshift(newEntry);\n  \n  // Write back\n  fs.writeFileSync(path, JSON.stringify(currentData, null, 2), 'utf8');\n  \n  return {\n    json: {\n      success: true,\n      entry: newEntry,\n      message: `Analyse erfolgreich zu analysen.json hinzugefügt`\n    }\n  };\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message\n    }\n  };\n}"
+      },
+      "id": "update-json",
+      "name": "Update analysen.json",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Generate simple SVG placeholder\nconst company = $('Parse Response').item.json.company;\nconst ticker = $('Parse Response').item.json.ticker;\nconst filename = $input.item.json.filename;\n\nconst svg = `<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">\n      <stop offset=\"0%\" stop-color=\"#0f172a\" />\n      <stop offset=\"100%\" stop-color=\"#1e293b\" />\n    </linearGradient>\n  </defs>\n  <rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"24\" />\n  <g transform=\"translate(60 60)\">\n    <text x=\"0\" y=\"12\" fill=\"#94a3b8\" font-family=\"'Inter', sans-serif\" font-size=\"14\" letter-spacing=\"0.2em\">${ticker}</text>\n    <text x=\"0\" y=\"56\" fill=\"#e2e8f0\" font-family=\"'Inter', sans-serif\" font-size=\"40\" font-weight=\"700\">${company}</text>\n    <text x=\"0\" y=\"96\" fill=\"#93c5fd\" font-family=\"'Inter', sans-serif\" font-size=\"18\">Equity Research • capitovo</text>\n  </g>\n  <g transform=\"translate(60 280)\" font-family=\"'Inter', sans-serif\" fill=\"#cbd5f5\">\n    <text x=\"0\" y=\"0\" font-size=\"16\">Marktbewertung • Kennzahlen • Ausblick</text>\n  </g>\n</svg>`;\n\nconst fs = require('fs');\nconst svgPath = `/workspaces/capitovo/data/vorschaubilder/${filename}.svg`;\nfs.writeFileSync(svgPath, svg, 'utf8');\n\nreturn {\n  json: {\n    success: true,\n    svgPath: svgPath,\n    filename: filename\n  }\n};"
+      },
+      "id": "generate-svg",
+      "name": "Generate Preview SVG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 480]
+    },
+    {
+      "parameters": {
+        "content": "=✅ **Neue Analyse erstellt**\\n\\n📊 **Unternehmen:** {{$('Parse Response').item.json.company}} ({{$('Parse Response').item.json.ticker}})\\n🏢 **Sektor:** {{$('Parse Response').item.json.sector}}\\n📅 **Datum:** {{$('Generate HTML').item.json.metadata.date}}\\n🔗 **Link:** `/Abonenten/{{$('Generate HTML').item.json.filename}}.html`\\n\\n**Summary:** {{$('Parse Response').item.json.summary}}",
+        "additionalFields": {}
+      },
+      "id": "slack-notification",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1650, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-webhook",
+          "name": "Slack Webhook"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "=✅ Analyse erfolgreich generiert!\\n\\n**Unternehmen:** {{$('Parse Response').item.json.company}}\\n**Ticker:** {{$('Parse Response').item.json.ticker}}\\n**Datei:** {{$('Generate HTML').item.json.filename}}.html\\n\\nDie Analyse wurde erstellt und ist nun verfügbar.",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1650, 480]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Input": {
+      "main": [
+        [
+          {
+            "node": "Perplexity Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Research": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          {
+            "node": "Quality Check Agent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Check Agent": {
+      "main": [
+        [
+          {
+            "node": "Parse Quality Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Quality Check": {
+      "main": [
+        [
+          {
+            "node": "Quality Score OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quality Score OK?": {
+      "main": [
+        [
+          {
+            "node": "Write HTML File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alert: Low Quality",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Write HTML File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate HTML": {
+      "main": [
+        [
+          {
+            "node": "Quality Score OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write HTML File": {
+      "main": [
+        [
+          {
+            "node": "Generate Preview SVG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Preview SVG": {
+      "main": [
+        [
+          {
+            "node": "Update analysen.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update analysen.json": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-11-30T00:00:00.000Z",
+  "versionId": "1"
+}

@@ -101,9 +101,10 @@
         /* Sidebar nav adjustments to match Mitgliederbereich style */
         .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
         .sidebar-nav ul li { display: block; }
-        .sidebar-nav ul li.logout-bottom { margin-top: auto; padding: 0; }
-        .sidebar-nav ul li.logout-bottom a.logout-link { display: flex; align-items: center; gap: 10px; padding: 12px 0; color: #f8fafc; text-decoration: none; }
-        .sidebar-nav ul li.logout-bottom a.logout-link svg { display: block; }
+        .sidebar-nav ul li.logout-bottom:first-of-type { margin-top: auto; padding: 0; }
+        .sidebar-nav ul li.logout-bottom { padding: 0; }
+        .sidebar-nav ul li.logout-bottom a { display: flex; align-items: center; gap: 10px; padding: 12px 0; color: #f8fafc; text-decoration: none; }
+        .sidebar-nav ul li.logout-bottom a svg { display: block; }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
@@ -417,8 +418,10 @@
             
             // Ensure the overview page initializes its JS renderer
             try{ if (typeof initAllAnalysesPage === 'function') initAllAnalysesPage(); } catch(e){ console.error('initAllAnalysesPage error', e); }
-            
-            // Contact Modal Logic
+        });
+        
+        // Contact Modal Logic - separate DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
             const openContactModalBtn = document.getElementById('open-contact-modal');
             const closeContactModalBtn = document.getElementById('close-contact-modal');
             const contactModal = document.getElementById('contact-modal');

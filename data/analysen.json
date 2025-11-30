@@ -1,5 +1,17 @@
 [
   {
+    "id": "ferrari-investment-analyse-2025",
+    "category": "LUXUSGÜTER & AUTOMOTIVE",
+    "title": "Ferrari N.V.: Wöchentliche Investment-Analyse",
+    "summary": "Goldman Sachs hebt Kursziel auf $454 (+16,65%). Stabilisierung nach Rückgang, Premium-Bewertung mit 49,7x KGV, Nettogewinnspanne 22,91%. Elektrifizierungsstrategie als Schlüsselkatalysator.",
+    "link": "Abonenten/ferrari.html",
+    "image": "data/vorschaubilder/ferrari.png",
+    "date": "2025-11-30",
+    "author": "capitovo Research",
+    "tags": ["Ferrari", "Luxusgüter", "Elektromobilität", "Premium-Automotive", "RACE"],
+    "published": true
+  },
+  {
     "id": "tesla-q3-2025-analyse",
     "category": "TECHNOLOGIE & AUTOMOTIVE",
     "title": "Tesla Q3 2025: Umfassende Investitionsanalyse",

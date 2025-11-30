@@ -690,6 +690,10 @@ function initTestLogin() {
                     ts: Date.now() 
                 })); 
                 
+                // Set session storage for paywall checks
+                sessionStorage.setItem('capitovo_logged_in', 'true');
+                sessionStorage.setItem('capitovo_subscription_active', user.sub !== 'none' && user.sub ? 'true' : 'false');
+                
                 // Set contact data if defined for this user
                 if (USER_CONTACTS[enteredEmail]) {
                     localStorage.setItem('capitovo_contact', JSON.stringify(USER_CONTACTS[enteredEmail]));
@@ -1125,6 +1129,11 @@ function initLogoutHandlers(){
         try{ localStorage.removeItem('capitovo_session'); }catch(e){}
         // clear any other session-like keys if present
         try{ localStorage.removeItem('capitovo_contact'); }catch(e){}
+        // clear session storage for paywall checks
+        try{ 
+            sessionStorage.removeItem('capitovo_logged_in');
+            sessionStorage.removeItem('capitovo_subscription_active');
+        }catch(e){}
         window.location.href = redirectPath;
     }
 

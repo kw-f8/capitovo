@@ -545,6 +545,12 @@
         // Logout
         document.querySelector('.logout-btn').addEventListener('click', () => {
             if (confirm('Möchtest du dich wirklich abmelden?')) {
+                try {
+                    localStorage.removeItem('capitovo_session');
+                    localStorage.removeItem('capitovo_contact');
+                    sessionStorage.removeItem('capitovo_logged_in');
+                    sessionStorage.removeItem('capitovo_subscription_active');
+                } catch(e) {}
                 window.location.href = '../index.html';
             }
         });

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — API Test Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Page specific */
+        .test-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .feature-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .stock-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stock-info {
+            flex: 1;
+        }
+        .stock-symbol {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .stock-name {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        .stock-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .stock-change {
+            font-size: 0.875rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        .positive {
+            color: #16a34a;
+            background: #f0fdf4;
+        }
+        .negative {
+            color: #dc2626;
+            background: #fef2f2;
+        }
+        .loading {
+            color: #64748b;
+            font-style: italic;
+        }
+        .error {
+            color: #dc2626;
+            font-size: 0.875rem;
+        }
+        .sparkline-container {
+            width: 200px;
+            height: 60px;
+        }
+        .last-update {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 4px;
+        }
+        .watchlist-add {
+            background: #0ea5e9;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        .watchlist-add:hover {
+            background: #0284c7;
+        }
+        .mini-chart {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+<header>
+    <div class="header-content">
+        <div class="logo">
+            <a href="index.html">
+                <img src="caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="test-container">
+    <div style="margin-bottom: 32px;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: #0f172a; margin-bottom: 8px;">🧪 Alpha Vantage API Test Dashboard</h1>
+        <p style="color: #64748b;">Testen Sie alle API-Features in Echtzeit. Diese Seite ist nur zu Testzwecken und wird nicht öffentlich angezeigt.</p>
+    </div>
+
+    <!-- Feature 1: Live Stock Prices -->
+    <div class="feature-box">
+        <h2 class="feature-title">1️⃣ Live-Aktienkurse (für Analyse-Seiten)</h2>
+        <p style="color: #64748b; margin-bottom: 20px; font-size: 0.875rem;">Diese Anzeige würde direkt unter dem Titel auf jeder Analyse-Seite erscheinen.</p>
+        
+        <div id="live-prices-container">
+            <div class="stock-card">
+                <div class="stock-info">
+                    <div class="stock-symbol">TSLA</div>
+                    <div class="stock-name">Tesla Inc.</div>
+                    <div class="last-update">Lädt Daten...</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="stock-price loading">---</div>
+                    <div class="stock-change loading">--- (---)</div>
+                </div>
+            </div>
+
+            <div class="stock-card">
+                <div class="stock-info">
+                    <div class="stock-symbol">RACE</div>
+                    <div class="stock-name">Ferrari N.V.</div>
+                    <div class="last-update">Lädt Daten...</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="stock-price loading">---</div>
+                    <div class="stock-change loading">--- (---)</div>
+                </div>
+            </div>
+
+            <div class="stock-card">
+                <div class="stock-info">
+                    <div class="stock-symbol">JNJ</div>
+                    <div class="stock-name">Johnson & Johnson</div>
+                    <div class="last-update">Lädt Daten...</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="stock-price loading">---</div>
+                    <div class="stock-change loading">--- (---)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature 2: Mini Charts -->
+    <div class="feature-box">
+        <h2 class="feature-title">2️⃣ Mini-Charts / Sparklines</h2>
+        <p style="color: #64748b; margin-bottom: 20px; font-size: 0.875rem;">Kleine Kursverlaufs-Grafik (letzte 7 Tage) neben dem Hero-Image.</p>
+        
+        <div id="mini-charts-container">
+            <div class="stock-card">
+                <div class="stock-info">
+                    <div class="stock-symbol">TSLA</div>
+                    <div class="stock-name">Tesla Inc. - Letzte 7 Tage</div>
+                </div>
+                <div class="sparkline-container">
+                    <canvas id="sparkline-tsla"></canvas>
+                </div>
+            </div>
+
+            <div class="stock-card">
+                <div class="stock-info">
+                    <div class="stock-symbol">RACE</div>
+                    <div class="stock-name">Ferrari N.V. - Letzte 7 Tage</div>
+                </div>
+                <div class="sparkline-container">
+                    <canvas id="sparkline-race"></canvas>
+                </div>
+            </div>
+
+            <div class="stock-card">
+                <div class="stock-info">
+                    <div class="stock-symbol">JNJ</div>
+                    <div class="stock-name">Johnson & Johnson - Letzte 7 Tage</div>
+                </div>
+                <div class="sparkline-container">
+                    <canvas id="sparkline-jnj"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature 3: Dashboard Widget -->
+    <div class="feature-box">
+        <h2 class="feature-title">3️⃣ Dashboard-Widget (für abonenten.html)</h2>
+        <p style="color: #64748b; margin-bottom: 20px; font-size: 0.875rem;">Übersicht aller analysierten Aktien mit Sortierung nach Performance.</p>
+        
+        <div style="margin-bottom: 16px;">
+            <button onclick="sortStocks('performance')" style="margin-right: 8px; padding: 6px 12px; background: #e2e8f0; border: none; border-radius: 4px; cursor: pointer; font-size: 0.875rem;">Nach Performance sortieren</button>
+            <button onclick="sortStocks('alphabetical')" style="padding: 6px 12px; background: #e2e8f0; border: none; border-radius: 4px; cursor: pointer; font-size: 0.875rem;">Alphabetisch sortieren</button>
+        </div>
+
+        <div id="dashboard-widget-container">
+            <!-- Wird dynamisch gefüllt -->
+        </div>
+    </div>
+
+    <!-- Feature 4: Watchlist Prototype -->
+    <div class="feature-box">
+        <h2 class="feature-title">4️⃣ Watchlist-Feature (Prototyp)</h2>
+        <p style="color: #64748b; margin-bottom: 20px; font-size: 0.875rem;">Nutzer können Aktien zur persönlichen Watchlist hinzufügen und tracken.</p>
+        
+        <div style="margin-bottom: 16px;">
+            <input type="text" id="watchlist-input" placeholder="Ticker eingeben (z.B. AAPL, MSFT)" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; margin-right: 8px; width: 200px;">
+            <button class="watchlist-add" onclick="addToWatchlist()">Zur Watchlist hinzufügen</button>
+        </div>
+
+        <div id="watchlist-container">
+            <p style="color: #94a3b8; font-size: 0.875rem;">Ihre Watchlist ist leer. Fügen Sie Aktien hinzu, um sie zu tracken.</p>
+        </div>
+    </div>
+
+    <!-- Feature 5: Intraday Chart -->
+    <div class="feature-box">
+        <h2 class="feature-title">5️⃣ Detaillierter Intraday-Chart</h2>
+        <p style="color: #64748b; margin-bottom: 20px; font-size: 0.875rem;">Größerer Chart mit Intraday-Daten für detaillierte Analysen.</p>
+        
+        <div style="margin-bottom: 16px;">
+            <select id="chart-symbol" style="padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; margin-right: 8px;">
+                <option value="TSLA">Tesla (TSLA)</option>
+                <option value="RACE">Ferrari (RACE)</option>
+                <option value="JNJ">Johnson & Johnson (JNJ)</option>
+            </select>
+            <button onclick="loadIntradayChart()" style="padding: 8px 16px; background: #0ea5e9; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Chart laden</button>
+        </div>
+
+        <div class="mini-chart">
+            <canvas id="intraday-chart" style="max-height: 400px;"></canvas>
+        </div>
+    </div>
+
+    <!-- API Info & Limits -->
+    <div class="feature-box" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+        <h2 class="feature-title" style="color: #92400e;">⚠️ API-Informationen & Limits</h2>
+        <ul style="color: #78350f; font-size: 0.875rem; line-height: 1.6;">
+            <li><strong>Alpha Vantage Free Tier:</strong> 25 API-Aufrufe pro Tag</li>
+            <li><strong>Rate Limit:</strong> 5 Anfragen pro Minute</li>
+            <li><strong>Empfehlung:</strong> Daten cachen (z.B. 15 Minuten) um Limits nicht zu überschreiten</li>
+            <li><strong>Aktueller API-Key:</strong> 2800GTJZ... (versteckt)</li>
+        </ul>
+    </div>
+
+</main>
+
+<footer class="site-footer border-t py-6 mt-12">
+    <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
+        <div>&copy; 2025 capitovo — Test-Dashboard</div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const API_KEY = '2800GTJZCWIBR717';
+    const BASE_URL = 'https://www.alphavantage.co/query';
+
+    // Watchlist in LocalStorage speichern
+    let watchlist = JSON.parse(localStorage.getItem('capitovo_watchlist') || '[]');
+
+    // Feature 1: Live Stock Prices laden
+    async function loadLivePrices() {
+        const stocks = [
+            { symbol: 'TSLA', name: 'Tesla Inc.' },
+            { symbol: 'RACE', name: 'Ferrari N.V.' },
+            { symbol: 'JNJ', name: 'Johnson & Johnson' }
+        ];
+
+        for (const stock of stocks) {
+            try {
+                const url = `${BASE_URL}?function=GLOBAL_QUOTE&symbol=${stock.symbol}&apikey=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data['Global Quote']) {
+                    const quote = data['Global Quote'];
+                    const price = parseFloat(quote['05. price']).toFixed(2);
+                    const change = parseFloat(quote['09. change']).toFixed(2);
+                    const changePercent = quote['10. change percent'];
+                    const isPositive = change >= 0;
+
+                    updateStockCard(stock.symbol, price, change, changePercent, isPositive);
+                } else {
+                    console.error('Fehler für', stock.symbol, data);
+                }
+
+                // Rate Limit beachten: 1 Sekunde Pause zwischen Anfragen
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (error) {
+                console.error('Fehler beim Laden von', stock.symbol, error);
+            }
+        }
+    }
+
+    function updateStockCard(symbol, price, change, changePercent, isPositive) {
+        const cards = document.querySelectorAll('.stock-card');
+        cards.forEach(card => {
+            const cardSymbol = card.querySelector('.stock-symbol');
+            if (cardSymbol && cardSymbol.textContent === symbol) {
+                const priceEl = card.querySelector('.stock-price');
+                const changeEl = card.querySelector('.stock-change');
+                const updateEl = card.querySelector('.last-update');
+
+                priceEl.textContent = `$${price}`;
+                priceEl.classList.remove('loading');
+
+                changeEl.textContent = `${change >= 0 ? '+' : ''}${change} (${changePercent})`;
+                changeEl.classList.remove('loading');
+                changeEl.classList.add(isPositive ? 'positive' : 'negative');
+
+                const now = new Date();
+                updateEl.textContent = `Letztes Update: ${now.toLocaleTimeString('de-DE')}`;
+            }
+        });
+    }
+
+    // Feature 2: Mini Charts (Sparklines) laden
+    async function loadSparklines() {
+        const stocks = ['TSLA', 'RACE', 'JNJ'];
+
+        for (const symbol of stocks) {
+            try {
+                const url = `${BASE_URL}?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data['Time Series (Daily)']) {
+                    const timeSeries = data['Time Series (Daily)'];
+                    const dates = Object.keys(timeSeries).slice(0, 7).reverse();
+                    const prices = dates.map(date => parseFloat(timeSeries[date]['4. close']));
+
+                    drawSparkline(`sparkline-${symbol.toLowerCase()}`, prices);
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (error) {
+                console.error('Fehler beim Laden Sparkline für', symbol, error);
+            }
+        }
+    }
+
+    function drawSparkline(canvasId, prices) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: prices.map((_, i) => `Tag ${i + 1}`),
+                datasets: [{
+                    data: prices,
+                    borderColor: '#0ea5e9',
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false }
+                },
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+    }
+
+    // Feature 4: Watchlist Management
+    function addToWatchlist() {
+        const input = document.getElementById('watchlist-input');
+        const symbol = input.value.trim().toUpperCase();
+
+        if (symbol && !watchlist.includes(symbol)) {
+            watchlist.push(symbol);
+            localStorage.setItem('capitovo_watchlist', JSON.stringify(watchlist));
+            input.value = '';
+            renderWatchlist();
+        } else {
+            alert('Ticker bereits in Watchlist oder ungültige Eingabe.');
+        }
+    }
+
+    function removeFromWatchlist(symbol) {
+        watchlist = watchlist.filter(s => s !== symbol);
+        localStorage.setItem('capitovo_watchlist', JSON.stringify(watchlist));
+        renderWatchlist();
+    }
+
+    async function renderWatchlist() {
+        const container = document.getElementById('watchlist-container');
+        
+        if (watchlist.length === 0) {
+            container.innerHTML = '<p style="color: #94a3b8; font-size: 0.875rem;">Ihre Watchlist ist leer. Fügen Sie Aktien hinzu, um sie zu tracken.</p>';
+            return;
+        }
+
+        container.innerHTML = '<p class="loading">Lade Watchlist-Daten...</p>';
+
+        let html = '';
+        for (const symbol of watchlist) {
+            try {
+                const url = `${BASE_URL}?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data['Global Quote']) {
+                    const quote = data['Global Quote'];
+                    const price = parseFloat(quote['05. price']).toFixed(2);
+                    const change = parseFloat(quote['09. change']).toFixed(2);
+                    const changePercent = quote['10. change percent'];
+                    const isPositive = change >= 0;
+
+                    html += `
+                        <div class="stock-card">
+                            <div class="stock-info">
+                                <div class="stock-symbol">${symbol}</div>
+                            </div>
+                            <div style="text-align: right; display: flex; align-items: center; gap: 12px;">
+                                <div>
+                                    <div class="stock-price">$${price}</div>
+                                    <div class="stock-change ${isPositive ? 'positive' : 'negative'}">${change >= 0 ? '+' : ''}${change} (${changePercent})</div>
+                                </div>
+                                <button onclick="removeFromWatchlist('${symbol}')" style="background: #ef4444; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.75rem;">Entfernen</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            } catch (error) {
+                console.error('Fehler beim Laden von', symbol, error);
+            }
+        }
+
+        container.innerHTML = html;
+    }
+
+    // Feature 5: Intraday Chart
+    let intradayChartInstance = null;
+
+    async function loadIntradayChart() {
+        const symbol = document.getElementById('chart-symbol').value;
+        const canvas = document.getElementById('intraday-chart');
+        const ctx = canvas.getContext('2d');
+
+        if (intradayChartInstance) {
+            intradayChartInstance.destroy();
+        }
+
+        try {
+            const url = `${BASE_URL}?function=TIME_SERIES_INTRADAY&symbol=${symbol}&interval=60min&apikey=${API_KEY}`;
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data['Time Series (60min)']) {
+                const timeSeries = data['Time Series (60min)'];
+                const times = Object.keys(timeSeries).slice(0, 24).reverse();
+                const prices = times.map(time => parseFloat(timeSeries[time]['4. close']));
+
+                intradayChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: times.map(t => t.split(' ')[1]),
+                        datasets: [{
+                            label: `${symbol} Intraday`,
+                            data: prices,
+                            borderColor: '#0ea5e9',
+                            backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { display: true, position: 'top' }
+                        },
+                        scales: {
+                            y: { 
+                                beginAtZero: false,
+                                ticks: {
+                                    callback: function(value) {
+                                        return '$' + value.toFixed(2);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Fehler beim Laden Intraday Chart:', error);
+        }
+    }
+
+    // Beim Laden der Seite
+    window.addEventListener('load', () => {
+        console.log('🚀 API Test Dashboard geladen');
+        
+        // Feature 1: Live Prices laden
+        loadLivePrices();
+        
+        // Feature 2: Sparklines laden
+        setTimeout(() => {
+            loadSparklines();
+        }, 3000); // 3 Sekunden verzögert wegen Rate Limit
+        
+        // Feature 4: Watchlist rendern
+        setTimeout(() => {
+            renderWatchlist();
+        }, 10000); // 10 Sekunden verzögert
+    });
+
+    // Feature 3: Dashboard Sortierung
+    function sortStocks(type) {
+        alert(`Sortierung nach ${type === 'performance' ? 'Performance' : 'Alphabet'} würde hier implementiert werden.`);
+    }
+</script>
+
+</body>
+</html>

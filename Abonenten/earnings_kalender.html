@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — Earnings Kalender</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Remove black outline from sidebar toggle */
+        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
+        /* Page layout */
+        :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
+        body { background: var(--muted-white); }
+        main { background: transparent; padding-top: 18px; }
+        
+        .earnings-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
+
+        /* Hero section */
+        .earnings-hero { background: var(--page-white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 6px 20px rgba(2,6,23,0.06); }
+        .earnings-hero h1 { margin: 0 0 12px 0; font-weight: 700; color: #0f172a; font-size: clamp(1.6rem, 2.5vw, 2.2rem); line-height: 1.1; }
+        .earnings-hero .subtitle { color: #475569; font-size: 1rem; max-width: 70ch; margin-bottom: 1.5rem; }
+        
+        /* Filter bar */
+        .filter-bar { background: var(--page-white); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(2,6,23,0.05); }
+        .filter-bar .filter-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+        .filter-bar label { font-weight: 600; font-size: 0.9rem; color: #0f172a; white-space: nowrap; }
+        .filter-bar select { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid rgba(15,23,42,0.08); background: white; font-size: 0.95rem; color: #0f172a; min-width: 180px; }
+        
+        /* Calendar view toggle */
+        .view-toggle { display: flex; gap: 0.5rem; background: #f1f5f9; padding: 4px; border-radius: 8px; }
+        .view-toggle button { padding: 8px 16px; border-radius: 6px; border: none; background: transparent; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; color: #64748b; }
+        .view-toggle button.active { background: white; color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .view-toggle button:hover:not(.active) { color: #0f172a; }
+
+        /* Calendar grid */
+        .calendar-container { background: var(--page-white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 6px 20px rgba(2,6,23,0.06); }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+        .calendar-header .day-name { text-align: center; font-weight: 700; color: #64748b; font-size: 0.85rem; padding: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
+        .calendar-day { background: white; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 120px; padding: 0.75rem; transition: all 0.2s; position: relative; }
+        .calendar-day:hover { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.1); transform: translateY(-2px); }
+        .calendar-day.other-month { background: #f8fafc; opacity: 0.5; }
+        .calendar-day.today { border: 2px solid #3b82f6; background: #eff6ff; }
+        
+        .day-number { font-weight: 700; color: #0f172a; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .calendar-day.other-month .day-number { color: #94a3b8; }
+        
+        /* Earnings events in calendar */
+        .earnings-event { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .earnings-event:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .earnings-event.pre-market { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .earnings-event.after-market { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        
+        /* List view */
+        .earnings-list { background: var(--page-white); border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); overflow: hidden; }
+        .earnings-list-header { background: #f8fafc; padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; font-weight: 700; color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .earnings-list-row { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; align-items: center; transition: all 0.2s; }
+        .earnings-list-row:hover { background: #f8fafc; }
+        .earnings-list-row:last-child { border-bottom: none; }
+        
+        .earnings-date { font-weight: 600; color: #0f172a; }
+        .company-info { display: flex; align-items: center; gap: 0.75rem; }
+        .company-logo { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: #f1f5f9; }
+        .company-name { font-weight: 600; color: #0f172a; }
+        .ticker { color: #64748b; font-size: 0.9rem; }
+        
+        .estimate { font-weight: 600; color: #0f172a; }
+        .time-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
+        .time-badge.pre { background: #d1fae5; color: #065f46; }
+        .time-badge.market { background: #dbeafe; color: #1e40af; }
+        .time-badge.after { background: #fed7aa; color: #92400e; }
+        
+        .importance-badge { padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .importance-badge.high { background: #fee2e2; color: #991b1b; }
+        .importance-badge.medium { background: #fef3c7; color: #92400e; }
+        .importance-badge.low { background: #e0e7ff; color: #3730a3; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .calendar-grid { grid-template-columns: repeat(7, 1fr); }
+            .calendar-day { min-height: 100px; padding: 0.5rem; }
+            .earnings-list-header, .earnings-list-row { grid-template-columns: 1fr; gap: 0.5rem; }
+            .earnings-list-header { display: none; }
+            .earnings-list-row { padding: 1rem; }
+        }
+        
+        @media (max-width: 640px) {
+            .calendar-day { min-height: 80px; padding: 0.4rem; font-size: 0.8rem; }
+            .earnings-event { font-size: 0.7rem; padding: 4px 6px; }
+            .filter-bar .filter-row { flex-direction: column; align-items: stretch; }
+            .filter-bar select { width: 100%; }
+        }
+
+        /* Stats cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--page-white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(2,6,23,0.05); border-left: 4px solid #3b82f6; }
+        .stat-card.green { border-left-color: #10b981; }
+        .stat-card.orange { border-left-color: #f59e0b; }
+        .stat-card.purple { border-left-color: #8b5cf6; }
+        .stat-label { color: #64748b; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+        .stat-value { color: #0f172a; font-size: 2rem; font-weight: 700; }
+        .stat-subtext { color: #64748b; font-size: 0.85rem; margin-top: 0.25rem; }
+    </style>
+</head>
+<body>
+    <!-- Global Header -->
+    <header>
+        <div class="header-content">
+            <div class="header-logo">
+                <a href="../index.html" aria-label="zur Startseite">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" class="logo-svg">
+                        <text x="0" y="30" font-family="'Inter', sans-serif" font-size="30" font-weight="700" fill="#0f172a">capitovo</text>
+                    </svg>
+                </a>
+            </div>
+            <nav class="header-nav">
+                <a href="../index.html">Home</a>
+                <a href="abonenten.html">Mitgliederbereich</a>
+                <a href="alle_analysen.html">Alle Analysen</a>
+                <a href="earnings_kalender.html" class="active">Earnings Kalender</a>
+            </nav>
+            <button id="menu-toggle" class="menu-toggle" aria-label="Menü öffnen/schließen" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Menu</h2>
+            <button class="sidebar-close" aria-label="Sidebar schließen">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="abonenten.html" class="sidebar-link">
+                <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Dashboard
+            </a>
+            <a href="alle_analysen.html" class="sidebar-link">
+                <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Alle Analysen
+            </a>
+            <a href="earnings_kalender.html" class="sidebar-link active">
+                <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                Earnings Kalender
+            </a>
+            <a href="konto.html" class="sidebar-link">
+                <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Konto
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <a href="kontaktdaten.html" class="sidebar-link">
+                <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                Kontakt
+            </a>
+            <button class="sidebar-link logout-btn">
+                <svg class="sidebar-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Logout
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <main>
+        <div class="earnings-layout">
+            <!-- Hero Section -->
+            <div class="earnings-hero">
+                <h1>📅 Earnings Kalender</h1>
+                <p class="subtitle">Verpasse keine wichtigen Quartalszahlen! Alle anstehenden Earnings Releases deiner Portfolio-Aktien und wichtiger Unternehmen auf einen Blick.</p>
+                
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Diese Woche</div>
+                        <div class="stat-value" id="stat-week">12</div>
+                        <div class="stat-subtext">Earnings Releases</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-label">Pre-Market</div>
+                        <div class="stat-value" id="stat-pre">5</div>
+                        <div class="stat-subtext">Vor Börseneröffnung</div>
+                    </div>
+                    <div class="stat-card orange">
+                        <div class="stat-label">After-Market</div>
+                        <div class="stat-value" id="stat-after">7</div>
+                        <div class="stat-subtext">Nach Börsenschluss</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-label">High Importance</div>
+                        <div class="stat-value" id="stat-high">8</div>
+                        <div class="stat-subtext">Portfolio-Relevante</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-row">
+                    <label for="month-select">Monat:</label>
+                    <select id="month-select">
+                        <option value="2025-12">Dezember 2025</option>
+                        <option value="2026-01">Januar 2026</option>
+                        <option value="2026-02">Februar 2026</option>
+                        <option value="2026-03">März 2026</option>
+                    </select>
+
+                    <label for="sector-filter">Sektor:</label>
+                    <select id="sector-filter">
+                        <option value="all">Alle Sektoren</option>
+                        <option value="tech">Technologie</option>
+                        <option value="consumer">Zyklischer Konsum</option>
+                        <option value="finance">Finanzwerte</option>
+                        <option value="healthcare">Gesundheit</option>
+                        <option value="energy">Energie</option>
+                    </select>
+
+                    <label for="importance-filter">Wichtigkeit:</label>
+                    <select id="importance-filter">
+                        <option value="all">Alle</option>
+                        <option value="high">Hoch</option>
+                        <option value="medium">Mittel</option>
+                        <option value="low">Niedrig</option>
+                    </select>
+
+                    <div class="view-toggle">
+                        <button id="view-calendar" class="active">Kalender</button>
+                        <button id="view-list">Liste</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar View -->
+            <div class="calendar-container" id="calendar-view">
+                <div class="calendar-header">
+                    <div class="day-name">Mo</div>
+                    <div class="day-name">Di</div>
+                    <div class="day-name">Mi</div>
+                    <div class="day-name">Do</div>
+                    <div class="day-name">Fr</div>
+                    <div class="day-name">Sa</div>
+                    <div class="day-name">So</div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar days will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- List View -->
+            <div class="earnings-list" id="list-view" style="display: none;">
+                <div class="earnings-list-header">
+                    <div>Datum</div>
+                    <div>Unternehmen</div>
+                    <div>Sektor</div>
+                    <div>EPS Estimate</div>
+                    <div>Zeitpunkt</div>
+                    <div>Wichtigkeit</div>
+                </div>
+                <div id="list-container">
+                    <!-- List rows will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-heading">capitovo</h3>
+                <p class="footer-text">Premium-Aktienanalysen für informierte Investmententscheidungen.</p>
+            </div>
+            <div class="footer-section">
+                <h4 class="footer-subheading">Rechtliches</h4>
+                <a href="../Rechtliches/impressum.html" class="footer-link">Impressum</a>
+                <a href="../Rechtliches/datenschutz.html" class="footer-link">Datenschutz</a>
+                <a href="../Rechtliches/agb.html" class="footer-link">AGB</a>
+                <a href="../Rechtliches/haftung.html" class="footer-link">Haftungsausschluss</a>
+            </div>
+            <div class="footer-section">
+                <h4 class="footer-subheading">Support</h4>
+                <a href="kontaktdaten.html" class="footer-link">Kontakt</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 capitovo. Alle Rechte vorbehalten.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mock earnings data - In production, this would come from an API
+        const earningsData = [
+            { date: '2025-12-02', company: 'Tesla', ticker: 'TSLA', sector: 'tech', estimate: '$0.85', time: 'after', importance: 'high' },
+            { date: '2025-12-03', company: 'Apple', ticker: 'AAPL', sector: 'tech', estimate: '$2.10', time: 'after', importance: 'high' },
+            { date: '2025-12-04', company: 'Microsoft', ticker: 'MSFT', sector: 'tech', estimate: '$2.75', time: 'after', importance: 'high' },
+            { date: '2025-12-05', company: 'Amazon', ticker: 'AMZN', sector: 'consumer', estimate: '$1.20', time: 'after', importance: 'high' },
+            { date: '2025-12-06', company: 'NVIDIA', ticker: 'NVDA', sector: 'tech', estimate: '$0.95', time: 'after', importance: 'high' },
+            { date: '2025-12-09', company: 'Meta', ticker: 'META', sector: 'tech', estimate: '$4.50', time: 'after', importance: 'high' },
+            { date: '2025-12-10', company: 'Alphabet', ticker: 'GOOGL', sector: 'tech', estimate: '$1.65', time: 'after', importance: 'high' },
+            { date: '2025-12-11', company: 'Netflix', ticker: 'NFLX', sector: 'consumer', estimate: '$3.20', time: 'after', importance: 'medium' },
+            { date: '2025-12-12', company: 'Salesforce', ticker: 'CRM', sector: 'tech', estimate: '$1.85', time: 'pre', importance: 'medium' },
+            { date: '2025-12-13', company: 'Adobe', ticker: 'ADBE', sector: 'tech', estimate: '$3.50', time: 'after', importance: 'medium' },
+            { date: '2025-12-16', company: 'Oracle', ticker: 'ORCL', sector: 'tech', estimate: '$1.40', time: 'after', importance: 'medium' },
+            { date: '2025-12-17', company: 'SAP', ticker: 'SAP', sector: 'tech', estimate: '$2.10', time: 'pre', importance: 'high' }
+        ];
+
+        // Sidebar toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const sidebarClose = document.querySelector('.sidebar-close');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+            sidebarOverlay.classList.toggle('active');
+            menuToggle.setAttribute('aria-expanded', sidebar.classList.contains('open'));
+        });
+
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+            sidebarOverlay.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        });
+
+        // View toggle
+        const viewCalendarBtn = document.getElementById('view-calendar');
+        const viewListBtn = document.getElementById('view-list');
+        const calendarView = document.getElementById('calendar-view');
+        const listView = document.getElementById('list-view');
+
+        viewCalendarBtn.addEventListener('click', () => {
+            viewCalendarBtn.classList.add('active');
+            viewListBtn.classList.remove('active');
+            calendarView.style.display = 'block';
+            listView.style.display = 'none';
+        });
+
+        viewListBtn.addEventListener('click', () => {
+            viewListBtn.classList.add('active');
+            viewCalendarBtn.classList.remove('active');
+            calendarView.style.display = 'none';
+            listView.style.display = 'block';
+            renderListView();
+        });
+
+        // Generate calendar
+        function generateCalendar(year, month) {
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Monday = 0
+
+            const calendarGrid = document.getElementById('calendar-grid');
+            calendarGrid.innerHTML = '';
+
+            // Previous month days
+            const prevMonthLastDay = new Date(year, month, 0).getDate();
+            for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+                const day = prevMonthLastDay - i;
+                const dayDiv = createDayElement(day, true);
+                calendarGrid.appendChild(dayDiv);
+            }
+
+            // Current month days
+            const today = new Date();
+            for (let day = 1; day <= daysInMonth; day++) {
+                const currentDate = new Date(year, month, day);
+                const isToday = currentDate.toDateString() === today.toDateString();
+                const dayDiv = createDayElement(day, false, isToday, currentDate);
+                calendarGrid.appendChild(dayDiv);
+            }
+
+            // Next month days
+            const remainingDays = 42 - (startingDayOfWeek + daysInMonth);
+            for (let day = 1; day <= remainingDays; day++) {
+                const dayDiv = createDayElement(day, true);
+                calendarGrid.appendChild(dayDiv);
+            }
+        }
+
+        function createDayElement(day, isOtherMonth, isToday = false, date = null) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'calendar-day';
+            if (isOtherMonth) dayDiv.classList.add('other-month');
+            if (isToday) dayDiv.classList.add('today');
+
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = day;
+            dayDiv.appendChild(dayNumber);
+
+            // Add earnings events if date exists
+            if (date) {
+                const dateStr = date.toISOString().split('T')[0];
+                const events = earningsData.filter(e => e.date === dateStr);
+                events.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = `earnings-event ${event.time}-market`;
+                    eventDiv.textContent = `${event.ticker} ${event.time === 'pre' ? '🌅' : '🌙'}`;
+                    eventDiv.title = `${event.company} - ${event.estimate} (${event.time === 'pre' ? 'Pre-Market' : 'After-Market'})`;
+                    dayDiv.appendChild(eventDiv);
+                });
+            }
+
+            return dayDiv;
+        }
+
+        // Render list view
+        function renderListView() {
+            const listContainer = document.getElementById('list-container');
+            listContainer.innerHTML = '';
+
+            earningsData.forEach(event => {
+                const row = document.createElement('div');
+                row.className = 'earnings-list-row';
+                
+                const eventDate = new Date(event.date);
+                const formattedDate = eventDate.toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' });
+                
+                row.innerHTML = `
+                    <div class="earnings-date">${formattedDate}</div>
+                    <div class="company-info">
+                        <div class="company-logo" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.9rem;">${event.ticker.substring(0, 2)}</div>
+                        <div>
+                            <div class="company-name">${event.company}</div>
+                            <div class="ticker">${event.ticker}</div>
+                        </div>
+                    </div>
+                    <div>${getSectorName(event.sector)}</div>
+                    <div class="estimate">${event.estimate}</div>
+                    <div><span class="time-badge ${event.time}">${event.time === 'pre' ? 'Pre-Market' : event.time === 'after' ? 'After-Market' : 'During Market'}</span></div>
+                    <div><span class="importance-badge ${event.importance}">${event.importance}</span></div>
+                `;
+                
+                listContainer.appendChild(row);
+            });
+        }
+
+        function getSectorName(sector) {
+            const sectors = {
+                'tech': 'Technologie',
+                'consumer': 'Zyklischer Konsum',
+                'finance': 'Finanzwerte',
+                'healthcare': 'Gesundheit',
+                'energy': 'Energie'
+            };
+            return sectors[sector] || sector;
+        }
+
+        // Update stats
+        function updateStats() {
+            const thisWeek = earningsData.filter(e => {
+                const eventDate = new Date(e.date);
+                const today = new Date();
+                const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+                return eventDate >= today && eventDate <= weekFromNow;
+            });
+
+            document.getElementById('stat-week').textContent = thisWeek.length;
+            document.getElementById('stat-pre').textContent = earningsData.filter(e => e.time === 'pre').length;
+            document.getElementById('stat-after').textContent = earningsData.filter(e => e.time === 'after').length;
+            document.getElementById('stat-high').textContent = earningsData.filter(e => e.importance === 'high').length;
+        }
+
+        // Month selector change
+        document.getElementById('month-select').addEventListener('change', (e) => {
+            const [year, month] = e.target.value.split('-');
+            generateCalendar(parseInt(year), parseInt(month) - 1);
+        });
+
+        // Initialize
+        const currentDate = new Date();
+        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        updateStats();
+
+        // Logout
+        document.querySelector('.logout-btn').addEventListener('click', () => {
+            if (confirm('Möchtest du dich wirklich abmelden?')) {
+                window.location.href = '../index.html';
+            }
+        });
+    </script>
+</body>
+</html>

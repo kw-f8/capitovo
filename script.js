@@ -94,9 +94,13 @@ const ScrollReveal = {
  * die Tailwind ggf. nicht kennt, falls sie nicht in der config.js ist.
  */
 function createAnalysisArticle(analysis, idx){
+    // Auf der Startseite (nicht im Abonenten-Bereich) soll der Link zum Login führen
+    const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+    const link = isInAbonenten ? computeAnalysisLink(analysis, idx) : '#open-login';
+    
     // Verwendung des neuen, von Ihnen genehmigten HTML-Templates, angepasst an die Datenstruktur
     return `
-            <a href="${computeAnalysisLink(analysis, idx)}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+            <a href="${link}" class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
             
             <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${analysis.image}" alt="Vorschaubild für ${analysis.title}" 

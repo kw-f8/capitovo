@@ -221,7 +221,7 @@
             </div>
 
             <a href="../checkout.html" class="paywall-cta">Jetzt Abonnieren</a>
-            <p style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8;">Ab 29€/Monat · Jederzeit kündbar</p>
+            <p id="paywall-price-text" style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8;">Ab 99€/Monat · Jederzeit kündbar</p>
         </div>
     </div>
 
@@ -555,6 +555,43 @@
             }
         });
 
+        // Fetch cheapest price from checkout page
+        async function updatePaywallPrice() {
+            try {
+                const response = await fetch('../checkout.html');
+                const html = await response.text();
+                
+                // Parse HTML to find all prices
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Find all monthly prices (excluding "Einmalig")
+                const priceElements = Array.from(doc.querySelectorAll('.text-4xl'));
+                const monthlyPrices = priceElements
+                    .map(el => {
+                        const text = el.textContent;
+                        // Only extract monthly prices
+                        if (text.includes('/ Monat')) {
+                            const match = text.match(/€\s*(\d+),-/);
+                            return match ? parseInt(match[1]) : null;
+                        }
+                        return null;
+                    })
+                    .filter(price => price !== null);
+                
+                if (monthlyPrices.length > 0) {
+                    const cheapestPrice = Math.min(...monthlyPrices);
+                    const priceText = document.getElementById('paywall-price-text');
+                    if (priceText) {
+                        priceText.textContent = `Ab ${cheapestPrice}€/Monat · Jederzeit kündbar`;
+                    }
+                }
+            } catch (error) {
+                console.log('Could not fetch pricing:', error);
+                // Keep default price of 99€
+            }
+        }
+
         // Subscription Check & Paywall
         function checkSubscription() {
             // Check if user is logged in
@@ -564,6 +601,7 @@
                 // Not logged in - show paywall
                 document.body.classList.add('paywall-active');
                 document.getElementById('paywall-overlay').classList.add('active');
+                updatePaywallPrice(); // Update price dynamically
                 return false;
             }
 
@@ -574,6 +612,7 @@
                 // Logged in but no active subscription - show paywall
                 document.body.classList.add('paywall-active');
                 document.getElementById('paywall-overlay').classList.add('active');
+                updatePaywallPrice(); // Update price dynamically
                 return false;
             }
 

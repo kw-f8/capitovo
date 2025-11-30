@@ -191,58 +191,140 @@
         <h2 class="feature-title">🏦 Insider-Trading & Institutionelle Holdings</h2>
         <p style="color: #64748b; margin-bottom: 20px; font-size: 0.875rem;">Wer kauft oder verkauft? Aktivitäten von Insidern und großen institutionellen Investoren.</p>
         
-        <!-- Tesla Insider Activity -->
-        <div style="margin-bottom: 32px;">
-            <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center;">
-                <span style="display: inline-block; width: 8px; height: 8px; background: #0ea5e9; border-radius: 50%; margin-right: 8px;"></span>
+        <!-- Stock Selector -->
+        <div style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button onclick="showStock('TSLA')" id="btn-tsla" class="stock-selector-btn active" style="padding: 8px 20px; background: #0ea5e9; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.875rem; transition: all 0.2s;">
+                TSLA
+            </button>
+            <button onclick="showStock('RACE')" id="btn-race" class="stock-selector-btn" style="padding: 8px 20px; background: #e2e8f0; color: #64748b; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.875rem; transition: all 0.2s;">
+                RACE
+            </button>
+            <button onclick="showStock('JNJ')" id="btn-jnj" class="stock-selector-btn" style="padding: 8px 20px; background: #e2e8f0; color: #64748b; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.875rem; transition: all 0.2s;">
+                JNJ
+            </button>
+        </div>
+
+        <!-- TSLA Content -->
+        <div id="stock-content-tsla" class="stock-content">
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #0ea5e9; border-radius: 50%; margin-right: 10px;"></span>
                 Tesla Inc. (TSLA)
             </h3>
             
-            <div id="insider-tsla">
-                <p class="loading">Lade Insider-Trading-Daten...</p>
+            <!-- Summary Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #0284c7;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #0c4a6e; text-transform: uppercase; margin-bottom: 4px;">Insider-Käufe (90T)</div>
+                    <div id="tsla-buys-summary" style="font-size: 1.1rem; font-weight: 700; color: #16a34a;">-</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #dc2626;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #991b1b; text-transform: uppercase; margin-bottom: 4px;">Insider-Verkäufe (90T)</div>
+                    <div id="tsla-sells-summary" style="font-size: 1.1rem; font-weight: 700; color: #dc2626;">-</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #16a34a;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #166534; text-transform: uppercase; margin-bottom: 4px;">Institutionelle Anleger</div>
+                    <div id="tsla-holders-count" style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">-</div>
+                </div>
             </div>
-            
-            <div style="background: #f0f9ff; padding: 16px; border-radius: 8px; border-left: 4px solid #0284c7; margin-top: 16px;">
-                <div style="font-size: 0.75rem; font-weight: 600; color: #0c4a6e; text-transform: uppercase; margin-bottom: 8px;">Top Institutionelle Anleger</div>
-                <div id="holdings-tsla">
+
+            <!-- Insider Trades Table -->
+            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 20px;">
+                <div style="background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin: 0;">📊 Insider-Transaktionen (letzte 20)</h4>
+                </div>
+                <div id="insider-tsla" style="max-height: 400px; overflow-y: auto;">
+                    <p class="loading" style="padding: 16px;">Lade Daten...</p>
+                </div>
+            </div>
+
+            <!-- Institutional Holdings -->
+            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <div style="background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin: 0;">🏛️ Top Institutionelle Anleger</h4>
+                </div>
+                <div id="holdings-tsla" style="padding: 16px;">
                     <p class="loading">Lädt...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Ferrari Insider Activity -->
-        <div style="margin-bottom: 32px;">
-            <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center;">
-                <span style="display: inline-block; width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 8px;"></span>
+        <!-- RACE Content -->
+        <div id="stock-content-race" class="stock-content" style="display: none;">
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #dc2626; border-radius: 50%; margin-right: 10px;"></span>
                 Ferrari N.V. (RACE)
             </h3>
             
-            <div id="insider-race">
-                <p class="loading">Lade Insider-Trading-Daten...</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #0284c7;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #0c4a6e; text-transform: uppercase; margin-bottom: 4px;">Insider-Käufe (90T)</div>
+                    <div id="race-buys-summary" style="font-size: 1.1rem; font-weight: 700; color: #16a34a;">-</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #dc2626;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #991b1b; text-transform: uppercase; margin-bottom: 4px;">Insider-Verkäufe (90T)</div>
+                    <div id="race-sells-summary" style="font-size: 1.1rem; font-weight: 700; color: #dc2626;">-</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #16a34a;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #166534; text-transform: uppercase; margin-bottom: 4px;">Institutionelle Anleger</div>
+                    <div id="race-holders-count" style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">-</div>
+                </div>
             </div>
-            
-            <div style="background: #f0f9ff; padding: 16px; border-radius: 8px; border-left: 4px solid #0284c7; margin-top: 16px;">
-                <div style="font-size: 0.75rem; font-weight: 600; color: #0c4a6e; text-transform: uppercase; margin-bottom: 8px;">Top Institutionelle Anleger</div>
-                <div id="holdings-race">
+
+            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 20px;">
+                <div style="background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin: 0;">📊 Insider-Transaktionen (letzte 20)</h4>
+                </div>
+                <div id="insider-race" style="max-height: 400px; overflow-y: auto;">
+                    <p class="loading" style="padding: 16px;">Lade Daten...</p>
+                </div>
+            </div>
+
+            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <div style="background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin: 0;">🏛️ Top Institutionelle Anleger</h4>
+                </div>
+                <div id="holdings-race" style="padding: 16px;">
                     <p class="loading">Lädt...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Johnson & Johnson Insider Activity -->
-        <div>
-            <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center;">
-                <span style="display: inline-block; width: 8px; height: 8px; background: #16a34a; border-radius: 50%; margin-right: 8px;"></span>
+        <!-- JNJ Content -->
+        <div id="stock-content-jnj" class="stock-content" style="display: none;">
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 16px; display: flex; align-items: center;">
+                <span style="display: inline-block; width: 10px; height: 10px; background: #16a34a; border-radius: 50%; margin-right: 10px;"></span>
                 Johnson & Johnson (JNJ)
             </h3>
             
-            <div id="insider-jnj">
-                <p class="loading">Lade Insider-Trading-Daten...</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #0284c7;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #0c4a6e; text-transform: uppercase; margin-bottom: 4px;">Insider-Käufe (90T)</div>
+                    <div id="jnj-buys-summary" style="font-size: 1.1rem; font-weight: 700; color: #16a34a;">-</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #dc2626;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #991b1b; text-transform: uppercase; margin-bottom: 4px;">Insider-Verkäufe (90T)</div>
+                    <div id="jnj-sells-summary" style="font-size: 1.1rem; font-weight: 700; color: #dc2626;">-</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 14px; border-radius: 8px; border-left: 4px solid #16a34a;">
+                    <div style="font-size: 0.7rem; font-weight: 600; color: #166534; text-transform: uppercase; margin-bottom: 4px;">Institutionelle Anleger</div>
+                    <div id="jnj-holders-count" style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">-</div>
+                </div>
             </div>
-            
-            <div style="background: #f0f9ff; padding: 16px; border-radius: 8px; border-left: 4px solid #0284c7; margin-top: 16px;">
-                <div style="font-size: 0.75rem; font-weight: 600; color: #0c4a6e; text-transform: uppercase; margin-bottom: 8px;">Top Institutionelle Anleger</div>
-                <div id="holdings-jnj">
+
+            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 20px;">
+                <div style="background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin: 0;">📊 Insider-Transaktionen (letzte 20)</h4>
+                </div>
+                <div id="insider-jnj" style="max-height: 400px; overflow-y: auto;">
+                    <p class="loading" style="padding: 16px;">Lade Daten...</p>
+                </div>
+            </div>
+
+            <div style="background: white; border-radius: 8px; border: 1px solid #e2e8f0; overflow: hidden;">
+                <div style="background: #f8fafc; padding: 12px 16px; border-bottom: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 0.875rem; font-weight: 700; color: #0f172a; margin: 0;">🏛️ Top Institutionelle Anleger</h4>
+                </div>
+                <div id="holdings-jnj" style="padding: 16px;">
                     <p class="loading">Lädt...</p>
                 </div>
             </div>
@@ -350,73 +432,74 @@
     async function loadInsiderTrading() {
         try {
             const promises = STOCKS.map(async (symbol) => {
-                const url = `${FMP_BASE_URL_V4}/insider-trading?symbol=${symbol}&limit=10&apikey=${FMP_API_KEY}`;
+                const url = `${FMP_BASE_URL_V4}/insider-trading?symbol=${symbol}&limit=50&apikey=${FMP_API_KEY}`;
                 const response = await fetch(url);
                 const data = await response.json();
                 
-                return { symbol, trades: data.slice(0, 3) }; // Top 3 trades
+                return { symbol, trades: data.slice(0, 20) }; // Top 20 trades
             });
 
             const results = await Promise.all(promises);
-            
-            const colors = { TSLA: '#0ea5e9', RACE: '#dc2626', JNJ: '#16a34a' };
-            const names = { TSLA: 'Tesla Inc.', RACE: 'Ferrari N.V.', JNJ: 'Johnson & Johnson' };
 
             results.forEach(({ symbol, trades }) => {
                 const containerId = `insider-${symbol.toLowerCase()}`;
                 const container = document.getElementById(containerId);
                 
                 if (!trades || trades.length === 0) {
-                    container.innerHTML = '<p style="color: #94a3b8; font-size: 0.875rem;">Keine aktuellen Insider-Trades verfügbar.</p>';
+                    container.innerHTML = '<p style="color: #94a3b8; font-size: 0.875rem; padding: 16px;">Keine aktuellen Insider-Trades verfügbar.</p>';
                     return;
                 }
 
-                // Calculate summary
+                // Calculate summary for 90 days
                 let totalBuys = 0, totalSells = 0;
+                const now = new Date();
+                const ninetyDaysAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
+                
                 trades.forEach(trade => {
-                    const value = Math.abs(trade.securitiesTransacted * trade.price);
-                    if (trade.transactionType === 'P-Purchase') totalBuys += value;
-                    if (trade.transactionType === 'S-Sale') totalSells += value;
+                    const tradeDate = new Date(trade.transactionDate);
+                    if (tradeDate >= ninetyDaysAgo) {
+                        const value = Math.abs(trade.securitiesTransacted * trade.price);
+                        if (trade.transactionType === 'P-Purchase') totalBuys += value;
+                        if (trade.transactionType === 'S-Sale') totalSells += value;
+                    }
                 });
 
-                // Latest trade
-                const latest = trades[0];
-                const isBuy = latest.transactionType === 'P-Purchase';
-                const tradeValue = Math.abs(latest.securitiesTransacted * latest.price);
+                // Update summary cards
+                document.getElementById(`${symbol.toLowerCase()}-buys-summary`).textContent = '$' + formatNumber(totalBuys);
+                document.getElementById(`${symbol.toLowerCase()}-sells-summary`).textContent = '$' + formatNumber(totalSells);
 
-                let html = `
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
-                        <div style="background: ${isBuy ? '#f0fdf4' : '#fef2f2'}; padding: 16px; border-radius: 8px; border-left: 4px solid ${isBuy ? '#16a34a' : '#dc2626'};">
-                            <div style="font-size: 0.75rem; font-weight: 600; color: ${isBuy ? '#166534' : '#991b1b'}; text-transform: uppercase; margin-bottom: 8px;">
-                                Letzter Insider-${isBuy ? 'Kauf' : 'Verkauf'}
-                            </div>
-                            <div style="font-size: 1.25rem; font-weight: 700; color: #0f172a; margin-bottom: 4px;">
-                                $${formatNumber(tradeValue)}
-                            </div>
-                            <div style="font-size: 0.875rem; color: #64748b;">
-                                <strong>${latest.reportingName}</strong><br>
-                                ${formatDate(latest.transactionDate)} · ${Math.abs(latest.securitiesTransacted).toLocaleString('de-DE')} Aktien @ $${latest.price.toFixed(2)}
-                            </div>
-                        </div>
+                // Create table
+                let html = '<table style="width: 100%; font-size: 0.8rem;">';
+                html += '<thead style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;"><tr>';
+                html += '<th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #64748b;">Datum</th>';
+                html += '<th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #64748b;">Insider</th>';
+                html += '<th style="padding: 10px 12px; text-align: center; font-weight: 600; color: #64748b;">Typ</th>';
+                html += '<th style="padding: 10px 12px; text-align: right; font-weight: 600; color: #64748b;">Aktien</th>';
+                html += '<th style="padding: 10px 12px; text-align: right; font-weight: 600; color: #64748b;">Preis</th>';
+                html += '<th style="padding: 10px 12px; text-align: right; font-weight: 600; color: #64748b;">Wert</th>';
+                html += '</tr></thead><tbody>';
 
-                        <div style="background: #f0f9ff; padding: 16px; border-radius: 8px; border-left: 4px solid #0284c7;">
-                            <div style="font-size: 0.75rem; font-weight: 600; color: #0c4a6e; text-transform: uppercase; margin-bottom: 8px;">
-                                90-Tage-Zusammenfassung
-                            </div>
-                            <div style="font-size: 0.875rem; color: #0f172a; line-height: 1.8;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                                    <span>Käufe:</span>
-                                    <strong style="color: #16a34a;">$${formatNumber(totalBuys)}</strong>
-                                </div>
-                                <div style="display: flex; justify-content: space-between;">
-                                    <span>Verkäufe:</span>
-                                    <strong style="color: #dc2626;">$${formatNumber(totalSells)}</strong>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                trades.forEach((trade, index) => {
+                    const isBuy = trade.transactionType === 'P-Purchase';
+                    const value = Math.abs(trade.securitiesTransacted * trade.price);
+                    const bgColor = index % 2 === 0 ? '#ffffff' : '#f8fafc';
+                    
+                    html += `<tr style="background: ${bgColor}; border-bottom: 1px solid #f1f5f9;">`;
+                    html += `<td style="padding: 10px 12px; color: #64748b;">${formatDate(trade.transactionDate)}</td>`;
+                    html += `<td style="padding: 10px 12px; color: #0f172a; font-weight: 500;">${trade.reportingName.substring(0, 25)}${trade.reportingName.length > 25 ? '...' : ''}</td>`;
+                    html += `<td style="padding: 10px 12px; text-align: center;">
+                        <span style="display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; 
+                                     background: ${isBuy ? '#dcfce7' : '#fee2e2'}; color: ${isBuy ? '#166534' : '#991b1b'};">
+                            ${isBuy ? 'KAUF' : 'VERKAUF'}
+                        </span>
+                    </td>`;
+                    html += `<td style="padding: 10px 12px; text-align: right; color: #0f172a; font-weight: 500;">${Math.abs(trade.securitiesTransacted).toLocaleString('de-DE')}</td>`;
+                    html += `<td style="padding: 10px 12px; text-align: right; color: #64748b;">$${trade.price.toFixed(2)}</td>`;
+                    html += `<td style="padding: 10px 12px; text-align: right; color: #0f172a; font-weight: 600;">$${formatNumber(value)}</td>`;
+                    html += '</tr>';
+                });
 
+                html += '</tbody></table>';
                 container.innerHTML = html;
             });
 
@@ -429,11 +512,11 @@
     async function loadInstitutionalHoldings() {
         try {
             const promises = STOCKS.map(async (symbol) => {
-                const url = `${FMP_BASE_URL_V4}/institutional-ownership/symbol-ownership?symbol=${symbol}&limit=5&apikey=${FMP_API_KEY}`;
+                const url = `${FMP_BASE_URL_V4}/institutional-ownership/symbol-ownership?symbol=${symbol}&limit=15&apikey=${FMP_API_KEY}`;
                 const response = await fetch(url);
                 const data = await response.json();
                 
-                return { symbol, holdings: data.slice(0, 3) }; // Top 3
+                return { symbol, holdings: data.slice(0, 10) }; // Top 10
             });
 
             const results = await Promise.all(promises);
@@ -447,20 +530,65 @@
                     return;
                 }
 
-                let html = '<div style="font-size: 0.875rem; color: #0f172a; line-height: 1.6;">';
-                holdings.forEach((holder, index) => {
-                    const changeText = holder.change > 0 ? `+${holder.change}%` : 
-                                      holder.change < 0 ? `${holder.change}%` : 'unverändert';
-                    html += `${index + 1}. <strong>${holder.investorName}</strong> · ${holder.putCallShare}% (${changeText})<br>`;
-                });
-                html += '</div>';
+                // Update holder count
+                document.getElementById(`${symbol.toLowerCase()}-holders-count`).textContent = `${holdings.length} Top-Investoren`;
 
+                // Create table
+                let html = '<table style="width: 100%; font-size: 0.8rem;">';
+                html += '<thead style="border-bottom: 2px solid #e2e8f0;"><tr>';
+                html += '<th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #64748b;">#</th>';
+                html += '<th style="padding: 10px 12px; text-align: left; font-weight: 600; color: #64748b;">Investor</th>';
+                html += '<th style="padding: 10px 12px; text-align: right; font-weight: 600; color: #64748b;">Aktien</th>';
+                html += '<th style="padding: 10px 12px; text-align: right; font-weight: 600; color: #64748b;">Wert</th>';
+                html += '<th style="padding: 10px 12px; text-align: right; font-weight: 600; color: #64748b;">% Anteil</th>';
+                html += '<th style="padding: 10px 12px; text-align: center; font-weight: 600; color: #64748b;">Änderung</th>';
+                html += '</tr></thead><tbody>';
+
+                holdings.forEach((holder, index) => {
+                    const changeText = holder.change > 0 ? `+${holder.change.toFixed(1)}%` : 
+                                      holder.change < 0 ? `${holder.change.toFixed(1)}%` : '0%';
+                    const changeColor = holder.change > 0 ? '#16a34a' : holder.change < 0 ? '#dc2626' : '#64748b';
+                    const bgColor = index % 2 === 0 ? '#ffffff' : '#f8fafc';
+                    
+                    html += `<tr style="background: ${bgColor};">`;
+                    html += `<td style="padding: 10px 12px; color: #64748b; font-weight: 600;">${index + 1}</td>`;
+                    html += `<td style="padding: 10px 12px; color: #0f172a; font-weight: 500;">${holder.investorName}</td>`;
+                    html += `<td style="padding: 10px 12px; text-align: right; color: #0f172a;">${formatNumber(holder.shares)}</td>`;
+                    html += `<td style="padding: 10px 12px; text-align: right; color: #0f172a; font-weight: 600;">$${formatNumber(holder.totalInvested)}</td>`;
+                    html += `<td style="padding: 10px 12px; text-align: right; color: #0f172a; font-weight: 600;">${holder.putCallShare ? holder.putCallShare.toFixed(2) : '0.00'}%</td>`;
+                    html += `<td style="padding: 10px 12px; text-align: center;">
+                        <span style="color: ${changeColor}; font-weight: 600;">${changeText}</span>
+                    </td>`;
+                    html += '</tr>';
+                });
+
+                html += '</tbody></table>';
                 container.innerHTML = html;
             });
 
         } catch (error) {
             console.error('Fehler beim Laden von Holdings:', error);
         }
+    }
+    
+    // Stock selector function
+    function showStock(symbol) {
+        // Hide all content
+        document.querySelectorAll('.stock-content').forEach(el => el.style.display = 'none');
+        
+        // Show selected content
+        document.getElementById(`stock-content-${symbol.toLowerCase()}`).style.display = 'block';
+        
+        // Update buttons
+        document.querySelectorAll('.stock-selector-btn').forEach(btn => {
+            btn.style.background = '#e2e8f0';
+            btn.style.color = '#64748b';
+        });
+        
+        const activeBtn = document.getElementById(`btn-${symbol.toLowerCase()}`);
+        const colors = { TSLA: '#0ea5e9', RACE: '#dc2626', JNJ: '#16a34a' };
+        activeBtn.style.background = colors[symbol];
+        activeBtn.style.color = 'white';
     }
 
     // Page initialization

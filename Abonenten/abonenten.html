@@ -533,6 +533,87 @@
                 });
             });
         });
+        
+        // Contact Modal Logic
+        const openContactModalBtn = document.getElementById('open-contact-modal');
+        const closeContactModalBtn = document.getElementById('close-contact-modal');
+        const contactModal = document.getElementById('contact-modal');
+        const contactForm = document.getElementById('contact-form-modal');
+        const contactCaptcha = document.getElementById('contact-captcha');
+        const contactSubmit = document.getElementById('contact-submit');
+
+        if (openContactModalBtn && contactModal) {
+            openContactModalBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                contactModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        if (closeContactModalBtn && contactModal) {
+            closeContactModalBtn.addEventListener('click', function() {
+                contactModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+        }
+
+        if (contactModal) {
+            contactModal.addEventListener('click', function(e) {
+                if (e.target === contactModal) {
+                    contactModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+            });
+        }
+
+        // Contact form validation
+        if (contactForm) {
+            const inputs = contactForm.querySelectorAll('input, select, textarea');
+            
+            function validateContactForm() {
+                let isValid = true;
+                inputs.forEach(input => {
+                    if (input.hasAttribute('required') && !input.value.trim()) {
+                        isValid = false;
+                    }
+                });
+                if (contactCaptcha && contactCaptcha.value.trim() !== '5') {
+                    isValid = false;
+                }
+                if (contactSubmit) {
+                    if (isValid) {
+                        contactSubmit.disabled = false;
+                        contactSubmit.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                        contactSubmit.classList.add('bg-primary-blue', 'hover:bg-blue-700');
+                    } else {
+                        contactSubmit.disabled = true;
+                        contactSubmit.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        contactSubmit.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
+                    }
+                }
+            }
+
+            inputs.forEach(input => {
+                input.addEventListener('input', validateContactForm);
+                input.addEventListener('change', validateContactForm);
+            });
+
+            validateContactForm();
+
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (contactCaptcha && contactCaptcha.value !== '5') {
+                    alert('Bitte beantworten Sie die Sicherheitsfrage korrekt (3 + 2 = 5).');
+                    contactCaptcha.focus();
+                    return;
+                }
+                alert('Ihre Nachricht wurde erfolgreich versendet. Wir werden uns in Kürze bei Ihnen melden.');
+                contactModal.classList.add('hidden');
+                document.body.style.overflow = '';
+                contactForm.reset();
+                validateContactForm();
+            });
+        }
     </script>
     <!-- Typing behavior is handled globally by script.js (typeElementText) -->
 </body>

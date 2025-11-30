@@ -18,7 +18,7 @@
         main { background: transparent; padding-top: 18px; }
 
         /* Paywall overlay for non-subscribers */
-        .paywall-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(36, 53, 75, 0.96); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .paywall-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
         .paywall-overlay.active { display: flex; }
         .paywall-content { background: white; border-radius: 16px; padding: 3rem 2.5rem; max-width: 460px; text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.12); position: relative; border: 1px solid rgba(36, 53, 75, 0.08); }
         .paywall-lock-icon { width: 56px; height: 56px; margin: 0 auto 1.5rem; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; }

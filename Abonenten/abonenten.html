@@ -131,10 +131,25 @@
                 /* Sidebar nav: keep links stacked and ensure logout sits at the bottom */
                 .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
                 .sidebar-nav ul li { display: block; }
-                .sidebar-nav ul li.logout-bottom:first-of-type { margin-top: auto; padding: 0; }
+                .sidebar-nav ul li.logout-bottom:first-of-type {
+                    margin-top: auto;
+                    padding-top: 1.75rem;
+                    border-top: 1px solid rgba(248, 250, 252, 0.18);
+                }
                 .sidebar-nav ul li.logout-bottom { padding: 0; }
-                .sidebar-nav ul li.logout-bottom a { display: flex; align-items: center; gap: 10px; padding: 12px 0; color: #f8fafc; text-decoration: none; }
-                .sidebar-nav ul li.logout-bottom a svg { display: block; }
+                .sidebar-nav ul li.logout-bottom a.logout-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 12px 0;
+                    color: #f8fafc;
+                    text-decoration: none;
+                }
+                .sidebar-nav ul li.logout-bottom a.logout-link svg { display: block; }
+                .sidebar-nav ul li.logout-bottom a.support-cta {
+                    display: block;
+                    margin-bottom: 1.25rem;
+                }
 
             /* Align header and main content: use same max-width and paddings so left edges line up */
             .abonenten-page .header-content,
@@ -254,12 +269,9 @@
                 </li>
                 
                 <!-- Support button at bottom -->
-                <li class="logout-bottom" style="margin-bottom: 12px;">
-                    <a href="#" id="open-contact-modal" class="flex items-center space-x-3" aria-label="Support kontaktieren">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                        </svg>
-                        <span>Support</span>
+                <li class="logout-bottom">
+                    <a href="#" id="open-contact-modal" class="sidebar-cta support-cta" aria-label="Support kontaktieren">
+                        Support
                     </a>
                 </li>
                 

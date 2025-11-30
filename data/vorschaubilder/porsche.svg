@@ -1,0 +1,36 @@
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Porsche AG Analyse Visual</title>
+  <desc id="desc">Abstrakte Illustration für einen Equity-Research-Bericht zu Porsche</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="line" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#22d3ee" />
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)" rx="24" />
+  <g transform="translate(60 60)">
+    <text x="0" y="12" fill="#94a3b8" font-family="'Inter', 'Roboto', sans-serif" font-size="14" letter-spacing="0.2em">PORSCHE AG</text>
+    <text x="0" y="56" fill="#e2e8f0" font-family="'Inter', 'Roboto', sans-serif" font-size="40" font-weight="700">Equity Research</text>
+    <text x="0" y="96" fill="#93c5fd" font-family="'Inter', 'Roboto', sans-serif" font-size="18">Marktbewertung • Dividende • Elektrifizierung</text>
+  </g>
+  <g transform="translate(60 150)">
+    <path d="M0 120 L80 90 L160 110 L240 60 L320 80 L400 40 L480 70" fill="none" stroke="url(#line)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+    <circle cx="0" cy="120" r="6" fill="#38bdf8" />
+    <circle cx="80" cy="90" r="6" fill="#38bdf8" />
+    <circle cx="160" cy="110" r="6" fill="#38bdf8" />
+    <circle cx="240" cy="60" r="6" fill="#38bdf8" />
+    <circle cx="320" cy="80" r="6" fill="#38bdf8" />
+    <circle cx="400" cy="40" r="6" fill="#38bdf8" />
+    <circle cx="480" cy="70" r="6" fill="#38bdf8" />
+  </g>
+  <g transform="translate(60 280)" font-family="'Inter', 'Roboto', sans-serif" fill="#cbd5f5">
+    <text x="0" y="0" font-size="16">Kurs 44,64 EUR</text>
+    <text x="220" y="0" font-size="16">Dividendenrendite 5,51%</text>
+    <text x="470" y="0" font-size="16">KGV 19,0x</text>
+  </g>
+</svg>

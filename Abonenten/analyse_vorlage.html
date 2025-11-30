@@ -90,7 +90,7 @@
         </div>
         
         <!-- Header: Kategorie, Titel, Meta -->
-        <header class="mb-2">
+        <div class="mb-2">
             <p class="text-xs font-semibold uppercase mb-2" style="color: #64748b;">
                 [KATEGORIE IN GROSSBUCHSTABEN] <span class="text-gray-400 mx-1">•</span> [UNTERNEHMENSNAME]
             </p>
@@ -98,15 +98,20 @@
             <div class="text-sm" style="color: #64748b;">
                 <span>• [DATUM im Format DD.MM.YYYY]</span>
             </div>
-        </header>
-
-        <!-- Hero Image -->
-        <div class="analysis-hero" style="margin:16px 0 20px 0;">
-            <img src="../data/vorschaubilder/[BILDNAME].png" alt="[ALT-TEXT]" style="width:100%; height:360px; object-fit:cover; display:block; border-radius:8px;">
         </div>
 
-        <!-- Intro Paragraph -->
-        <p class="analysis-intro">[Einleitender Absatz, der die wichtigsten Punkte der Analyse zusammenfasst und das Interesse des Lesers weckt. Sollte 2-4 Sätze umfassen.]</p>
+        <!-- Hero Image & Intro (Side by Side on Desktop) -->
+        <div class="hero-intro-wrapper" style="display: flex; gap: 24px; margin: 24px 0 32px 0; align-items: center; flex-wrap: wrap;">
+            <!-- Hero Image (Left) -->
+            <div class="analysis-hero" style="flex: 1; min-width: 300px;">
+                <img src="../data/vorschaubilder/[BILDNAME].png" alt="[ALT-TEXT]" style="width:100%; aspect-ratio: 16/9; object-fit:cover; display:block; border-radius:8px;">
+            </div>
+
+            <!-- Intro Paragraph (Right) -->
+            <div style="flex: 1; min-width: 300px;">
+                <p class="analysis-intro" style="margin: 0;">[Einleitender Absatz, der die wichtigsten Punkte der Analyse zusammenfasst und das Interesse des Lesers weckt. Sollte 2-4 Sätze umfassen.]</p>
+            </div>
+        </div>
 
         <!-- Content Sections -->
         <section class="analysis-section">

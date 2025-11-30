@@ -16,6 +16,24 @@
         :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
         body { background: var(--muted-white); }
         main { background: transparent; padding-top: 18px; }
+
+        /* Paywall overlay for non-subscribers */
+        .paywall-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.95); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .paywall-overlay.active { display: flex; }
+        .paywall-content { background: white; border-radius: 20px; padding: 3rem; max-width: 500px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.3); position: relative; }
+        .paywall-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .paywall-content h2 { font-size: 1.8rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem; }
+        .paywall-content p { color: #64748b; font-size: 1.05rem; margin-bottom: 2rem; line-height: 1.6; }
+        .paywall-cta { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 14px 32px; border-radius: 10px; font-weight: 600; font-size: 1.05rem; border: none; cursor: pointer; transition: all 0.3s; text-decoration: none; display: inline-block; }
+        .paywall-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59,130,246,0.4); }
+        .paywall-features { text-align: left; margin: 2rem 0; }
+        .paywall-feature { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; color: #475569; font-size: 0.95rem; }
+        .paywall-feature svg { color: #10b981; flex-shrink: 0; }
+        
+        /* Blur content for non-subscribers */
+        body.paywall-active main { filter: blur(8px); pointer-events: none; user-select: none; }
+        body.paywall-active header { filter: blur(4px); }
+        body.paywall-active footer { filter: blur(4px); }
         
         .earnings-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
 
@@ -169,6 +187,37 @@
     </aside>
 
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- Paywall Overlay -->
+    <div class="paywall-overlay" id="paywall-overlay">
+        <div class="paywall-content">
+            <div class="paywall-icon">🔒</div>
+            <h2>Premium Feature</h2>
+            <p>Der Earnings Kalender ist exklusiv für capitovo Abonnenten verfügbar.</p>
+            
+            <div class="paywall-features">
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Vollständiger Earnings Kalender</span>
+                </div>
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Pre- & After-Market Zeitpunkte</span>
+                </div>
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>EPS Estimates & Analysen</span>
+                </div>
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Portfolio-Filter & Alerts</span>
+                </div>
+            </div>
+
+            <a href="../checkout.html" class="paywall-cta">Jetzt Abonnieren</a>
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: #94a3b8;">Ab 29€/Monat • Jederzeit kündbar</p>
+        </div>
+    </div>
 
     <main>
         <div class="earnings-layout">
@@ -493,6 +542,43 @@
                 window.location.href = '../index.html';
             }
         });
+
+        // Subscription Check & Paywall
+        function checkSubscription() {
+            // Check if user is logged in
+            const isLoggedIn = sessionStorage.getItem('capitovo_logged_in') === 'true';
+            
+            if (!isLoggedIn) {
+                // Not logged in - show paywall
+                document.body.classList.add('paywall-active');
+                document.getElementById('paywall-overlay').classList.add('active');
+                return false;
+            }
+
+            // Check subscription status
+            const subscriptionActive = sessionStorage.getItem('capitovo_subscription_active') === 'true';
+            
+            if (!subscriptionActive) {
+                // Logged in but no active subscription - show paywall
+                document.body.classList.add('paywall-active');
+                document.getElementById('paywall-overlay').classList.add('active');
+                return false;
+            }
+
+            // Subscription active - full access
+            return true;
+        }
+
+        // Run subscription check on page load
+        if (!checkSubscription()) {
+            console.log('Paywall active - no subscription');
+        }
+
+        // For testing: Simulate login/subscription
+        // Uncomment these lines to test with active subscription:
+        // sessionStorage.setItem('capitovo_logged_in', 'true');
+        // sessionStorage.setItem('capitovo_subscription_active', 'true');
+        // location.reload();
     </script>
 </body>
 </html>

@@ -592,8 +592,40 @@
             }
         }
 
+        // Initialize session storage from localStorage if needed
+        function initializeSessionFromLocalStorage() {
+            try {
+                const sessionData = localStorage.getItem('capitovo_session');
+                if (sessionData) {
+                    const session = JSON.parse(sessionData);
+                    
+                    // Set sessionStorage based on localStorage session
+                    sessionStorage.setItem('capitovo_logged_in', 'true');
+                    
+                    // Check if user has active subscription
+                    const hasSubscription = session.subscription && session.subscription !== 'none';
+                    sessionStorage.setItem('capitovo_subscription_active', hasSubscription ? 'true' : 'false');
+                    
+                    console.log('Session initialized:', {
+                        logged_in: true,
+                        subscription: session.subscription,
+                        subscription_active: hasSubscription
+                    });
+                } else {
+                    // No session found - clear sessionStorage
+                    sessionStorage.removeItem('capitovo_logged_in');
+                    sessionStorage.removeItem('capitovo_subscription_active');
+                }
+            } catch (e) {
+                console.error('Error initializing session:', e);
+            }
+        }
+
         // Subscription Check & Paywall
         function checkSubscription() {
+            // Initialize session from localStorage first
+            initializeSessionFromLocalStorage();
+            
             // Check if user is logged in
             const isLoggedIn = sessionStorage.getItem('capitovo_logged_in') === 'true';
             
@@ -623,6 +655,8 @@
         // Run subscription check on page load
         if (!checkSubscription()) {
             console.log('Paywall active - no subscription');
+        } else {
+            console.log('Full access granted - active subscription');
         }
 
         // For testing: Simulate login/subscription

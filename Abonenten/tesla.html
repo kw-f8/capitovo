@@ -13,23 +13,18 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
-        /* Page-specific overrides: ensure header is not sticky and detail article has no boxed background */
+        /* Page-specific overrides: ensure header is not sticky and article has no boxed background */
         header { position: static !important; box-shadow: none !important; border-bottom: none !important; }
-        #analysis-detail article { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
-        #analysis-detail img { border-radius: 0 !important; }
+        article { background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important; }
+        article img { border-radius: 0 !important; }
 
         /* Page specific: keep article unboxed and readable */
         main { background: transparent; }
-        .analysis-article, #analysis-detail { 
-            max-width: 900px; 
-            margin: 40px auto; 
-            padding: 0 20px; 
-        }
-        #analysis-detail article h1 { 
+        article h1 { 
             font-size: 1.8rem; 
             margin: 0 0 0.5rem 0; 
         }
-        #analysis-detail article h2 { 
+        article h2 { 
             font-size: 1.5rem; 
             font-weight: 700;
             margin: 2rem 0 1rem 0; 
@@ -37,59 +32,59 @@
             border-bottom: 2px solid #e2e8f0;
             padding-bottom: 0.5rem;
         }
-        #analysis-detail article h3 { 
+        article h3 { 
             font-size: 1.25rem; 
             font-weight: 600;
             margin: 1.5rem 0 0.8rem 0; 
             color: #1e293b;
         }
-        #analysis-detail article h4 { 
+        article h4 { 
             font-size: 1.1rem; 
             font-weight: 600;
             margin: 1.2rem 0 0.6rem 0; 
             color: #334155;
         }
-        #analysis-detail article p { 
+        article p { 
             font-size: 1.05rem; 
             line-height: 1.75;
             color: #1e293b; 
             margin-bottom: 1.25rem; 
         }
-        #analysis-detail article ul, 
-        #analysis-detail article ol { 
+        article ul, 
+        article ol { 
             margin: 1rem 0 1.25rem 1.5rem; 
             line-height: 1.75;
         }
-        #analysis-detail article li { 
+        article li { 
             margin-bottom: 0.5rem; 
             color: #334155;
         }
-        #analysis-detail article strong { 
+        article strong { 
             font-weight: 600; 
             color: #0f172a; 
         }
-        #analysis-detail article table {
+        article table {
             width: 100%;
             border-collapse: collapse;
             margin: 1.5rem 0;
             font-size: 0.95rem;
         }
-        #analysis-detail article table thead {
+        article table thead {
             background: #f8fafc;
         }
-        #analysis-detail article table th {
+        article table th {
             padding: 0.75rem;
             text-align: left;
             font-weight: 600;
             color: #0f172a;
             border-bottom: 2px solid #e2e8f0;
         }
-        #analysis-detail article table td {
+        article table td {
             padding: 0.75rem;
             border-bottom: 1px solid #e2e8f0;
             color: #334155;
         }
-        #analysis-detail article table tbody tr:hover {
+        article table tbody tr:hover {
             background: #f8fafc;
         }
         .votum-box {
@@ -132,7 +127,7 @@
     <header style="position: static !important; box-shadow: none !important;">
         <div class="header-content">
             <div class="logo">
-                <a href="alle_analysen.html">
+                <a href="abonenten.html">
                     <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
                 </a>
             </div>
@@ -141,7 +136,7 @@
     </header>
 
     <main class="py-12">
-        <div id="analysis-detail" class="px-6">
+        <div class="px-6" style="max-width: 900px; margin: 0 auto;">
             <article style="background: transparent !important; box-shadow: none !important; border: none !important; padding: 0 !important;">
                 <div class="category" style="color:#0f172a;font-weight:700;margin-bottom:6px;">Technologie & Automotive</div>
                 <h1 style="font-size: 1.8rem; margin: 0 0 0.5rem 0;">Tesla Q3 2025: Umfassende Investitionsanalyse</h1>

@@ -127,25 +127,14 @@
     </style>
 </head>
 <body>
-    <!-- Global Header -->
     <header>
         <div class="header-content">
-            <div class="header-logo">
-                <a href="../index.html" aria-label="zur Startseite">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" class="logo-svg">
-                        <text x="0" y="30" font-family="'Inter', sans-serif" font-size="30" font-weight="700" fill="#0f172a">capitovo</text>
-                    </svg>
+            <div class="logo">
+                <a href="./abonenten.html">
+                    <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
                 </a>
             </div>
-            <nav class="header-nav">
-                <a href="../index.html">Home</a>
-                <a href="abonenten.html">Mitgliederbereich</a>
-                <a href="alle_analysen.html">Alle Analysen</a>
-                <a href="earnings_kalender.html" class="active">Earnings Kalender</a>
-            </nav>
-            <button id="menu-toggle" class="menu-toggle" aria-label="Menü öffnen/schließen" aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-            </button>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
         </div>
     </header>
 
@@ -346,27 +335,15 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3 class="footer-heading">capitovo</h3>
-                <p class="footer-text">Premium-Aktienanalysen für informierte Investmententscheidungen.</p>
+    <footer class="site-footer border-t py-6 mt-12">
+        <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
+            <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
+            <div class="footer-links">
+                <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+                <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
             </div>
-            <div class="footer-section">
-                <h4 class="footer-subheading">Rechtliches</h4>
-                <a href="../Rechtliches/impressum.html" class="footer-link">Impressum</a>
-                <a href="../Rechtliches/datenschutz.html" class="footer-link">Datenschutz</a>
-                <a href="../Rechtliches/agb.html" class="footer-link">AGB</a>
-                <a href="../Rechtliches/haftung.html" class="footer-link">Haftungsausschluss</a>
-            </div>
-            <div class="footer-section">
-                <h4 class="footer-subheading">Support</h4>
-                <a href="kontaktdaten.html" class="footer-link">Kontakt</a>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 capitovo. Alle Rechte vorbehalten.</p>
         </div>
     </footer>
 

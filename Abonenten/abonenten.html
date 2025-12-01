@@ -160,9 +160,13 @@
                     align-items: center;
                     gap: 0.75rem;
                     padding: 12px 0; /* gleicher vertikaler Abstand */
-                    color: inherit;
+                    color: #f8fafc; /* helle Schrift für Sidebar */
                     text-decoration: none;
+                    font-weight: 600;
                 }
+                /* Ensure consistent small gaps between list items */
+                .sidebar-nav ul li { margin-bottom: 6px; }
+                .sidebar-nav ul li:last-child { margin-bottom: 0; }
                 .sidebar-nav ul li > a svg,
                 .sidebar-nav ul li > div > a svg,
                 .sidebar-nav ul li.logout-bottom a.logout-link svg {

@@ -417,6 +417,8 @@
 
     <script>
         // Financial Modeling Prep API Configuration
+        const USE_PROXY = true; // Set to true to use local proxy (bypasses CORS)
+        const PROXY_URL = 'http://localhost:3000'; // Local proxy server
         const FMP_API_KEY = 'OQ6IIDD26Cnm3fPtXiQw8O05ZAaBPFRI';
         const FMP_BASE_URL = 'https://financialmodelingprep.com/api/v3';
         const CACHE_KEY = 'capitovo_earnings_cache';
@@ -445,10 +447,15 @@
                 const from = fromDate || new Date().toISOString().split('T')[0];
                 const to = toDate || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
                 
-                const url = `${FMP_BASE_URL}/earning_calendar?from=${from}&to=${to}&apikey=${FMP_API_KEY}`;
-                
-                console.log('Fetching earnings data from FMP API...');
-                console.log('API URL:', url);
+                // Use proxy if enabled (bypasses CORS), otherwise direct API call
+                let url;
+                if (USE_PROXY) {
+                    url = `${PROXY_URL}/earnings-calendar?from=${from}&to=${to}`;
+                    console.log('Fetching via PROXY:', url);
+                } else {
+                    url = `${FMP_BASE_URL}/earning_calendar?from=${from}&to=${to}&apikey=${FMP_API_KEY}`;
+                    console.log('Fetching DIRECT from FMP API:', url);
+                }
                 
                 const response = await fetch(url, {
                     method: 'GET',

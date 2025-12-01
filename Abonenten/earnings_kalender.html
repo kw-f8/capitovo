@@ -356,21 +356,136 @@
     </footer>
 
     <script>
-        // Mock earnings data - In production, this would come from an API
-        const earningsData = [
-            { date: '2025-12-02', company: 'Tesla', ticker: 'TSLA', sector: 'tech', estimate: '$0.85', time: 'after', importance: 'high' },
-            { date: '2025-12-03', company: 'Apple', ticker: 'AAPL', sector: 'tech', estimate: '$2.10', time: 'after', importance: 'high' },
-            { date: '2025-12-04', company: 'Microsoft', ticker: 'MSFT', sector: 'tech', estimate: '$2.75', time: 'after', importance: 'high' },
-            { date: '2025-12-05', company: 'Amazon', ticker: 'AMZN', sector: 'consumer', estimate: '$1.20', time: 'after', importance: 'high' },
-            { date: '2025-12-06', company: 'NVIDIA', ticker: 'NVDA', sector: 'tech', estimate: '$0.95', time: 'after', importance: 'high' },
-            { date: '2025-12-09', company: 'Meta', ticker: 'META', sector: 'tech', estimate: '$4.50', time: 'after', importance: 'high' },
-            { date: '2025-12-10', company: 'Alphabet', ticker: 'GOOGL', sector: 'tech', estimate: '$1.65', time: 'after', importance: 'high' },
-            { date: '2025-12-11', company: 'Netflix', ticker: 'NFLX', sector: 'consumer', estimate: '$3.20', time: 'after', importance: 'medium' },
-            { date: '2025-12-12', company: 'Salesforce', ticker: 'CRM', sector: 'tech', estimate: '$1.85', time: 'pre', importance: 'medium' },
-            { date: '2025-12-13', company: 'Adobe', ticker: 'ADBE', sector: 'tech', estimate: '$3.50', time: 'after', importance: 'medium' },
-            { date: '2025-12-16', company: 'Oracle', ticker: 'ORCL', sector: 'tech', estimate: '$1.40', time: 'after', importance: 'medium' },
-            { date: '2025-12-17', company: 'SAP', ticker: 'SAP', sector: 'tech', estimate: '$2.10', time: 'pre', importance: 'high' }
-        ];
+        // Financial Modeling Prep API Configuration
+        const FMP_API_KEY = 'OQ6IIDD26Cnm3fPtXiQw8O05ZAaBPFRI';
+        const FMP_BASE_URL = 'https://financialmodelingprep.com/api/v3';
+        
+        // Global earnings data - will be populated from API
+        let earningsData = [];
+        let isLoadingData = false;
+
+        // Fetch earnings calendar from FMP API
+        async function fetchEarningsCalendar(fromDate, toDate) {
+            if (isLoadingData) return;
+            isLoadingData = true;
+            
+            try {
+                // Format dates as YYYY-MM-DD
+                const from = fromDate || new Date().toISOString().split('T')[0];
+                const to = toDate || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                
+                const url = `${FMP_BASE_URL}/earning_calendar?from=${from}&to=${to}&apikey=${FMP_API_KEY}`;
+                
+                console.log('Fetching earnings data from FMP API...');
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`FMP API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log(`Loaded ${data.length} earnings events from FMP`);
+                
+                // Transform FMP data to our format
+                earningsData = data.map(event => {
+                    // Determine sector from FMP data (simplified mapping)
+                    const sector = determineSector(event.symbol);
+                    
+                    // Determine time of day (FMP provides 'time' field: bmo=before market open, amc=after market close)
+                    let time = 'market'; // default
+                    if (event.time) {
+                        if (event.time.toLowerCase().includes('bmo') || event.time.toLowerCase().includes('before')) {
+                            time = 'pre';
+                        } else if (event.time.toLowerCase().includes('amc') || event.time.toLowerCase().includes('after')) {
+                            time = 'after';
+                        }
+                    }
+                    
+                    // Determine importance based on market cap or portfolio relevance
+                    const importance = determineImportance(event.symbol, event.marketCap);
+                    
+                    return {
+                        date: event.date,
+                        company: event.name || event.symbol,
+                        ticker: event.symbol,
+                        sector: sector,
+                        estimate: event.epsEstimated ? `$${event.epsEstimated.toFixed(2)}` : 'N/A',
+                        revenue: event.revenueEstimated ? formatRevenue(event.revenueEstimated) : null,
+                        time: time,
+                        importance: importance,
+                        fiscalDateEnding: event.fiscalDateEnding,
+                        updatedFromPrior: event.updatedFromDate
+                    };
+                }).filter(e => e.ticker); // Remove entries without ticker
+                
+                // Sort by date
+                earningsData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                // Re-render calendar and stats
+                const currentDate = new Date();
+                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+                updateStats();
+                
+                // If list view is active, re-render it
+                if (listView.style.display !== 'none') {
+                    renderListView();
+                }
+                
+                console.log('Earnings calendar updated successfully');
+                
+            } catch (error) {
+                console.error('Error fetching earnings data:', error);
+                // Fallback to empty array or show error message
+                alert('Fehler beim Laden der Wirtschaftsdaten. Bitte versuche es später erneut.');
+            } finally {
+                isLoadingData = false;
+            }
+        }
+
+        // Helper: Determine sector based on ticker (simplified)
+        function determineSector(ticker) {
+            const techTickers = ['AAPL', 'MSFT', 'GOOGL', 'GOOG', 'META', 'NVDA', 'AMD', 'INTC', 'CRM', 'ORCL', 'ADBE', 'CSCO', 'IBM', 'SAP'];
+            const consumerTickers = ['AMZN', 'TSLA', 'NFLX', 'DIS', 'NKE', 'SBUX', 'MCD', 'HD'];
+            const financeTickers = ['JPM', 'BAC', 'GS', 'MS', 'WFC', 'C', 'BLK', 'AXP'];
+            const healthTickers = ['JNJ', 'UNH', 'PFE', 'ABBV', 'TMO', 'MRK', 'LLY'];
+            const energyTickers = ['XOM', 'CVX', 'COP', 'SLB', 'EOG'];
+            
+            if (techTickers.includes(ticker)) return 'tech';
+            if (consumerTickers.includes(ticker)) return 'consumer';
+            if (financeTickers.includes(ticker)) return 'finance';
+            if (healthTickers.includes(ticker)) return 'healthcare';
+            if (energyTickers.includes(ticker)) return 'energy';
+            
+            return 'other';
+        }
+
+        // Helper: Determine importance (high/medium/low)
+        function determineImportance(ticker, marketCap) {
+            // Portfolio stocks (from capitovo analyses) = high importance
+            const portfolioStocks = ['TSLA', 'AAPL', 'MSFT', 'AMZN', 'NVDA', 'META', 'GOOGL', 'GOOG', 'JNJ', 'SAP'];
+            
+            if (portfolioStocks.includes(ticker)) {
+                return 'high';
+            }
+            
+            // Large cap (>200B) = medium
+            if (marketCap && marketCap > 200000000000) {
+                return 'medium';
+            }
+            
+            // Everything else = low
+            return 'low';
+        }
+
+        // Helper: Format revenue numbers
+        function formatRevenue(revenue) {
+            if (revenue >= 1e9) {
+                return `$${(revenue / 1e9).toFixed(2)}B`;
+            } else if (revenue >= 1e6) {
+                return `$${(revenue / 1e6).toFixed(2)}M`;
+            }
+            return `$${revenue.toFixed(0)}`;
+        }
 
         // View toggle
         const viewCalendarBtn = document.getElementById('view-calendar');
@@ -518,10 +633,33 @@
             generateCalendar(parseInt(year), parseInt(month) - 1);
         });
 
-        // Initialize
-        const currentDate = new Date();
-        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
-        updateStats();
+        // Initialize - Load data from API first
+        async function initializeCalendar() {
+            const currentDate = new Date();
+            
+            // Show loading state
+            const calendarGrid = document.getElementById('calendar-grid');
+            if (calendarGrid) {
+                calendarGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b;">Lade Wirtschaftsdaten...</div>';
+            }
+            
+            // Fetch earnings data for next 3 months
+            const today = new Date();
+            const threeMonthsLater = new Date(today);
+            threeMonthsLater.setMonth(today.getMonth() + 3);
+            
+            await fetchEarningsCalendar(
+                today.toISOString().split('T')[0],
+                threeMonthsLater.toISOString().split('T')[0]
+            );
+            
+            // Now render calendar with real data
+            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+            updateStats();
+        }
+
+        // Call initialization
+        initializeCalendar();
 
         // Logout
         document.querySelector('.logout-btn').addEventListener('click', () => {

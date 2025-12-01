@@ -62,7 +62,7 @@
         .calendar-header .day-name { text-align: center; font-weight: 600; color: var(--cap-muted); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
 
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: #e5e7eb; border: 1px solid #e5e7eb; }
-        .calendar-day { background: var(--page-white); min-height: 100px; padding: 0.5rem; transition: background 0.12s; position: relative; display: flex; flex-direction: column; border: 1px solid rgba(15,23,42,0.03); }
+        .calendar-day { background: var(--page-white); min-height: 70px; padding: 0.4rem; transition: background 0.12s; position: relative; display: flex; flex-direction: column; border: 1px solid rgba(15,23,42,0.03); }
         .calendar-day:hover { background: #fbfbfb; }
         .calendar-day.other-month { background: #fbfbfc; opacity: 0.55; }
         .calendar-day.today { outline: 2px solid rgba(99,102,241,0.06); box-shadow: inset 0 0 0 1px rgba(99,102,241,0.03); }
@@ -83,12 +83,19 @@
         .earnings-event.high { text-decoration: underline; }
 
         .earnings-event .time-icon { display: none; }
+
+        /* Dot indicator for compact calendar events */
+        .event-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px; vertical-align:middle; }
+        .event-dot.pre { background: #059669; }
+        .event-dot.market { background: #1e40af; }
+        .event-dot.after { background: #92400e; }
         
         /* List view */
         .earnings-list { background: var(--page-white); border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); overflow: hidden; }
         .earnings-list-header { background: #f8fafc; padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; font-weight: 700; color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
         .earnings-list-row { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; align-items: center; transition: all 0.2s; }
         .earnings-list-row:hover { background: #f8fafc; }
+        .earnings-list-row { cursor: pointer; }
         .earnings-list-row:last-child { border-bottom: none; }
         
         .earnings-date { font-weight: 600; color: #0f172a; }
@@ -107,6 +114,15 @@
         .importance-badge.high { background: #fee2e2; color: #991b1b; }
         .importance-badge.medium { background: #fef3c7; color: #92400e; }
         .importance-badge.low { background: #e0e7ff; color: #3730a3; }
+
+        /* Compact list styles for denser Darstellung */
+        .earnings-list.compact .earnings-list-row { padding: 0.7rem 0.6rem; grid-template-columns: 110px 150px 1fr 90px 90px 80px; gap: 0.5rem; font-size: 0.92rem; }
+        .earnings-list.compact .company-logo { width: 34px; height: 34px; border-radius: 6px; }
+        .earnings-list.compact .company-name { font-size: 0.95rem; }
+        .earnings-list.compact .ticker { font-size: 0.85rem; }
+        .earnings-list.compact .estimate { font-size: 0.9rem; }
+        .earnings-list.compact .time-badge { padding: 3px 8px; font-size: 0.78rem; }
+        .earnings-list.compact .importance-badge { padding: 3px 8px; font-size: 0.7rem; }
 
         /* Event Details Modal */
         .event-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); z-index: 10000; display: none; align-items: center; justify-content: center; }
@@ -139,12 +155,12 @@
 
         /* Stats cards */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-        .stat-card { background: var(--page-white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(2,6,23,0.05); border-left: 4px solid #3b82f6; }
+        .stat-card { background: var(--page-white); border-radius: 12px; padding: 1rem; box-shadow: 0 4px 16px rgba(2,6,23,0.05); border-left: 4px solid #3b82f6; }
         .stat-card.green { border-left-color: #10b981; }
         .stat-card.orange { border-left-color: #f59e0b; }
         .stat-card.purple { border-left-color: #8b5cf6; }
         .stat-label { color: #64748b; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-        .stat-value { color: #0f172a; font-size: 2rem; font-weight: 700; }
+        .stat-value { color: #0f172a; font-size: 1.5rem; font-weight: 700; }
         .stat-subtext { color: #64748b; font-size: 0.85rem; margin-top: 0.25rem; }
     </style>
 </head>
@@ -315,6 +331,8 @@
                         <option value="2026-02">Februar 2026</option>
                         <option value="2026-03">März 2026</option>
                     </select>
+                    <button id="month-prev" class="menu-toggle" title="Vorheriger Monat" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(15,23,42,0.06);background:white;margin-left:6px;">◀</button>
+                    <button id="month-next" class="menu-toggle" title="Nächster Monat" style="padding:6px 10px;border-radius:6px;border:1px solid rgba(15,23,42,0.06);background:white;margin-left:6px;">▶</button>
 
                     <label for="sector-filter">Sektor:</label>
                     <select id="sector-filter">
@@ -334,15 +352,22 @@
                         <option value="low">Niedrig</option>
                     </select>
 
-                    <div class="view-toggle">
-                        <button id="view-calendar" class="active">Kalender</button>
-                        <button id="view-list">Liste</button>
+                    <div style="display:flex;align-items:center;gap:0.75rem;">
+                        <div class="view-toggle">
+                            <button id="view-calendar">Kalender</button>
+                            <button id="view-list" class="active">Liste</button>
+                        </div>
+                        <div class="legend" aria-hidden="true" style="display:flex;gap:8px;align-items:center;margin-left:8px;">
+                            <div class="legend-item"><span class="time-badge pre" style="padding:4px 6px;border-radius:999px;">Pre</span><span style="color:var(--cap-muted);font-size:0.85rem;">Pre</span></div>
+                            <div class="legend-item"><span class="time-badge market" style="padding:4px 6px;border-radius:999px;">Market</span><span style="color:var(--cap-muted);font-size:0.85rem;">Market</span></div>
+                            <div class="legend-item"><span class="time-badge after" style="padding:4px 6px;border-radius:999px;">After</span><span style="color:var(--cap-muted);font-size:0.85rem;">After</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Calendar View -->
-            <div class="calendar-container" id="calendar-view">
+            <div class="calendar-container" id="calendar-view" style="display:none;">
                 <div class="calendar-header">
                     <div class="day-name">Mo</div>
                     <div class="day-name">Di</div>
@@ -392,7 +417,7 @@
             </div>
 
             <!-- List View -->
-            <div class="earnings-list" id="list-view" style="display: none;">
+            <div class="earnings-list compact" id="list-view" style="display: block;">
                 <div class="earnings-list-header">
                     <div>Datum</div>
                     <div>Unternehmen</div>
@@ -702,6 +727,8 @@
             viewListBtn.classList.remove('active');
             calendarView.style.display = 'block';
             listView.style.display = 'none';
+            listView.classList.remove('compact');
+            try { localStorage.setItem('capitovo_earnings_view', 'calendar'); } catch(e){}
         });
 
         viewListBtn.addEventListener('click', () => {
@@ -710,7 +737,19 @@
             calendarView.style.display = 'none';
             listView.style.display = 'block';
             renderListView();
+            listView.classList.add('compact');
+            try { localStorage.setItem('capitovo_earnings_view', 'list'); } catch(e){}
         });
+
+        // Load and apply saved view preference
+        try {
+            const savedView = localStorage.getItem('capitovo_earnings_view');
+            if (savedView === 'calendar') {
+                viewCalendarBtn.click();
+            } else {
+                viewListBtn.click();
+            }
+        } catch(e) {}
 
         // Generate calendar
         function generateCalendar(year, month) {
@@ -782,7 +821,8 @@
                         }
                         
                         // Nur Kürzel anzeigen (ohne Zeit-Icon) — schlankes Layout
-                        eventDiv.textContent = event.ticker ? event.ticker.toUpperCase() : event.ticker;
+                        const dotClass = event.time || 'market';
+                        eventDiv.innerHTML = `<span class="event-dot ${dotClass}" aria-hidden="true"></span><span class="event-ticker">${(event.ticker||'').toUpperCase()}</span>`;
                         eventDiv.title = `${event.company}\nEPS: ${event.estimate}\n${event.time === 'pre' ? 'Pre-Market' : event.time === 'after' ? 'After-Market' : 'Während Handelszeit'}`;
                         
                         // Click to show details
@@ -881,6 +921,11 @@
                     <div><span class="importance-badge ${event.importance}">${event.importance}</span></div>
                 `;
                 
+                // Make row clickable to show details and accessible via keyboard
+                row.setAttribute('role', 'button');
+                row.tabIndex = 0;
+                row.addEventListener('click', () => showEventDetails(event));
+                row.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); showEventDetails(event); } });
                 listContainer.appendChild(row);
             });
         }
@@ -917,6 +962,20 @@
             generateCalendar(parseInt(year), parseInt(month) - 1);
         });
 
+                // Month prev/next handlers
+                function changeMonth(delta) {
+                    const select = document.getElementById('month-select');
+                    const options = Array.from(select.options);
+                    const curIndex = select.selectedIndex;
+                    let newIndex = curIndex + delta;
+                    if (newIndex < 0) newIndex = 0;
+                    if (newIndex >= options.length) newIndex = options.length - 1;
+                    select.selectedIndex = newIndex;
+                    select.dispatchEvent(new Event('change'));
+                }
+                document.getElementById('month-prev').addEventListener('click', () => changeMonth(-1));
+                document.getElementById('month-next').addEventListener('click', () => changeMonth(1));
+
         // Initialize - Load data from API first
         async function initializeCalendar() {
             const currentDate = new Date();
@@ -927,6 +986,16 @@
                 calendarGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b;">Lade Wirtschaftsdaten...</div>';
             }
             
+            // Make month-select default to current month if present
+            try {
+                const monthSelect = document.getElementById('month-select');
+                if (monthSelect) {
+                    const value = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}`;
+                    const optionToSelect = Array.from(monthSelect.options).findIndex(o => o.value === value);
+                    if (optionToSelect >= 0) monthSelect.selectedIndex = optionToSelect;
+                }
+            } catch(e) {}
+
             // Fetch earnings data for next 3 months
             const today = new Date();
             const threeMonthsLater = new Date(today);
@@ -946,7 +1015,9 @@
         initializeCalendar();
 
         // Logout
-        document.querySelector('.logout-btn').addEventListener('click', () => {
+        const logoutElement = document.getElementById('logout-link') || document.querySelector('.logout-link');
+        if (logoutElement) {
+            logoutElement.addEventListener('click', () => {
             if (confirm('Möchtest du dich wirklich abmelden?')) {
                 try {
                     localStorage.removeItem('capitovo_session');
@@ -956,7 +1027,8 @@
                 } catch(e) {}
                 window.location.href = '../index.html';
             }
-        });
+            });
+        }
 
         // Fetch cheapest price from checkout page
         async function updatePaywallPrice() {

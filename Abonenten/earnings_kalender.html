@@ -364,30 +364,6 @@
             { date: '2025-12-17', company: 'SAP', ticker: 'SAP', sector: 'tech', estimate: '$2.10', time: 'pre', importance: 'high' }
         ];
 
-        // Sidebar toggle
-        const menuToggle = document.getElementById('menu-toggle');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebar-overlay');
-        const sidebarClose = document.querySelector('.sidebar-close');
-
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
-            sidebarOverlay.classList.toggle('active');
-            menuToggle.setAttribute('aria-expanded', sidebar.classList.contains('open'));
-        });
-
-        sidebarClose.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
-        });
-
-        sidebarOverlay.addEventListener('click', () => {
-            sidebar.classList.remove('open');
-            sidebarOverlay.classList.remove('active');
-            menuToggle.setAttribute('aria-expanded', 'false');
-        });
-
         // View toggle
         const viewCalendarBtn = document.getElementById('view-calendar');
         const viewListBtn = document.getElementById('view-list');

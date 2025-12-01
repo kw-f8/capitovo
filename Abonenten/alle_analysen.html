@@ -59,6 +59,31 @@
             color: #0f172a;
             vertical-align: middle;
         }
+        /* Date input specific styling for darker text */
+        .filter-bar input[type="date"], .advanced-filters input[type="date"] {
+            color: #0f172a;
+            color-scheme: light;
+        }
+        .filter-bar input[type="date"]::-webkit-datetime-edit,
+        .filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+            color: #0f172a;
+        }
+        .filter-bar input[type="date"]::-webkit-datetime-edit-text,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-month-field,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-day-field,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #0f172a;
+        }
+        .advanced-filters input[type="date"]::-webkit-datetime-edit,
+        .advanced-filters input[type="date"]::-webkit-calendar-picker-indicator {
+            color: #0f172a;
+        }
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-text,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-month-field,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-day-field,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #0f172a;
+        }
         .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; }
         .filter-bar #filter-toggle { white-space: nowrap; flex-shrink: 0; }
         .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; min-width: 158px; }

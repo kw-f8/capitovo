@@ -344,7 +344,7 @@ footer {
     display: flex !important;
     align-items: center !important;
     gap: 0.75rem !important;
-    font-weight: 600 !important;
+    font-weight: 400 !important;
 }
 .abonenten-page .sidebar-nav ul li { margin-bottom: 6px !important; }
 .abonenten-page .sidebar-nav ul li:last-child { margin-bottom: 0 !important; }

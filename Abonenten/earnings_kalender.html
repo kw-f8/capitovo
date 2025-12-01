@@ -13,7 +13,8 @@
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
         /* Page layout */
-        :root { --page-white: #ffffff; --muted-white: #fbfbfc; --cap-primary: #24354b; --cap-accent: #3b82f6; --cap-text: #0f172a; --cap-muted: #64748b; --cap-success: #059669; --cap-warning: #d97706; }
+        /* Schlichteres, neutraleres Farbset für den Kalender */
+        :root { --page-white: #ffffff; --muted-white: #fbfbfc; --cap-primary: #0b1220; --cap-accent: #6b7280; --cap-text: #0f172a; --cap-muted: #94a3b8; --cap-success: #059669; --cap-warning: #d97706; }
         body { background: var(--muted-white); }
         main { background: transparent; padding-top: 18px; }
 
@@ -61,27 +62,27 @@
         .calendar-header .day-name { text-align: center; font-weight: 600; color: var(--cap-muted); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
 
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: #e5e7eb; border: 1px solid #e5e7eb; }
-        .calendar-day { background: var(--page-white); min-height: 100px; padding: 0.5rem; transition: background 0.15s; position: relative; display: flex; flex-direction: column; }
-        .calendar-day:hover { background: #f9fafb; }
-        .calendar-day.other-month { background: #fafafa; opacity: 0.5; }
-        .calendar-day.today { background: rgba(59,130,246,0.06); }
-        .calendar-day.today .day-number { color: var(--cap-accent); font-weight: 700; }
+        .calendar-day { background: var(--page-white); min-height: 100px; padding: 0.5rem; transition: background 0.12s; position: relative; display: flex; flex-direction: column; border: 1px solid rgba(15,23,42,0.03); }
+        .calendar-day:hover { background: #fbfbfb; }
+        .calendar-day.other-month { background: #fbfbfc; opacity: 0.55; }
+        .calendar-day.today { outline: 2px solid rgba(99,102,241,0.06); box-shadow: inset 0 0 0 1px rgba(99,102,241,0.03); }
+        .calendar-day.today .day-number { color: var(--cap-primary); font-weight: 700; }
 
         .day-number { font-weight: 500; color: var(--cap-text); font-size: 0.875rem; margin-bottom: 0.5rem; }
         .calendar-day.other-month .day-number { color: #d1d5db; }
 
         .calendar-day.has-events .day-number { font-weight: 600; }
 
-        .event-count { position: absolute; top: 0.25rem; right: 0.25rem; background: var(--cap-muted); color: white; font-size: 0.625rem; font-weight: 600; min-width: 16px; height: 16px; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+        .event-count { position: absolute; top: 0.25rem; right: 0.25rem; background: var(--cap-muted); color: white; font-size: 0.675rem; font-weight: 600; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
         
         /* Earnings events in calendar */
-        .earnings-event { background: #f8fafc; color: var(--cap-text); padding: 4px 6px; border-radius: 4px; margin-bottom: 3px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: background 0.12s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; border-left: 3px solid var(--cap-muted); }
-        .earnings-event:hover { background: #f3f4f6; }
-        .earnings-event.pre-market { border-left-color: var(--cap-success); background: #f0fdf4; color: #065f46; }
-        .earnings-event.after-market { border-left-color: var(--cap-warning); background: #fffbeb; color: #92400e; }
-        .earnings-event.high { font-weight: 600; color: var(--cap-primary); }
+        /* Schlichtere Event-Darstellung: nur Kürzel sichtbar, keine starken Farben */
+        .earnings-event { background: transparent; color: var(--cap-primary); padding: 2px 0; margin-bottom: 4px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: color 0.12s; text-align: left; }
+        .earnings-event:hover { color: var(--cap-accent); }
+        .earnings-event.pre-market, .earnings-event.after-market { background: transparent; }
+        .earnings-event.high { text-decoration: underline; }
 
-        .earnings-event .time-icon { font-size: 0.7rem; margin-right: 6px; opacity: 0.9; }
+        .earnings-event .time-icon { display: none; }
         
         /* List view */
         .earnings-list { background: var(--page-white); border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); overflow: hidden; }
@@ -777,10 +778,8 @@
                             eventDiv.classList.add('high');
                         }
                         
-                        // Time icon
-                        const timeIcon = event.time === 'pre' ? '☀️' : event.time === 'after' ? '🌙' : '⏰';
-                        
-                        eventDiv.innerHTML = `<span class="time-icon">${timeIcon}</span>${event.ticker}`;
+                        // Nur Kürzel anzeigen (ohne Zeit-Icon) — schlankes Layout
+                        eventDiv.textContent = event.ticker ? event.ticker.toUpperCase() : event.ticker;
                         eventDiv.title = `${event.company}\nEPS: ${event.estimate}\n${event.time === 'pre' ? 'Pre-Market' : event.time === 'after' ? 'After-Market' : 'Während Handelszeit'}`;
                         
                         // Click to show details

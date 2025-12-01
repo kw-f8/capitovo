@@ -150,6 +150,27 @@
                     margin-bottom: 0.75rem;
                 }
 
+                /* Einheitliche Abstände für alle Sidebar-Links */
+                .sidebar-nav ul { margin: 0; padding: 0; }
+                .sidebar-nav ul li { margin: 0; }
+                .sidebar-nav ul li > a,
+                .sidebar-nav ul li > div > a,
+                .sidebar-nav ul li.logout-bottom a.logout-link {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                    padding: 12px 0; /* gleicher vertikaler Abstand */
+                    color: inherit;
+                    text-decoration: none;
+                }
+                .sidebar-nav ul li > a svg,
+                .sidebar-nav ul li > div > a svg,
+                .sidebar-nav ul li.logout-bottom a.logout-link svg {
+                    flex-shrink: 0;
+                }
+                /* Ensure the logout block still sticks to bottom but keeps spacing */
+                .sidebar-nav ul li.logout-bottom:first-of-type { margin-top: auto; padding-top: 12px; }
+
             /* Align header and main content: use same max-width and paddings so left edges line up */
             .abonenten-page .header-content,
             .abonenten-page main {

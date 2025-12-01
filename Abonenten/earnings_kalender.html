@@ -56,24 +56,34 @@
         .view-toggle button:hover:not(.active) { color: #0f172a; }
 
         /* Calendar grid */
-        .calendar-container { background: var(--page-white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 6px 20px rgba(2,6,23,0.06); }
-        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
-        .calendar-header .day-name { text-align: center; font-weight: 700; color: #64748b; font-size: 0.85rem; padding: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .calendar-container { background: var(--page-white); border-radius: 12px; padding: 2rem; box-shadow: 0 6px 20px rgba(2,6,23,0.06); }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; margin-bottom: 1.25rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem; }
+        .calendar-header .day-name { text-align: center; font-weight: 700; color: #475569; font-size: 0.9rem; padding: 0.5rem; text-transform: uppercase; letter-spacing: 0.8px; }
         
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
-        .calendar-day { background: white; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 120px; padding: 0.75rem; transition: all 0.2s; position: relative; }
-        .calendar-day:hover { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.1); transform: translateY(-2px); }
-        .calendar-day.other-month { background: #f8fafc; opacity: 0.5; }
-        .calendar-day.today { border: 2px solid #3b82f6; background: #eff6ff; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.75rem; }
+        .calendar-day { background: #fafbfc; border: 1px solid #e2e8f0; border-radius: 10px; min-height: 140px; padding: 0.85rem; transition: all 0.25s ease; position: relative; display: flex; flex-direction: column; }
+        .calendar-day:hover { border-color: #3b82f6; box-shadow: 0 6px 16px rgba(59,130,246,0.12); transform: translateY(-3px); background: white; }
+        .calendar-day.other-month { background: #f1f5f9; opacity: 0.4; pointer-events: none; }
+        .calendar-day.today { border: 2px solid #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); box-shadow: 0 4px 12px rgba(59,130,246,0.15); }
+        .calendar-day.today .day-number { color: #1e40af; }
         
-        .day-number { font-weight: 700; color: #0f172a; font-size: 0.9rem; margin-bottom: 0.5rem; }
-        .calendar-day.other-month .day-number { color: #94a3b8; }
+        .day-number { font-weight: 800; color: #0f172a; font-size: 1.1rem; margin-bottom: 0.65rem; line-height: 1; }
+        .calendar-day.other-month .day-number { color: #cbd5e1; }
+        
+        .calendar-day.has-events { border-left: 4px solid #3b82f6; }
+        .calendar-day.has-events.high-importance { border-left-color: #dc2626; border-left-width: 5px; }
+        
+        .event-count { position: absolute; top: 0.5rem; right: 0.5rem; background: #3b82f6; color: white; font-size: 0.7rem; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(59,130,246,0.3); }
         
         /* Earnings events in calendar */
-        .earnings-event { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .earnings-event:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
-        .earnings-event.pre-market { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .earnings-event.after-market { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .earnings-event { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 7px 10px; border-radius: 7px; margin-bottom: 5px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.25s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-shadow: 0 2px 6px rgba(59,130,246,0.2); display: flex; align-items: center; gap: 5px; }
+        .earnings-event:hover { transform: translateX(3px) scale(1.02); box-shadow: 0 4px 14px rgba(59,130,246,0.35); }
+        .earnings-event.pre-market { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 2px 6px rgba(16,185,129,0.2); }
+        .earnings-event.after-market { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 2px 6px rgba(245,158,11,0.2); }
+        .earnings-event.high { position: relative; }
+        .earnings-event.high::before { content: '⭐'; margin-right: 2px; font-size: 0.7rem; }
+        
+        .earnings-event .time-icon { font-size: 0.65rem; opacity: 0.9; }
         
         /* List view */
         .earnings-list { background: var(--page-white); border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); overflow: hidden; }
@@ -98,6 +108,22 @@
         .importance-badge.high { background: #fee2e2; color: #991b1b; }
         .importance-badge.medium { background: #fef3c7; color: #92400e; }
         .importance-badge.low { background: #e0e7ff; color: #3730a3; }
+
+        /* Event Details Modal */
+        .event-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 10000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s ease; }
+        .event-modal.active { display: flex; }
+        .event-modal-content { background: white; border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideUp 0.3s ease; }
+        .event-modal-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem; }
+        .event-modal-title { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
+        .event-modal-close { background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; color: #64748b; transition: all 0.2s; }
+        .event-modal-close:hover { background: #e2e8f0; color: #0f172a; transform: rotate(90deg); }
+        .event-detail-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; }
+        .event-detail-row:last-child { border-bottom: none; }
+        .event-detail-label { color: #64748b; font-weight: 600; font-size: 0.9rem; }
+        .event-detail-value { color: #0f172a; font-weight: 600; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         /* Responsive */
         @media (max-width: 1024px) {
@@ -323,6 +349,40 @@
                 </div>
                 <div class="calendar-grid" id="calendar-grid">
                     <!-- Calendar days will be generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Event Details Modal -->
+            <div class="event-modal" id="event-modal">
+                <div class="event-modal-content">
+                    <div class="event-modal-header">
+                        <div class="event-modal-title" id="modal-company-name">Tesla</div>
+                        <button class="event-modal-close" onclick="closeEventModal()">✕</button>
+                    </div>
+                    <div class="event-detail-row">
+                        <span class="event-detail-label">Ticker:</span>
+                        <span class="event-detail-value" id="modal-ticker">TSLA</span>
+                    </div>
+                    <div class="event-detail-row">
+                        <span class="event-detail-label">Datum:</span>
+                        <span class="event-detail-value" id="modal-date">2. Dezember 2025</span>
+                    </div>
+                    <div class="event-detail-row">
+                        <span class="event-detail-label">Zeit:</span>
+                        <span class="event-detail-value" id="modal-time">After-Market</span>
+                    </div>
+                    <div class="event-detail-row">
+                        <span class="event-detail-label">EPS Schätzung:</span>
+                        <span class="event-detail-value" id="modal-eps">$0.85</span>
+                    </div>
+                    <div class="event-detail-row">
+                        <span class="event-detail-label">Sektor:</span>
+                        <span class="event-detail-value" id="modal-sector">Technologie</span>
+                    </div>
+                    <div class="event-detail-row">
+                        <span class="event-detail-label">Wichtigkeit:</span>
+                        <span class="event-detail-value" id="modal-importance">High</span>
+                    </div>
                 </div>
             </div>
 
@@ -620,17 +680,99 @@
             if (date) {
                 const dateStr = date.toISOString().split('T')[0];
                 const events = earningsData.filter(e => e.date === dateStr);
-                events.forEach(event => {
-                    const eventDiv = document.createElement('div');
-                    eventDiv.className = `earnings-event ${event.time}-market`;
-                    eventDiv.textContent = `${event.ticker} ${event.time === 'pre' ? '🌅' : '🌙'}`;
-                    eventDiv.title = `${event.company} - ${event.estimate} (${event.time === 'pre' ? 'Pre-Market' : 'After-Market'})`;
-                    dayDiv.appendChild(eventDiv);
-                });
+                
+                if (events.length > 0) {
+                    dayDiv.classList.add('has-events');
+                    
+                    // Check if any high-importance events
+                    const hasHighImportance = events.some(e => e.importance === 'high');
+                    if (hasHighImportance) {
+                        dayDiv.classList.add('high-importance');
+                    }
+                    
+                    // Show max 3 events, then show count
+                    const visibleEvents = events.slice(0, 3);
+                    visibleEvents.forEach(event => {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = `earnings-event ${event.time}-market`;
+                        if (event.importance === 'high') {
+                            eventDiv.classList.add('high');
+                        }
+                        
+                        // Time icon
+                        const timeIcon = event.time === 'pre' ? '☀️' : event.time === 'after' ? '🌙' : '⏰';
+                        
+                        eventDiv.innerHTML = `<span class="time-icon">${timeIcon}</span>${event.ticker}`;
+                        eventDiv.title = `${event.company}\nEPS: ${event.estimate}\n${event.time === 'pre' ? 'Pre-Market' : event.time === 'after' ? 'After-Market' : 'Während Handelszeit'}`;
+                        
+                        // Click to show details
+                        eventDiv.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            showEventDetails(event);
+                        });
+                        
+                        dayDiv.appendChild(eventDiv);
+                    });
+                    
+                    // If more than 3 events, show count badge
+                    if (events.length > 3) {
+                        const countBadge = document.createElement('div');
+                        countBadge.className = 'event-count';
+                        countBadge.textContent = `+${events.length - 3}`;
+                        countBadge.title = `${events.length} Events gesamt`;
+                        dayDiv.appendChild(countBadge);
+                    }
+                }
             }
 
             return dayDiv;
         }
+
+        // Show event details modal
+        function showEventDetails(event) {
+            const modal = document.getElementById('event-modal');
+            const eventDate = new Date(event.date);
+            const formattedDate = eventDate.toLocaleDateString('de-DE', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            document.getElementById('modal-company-name').textContent = event.company;
+            document.getElementById('modal-ticker').textContent = event.ticker;
+            document.getElementById('modal-date').textContent = formattedDate;
+            
+            const timeText = event.time === 'pre' ? 'Pre-Market (vor Börseneröffnung)' : 
+                            event.time === 'after' ? 'After-Market (nach Börsenschluss)' : 
+                            'Während Handelszeit';
+            document.getElementById('modal-time').textContent = timeText;
+            document.getElementById('modal-eps').textContent = event.estimate;
+            document.getElementById('modal-sector').textContent = getSectorName(event.sector);
+            
+            const importanceText = event.importance === 'high' ? 'Hoch ⭐' : 
+                                  event.importance === 'medium' ? 'Mittel' : 'Niedrig';
+            document.getElementById('modal-importance').textContent = importanceText;
+            
+            modal.classList.add('active');
+            
+            // Close on background click
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    closeEventModal();
+                }
+            };
+        }
+
+        function closeEventModal() {
+            document.getElementById('event-modal').classList.remove('active');
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeEventModal();
+            }
+        });
 
         // Render list view
         function renderListView() {

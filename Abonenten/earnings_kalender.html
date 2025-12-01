@@ -359,14 +359,25 @@
         // Financial Modeling Prep API Configuration
         const FMP_API_KEY = 'OQ6IIDD26Cnm3fPtXiQw8O05ZAaBPFRI';
         const FMP_BASE_URL = 'https://financialmodelingprep.com/api/v3';
+        const CACHE_KEY = 'capitovo_earnings_cache';
+        const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6 Stunden in Millisekunden
         
-        // Global earnings data - will be populated from API
+        // Global earnings data - will be populated from API or cache
         let earningsData = [];
         let isLoadingData = false;
 
-        // Fetch earnings calendar from FMP API
+        // Fetch earnings calendar from FMP API (with caching to save API calls)
         async function fetchEarningsCalendar(fromDate, toDate) {
             if (isLoadingData) return;
+            
+            // Check cache first
+            const cachedData = getCachedEarnings();
+            if (cachedData) {
+                console.log('Using cached earnings data (reduces API calls)');
+                earningsData = cachedData;
+                return;
+            }
+            
             isLoadingData = true;
             
             try {
@@ -421,6 +432,9 @@
                 // Sort by date
                 earningsData.sort((a, b) => new Date(a.date) - new Date(b.date));
                 
+                // Save to cache (6h expiry) to reduce API calls
+                saveCachedEarnings(earningsData);
+                
                 // Re-render calendar and stats
                 const currentDate = new Date();
                 generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
@@ -435,10 +449,58 @@
                 
             } catch (error) {
                 console.error('Error fetching earnings data:', error);
-                // Fallback to empty array or show error message
+                
+                // Try to use old cache as fallback
+                const oldCache = localStorage.getItem(CACHE_KEY);
+                if (oldCache) {
+                    try {
+                        const parsed = JSON.parse(oldCache);
+                        earningsData = parsed.data || [];
+                        console.log('Using expired cache as fallback');
+                        return;
+                    } catch (e) {}
+                }
+                
                 alert('Fehler beim Laden der Wirtschaftsdaten. Bitte versuche es später erneut.');
             } finally {
                 isLoadingData = false;
+            }
+        }
+
+        // Cache Management Functions (to save API calls - Free Tier: 250/day)
+        function getCachedEarnings() {
+            try {
+                const cached = localStorage.getItem(CACHE_KEY);
+                if (!cached) return null;
+                
+                const parsed = JSON.parse(cached);
+                const now = Date.now();
+                
+                // Check if cache is still valid (6 hours)
+                if (now - parsed.timestamp < CACHE_DURATION) {
+                    console.log(`Cache valid for ${Math.round((CACHE_DURATION - (now - parsed.timestamp)) / 1000 / 60)} more minutes`);
+                    return parsed.data;
+                }
+                
+                // Cache expired
+                console.log('Cache expired, fetching fresh data');
+                return null;
+            } catch (e) {
+                console.error('Cache read error:', e);
+                return null;
+            }
+        }
+
+        function saveCachedEarnings(data) {
+            try {
+                const cacheObject = {
+                    data: data,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObject));
+                console.log('Earnings data cached for 6 hours');
+            } catch (e) {
+                console.error('Cache write error:', e);
             }
         }
 

@@ -313,12 +313,6 @@ footer {
     transition: color 0.2s;
 }
 
-/* Einheitlicher Abstand zwischen Icon und Text in der Sidebar
-   - `gap` sorgt dafür, dass auch Links ohne extra Utility-Klassen korrekt Abstand haben
-   - Icons werden nicht verkleinert (flex-shrink:0) */
-.sidebar-nav ul li a { gap: 0.75rem; }
-.sidebar-nav ul li a svg, .sidebar-nav ul li a img { flex-shrink: 0; width: 20px; height: 20px; }
-
 .sidebar-nav ul li a:hover {
     color: var(--color-accent-blue);
 }

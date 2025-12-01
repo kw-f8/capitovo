@@ -334,6 +334,21 @@ footer {
     background-color: #0056b3; 
 }
 
+/* Ensure Abonenten pages always show light sidebar links and consistent spacing
+   even if page-local styles try to override colors. Uses !important to win cascade. */
+.abonenten-page .sidebar-nav ul li > a,
+.abonenten-page .sidebar-nav ul li > div > a,
+.abonenten-page .sidebar-nav ul li.logout-bottom a.logout-link {
+    color: #f8fafc !important;
+    padding: 12px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    font-weight: 600 !important;
+}
+.abonenten-page .sidebar-nav ul li { margin-bottom: 6px !important; }
+.abonenten-page .sidebar-nav ul li:last-child { margin-bottom: 0 !important; }
+
 
 /* ---------------------------------------------------- */
 /* FAQ/Accordion-Styling */

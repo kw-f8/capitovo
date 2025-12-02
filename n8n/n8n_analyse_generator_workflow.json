@@ -29,6 +29,34 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$env.TEST_MODE === 'true'}}",
+              "operation": "equal",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "test-mode-check",
+      "name": "Test Mode?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [550, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Mock Perplexity response for testing (keeps same shape as real API)\nconst company = $items(0).json.company || 'Tesla';\nconst ticker = $items(0).json.ticker || 'TSLA';\nconst mockText = `## Marktbewertung und Aktienperformance\n- Aktueller Kurs: 123.45 USD\n- Marktkapitalisierung: 800 Mrd. USD\n\n## Bewertungsmultiples und Finanzkennzahlen\n- KGV: 25\n\n## Fazit\nEmpfehlung: Halten`;\n\nreturn { json: { choices: [{ message: { content: mockText } }], citations: [] } };"
+      },
+      "id": "mock-perplexity",
+      "name": "Mock Perplexity",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
         "method": "POST",
         "url": "https://api.perplexity.ai/chat/completions",
         "authentication": "predefinedCredentialType",
@@ -195,19 +223,19 @@
       "typeVersion": 2,
       "position": [1450, 480]
     },
-    {
-      "parameters": {
-        "functionCode": "// Write HTML file to disk\nconst fs = require('fs');\nconst filename = $('Generate HTML').item.json.filename;\nconst html = $('Generate HTML').item.json.html;\nconst metadata = $('Generate HTML').item.json.metadata;\nconst qualityData = $input.item.json;\n\nconst filePath = `/workspaces/capitovo/Abonenten/${filename}.html`;\n\ntry {\n  // Add quality badge to HTML if score is high\n  let finalHtml = html;\n  if (qualityData.qualityScore >= 8) {\n    const badge = `<div style=\"background:#10b981;color:white;padding:8px 16px;border-radius:8px;display:inline-block;margin:1rem 0;font-size:0.9rem;font-weight:600;\">✓ Qualitätsgeprüft (${qualityData.qualityScore}/10)</div>`;\n    finalHtml = html.replace('</h1>', `</h1>\\n${badge}`);\n  }\n  \n  fs.writeFileSync(filePath, finalHtml, 'utf8');\n  \n  return {\n    json: {\n      success: true,\n      filePath: filePath,\n      filename: filename,\n      metadata: metadata,\n      qualityScore: qualityData.qualityScore,\n      message: `HTML-Datei erfolgreich erstellt: ${filename}.html (Quality: ${qualityData.qualityScore}/10)`\n    }\n  };\n} catch (error) {\n  return {\n    json: {\n      success: false,\n      error: error.message,\n      filename: filename\n    }\n  };\n}"
-      },
-      "id": "write-html-file",
-      "name": "Write HTML File",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [1650, 390]
-    },
-    {
-      "parameters": {
-        "content": "=⚠️ **Analyse benötigt manuelle Überprüfung**\\n\\n📊 **Unternehmen:** {{$('Parse Quality Check').item.json.company}} ({{$('Parse Quality Check').item.json.ticker}})\\n⭐ **Quality Score:** {{$('Parse Quality Check').item.json.qualityScore}}/10\\n\\n**Identifizierte Probleme:**\\n```\\n{{$('Parse Quality Check').item.json.problems}}\\n```\\n\\n**Verbesserungsvorschläge:**\\n```\\n{{$('Parse Quality Check').item.json.suggestions}}\\n```\\n\\n❗ Bitte vor Veröffentlichung manuell überprüfen!",
+          "Process Input": {
+            "main": [
+              [
+                [
+                  {
+                    "node": "Test Mode?",
+                    "type": "main",
+                    "index": 0
+                  }
+                ]
+              ]
+            ]
+          },
         "additionalFields": {}
       },
       "id": "alert-low-quality",
@@ -287,7 +315,7 @@
       "main": [
         [
           {
-            "node": "Perplexity Research",
+            "node": "Test Mode?",
             "type": "main",
             "index": 0
           }
@@ -295,6 +323,35 @@
       ]
     },
     "Perplexity Research": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Mode?": {
+      "main": [
+        [
+          {
+            "node": "Mock Perplexity",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Perplexity Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Perplexity": {
       "main": [
         [
           {

@@ -1,0 +1,67 @@
+{
+  "name": "capitovo Analyse Generator (TEST MODE)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "test-create-analysis",
+        "responseMode": "lastNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "id": "webhook-trigger-test",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const body = $input.item.json.body || {}\nconst company = body.company || 'TestCo'\nconst ticker = body.ticker || 'TST'\nreturn { json: { company, ticker } }"
+      },
+      "id": "process-input-test",
+      "name": "Process Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const company = $items(0).json.company || 'TestCo'\nconst ticker = $items(0).json.ticker || 'TST'\nconst mockText = `## Marktbewertung\n- Kurs: 100\n- Marktkapitalisierung: 1 Mrd.`\nreturn { json: { choices: [{ message: { content: mockText } }], citations: [] } }"
+      },
+      "id": "mock-perplexity-test",
+      "name": "Mock Perplexity",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const fs = require('fs')\nconst company = $('Process Input').item.json.company || 'TestCo'\nconst ticker = $('Process Input').item.json.ticker || 'TST'\nconst response = $input.item.json.choices[0].message.content || 'no content'\nconst filename = `test-${ticker.toLowerCase()}.html`\nconst html = `<html><body><h1>${company} (${ticker})</h1><pre>${response}</pre></body></html>`\nconst path = `/workspaces/capitovo/Abonenten/${filename}`\nfs.writeFileSync(path, html, 'utf8')\nreturn { json: { success: true, path } }"
+      },
+      "id": "parse-response-test",
+      "name": "Parse Response and Write",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "content": "=✅ Test-Analyse erstellt (TEST MODE)\n\nDatei: {{$node['Parse Response and Write'].json.path}}",
+        "options": {}
+      },
+      "id": "webhook-response-test",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": { "main": [[ { "node": "Process Input", "type": "main", "index": 0 } ]] },
+    "Process Input": { "main": [[ { "node": "Mock Perplexity", "type": "main", "index": 0 } ]] },
+    "Mock Perplexity": { "main": [[ { "node": "Parse Response and Write", "type": "main", "index": 0 } ]] },
+    "Parse Response and Write": { "main": [[ { "node": "Webhook Response", "type": "main", "index": 0 } ]] }
+  }
+}

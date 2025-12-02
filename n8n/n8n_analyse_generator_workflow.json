@@ -6,20 +6,18 @@
         "httpMethod": "POST",
         "path": "create-analysis",
         "responseMode": "lastNode",
-        "options": {
-          "rawBody": true
-        }
+        "options": {}
       },
       "id": "webhook-trigger",
       "name": "Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
-      "typeVersion": 1,
+      "typeVersion": 1.1,
       "position": [250, 300],
       "webhookId": "capitovo-analysis"
     },
     {
       "parameters": {
-        "functionCode": "// Extract and validate input\nconst company = $input.item.json.body.company || 'Tesla';\nconst ticker = $input.item.json.body.ticker || 'TSLA';\nconst sector = $input.item.json.body.sector || 'ZYKLISCHER KONSUM';\nconst analysisType = $input.item.json.body.analysisType || 'equity-research';\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    sector: sector,\n    analysisType: analysisType,\n    timestamp: new Date().toISOString()\n  }\n};"
+        "jsCode": "const body = $input.item.json.body || $input.item.json;\\nconst company = body.company || 'Tesla';\\nconst ticker = body.ticker || 'TSLA';\\nconst sector = body.sector || 'ZYKLISCHER KONSUM';\\n\\nreturn {\\n  json: {\\n    company: company,\\n    ticker: ticker,\\n    sector: sector,\\n    timestamp: new Date().toISOString()\\n  }\\n};"
       },
       "id": "process-input",
       "name": "Process Input",
@@ -30,11 +28,11 @@
     {
       "parameters": {
         "conditions": {
-          "boolean": [
+          "string": [
             {
-              "value1": "={{$env.TEST_MODE === 'true'}}",
-              "operation": "equal",
-              "value2": true
+              "value1": "={{ $env.TEST_MODE }}",
+              "operation": "equals",
+              "value2": "true"
             }
           ]
         }
@@ -43,141 +41,149 @@
       "name": "Test Mode?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [550, 300]
+      "position": [650, 300]
     },
     {
       "parameters": {
-        "functionCode": "// Mock Perplexity response for testing (keeps same shape as real API)\nconst company = $items(0).json.company || 'Tesla';\nconst ticker = $items(0).json.ticker || 'TSLA';\nconst mockText = `## Marktbewertung und Aktienperformance\n- Aktueller Kurs: 123.45 USD\n- Marktkapitalisierung: 800 Mrd. USD\n\n## Bewertungsmultiples und Finanzkennzahlen\n- KGV: 25\n\n## Fazit\nEmpfehlung: Halten`;\n\nreturn { json: { choices: [{ message: { content: mockText } }], citations: [] } };"
+        "jsCode": "const company = $input.item.json.company || 'Tesla';\\nconst ticker = $input.item.json.ticker || 'TSLA';\\nconst mockText = `## Marktbewertung und Aktienperformance\\\\n\\\\n- **Aktueller Kurs:** 123.45 USD\\\\n- **Marktkapitalisierung:** 800 Mrd. USD\\\\n- **52-Wochen-Hoch/Tief:** 150.00 / 95.00 USD\\\\n\\\\n## Bewertungsmultiples und Finanzkennzahlen\\\\n\\\\n| Kennzahl | Wert |\\\\n|----------|------|\\\\n| KGV | 25.0 |\\\\n| KBV | 8.5 |\\\\n| Umsatz | 100 Mrd. USD |\\\\n\\\\n## Analystenerwartungen\\\\n\\\\n- Durchschnittliches Kursziel: 135 USD\\\\n- Konsens: Halten\\\\n\\\\n## Fazit\\\\n\\\\nEmpfehlung: **Halten**`;\\n\\nreturn {\\n  json: {\\n    choices: [{\\n      message: {\\n        content: mockText\\n      }\\n    }],\\n    citations: []\\n  }\\n};"
       },
       "id": "mock-perplexity",
       "name": "Mock Perplexity",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [700, 300]
+      "position": [850, 200]
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.perplexity.ai/chat/completions",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "perplexityApi",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{$credentials.apiKey}}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "model",
-              "value": "sonar-pro"
-            },
-            {
-              "name": "messages",
-              "value": "=[{\"role\": \"system\", \"content\": \"Du bist ein professioneller Finanzanalyst für capitovo, ein deutsches Premium-Analyseportal. Erstelle detaillierte Equity-Research-Berichte auf Deutsch mit aktuellen Marktdaten, Finanzkennzahlen und Analystenmeinungen. Strukturiere alle Analysen konsistent nach den capitovo-Standards. Nutze Markdown-Formatierung für Überschriften (##), Tabellen und Listen.\"}, {\"role\": \"user\", \"content\": \"Erstelle einen umfassenden Equity-Research-Bericht für {{$json.company}} ({{$json.ticker}}) zum Stichtag Ende November 2025.\\n\\nStrukturiere den Bericht wie folgt:\\n\\n## Marktbewertung und Aktienperformance\\n- Aktueller Kurs und Marktkapitalisierung\\n- 52-Wochen-Hoch/Tief\\n- Kursentwicklung 2025\\n- Volatilität und Beta\\n\\n## Bewertungsmultiples und Finanzkennzahlen\\n- KGV, KBV, KUV\\n- Vergleich mit Sektor/Wettbewerb\\n- Umsatz und Profitabilität (EBITDA, EBIT, Nettogewinn)\\n- EPS und Margen\\n- Bilanzstruktur (Eigenkapital, Verschuldung)\\n\\n## Analystenerwartungen und Kursziele\\n- Durchschnittliches Kursziel\\n- Wichtigste Analystenmeinungen (mit Datum November 2025)\\n- Konsens-Rating\\n- Aufwärts-/Abwärtspotenzial\\n\\n## Dividendenpolitik\\n- Aktuelle Dividendenrendite\\n- Ausschüttungshistorie\\n- Nachhaltigkeit\\n\\n## Investitionsbewertung\\n- Stärken (als Aufzählung)\\n- Risiken (als Aufzählung)\\n- Wichtige Katalysatoren\\n\\n## Fazit und Ausblick\\n- Zusammenfassende Bewertung\\n- Anlagevotum (Kaufen/Halten/Verkaufen)\\n- Kursziele kurz-/mittel-/langfristig\\n\\nNutze aktuelle Daten vom November 2025. Füge eine Markdown-Tabelle mit den wichtigsten Kennzahlen ein. Schreibe professionell aber verständlich.\"}]"
-            },
-            {
-              "name": "temperature",
-              "value": "0.2"
-            },
-            {
-              "name": "max_tokens",
-              "value": "4000"
-            },
-            {
-              "name": "return_citations",
-              "value": "true"
-            },
-            {
-              "name": "search_recency_filter",
-              "value": "month"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "perplexity-research",
-      "name": "Perplexity Research",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.1,
-      "position": [650, 300],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "perplexity-api-key",
-          "name": "Perplexity API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "functionCode": "// Extract Perplexity response\nconst response = $input.item.json.choices[0].message.content;\nconst citations = $input.item.json.citations || [];\nconst company = $('Process Input').item.json.company;\nconst ticker = $('Process Input').item.json.ticker;\nconst sector = $('Process Input').item.json.sector;\n\n// Parse sections from Markdown\nfunction extractSection(text, keyword) {\n  const regex = new RegExp(`##\\\\s*${keyword}[^#]*([\\\\s\\\\S]*?)(?=##|$)`, 'i');\n  const match = text.match(regex);\n  return match ? match[1].trim() : '';\n}\n\nfunction markdownToHTML(markdown) {\n  // Simple Markdown to HTML converter\n  let html = markdown\n    .replace(/### (.+)/g, '<h3>$1</h3>')\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n    .replace(/^- (.+)/gm, '<li>$1</li>')\n    .replace(/(<li>.*<\\/li>)/s, '<ul>$1</ul>')\n    .replace(/\\n\\n/g, '</p><p>')\n    .replace(/^(?!<[uh])/gm, '<p>');\n  \n  // Handle tables\n  const tableRegex = /\\|(.+)\\|\\n\\|[-\\s|]+\\|\\n((\\|.+\\|\\n?)+)/g;\n  html = html.replace(tableRegex, (match) => {\n    const lines = match.trim().split('\\n');\n    const headers = lines[0].split('|').filter(h => h.trim()).map(h => h.trim());\n    const rows = lines.slice(2).map(row => \n      row.split('|').filter(cell => cell.trim()).map(cell => cell.trim())\n    );\n    \n    let table = '<table style=\"width:100%; border-collapse:collapse; margin:1rem 0;\"><thead><tr>';\n    headers.forEach(h => {\n      table += `<th style=\"padding:10px 8px; border-bottom:2px solid rgba(15,23,42,0.1); text-align:left;\">${h}</th>`;\n    });\n    table += '</tr></thead><tbody>';\n    rows.forEach(row => {\n      table += '<tr style=\"border-bottom:1px solid rgba(15,23,42,0.05);\">';\n      row.forEach(cell => {\n        table += `<td style=\"padding:8px;\">${cell}</td>`;\n      });\n      table += '</tr>';\n    });\n    table += '</tbody></table>';\n    return table;\n  });\n  \n  return html;\n}\n\nconst sections = {\n  marktbewertung: markdownToHTML(extractSection(response, \"Marktbewertung\")),\n  finanzen: markdownToHTML(extractSection(response, \"Bewertungsmultiples|Finanzkennzahlen\")),\n  analysten: markdownToHTML(extractSection(response, \"Analysten\")),\n  dividende: markdownToHTML(extractSection(response, \"Dividende\")),\n  bewertung: markdownToHTML(extractSection(response, \"Investitionsbewertung|Bewertung\")),\n  fazit: markdownToHTML(extractSection(response, \"Fazit\"))\n};\n\n// Generate summary from first paragraph\nconst summaryMatch = response.match(/^[^#\\n]+/);\nconst summary = summaryMatch ? summaryMatch[0].trim().substring(0, 200) + '...' : `Equity-Research-Bericht zu ${company} mit aktuellen Marktdaten und Analystenmeinungen.`;\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    sector: sector,\n    content: sections,\n    summary: summary,\n    citations: citations,\n    raw: response\n  }\n};"
+        "jsCode": "const response = $input.item.json.choices[0].message.content;\\nconst company = $('Process Input').item.json.company;\\nconst ticker = $('Process Input').item.json.ticker;\\nconst sector = $('Process Input').item.json.sector;\\nconst date = new Date().toISOString().split('T')[0];\\nconst filename = company.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '');\\n\\nfunction markdownToHTML(markdown) {\\n  return markdown\\n    .replace(/### (.+)/g, '<h3>$1</h3>')\\n    .replace(/## (.+)/g, '<h2>$1</h2>')\\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\\n    .replace(/^- (.+)/gm, '<li>$1</li>')\\n    .replace(/(<li>.*<\\/li>)/s, '<ul>$1</ul>')\\n    .replace(/\\n\\n/g, '</p><p>');\\n}\\n\\nconst htmlContent = markdownToHTML(response);\\nconst summary = company + ' Equity-Research-Bericht mit aktuellen Marktdaten.';\\n\\nreturn {\\n  json: {\\n    company: company,\\n    ticker: ticker,\\n    sector: sector,\\n    filename: filename,\\n    date: date,\\n    summary: summary,\\n    content: htmlContent,\\n    raw: response\\n  }\\n};"
       },
       "id": "parse-response",
       "name": "Parse Response",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [850, 300]
-    },
-    {
-      "parameters": {
-        "functionCode": "const company = $input.item.json.company;\nconst ticker = $input.item.json.ticker;\nconst sector = $input.item.json.sector;\nconst content = $input.item.json.content;\nconst summary = $input.item.json.summary;\nconst date = new Date().toISOString().split('T')[0];\nconst filename = company.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '');\n\nconst html = `<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n    <title>capitovo — ${company} Equity Research ${date}</title>\n    <link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">\n    <link rel=\"stylesheet\" href=\"../style.css\">\n    <style>\n        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }\n        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }\n        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }\n        header { position: static !important; }\n        main { background: transparent; }\n        .analysis-article { max-width: 1000px; margin: 40px auto; padding: 0 20px; }\n        .analysis-article h1 { font-size: 2rem; margin-bottom: 0.5rem; }\n        .analysis-section { margin-top: 1.5rem; }\n        .analysis-section h2 {\n            font-size: 1.5rem;\n            font-weight: 700;\n            margin: 2rem 0 1rem;\n            color: #0f172a;\n            border-bottom: 2px solid #e2e8f0;\n            padding-bottom: 0.4rem;\n        }\n        .analysis-section h3 { font-size: 1.2rem; font-weight: 600; margin: 1.2rem 0 0.6rem; }\n        .analysis-intro { font-size: 1.05rem; color: #0f172a; }\n        table { width: 100%; border-collapse: collapse; }\n        th, td { padding: 10px 8px; }\n        thead tr { border-bottom: 2px solid rgba(15,23,42,0.08); text-align: left; }\n        tbody tr { border-bottom: 1px solid rgba(15,23,42,0.05); }\n        ul, ol { margin: 1rem 0; padding-left: 1.5rem; }\n        li { margin: 0.5rem 0; }\n    </style>\n</head>\n<body class=\"abonenten-page bg-white text-gray-900\">\n\n<header>\n    <div class=\"header-content\">\n        <div class=\"logo\">\n            <a href=\"abonenten.html\">\n                <img src=\"../caitavo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\n            </a>\n        </div>\n    </div>\n</header>\n\n<main>\n    <article class=\"analysis-article\" id=\"${filename}-analysis\">\n        <div class=\"mb-4\">\n            <a href=\"alle_analysen.html\" class=\"text-accent-blue text-sm\">← Zurück</a>\n        </div>\n\n        <div class=\"mb-2\">\n            <p class=\"text-xs font-semibold uppercase mb-2 text-slate-500\">\n                ${sector} <span class=\"text-gray-400 mx-1\">•</span> ${company.toUpperCase()} (${ticker})\n            </p>\n            <h1 class=\"text-3xl font-extrabold text-gray-900 mb-2\">Equity-Research-Bericht: ${company}</h1>\n            <div class=\"text-sm text-gray-500\">\n                <span class=\"mr-2\">capitovo Research</span>\n                <span>• ${date}</span>\n            </div>\n        </div>\n\n        <div class=\"hero-intro-wrapper\" style=\"display:flex; gap:24px; margin:24px 0 32px; align-items:center; flex-wrap:wrap;\">\n            <div class=\"analysis-hero\" style=\"flex:1; min-width:280px;\">\n                <img src=\"../data/vorschaubilder/${filename}.svg\" alt=\"${company} Analyse\" style=\"width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:10px;\" onerror=\"this.style.display='none'\">\n            </div>\n            <div style=\"flex:1; min-width:280px;\">\n                <p class=\"analysis-intro\">${summary}</p>\n            </div>\n        </div>\n\n        <section class=\"analysis-section\">\n            <h2>Marktbewertung und Aktienperformance</h2>\n            ${content.marktbewertung}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Bewertungsmultiples und Finanzkennzahlen</h2>\n            ${content.finanzen}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Analystenerwartungen und Kursziele</h2>\n            ${content.analysten}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Dividendenpolitik und Ausschüttungen</h2>\n            ${content.dividende}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Investitionsbewertung</h2>\n            ${content.bewertung}\n        </section>\n\n        <section class=\"analysis-section\">\n            <h2>Fazit und Ausblick</h2>\n            ${content.fazit}\n            \n            <hr style=\"margin:3rem 0; border:none; border-top:1px solid #e2e8f0;\">\n            <p style=\"font-size:0.9rem; color:#64748b;\">\n                <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.\n            </p>\n            <p style=\"font-size:0.9rem; color:#64748b;\">\n                <strong>Quellen:</strong> Generiert mit Perplexity Pro (Sonar), Marktdaten per ${date}.\n            </p>\n        </section>\n    </article>\n</main>\n\n<footer class=\"site-footer border-t py-6 mt-12\">\n    <div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\">\n        <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>\n        <div class=\"footer-links\">\n            <a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Impressum</a>\n            <a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Datenschutz</a>\n            <a href=\"../Rechtliches/haftung.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Haftungsausschluss</a>\n            <a href=\"../Rechtliches/agb.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">AGB</a>\n        </div>\n    </div>\n</footer>\n\n<div class=\"sidebar\" id=\"sidebar\" aria-hidden=\"true\" aria-label=\"Seitenmenü\">\n    <button class=\"close-button\" id=\"close-sidebar\" aria-label=\"Sidebar schließen\">&times;</button>\n    <nav class=\"sidebar-nav\" aria-label=\"Hauptnavigation\">\n        <ul>\n            <li><a href=\"abonenten.html\" class=\"flex items-center space-x-3\"><span>Dashboard</span></a></li>\n            <li><a href=\"alle_analysen.html\" class=\"flex items-center space-x-3\"><span>Alle Analysen</span></a></li>\n            <li><a href=\"konto.html\" class=\"flex items-center space-x-3\"><span>Mein Konto</span></a></li>\n            <li><a href=\"#\" id=\"logout-link\" class=\"flex items-center space-x-3\"><span>Abmelden</span></a></li>\n        </ul>\n    </nav>\n</div>\n\n<script src=\"../script.js\"></script>\n\n</body>\n</html>`;\n\nreturn {\n  json: {\n    filename: filename,\n    html: html,\n    metadata: {\n      company: company,\n      ticker: ticker,\n      sector: sector,\n      date: date,\n      summary: summary\n    }\n  }\n};"
-      },
-      "id": "generate-html",
-      "name": "Generate HTML",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [1050, 300]
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://api.perplexity.ai/chat/completions",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "perplexityApi",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{$credentials.apiKey}}"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            {
-              "name": "model",
-              "value": "sonar-pro"
-            },
-            {
-              "name": "messages",
-              "value": "=[{\"role\": \"system\", \"content\": \"Du bist ein kritischer Finanzanalyst und Fact-Checker. Deine Aufgabe ist es, Analyseberichte auf Faktentreue, Plausibilität und Rechenfehler zu prüfen. Identifiziere: 1) Falsche Zahlen/Kennzahlen, 2) Inkonsistenzen, 3) Veraltete Daten, 4) Rechenfehler, 5) Widersprüchliche Aussagen. Gib konkrete Korrekturen.\"}, {\"role\": \"user\", \"content\": \"Prüfe folgenden Analysebericht für {{$('Process Input').item.json.company}} ({{$('Process Input').item.json.ticker}}) kritisch:\\n\\n{{$('Parse Response').item.json.raw}}\\n\\n---\\n\\nAntwortformat:\\n\\n## ✅ Verifizierte Daten\\n[Liste korrekte Zahlen/Fakten]\\n\\n## ⚠️ Identifizierte Probleme\\n[Fehler mit Korrekturvorschlägen]\\n\\n## 📊 Kennzahlen-Validierung\\n[KGV, Marktcap, Kursziele, etc. - sind diese plausibel?]\\n\\n## 💡 Verbesserungsvorschläge\\n[Was fehlt oder sollte ergänzt werden?]\\n\\n## ⭐ Quality Score\\n[0-10 Punkte mit Begründung]\"}]"
-            },
-            {
-              "name": "temperature",
-              "value": "0.1"
-            },
-            {
-              "name": "max_tokens",
-              "value": "2000"
-            },
-            {
-              "name": "search_recency_filter",
-              "value": "month"
+        "jsCode": "const data = $input.item.json;\\nconst html = `<!DOCTYPE html>\\n<html lang=\"de\">\\n<head>\\n    <meta charset=\"utf-8\">\\n    <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\\n    <title>capitovo — ${data.company} Analyse</title>\\n    <link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">\\n    <link rel=\"stylesheet\" href=\"../style.css\">\\n</head>\\n<body class=\"abonenten-page bg-white text-gray-900\">\\n\\n<header>\\n    <div class=\"header-content\">\\n        <div class=\"logo\">\\n            <a href=\"abonenten.html\">\\n                <img src=\"../caitavo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\\n            </a>\\n        </div>\\n    </div>\\n</header>\\n\\n<main class=\"max-w-4xl mx-auto p-6\">\\n    <div class=\"mb-4\">\\n        <a href=\"alle_analysen.html\" class=\"text-blue-600\">← Zurück</a>\\n    </div>\\n\\    <article>\\n        <p class=\"text-xs uppercase text-gray-500 mb-2\">${data.sector} • ${data.ticker}</p>\\n        <h1 class=\"text-3xl font-bold mb-4\">${data.company}: Equity-Research-Bericht</h1>\\n        <p class=\"text-sm text-gray-500 mb-6\">capitovo Research • ${data.date}</p>\\n\\        <div class=\"prose max-w-none\">\\n            ${data.content}\\n        </div>\\n\\        <hr class=\"my-8\">\\n        <p class=\"text-sm text-gray-600\">\\n            <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar.\\n        </p>\\n    </article>\\n</main>\\n\\footer class=\"border-t py-6 mt-12 text-center text-sm text-gray-500\">\\n    <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>\\n</footer>\\n\\script src=\"../script.js\"></script>\\n</body>\\n</html>`;\\n\\const fs = require('fs');\\nconst filepath = `/workspaces/capitovo/Abonenten/${data.filename}.html`;\\nfs.writeFileSync(filepath, html, 'utf8');\\n\\return {\\n  json: {\\n    success: true,\\n    filepath: filepath,\\n    filename: data.filename,\\n    company: data.company,\\n    ticker: data.ticker,\\n    sector: data.sector,\\n    date: data.date,\\n    summary: data.summary\\n  }\\n};"
+      },
+      "id": "write-html",
+      "name": "Write HTML File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\\nconst data = $input.item.json;\\nconst jsonPath = '/workspaces/capitovo/data/analysen.json';\\n\\nlet analysen = [];\\ntry {\\n  analysen = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));\\n} catch(e) {\\n  console.log('Creating new analysen.json');\\n}\\n\\nconst newEntry = {\\n  id: `${data.ticker.toLowerCase()}-${data.date}`,\\n  category: data.sector,\\n  title: `${data.company}: Equity-Research-Bericht`,\\n  summary: data.summary,\\n  link: `Abonenten/${data.filename}.html`,\\n  image: `data/vorschaubilder/${data.filename}.svg`,\\n  date: data.date,\\n  author: \"capitovo Research\",\\n  tags: [data.company, data.ticker, data.sector],\\n  published: true\\n};\\n\\nanalysen.unshift(newEntry);\\nfs.writeFileSync(jsonPath, JSON.stringify(analysen, null, 2), 'utf8');\\n\\return {\\n  json: {\\n    success: true,\\n    message: 'Analyse erfolgreich generiert!',\\n    filename: data.filename,\\n    company: data.company\\n  }\\n};"
+      },
+      "id": "update-json",
+      "name": "Update analysen.json",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Input": {
+      "main": [
+        [
+          {
+            "node": "Test Mode?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Mode?": {
+      "main": [
+        [
+          {
+            "node": "Mock Perplexity",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Mock Perplexity": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          {
+            "node": "Write HTML File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write HTML File": {
+      "main": [
+        [
+          {
+            "node": "Update analysen.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update analysen.json": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-01T00:00:00.000Z",
+  "versionId": "1"
+}
             }
           ]
         },

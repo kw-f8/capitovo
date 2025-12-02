@@ -124,6 +124,14 @@
         .stat-label { color: #64748b; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
         .stat-value { color: #0f172a; font-size: 2rem; font-weight: 700; }
         .stat-subtext { color: #64748b; font-size: 0.85rem; margin-top: 0.25rem; }
+        /* Multi-month / mini calendar styles */
+        .multi-month-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+        .mini-calendar { background: white; border-radius: 8px; padding: 10px; box-shadow: 0 4px 12px rgba(2,6,23,0.04); }
+        .mini-calendar .calendar-header { margin-bottom: 6px; }
+        .mini-calendar .calendar-grid { gap: 0.25rem; }
+        .mini-calendar .calendar-day { min-height: 56px; padding: 6px; }
+        .mini-calendar .day-number { font-size: 0.75rem; }
+        .mini-calendar .earnings-event { font-size: 0.65rem; padding: 4px 6px; }
     </style>
 </head>
 <body>
@@ -306,6 +314,7 @@
                     <div class="view-toggle">
                         <button id="view-calendar" class="active">Kalender</button>
                         <button id="view-list">Liste</button>
+                        <button id="toggle-year-view" title="Alle Monate anzeigen" style="padding:8px 12px; border-radius:6px; border:none; background:#e6eef9; font-weight:600; cursor:pointer;">Alle Monate anzeigen</button>
                     </div>
                 </div>
             </div>
@@ -522,6 +531,97 @@
         const currentDate = new Date();
         generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
         updateStats();
+
+        // Year / multi-month view toggling
+        const toggleYearBtn = document.getElementById('toggle-year-view');
+        let yearViewActive = false;
+        const monthNames = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+        let activeYear = currentDate.getFullYear();
+        let activeMonth = currentDate.getMonth();
+
+        function renderYearView(year) {
+            const calendarView = document.getElementById('calendar-view');
+            calendarView.innerHTML = '';
+
+            const grid = document.createElement('div');
+            grid.className = 'multi-month-grid';
+
+            for (let m = 0; m < 12; m++) {
+                const monthBox = document.createElement('div');
+                monthBox.className = 'mini-calendar';
+
+                const title = document.createElement('div');
+                title.style.fontWeight = '700';
+                title.style.marginBottom = '6px';
+                title.textContent = `${monthNames[m]} ${year}`;
+                monthBox.appendChild(title);
+
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(dn => {
+                    const dnEl = document.createElement('div');
+                    dnEl.className = 'day-name';
+                    dnEl.textContent = dn;
+                    header.appendChild(dnEl);
+                });
+                monthBox.appendChild(header);
+
+                const monthGrid = document.createElement('div');
+                monthGrid.className = 'calendar-grid';
+
+                const firstDay = new Date(year, m, 1);
+                const lastDay = new Date(year, m + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                const startingDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+
+                // previous month fillers
+                const prevMonthLastDay = new Date(year, m, 0).getDate();
+                for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+                    const day = prevMonthLastDay - i;
+                    const d = createDayElement(day, true);
+                    d.classList.add('mini');
+                    monthGrid.appendChild(d);
+                }
+
+                // current month
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dObj = new Date(year, m, day);
+                    const isToday = dObj.toDateString() === new Date().toDateString();
+                    const dayEl = createDayElement(day, false, isToday, dObj);
+                    dayEl.classList.add('mini');
+                    monthGrid.appendChild(dayEl);
+                }
+
+                // fill to 42 cells
+                const remaining = 42 - (startingDayOfWeek + daysInMonth);
+                for (let k = 1; k <= remaining; k++) {
+                    const d = createDayElement(k, true);
+                    d.classList.add('mini');
+                    monthGrid.appendChild(d);
+                }
+
+                monthBox.appendChild(monthGrid);
+                grid.appendChild(monthBox);
+            }
+
+            calendarView.appendChild(grid);
+        }
+
+        if (toggleYearBtn) {
+            toggleYearBtn.addEventListener('click', () => {
+                yearViewActive = !yearViewActive;
+                if (yearViewActive) {
+                    renderYearView(activeYear);
+                    toggleYearBtn.textContent = 'Monatsansicht';
+                    // ensure list view hidden
+                    listView.style.display = 'none';
+                } else {
+                    // restore single month
+                    generateCalendar(activeYear, activeMonth);
+                    toggleYearBtn.textContent = 'Alle Monate anzeigen';
+                }
+            });
+        }
 
         // Logout
         document.querySelector('.logout-btn').addEventListener('click', () => {

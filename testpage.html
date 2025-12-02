@@ -52,74 +52,102 @@
         <div class="p-2 bg-white rounded">29</div><div class="p-2 bg-white rounded">30</div><div class="p-2 bg-white rounded">1</div><div class="p-2 bg-white rounded">2</div><div class="p-2 bg-white rounded">3<div class="text-xs text-blue-600">TSLA</div></div><div class="p-2 bg-white rounded">4</div><div class="p-2 bg-white rounded">5</div>
       </div>
       
-      <!-- TradingView Widget BEGIN -->
-      <div class="mt-6" style="height:380px;">
-        <div class="tradingview-widget-container" style="height:100%;">
-          <div class="tradingview-widget-container__widget"></div>
-          <div class="tradingview-widget-copyright"><a href="https://de.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-          {
-          "lineWidth": 2,
-          "lineType": 0,
-          "chartType": "area",
-          "fontColor": "rgb(106, 109, 120)",
-          "gridLineColor": "rgba(46, 46, 46, 0.06)",
-          "volumeUpColor": "rgba(34, 171, 148, 0.5)",
-          "volumeDownColor": "rgba(247, 82, 95, 0.5)",
-          "backgroundColor": "#ffffff",
-          "widgetFontColor": "#0F0F0F",
-          "upColor": "#22ab94",
-          "downColor": "#f7525f",
-          "borderUpColor": "#22ab94",
-          "borderDownColor": "#f7525f",
-          "wickUpColor": "#22ab94",
-          "wickDownColor": "#f7525f",
-          "colorTheme": "light",
-          "isTransparent": false,
-          "locale": "de_DE",
-          "chartOnly": false,
-          "scalePosition": "right",
-          "scaleMode": "Normal",
-          "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-          "valuesTracking": "1",
-          "changeMode": "percent-only",
-          "symbols": [
-            [
-              "Apple",
-              "NASDAQ:AAPL|ALL|EUR"
-            ],
-            [
-              "CME_MINI:NQ1!|1D|EUR"
-            ],
-            [
-              "NASDAQ:TSLA|1D|EUR"
-            ]
-          ],
-          "dateRanges": [
-            "1d|1",
-            "1w|15",
-            "1m|30",
-            "12m|1D",
-            "60m|1W",
-            "all|1M"
-          ],
-          "fontSize": "10",
-          "headerFontSize": "medium",
-          "autosize": true,
-          "dateFormat": "dd/MM/yyyy",
-          "timeHoursFormat": "24-hours",
-          "lineColor": "rgba(0, 162, 173, 1)",
-          "width": "100%",
-          "height": "100%",
-          "noTimeScale": false,
-          "hideDateRanges": false,
-          "hideMarketStatus": false,
-          "hideSymbolLogo": false
-        }
-          </script>
+      <!-- TradingView Widget (dynamisch) BEGIN -->
+      <div class="mt-6" style="height:420px;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+          <label for="tv-symbol-select" style="font-weight:600;">Ticker:</label>
+          <select id="tv-symbol-select" style="padding:6px 10px; border-radius:6px; border:1px solid #e2e8f0;">
+            <option value="NASDAQ:AAPL|ALL|EUR">Apple (AAPL)</option>
+            <option value="NASDAQ:TSLA|1D|EUR">Tesla (TSLA)</option>
+            <option value="NASDAQ:NVDA|1D|EUR">NVIDIA (NVDA)</option>
+            <option value="NASDAQ:GOOGL|1D|EUR">Alphabet (GOOGL)</option>
+            <option value="CME_MINI:NQ1!|1D|EUR">E-Mini Nasdaq (NQ)</option>
+          </select>
+          <button id="tv-reload-btn" style="padding:6px 10px; border-radius:6px; background:#0f172a; color:white; border:none; cursor:pointer;">Laden</button>
+        </div>
+
+        <div id="tv-host" class="tradingview-widget-container" style="height:calc(100% - 40px);">
+          <!-- Widget wird hier dynamisch eingefügt -->
         </div>
       </div>
-      <!-- TradingView Widget END -->
+      <!-- TradingView Widget (dynamisch) END -->
+
+      <script>
+        (function(){
+          const host = document.getElementById('tv-host');
+          const select = document.getElementById('tv-symbol-select');
+          const btn = document.getElementById('tv-reload-btn');
+
+          function loadWidget(symbol) {
+            if (!host) return;
+            host.innerHTML = '';
+
+            const widgetInner = document.createElement('div');
+            widgetInner.className = 'tradingview-widget-container__widget';
+            host.appendChild(widgetInner);
+
+            const copyright = document.createElement('div');
+            copyright.className = 'tradingview-widget-copyright';
+            copyright.innerHTML = '<a href="https://de.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a>';
+            host.appendChild(copyright);
+
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+            script.async = true;
+
+            const config = {
+              lineWidth: 2,
+              lineType: 0,
+              chartType: 'area',
+              fontColor: 'rgb(106, 109, 120)',
+              gridLineColor: 'rgba(46, 46, 46, 0.06)',
+              volumeUpColor: 'rgba(34, 171, 148, 0.5)',
+              volumeDownColor: 'rgba(247, 82, 95, 0.5)',
+              backgroundColor: '#ffffff',
+              widgetFontColor: '#0F0F0F',
+              upColor: '#22ab94',
+              downColor: '#f7525f',
+              borderUpColor: '#22ab94',
+              borderDownColor: '#f7525f',
+              wickUpColor: '#22ab94',
+              wickDownColor: '#f7525f',
+              colorTheme: 'light',
+              isTransparent: false,
+              locale: 'de_DE',
+              chartOnly: false,
+              scalePosition: 'right',
+              scaleMode: 'Normal',
+              fontFamily: '-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif',
+              valuesTracking: '1',
+              changeMode: 'percent-only',
+              symbols: [[symbol]],
+              dateRanges: ['1d|1','1w|15','1m|30','12m|1D','60m|1W','all|1M'],
+              fontSize: '10',
+              headerFontSize: 'medium',
+              autosize: true,
+              dateFormat: 'dd/MM/yyyy',
+              timeHoursFormat: '24-hours',
+              lineColor: 'rgba(0, 162, 173, 1)',
+              width: '100%',
+              height: '100%',
+              noTimeScale: false,
+              hideDateRanges: false,
+              hideMarketStatus: false,
+              hideSymbolLogo: false
+            };
+
+            // safer: set textContent
+            script.textContent = JSON.stringify(config);
+            host.appendChild(script);
+          }
+
+          // initial load
+          loadWidget(select.value);
+
+          btn.addEventListener('click', () => loadWidget(select.value));
+        })();
+      </script>
     </div>
 
     <aside class="card">

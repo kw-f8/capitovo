@@ -389,6 +389,25 @@ footer {
     vertical-align: middle !important;
 }
 
+/* --- Abonenten: Sidebar spacing alignment --- */
+/* On abonenten pages the header is adjusted (non-sticky), so ensure the
+   sidebar content shifts down to visually match the homepage spacing. */
+.abonenten-page .sidebar {
+    /* increase top padding so first buttons sit at the same vertical offset
+       as on the homepage (logo + header height) */
+    padding-top: 120px !important;
+}
+
+.abonenten-page .sidebar-nav ul {
+    /* remove the earlier margin-top and rely on sidebar padding for alignment */
+    margin-top: 0 !important;
+}
+
+.abonenten-page .close-button {
+    /* place close button slightly lower to visually align with homepage placement */
+    top: 18px !important;
+}
+
 
 /* ---------------------------------------------------- */
 /* FAQ/Accordion-Styling */

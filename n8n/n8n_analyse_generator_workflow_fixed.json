@@ -1,0 +1,186 @@
+{
+  "name": "capitovo Analyse Generator (Perplexity Pro)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-analysis",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "capitovo-analysis"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.item.json.body || $input.item.json;\nconst company = body.company || 'Tesla';\nconst ticker = body.ticker || 'TSLA';\nconst sector = body.sector || 'ZYKLISCHER KONSUM';\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    sector: sector,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "process-input",
+      "name": "Process Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $env.TEST_MODE }}",
+              "operation": "equals",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "id": "test-mode-check",
+      "name": "Test Mode?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const company = $input.item.json.company || 'Tesla';\nconst ticker = $input.item.json.ticker || 'TSLA';\nconst mockText = `## Marktbewertung und Aktienperformance\\n\\n- **Aktueller Kurs:** 123.45 USD\\n- **Marktkapitalisierung:** 800 Mrd. USD\\n- **52-Wochen-Hoch/Tief:** 150.00 / 95.00 USD\\n\\n## Bewertungsmultiples und Finanzkennzahlen\\n\\n| Kennzahl | Wert |\\n|----------|------|\\n| KGV | 25.0 |\\n| KBV | 8.5 |\\n| Umsatz | 100 Mrd. USD |\\n\\n## Analystenerwartungen\\n\\n- Durchschnittliches Kursziel: 135 USD\\n- Konsens: Halten\\n\\n## Fazit\\n\\nEmpfehlung: **Halten**`;\n\nreturn {\n  json: {\n    choices: [{\n      message: {\n        content: mockText\n      }\n    }],\n    citations: []\n  }\n};"
+      },
+      "id": "mock-perplexity",
+      "name": "Mock Perplexity",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.item.json.choices[0].message.content;\nconst company = $('Process Input').item.json.company;\nconst ticker = $('Process Input').item.json.ticker;\nconst sector = $('Process Input').item.json.sector;\nconst date = new Date().toISOString().split('T')[0];\nconst filename = company.toLowerCase().replace(/\\s+/g, '-').replace(/[^a-z0-9-]/g, '');\n\nfunction markdownToHTML(markdown) {\n  return markdown\n    .replace(/### (.+)/g, '<h3>$1</h3>')\n    .replace(/## (.+)/g, '<h2>$1</h2>')\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\n    .replace(/^- (.+)/gm, '<li>$1</li>')\n    .replace(/(<li>.*<\\/li>)/s, '<ul>$1</ul>')\n    .replace(/\\n\\n/g, '</p><p>');\n}\n\nconst htmlContent = markdownToHTML(response);\nconst summary = company + ' Equity-Research-Bericht mit aktuellen Marktdaten.';\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    sector: sector,\n    filename: filename,\n    date: date,\n    summary: summary,\n    content: htmlContent,\n    raw: response\n  }\n};"
+      },
+      "id": "parse-response",
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.item.json;\nconst html = `<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n    <title>capitovo — ${data.company} Analyse</title>\n    <link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">\n    <link rel=\"stylesheet\" href=\"../style.css\">\n</head>\n<body class=\"abonenten-page bg-white text-gray-900\">\n\n<header>\n    <div class=\"header-content\">\n        <div class=\"logo\">\n            <a href=\"abonenten.html\">\n                <img src=\"../caitavo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\n            </a>\n        </div>\n    </div>\n</header>\n\n<main class=\"max-w-4xl mx-auto p-6\">\n    <div class=\"mb-4\">\n        <a href=\"alle_analysen.html\" class=\"text-blue-600\">← Zurück</a>\n    </div>\n\n    <article>\n        <p class=\"text-xs uppercase text-gray-500 mb-2\">${data.sector} • ${data.ticker}</p>\n        <h1 class=\"text-3xl font-bold mb-4\">${data.company}: Equity-Research-Bericht</h1>\n        <p class=\"text-sm text-gray-500 mb-6\">capitovo Research • ${data.date}</p>\n\n        <div class=\"prose max-w-none\">\n            ${data.content}\n        </div>\n\n        <hr class=\"my-8\">\n        <p class=\"text-sm text-gray-600\">\n            <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar.\n        </p>\n    </article>\n</main>\n\n<footer class=\"border-t py-6 mt-12 text-center text-sm text-gray-500\">\n    <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>\n</footer>\n\n<script src=\"../script.js\"></script>\n</body>\n</html>`;\n\nconst fs = require('fs');\nconst filepath = `/workspaces/capitovo/Abonenten/${data.filename}.html`;\nfs.writeFileSync(filepath, html, 'utf8');\n\nreturn {\n  json: {\n    success: true,\n    filepath: filepath,\n    filename: data.filename,\n    company: data.company,\n    ticker: data.ticker,\n    sector: data.sector,\n    date: data.date,\n    summary: data.summary\n  }\n};"
+      },
+      "id": "write-html",
+      "name": "Write HTML File",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const fs = require('fs');\nconst data = $input.item.json;\nconst jsonPath = '/workspaces/capitovo/data/analysen.json';\n\nlet analysen = [];\ntry {\n  analysen = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));\n} catch(e) {\n  console.log('Creating new analysen.json');\n}\n\nconst newEntry = {\n  id: `${data.ticker.toLowerCase()}-${data.date}`,\n  category: data.sector,\n  title: `${data.company}: Equity-Research-Bericht`,\n  summary: data.summary,\n  link: `Abonenten/${data.filename}.html`,\n  image: `data/vorschaubilder/${data.filename}.svg`,\n  date: data.date,\n  author: \"capitovo Research\",\n  tags: [data.company, data.ticker, data.sector],\n  published: true\n};\n\nanalysen.unshift(newEntry);\nfs.writeFileSync(jsonPath, JSON.stringify(analysen, null, 2), 'utf8');\n\nreturn {\n  json: {\n    success: true,\n    message: 'Analyse erfolgreich generiert!',\n    filename: data.filename,\n    company: data.company\n  }\n};"
+      },
+      "id": "update-json",
+      "name": "Update analysen.json",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}"
+      },
+      "id": "webhook-response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Process Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Input": {
+      "main": [
+        [
+          {
+            "node": "Test Mode?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Mode?": {
+      "main": [
+        [
+          {
+            "node": "Mock Perplexity",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Mock Perplexity": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          {
+            "node": "Write HTML File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write HTML File": {
+      "main": [
+        [
+          {
+            "node": "Update analysen.json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update analysen.json": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-01T00:00:00.000Z",
+  "versionId": "1"
+}

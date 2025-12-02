@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — Alle Analysen</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
+        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+        /* Provide a subtle visible focus for keyboard users */
+        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
+        /* Page-local layout: align header and main with logo's left edge */
+        :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
+        /* page background and unified white tones */
+        body { background: var(--muted-white); }
+        main { background: transparent; padding-top: 18px; }
+        .alle-hero, .filter-bar, .member-card { background: var(--page-white); background-clip: padding-box; }
+        /* match global header container: 1200px and 20px horizontal padding */
+        .alle-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
+
+        /* Top heading: give more breathing room and responsive type scale */
+        .alle-heading { margin: 0 0 18px 0; padding-top: 12px; padding-bottom: 6px; }
+        .alle-heading .lede { margin:0; font-weight:700; color:#0f172a; font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.05; }
+        .alle-heading .sub { margin-top: 8px; color:#475569; font-size: 1rem; max-width: 70ch; }
+
+        /* Filter row without sticky positioning */
+        .filter-bar { position: relative; background: rgba(255,255,255,0.96); padding: 0.7rem 0; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); margin-bottom: 1rem; }
+
+        /* Filter controls: visual polish without changing the overall box size */
+        .filter-bar .alle-layout > .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 0; }
+        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
+        .advanced-filters { overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; max-height: 0; opacity: 0; }
+        .advanced-filters.open { max-height: 800px; opacity: 1; }
+        #filter-chevron { transition: transform 0.3s ease; }
+        #filter-chevron.open { transform: rotate(180deg); }
+        .filter-bar select, .filter-bar input[type="search"], .filter-bar input[type="date"], .filter-bar button {
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(15,23,42,0.08);
+            background: var(--page-white);
+            font-size: 0.98rem;
+            color: #0f172a;
+            line-height: 1;
+            box-shadow: none;
+            box-sizing: border-box;
+        }
+        .filter-bar select, .filter-bar input[type="date"], .filter-bar input[type="search"], .advanced-filters select, .advanced-filters input[type="date"] { 
+            appearance: none; -webkit-appearance: none; -moz-appearance: none; 
+            height: 40px; 
+            padding: 0 12px; 
+            font-size: 0.98rem; 
+            line-height: 1; 
+            box-sizing: border-box;
+            color: #0f172a;
+            vertical-align: middle;
+        }
+        /* Date input specific styling for darker text */
+        .filter-bar input[type="date"], .advanced-filters input[type="date"] {
+            color: #0f172a;
+            color-scheme: light;
+        }
+        .filter-bar input[type="date"]::-webkit-datetime-edit,
+        .filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+            color: #0f172a;
+        }
+        .filter-bar input[type="date"]::-webkit-datetime-edit-text,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-month-field,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-day-field,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #0f172a;
+        }
+        .advanced-filters input[type="date"]::-webkit-datetime-edit,
+        .advanced-filters input[type="date"]::-webkit-calendar-picker-indicator {
+            color: #0f172a;
+        }
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-text,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-month-field,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-day-field,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #0f172a;
+        }
+        .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; }
+        .filter-bar #filter-toggle { white-space: nowrap; flex-shrink: 0; }
+        .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; min-width: 158px; }
+        .filter-bar #search-clear { background: transparent; border: 1px solid rgba(15,23,42,0.06); padding: 0 12px; border-radius: 8px; cursor: pointer; }
+        /* keep select and input visually compact on small screens */
+        @media (max-width: 1200px) {
+            .filter-row { flex-wrap: wrap; }
+        }
+        @media (max-width: 1024px) {
+            .filter-row { flex-direction: column; align-items: stretch; width: 100%; }
+            .filter-row > div { width: 100%; }
+            .filter-bar select { width: 100%; max-width: 100%; }
+            .filter-bar #favorites-toggle { width: 100%; justify-content: center; }
+            .filter-bar input[type="search"] { width: 100%; max-width: 100%; }
+        }
+        @media (max-width: 640px) {
+            .filter-bar select, .filter-bar input[type="search"], .filter-bar button { height: 36px; font-size: 0.92rem; }
+            .filter-bar { top: 92px; }
+        }
+
+        /* Cards */
+        /* Use responsive auto-fit grid so cards keep sensible min width and don't get squashed */
+        .member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
+
+        .member-card { border-radius: 12px; overflow: hidden; background: var(--page-white); border: 1px solid rgba(15,23,42,0.04); transition: transform .28s ease, box-shadow .28s ease; display:flex; flex-direction:column; height:100%; }
+        .member-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(2,6,23,0.12); }
+        .member-card .media { position: relative; height: 220px; overflow: hidden; flex-shrink:0; }
+        .member-card .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .member-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+        .member-card:hover img { transform: scale(1.06); }
+        .category-pill { position: absolute; left: 12px; top: 12px; background: rgba(255,255,255,0.86); color: var(--color-accent-blue); padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.75rem; box-shadow: 0 4px 10px rgba(2,6,23,0.06); }
+        .card-body { padding: 1rem; display:flex; flex-direction:column; gap:0.5rem; flex:1 1 auto; }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
+        .card-excerpt { color: #6b7280; margin-bottom: 0.75rem; line-height: 1.35; }
+        /* Ensure excerpts don't blow out one card's height — clamp to 3 lines */
+        .card-excerpt { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-clamp: 3; overflow: hidden; max-height: calc(1.35rem * 3); }
+        .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
+
+        /* Align header and main content to the same left column (logo left edge) */
+        /* Use same container sizing as global .header-content (1200px / 20px) to match logo */
+        header .header-content, main { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
+        /* Sidebar nav adjustments to match Mitgliederbereich style */
+        .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
+        .sidebar-nav ul li { display: block; }
+        .sidebar-nav ul li.logout-bottom:first-of-type {
+            margin-top: auto;
+            padding-top: 1.75rem;
+            border-top: 1px solid rgba(248, 250, 252, 0.18);
+        }
+        .sidebar-nav ul li.logout-bottom { padding: 0; }
+        .sidebar-nav ul li.logout-bottom a.logout-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            color: #f8fafc;
+            text-decoration: none;
+        }
+        .sidebar-nav ul li.logout-bottom a.logout-link svg { display: block; }
+        .sidebar-nav ul li.logout-bottom:not(:last-child) {
+            margin-bottom: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 abonenten-page">
+
+<header>
+        <div class="header-content">
+        <div class="logo">
+            <a href="/capitovo/Abonenten/abonenten.html">
+                <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+            </a>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+    </div>
+</header>
+
+<main>
+    <div class="alle-layout">
+        <div class="alle-heading">
+            <h1 class="lede">Alle Analysen</h1>
+            <p class="sub">Durchsuche, filtere und sortiere die gesamte Analysebibliothek</p>
+        </div>
+
+        
+
+        <div class="filter-bar">
+            <div class="alle-layout">
+                <!-- Hauptzeile: Suche + Favoriten + Filter-Toggle -->
+                <div class="filter-row">
+                    <div class="flex items-center gap-3 flex-1">
+                        <label for="search-input" class="sr-only">Suche</label>
+                        <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full border rounded px-3 py-2">
+                    </div>
+
+                    <button id="favorites-toggle" class="border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                        <span>Nur Favoriten</span>
+                    </button>
+
+                    <button id="filter-toggle" class="flex items-center gap-2 border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                        <span>Filter</span>
+                        <svg id="filter-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Ausklappbare Filter -->
+                <div id="advanced-filters" class="advanced-filters">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3">
+                        <div>
+                            <label for="sector-select" class="block text-sm font-medium text-gray-700 mb-1">Branche/Sektor</label>
+                            <select id="sector-select" class="w-full border rounded px-3">
+                                <option value="">Alle Branchen</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="risk-select" class="block text-sm font-medium text-gray-700 mb-1">Risiko</label>
+                            <select id="risk-select" class="w-full border rounded px-3">
+                                <option value="">Alle Risiken</option>
+                                <option value="low">Niedrig</option>
+This was long. The create_file succeeded and returned no error output. Next, create konto.html and earnings_kalender.html similarly. But to be efficient, we can copy remaining files. We'll read konto.html and earnings_kalender.html and write to Backup. Let's continue.

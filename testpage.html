@@ -82,17 +82,23 @@
           "scaleMode": "Normal",
           "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
           "valuesTracking": "1",
-          "changeMode": "price-and-percent",
+          "changeMode": "percent-only",
           "symbols": [
             [
               "Apple",
               "NASDAQ:AAPL|ALL|EUR"
+            ],
+            [
+              "CME_MINI:NQ1!|1D|EUR"
+            ],
+            [
+              "NASDAQ:TSLA|1D|EUR"
             ]
           ],
           "dateRanges": [
             "1d|1",
+            "1w|15",
             "1m|30",
-            "3m|60",
             "12m|1D",
             "60m|1W",
             "all|1M"
@@ -102,6 +108,7 @@
           "autosize": true,
           "dateFormat": "dd/MM/yyyy",
           "timeHoursFormat": "24-hours",
+          "lineColor": "rgba(0, 162, 173, 1)",
           "width": "100%",
           "height": "100%",
           "noTimeScale": false,

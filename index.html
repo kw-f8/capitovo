@@ -16,6 +16,8 @@
           /* Slightly increase vertical spacing between main sections on the homepage
               (adds extra breathing room between Pricing, Vorteile, FAQ, etc.) */
           main > section { margin-top: 2.5rem; margin-bottom: 3rem; }
+          /* Reduce spacing specifically between Analysen and Pricing to avoid large gap */
+          #pricing { margin-top: 1rem; }
         /* Larger spacing on wider screens */
         @media (min-width: 768px) {
             main > section { margin-top: 3.5rem; margin-bottom: 4rem; }
@@ -514,10 +516,10 @@
 
                             <g id="markers">
                                 <circle cx="290" cy="160" r="4" class="market-marker"><title>New York</title></circle>
-                                <text x="305" y="164" class="market-text">New York</text>
+                                <!-- Removed visible label for New York to avoid duplicate map text -->
 
                                 <circle cx="500" cy="120" r="4" class="market-marker" style="animation-delay: 0.5s;"><title>Frankfurt</title></circle>
-                                <text x="515" y="124" class="market-text">Frankfurt</text>
+                                <!-- Removed visible label for Frankfurt to avoid duplicate map text -->
                                 
                                 <circle cx="460" cy="110" r="4" class="market-marker" style="animation-delay: 0.7s;"><title>London</title></circle>
                             </g>

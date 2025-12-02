@@ -370,6 +370,25 @@ footer {
    and icon strokes look consistent */
 .sidebar-nav ul li a .flex-shrink-0 { flex-shrink: 0; }
 
+/* Force consistent icon spacing for all sidebar svgs (catch missing Tailwind
+   utility classes like `mt-1` / `mr-2` on some member pages). Scoped to the
+   sidebar to avoid affecting other inline svgs elsewhere. Uses !important to
+   win over utility classes if necessary. */
+.sidebar .sidebar-nav ul li a svg {
+    flex-shrink: 0 !important;
+    margin-top: 0.25rem !important; /* matches Tailwind's mt-1 */
+    margin-right: 0.5rem !important; /* matches Tailwind's mr-2 */
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    display: block !important;
+    align-self: center !important;
+}
+
+.sidebar .sidebar-nav ul li a span {
+    line-height: 1.25 !important;
+    vertical-align: middle !important;
+}
+
 
 /* ---------------------------------------------------- */
 /* FAQ/Accordion-Styling */

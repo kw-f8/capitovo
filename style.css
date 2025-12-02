@@ -335,22 +335,22 @@ footer {
     background-color: #0056b3; 
 }
 
-/* Ensure Abonenten pages always show light sidebar links and consistent spacing
-   even if page-local styles try to override colors. Uses !important to win cascade. */
+/* Normalize sidebar appearance on Abonenten pages so it matches the homepage
+   exactly. Avoid forcing different colors/sizes — inherit from the global
+   `.sidebar` rules so spacing and positions are identical. */
 .abonenten-page .sidebar-nav ul li > a,
 .abonenten-page .sidebar-nav ul li > div > a,
 .abonenten-page .sidebar-nav ul li.logout-bottom a.logout-link {
-    /* Match global sidebar appearance from the homepage */
-    color: #f0f0f0 !important;
-    font-size: 1.1em !important;
-    padding: 10px 0 !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    padding: inherit !important;
     display: flex !important;
     align-items: center !important;
     gap: 0.75rem !important;
-    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif !important;
+    font-family: inherit !important;
 }
-.abonenten-page .sidebar-nav ul li { margin-bottom: 6px !important; }
-.abonenten-page .sidebar-nav ul li:last-child { margin-bottom: 0 !important; }
+.abonenten-page .sidebar-nav ul li { margin-bottom: 6px; }
+.abonenten-page .sidebar-nav ul li:last-child { margin-bottom: 0; }
 
 /* Icon + text alignment fixes to match the homepage exactly */
 .sidebar-nav ul li a svg {
@@ -393,19 +393,18 @@ footer {
 /* On abonenten pages the header is adjusted (non-sticky), so ensure the
    sidebar content shifts down to visually match the homepage spacing. */
 .abonenten-page .sidebar {
-    /* increase top padding so first buttons sit at the same vertical offset
-       as on the homepage (logo + header height) */
-    padding-top: 120px !important;
+    /* Use the same padding as the homepage sidebar so vertical offsets match */
+    padding-top: 20px !important;
 }
 
 .abonenten-page .sidebar-nav ul {
-    /* remove the earlier margin-top and rely on sidebar padding for alignment */
-    margin-top: 0 !important;
+    /* same top margin as homepage so first item aligns identically */
+    margin-top: 50px !important;
 }
 
 .abonenten-page .close-button {
-    /* place close button slightly lower to visually align with homepage placement */
-    top: 18px !important;
+    /* match homepage placement */
+    top: 10px !important;
 }
 
 

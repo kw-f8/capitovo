@@ -352,6 +352,24 @@ footer {
 .abonenten-page .sidebar-nav ul li { margin-bottom: 6px !important; }
 .abonenten-page .sidebar-nav ul li:last-child { margin-bottom: 0 !important; }
 
+/* Icon + text alignment fixes to match the homepage exactly */
+.sidebar-nav ul li a svg {
+    width: 1.25rem; /* 20px / Tailwind w-5 */
+    height: 1.25rem; /* 20px / Tailwind h-5 */
+    display: block; /* remove inline baseline alignment issues */
+    margin: 0; /* remove unexpected offsets */
+    align-self: center; /* ensure vertical centering in flex container */
+}
+.sidebar-nav ul li a span {
+    display: inline-block;
+    line-height: 1.2; /* consistent text alignment with icons */
+    margin-top: 0; /* ensure no extra offset */
+}
+
+/* Small tweak: ensure icons that use 'flex-shrink-0' keep same layout
+   and icon strokes look consistent */
+.sidebar-nav ul li a .flex-shrink-0 { flex-shrink: 0; }
+
 
 /* ---------------------------------------------------- */
 /* FAQ/Accordion-Styling */

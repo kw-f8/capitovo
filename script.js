@@ -416,13 +416,11 @@ async function initAllAnalysesPage(){
         data = await res.json();
     }catch(e){ console.error(e); grid.innerHTML = '<p class="text-red-500">Analysen konnten nicht geladen werden.</p>'; return; }
 
-    // populate sector select (only if the element exists - some pages may omit it)
+    // populate sector select
     const sectors = Array.from(new Set(data.map(d => (d.category || '').toString().trim()).filter(Boolean))).sort();
-    if (sectorSelect) {
-        sectors.forEach(s => {
-            const opt = document.createElement('option'); opt.value = s; opt.textContent = s; sectorSelect.appendChild(opt);
-        });
-    }
+    sectors.forEach(s => {
+        const opt = document.createElement('option'); opt.value = s; opt.textContent = s; sectorSelect.appendChild(opt);
+    });
 
     function renderList(filterOpts = {}){
         const q = (filterOpts.q || '').toLowerCase().trim();

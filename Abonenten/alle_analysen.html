@@ -5,14 +5,155 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>capitovo — Alle Analysen</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css?v=2">
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
+        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+        /* Provide a subtle visible focus for keyboard users */
+        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
+        /* Page-local layout: align header and main with logo's left edge */
+        :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
+        /* page background and unified white tones */
+        body { background: var(--muted-white); }
+        main { background: transparent; padding-top: 18px; }
+        .alle-hero, .filter-bar, .member-card { background: var(--page-white); background-clip: padding-box; }
+        /* match global header container: 1200px and 20px horizontal padding */
+        .alle-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
+
+        /* Top heading: give more breathing room and responsive type scale */
+        .alle-heading { margin: 0 0 18px 0; padding-top: 12px; padding-bottom: 6px; }
+        .alle-heading .lede { margin:0; font-weight:700; color:#0f172a; font-size: clamp(1.4rem, 2.2vw, 2rem); line-height: 1.05; }
+        .alle-heading .sub { margin-top: 8px; color:#475569; font-size: 1rem; max-width: 70ch; }
+
+        /* Filter row without sticky positioning */
+        .filter-bar { position: relative; background: rgba(255,255,255,0.96); padding: 0.7rem 0; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); margin-bottom: 1rem; }
+
+        /* Filter controls: visual polish without changing the overall box size */
+        .filter-bar .alle-layout > .filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 0; }
+        .filter-bar label { color: #0f172a; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
+        .advanced-filters { overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; max-height: 0; opacity: 0; }
+        .advanced-filters.open { max-height: 800px; opacity: 1; }
+        #filter-chevron { transition: transform 0.3s ease; }
+        #filter-chevron.open { transform: rotate(180deg); }
+        .filter-bar select, .filter-bar input[type="search"], .filter-bar input[type="date"], .filter-bar button {
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(15,23,42,0.08);
+            background: var(--page-white);
+            font-size: 0.98rem;
+            color: #0f172a;
+            line-height: 1;
+            box-shadow: none;
+            box-sizing: border-box;
+        }
+        .filter-bar select, .filter-bar input[type="date"], .filter-bar input[type="search"], .advanced-filters select, .advanced-filters input[type="date"] { 
+            appearance: none; -webkit-appearance: none; -moz-appearance: none; 
+            height: 40px; 
+            padding: 0 12px; 
+            font-size: 0.98rem; 
+            line-height: 1; 
+            box-sizing: border-box;
+            color: #0f172a;
+            vertical-align: middle;
+        }
+        /* Date input specific styling for darker text */
+        .filter-bar input[type="date"], .advanced-filters input[type="date"] {
+            color: #0f172a;
+            color-scheme: light;
+        }
+        .filter-bar input[type="date"]::-webkit-datetime-edit,
+        .filter-bar input[type="date"]::-webkit-calendar-picker-indicator {
+            color: #0f172a;
+        }
+        .filter-bar input[type="date"]::-webkit-datetime-edit-text,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-month-field,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-day-field,
+        .filter-bar input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #0f172a;
+        }
+        .advanced-filters input[type="date"]::-webkit-datetime-edit,
+        .advanced-filters input[type="date"]::-webkit-calendar-picker-indicator {
+            color: #0f172a;
+        }
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-text,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-month-field,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-day-field,
+        .advanced-filters input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #0f172a;
+        }
+        .filter-bar input[type="search"] { min-width: 200px; flex: 1 1 auto; }
+        .filter-bar #filter-toggle { white-space: nowrap; flex-shrink: 0; }
+        .filter-bar #favorites-toggle { white-space: nowrap; flex-shrink: 0; min-width: 158px; }
+        .filter-bar #search-clear { background: transparent; border: 1px solid rgba(15,23,42,0.06); padding: 0 12px; border-radius: 8px; cursor: pointer; }
+        /* keep select and input visually compact on small screens */
+        @media (max-width: 1200px) {
+            .filter-row { flex-wrap: wrap; }
+        }
+        @media (max-width: 1024px) {
+            .filter-row { flex-direction: column; align-items: stretch; width: 100%; }
+            .filter-row > div { width: 100%; }
+            .filter-bar select { width: 100%; max-width: 100%; }
+            .filter-bar #favorites-toggle { width: 100%; justify-content: center; }
+            .filter-bar input[type="search"] { width: 100%; max-width: 100%; }
+        }
+        @media (max-width: 640px) {
+            .filter-bar select, .filter-bar input[type="search"], .filter-bar button { height: 36px; font-size: 0.92rem; }
+            .filter-bar { top: 92px; }
+        }
+
+        /* Cards */
+        /* Use responsive auto-fit grid so cards keep sensible min width and don't get squashed */
+        .member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
+
+        .member-card { border-radius: 12px; overflow: hidden; background: var(--page-white); border: 1px solid rgba(15,23,42,0.04); transition: transform .28s ease, box-shadow .28s ease; display:flex; flex-direction:column; height:100%; }
+        .member-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(2,6,23,0.12); }
+        .member-card .media { position: relative; height: 220px; overflow: hidden; flex-shrink:0; }
+        .member-card .media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .member-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+        .member-card:hover img { transform: scale(1.06); }
+        .category-pill { position: absolute; left: 12px; top: 12px; background: rgba(255,255,255,0.86); color: var(--color-accent-blue); padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 0.75rem; box-shadow: 0 4px 10px rgba(2,6,23,0.06); }
+        .card-body { padding: 1rem; display:flex; flex-direction:column; gap:0.5rem; flex:1 1 auto; }
+        .card-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
+        .card-excerpt { color: #6b7280; margin-bottom: 0.75rem; line-height: 1.35; }
+        /* Ensure excerpts don't blow out one card's height — clamp to 3 lines */
+        .card-excerpt { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-clamp: 3; overflow: hidden; max-height: calc(1.35rem * 3); }
+        .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
+
+        /* Align header and main content to the same left column (logo left edge) */
+        /* Use same container sizing as global .header-content (1200px / 20px) to match logo */
+        header .header-content, main { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
+        /* Sidebar nav adjustments to match Mitgliederbereich style */
+        .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
+        .sidebar-nav ul li { display: block; }
+        .sidebar-nav ul li.logout-bottom:first-of-type {
+            margin-top: auto;
+            padding-top: 1.75rem;
+            border-top: 1px solid rgba(248, 250, 252, 0.18);
+        }
+        .sidebar-nav ul li.logout-bottom { padding: 0; }
+        .sidebar-nav ul li.logout-bottom a.logout-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            color: #f8fafc;
+            text-decoration: none;
+        }
+        .sidebar-nav ul li.logout-bottom a.logout-link svg { display: block; }
+        .sidebar-nav ul li.logout-bottom:not(:last-child) {
+            margin-bottom: 0.75rem;
+        }
+    </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
 
 <header>
-    <div class="header-content max-w-6xl mx-auto p-6 flex items-center justify-between">
+        <div class="header-content">
         <div class="logo">
-            <a href="./abonenten.html">
+            <a href="/capitovo/Abonenten/abonenten.html">
                 <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
             </a>
         </div>
@@ -20,156 +161,395 @@
     </div>
 </header>
 
-<main class="max-w-6xl mx-auto p-6">
-    <section class="mb-6">
-        <h1 class="text-2xl font-extrabold mb-2">Alle Analysen</h1>
-        <p class="text-gray-600">Durchsuche und filtere alle verfügbaren Analysen.</p>
-    </section>
+<main>
+    <div class="alle-layout">
+        <div class="alle-heading">
+            <h1 class="lede">Alle Analysen</h1>
+            <p class="sub">Durchsuche, filtere und sortiere die gesamte Analysebibliothek</p>
+        </div>
 
-    <section class="filter-bar mb-6">
-        <div class="alle-layout">
-            <div class="filter-row">
-                <div>
-                    <label for="sort-select" class="block text-sm font-medium text-gray-700 mb-1">Sortierung</label>
-                    <select id="sort-select" class="w-full border rounded px-3">
-                        <option value="newest">Neueste zuerst</option>
-                        <option value="oldest">Älteste zuerst</option>
-                        <option value="alpha-asc">A-Z</option>
-                        <option value="alpha-desc">Z-A</option>
-                    </select>
-                </div>
+        
 
-                <div>
-                    <label for="sector-select" class="block text-sm font-medium text-gray-700 mb-1">Sektor</label>
-                    <select id="sector-select" class="w-full border rounded px-3">
-                        <option value="">Alle Sektoren</option>
-                        <option value="fundamental">Fundamental</option>
-                        <option value="technical">Technisch</option>
-                        <option value="market">Marktübersicht</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label for="date-from" class="block text-sm font-medium text-gray-700 mb-1">Zeitraum von</label>
-                    <input type="date" id="date-from" class="w-full border rounded px-3">
-                </div>
-
-                <div>
-                    <label for="date-to" class="block text-sm font-medium text-gray-700 mb-1">Zeitraum bis</label>
-                    <input type="date" id="date-to" class="w-full border rounded px-3">
-                </div>
-
-                <div class="flex items-end gap-3">
-                    <div>
-                        <label for="search-input" class="block text-sm font-medium text-gray-700 mb-1">Suche</label>
-                        <input type="search" id="search-input" class="w-full border rounded px-3" placeholder="Titel, Stichwort ...">
+        <div class="filter-bar">
+            <div class="alle-layout">
+                <!-- Hauptzeile: Suche + Favoriten + Filter-Toggle -->
+                <div class="filter-row">
+                    <div class="flex items-center gap-3 flex-1">
+                        <label for="search-input" class="sr-only">Suche</label>
+                        <input id="search-input" type="search" placeholder="Suche nach Titel, Sektor oder Stichwort" class="w-full border rounded px-3 py-2">
                     </div>
 
-                    <div class="flex items-center gap-2 mt-6">
-                        <button id="search-clear" class="px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-100">Suche zurücksetzen</button>
-                        <button id="favorites-toggle" class="px-3 py-2 text-sm text-gray-600 border border-gray-200 rounded bg-white flex items-center gap-1">
-                            <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
-                            <span>Nur Favoriten</span>
+                    <button id="favorites-toggle" class="border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 flex items-center gap-2 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
+                        <span>Nur Favoriten</span>
+                    </button>
+
+                    <button id="filter-toggle" class="flex items-center gap-2 border border-gray-200 rounded px-3 py-2 bg-white text-gray-600 hover:bg-gray-50 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                        <span>Filter</span>
+                        <svg id="filter-chevron" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Ausklappbare Filter -->
+                <div id="advanced-filters" class="advanced-filters">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-3">
+                        <div>
+                            <label for="sector-select" class="block text-sm font-medium text-gray-700 mb-1">Branche/Sektor</label>
+                            <select id="sector-select" class="w-full border rounded px-3">
+                                <option value="">Alle Branchen</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="risk-select" class="block text-sm font-medium text-gray-700 mb-1">Risiko</label>
+                            <select id="risk-select" class="w-full border rounded px-3">
+                                <option value="">Alle Risiken</option>
+                                <option value="low">Niedrig</option>
+                                <option value="medium">Mittel</option>
+                                <option value="high">Hoch</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="performance-select" class="block text-sm font-medium text-gray-700 mb-1">Performance</label>
+                            <select id="performance-select" class="w-full border rounded px-3">
+                                <option value="">Alle</option>
+                                <option value="positive">Positiv</option>
+                                <option value="neutral">Neutral</option>
+                                <option value="negative">Negativ</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="type-select" class="block text-sm font-medium text-gray-700 mb-1">Analysentyp</label>
+                            <select id="type-select" class="w-full border rounded px-3">
+                                <option value="">Alle Typen</option>
+                                <option value="fundamental">Fundamental</option>
+                                <option value="technical">Technisch</option>
+                                <option value="market">Marktübersicht</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="date-from" class="block text-sm font-medium text-gray-700 mb-1">Zeitraum von</label>
+                            <input type="date" id="date-from" class="w-full border rounded px-3">
+                        </div>
+
+                        <div>
+                            <label for="date-to" class="block text-sm font-medium text-gray-700 mb-1">Zeitraum bis</label>
+                            <input type="date" id="date-to" class="w-full border rounded px-3">
+                        </div>
+
+                        <div>
+                            <label for="sort-select" class="block text-sm font-medium text-gray-700 mb-1">Sortierung</label>
+                            <select id="sort-select" class="w-full border rounded px-3">
+                                <option value="newest">Neueste zuerst</option>
+                                <option value="oldest">Älteste zuerst</option>
+                                <option value="alpha-asc">A-Z</option>
+                                <option value="alpha-desc">Z-A</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-2 mt-3 pt-3 border-t">
+                        <button id="reset-filters" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">
+                            Filter zurücksetzen
                         </button>
                     </div>
                 </div>
-
-                <div class="flex justify-end w-full mt-3 pt-3 border-t">
-                    <button id="reset-filters" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors">Filter zurücksetzen</button>
-                </div>
             </div>
         </div>
-    </section>
 
-    <section>
-        <div id="all-analyses-grid" class="member-analyses-grid">
-            <!-- script.js füllt hier die Analyse-Karten -->
-            <p class="text-sm text-gray-400">Lade Analysen…</p>
-        </div>
-    </section>
+        <section>
+            <div id="all-analyses-grid"></div>
+        </section>
+    </div>
 </main>
 
 <footer class="site-footer border-t py-6 mt-12">
     <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
         <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
-        <div class="footer-links">
-            <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
-            <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
-            <a href="../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
-            <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
-        </div>
+            <div class="footer-links">
+                <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+                <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+            </div>
     </div>
 </footer>
 
-<!-- Sidebar (members) -->
-<div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
-    <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
-    <nav class="sidebar-nav" aria-label="Hauptnavigation">
-        <ul>
-            <li><a href="./abonenten.html" class="flex items-center space-x-3"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10.5v8a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1v-8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Startseite</span></a></li>
-            <li><a href="./konto.html" class="flex items-center space-x-3"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mein Konto</span></a></li>
-            <li><a href="./alle_analysen.html" class="flex items-center space-x-3"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="10" width="4" height="11" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="10" y="6" width="4" height="15" rx="0.5" stroke="currentColor" stroke-width="1.2"/><rect x="17" y="3" width="4" height="18" rx="0.5" stroke="currentColor" stroke-width="1.2"/></svg><span>Analysen</span></a></li>
-            <li><a href="./earnings_kalender.html" class="flex items-center space-x-3"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="1.2"></rect><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.2"></line><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.2"></line><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.2"></line></svg><span>Wirtschaftskalender</span></a></li>
-            <li class="logout-bottom"><a href="#open-contact-modal" id="open-contact-modal" class="flex items-center space-x-3"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Kontakt</span></a></li>
-            <li class="logout-bottom"><a href="#" id="logout-link" class="logout-link flex items-center space-x-3"><svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 17l5-5-5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12H9" stroke="currentColor" stroke-width="1.2"/></svg><span>Abmelden</span></a></li>
-        </ul>
-    </nav>
-</div>
-
-<!-- Contact Modal (keine Logik hier verändern) -->
-<div id="contact-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
-    <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 relative overflow-hidden max-h-[90vh] overflow-y-auto">
-        <button id="close-contact-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10">×</button>
-        <div class="p-8 md:p-10">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Support kontaktieren</h2>
-            <form id="contact-form-modal" action="#" method="POST" class="space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="relative">
-                        <input type="text" id="contact-name" name="name" required class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Ihr Name">
-                        <label for="contact-name" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500">Ihr Name</label>
+    <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
+        <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
+        <nav class="sidebar-nav" aria-label="Hauptnavigation">
+            <ul>
+                <li>
+                    <div>
+                        <a href="./konto.html" class="flex items-center space-x-3" aria-label="Mein Konto">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="8" r="3.5" />
+                            </svg>
+                            <span>Mein Konto</span>
+                        </a>
                     </div>
-                    <div class="relative">
-                        <input type="email" id="contact-email" name="email" required class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Ihre E-Mail">
-                        <label for="contact-email" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500">Ihre E-Mail</label>
-                    </div>
-                </div>
-                <div class="relative">
-                    <select id="contact-category" name="category" required class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none sm:text-sm bg-white">
-                        <option value="" disabled selected>Bitte wählen</option>
-                        <option value="support">Technischer Support</option>
-                        <option value="billing">Rechnung & Abo</option>
-                        <option value="feedback">Feedback & Vorschläge</option>
-                        <option value="other">Sonstiges</option>
-                    </select>
-                </div>
-                <div class="relative">
-                    <textarea id="contact-message" name="message" rows="4" required class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none sm:text-sm" placeholder="Ihre Nachricht"></textarea>
-                </div>
-                <div class="relative">
-                    <input type="number" id="contact-captcha" name="captcha" required class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none sm:text-sm" placeholder="Sicherheitsfrage: Was ist 3 + 2?">
-                </div>
-                <div class="text-center">
-                    <button type="submit" id="contact-submit" class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-primary-blue">Nachricht senden</button>
-                </div>
-            </form>
-        </div>
+                </li>
+                <li>
+                    <a href="./alle_analysen.html" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="10" width="4" height="11" rx="0.5" /><rect x="10" y="6" width="4" height="15" rx="0.5" /><rect x="17" y="3" width="4" height="18" rx="0.5" /></svg>
+                        <span>Analysen</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./earnings_kalender.html" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Wirtschaftskalender</span>
+                    </a>
+                </li>
+                
+                <li class="logout-bottom">
+                    <a href="./kontaktdaten.html" class="flex items-center space-x-3">
+                        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Kontakt</span>
+                    </a>
+                </li>
+                
+                <li class="logout-bottom">
+                    <a href="#" id="logout-link" class="logout-link" aria-label="Abmelden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <path d="M16 17l5-5-5-5" />
+                            <path d="M21 12H9" />
+                        </svg>
+                        <span>Abmelden</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
-</div>
+    
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 relative overflow-hidden max-h-[90vh] overflow-y-auto">
+            <button id="close-contact-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="p-8 md:p-10">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Support kontaktieren</h2>
+                
+                <form id="contact-form-modal" action="#" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <input type="text" id="contact-name" name="name" required
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Ihr Name">
+                            <label for="contact-name" 
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihr Name
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="contact-email" name="email" required
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Ihre E-Mail">
+                            <label for="contact-email" 
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihre E-Mail
+                            </label>
+                        </div>
+                    </div>
 
-<div id="logout-confirm-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-50 backdrop-blur-xl-custom flex items-center justify-center p-4">
-    <div class="w-full max-w-sm">
-        <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
-            <h3 class="text-lg font-semibold mb-2">Abmelden</h3>
-            <p class="text-sm text-gray-700 mb-4">Möchten Sie sich wirklich abmelden? Lokale Sitzungsdaten werden entfernt.</p>
-            <div class="flex gap-3">
-                <button id="logout-confirm-yes" class="flex-1 py-2 px-4 rounded bg-primary-blue text-white">Abmelden</button>
-                <button id="logout-confirm-no" class="flex-1 py-2 px-4 rounded border border-gray-300">Abbrechen</button>
+                    <div class="relative">
+                        <select id="contact-category" name="category" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                            <option value="" disabled selected>Bitte wählen</option>
+                            <option value="support">Technischer Support</option>
+                            <option value="billing">Rechnung & Abo</option>
+                            <option value="feedback">Feedback & Vorschläge</option>
+                            <option value="other">Sonstiges</option>
+                        </select>
+                        <label for="contact-category" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Kategorie
+                        </label>
+                    </div>
+
+                    <div class="relative">
+                        <textarea id="contact-message" name="message" rows="4" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                            placeholder="Ihre Nachricht"></textarea>
+                        <label for="contact-message" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Ihre Nachricht
+                        </label>
+                    </div>
+
+                    <div class="relative">
+                        <input type="number" id="contact-captcha" name="captcha" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                            placeholder="Sicherheitsfrage: Was ist 3 + 2?">
+                        <label for="contact-captcha" 
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Sicherheitsfrage: Was ist 3 + 2?
+                        </label>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" id="contact-submit" disabled
+                            class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gray-400 cursor-not-allowed transition duration-150">
+                            Nachricht senden
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<script src="../script.js?v=7"></script>
-</body>
-</html>
+    <div id="logout-confirm-modal" class="hidden fixed inset-0 z-[1001] bg-black bg-opacity-50 backdrop-blur-xl-custom flex items-center justify-center p-4">
+        <div class="w-full max-w-sm">
+            <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
+                <h3 class="text-lg font-semibold mb-2">Abmelden</h3>
+                <p class="text-sm text-gray-700 mb-4">Möchten Sie sich wirklich abmelden? Lokale Sitzungsdaten werden entfernt.</p>
+                <div class="flex gap-3">
+                    <button id="logout-confirm-yes" class="flex-1 py-2 px-4 rounded bg-primary-blue text-white">Abmelden</button>
+                    <button id="logout-confirm-no" class="flex-1 py-2 px-4 rounded border border-gray-300">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script src="../script.js?v=6"></script>
+    <script>
+        // Filter toggle - muss sofort funktionieren
+        document.addEventListener('DOMContentLoaded', function(){
+            console.log('DOMContentLoaded fired');
+            const filterToggle = document.getElementById('filter-toggle');
+            const filterChevron = document.getElementById('filter-chevron');
+            const advancedFilters = document.getElementById('advanced-filters');
+            
+            console.log('Filter elements:', {filterToggle, filterChevron, advancedFilters});
+            
+            if (filterToggle && advancedFilters && filterChevron) {
+                console.log('Setting up filter toggle listener');
+                filterToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Filter button clicked!');
+                    advancedFilters.classList.toggle('open');
+                    filterChevron.classList.toggle('open');
+                    console.log('Filter toggled, open:', advancedFilters.classList.contains('open'));
+                });
+            } else {
+                console.error('Missing filter elements!');
+            }
+            
+            // Ensure the overview page initializes its JS renderer
+            try{ if (typeof initAllAnalysesPage === 'function') initAllAnalysesPage(); } catch(e){ console.error('initAllAnalysesPage error', e); }
+        });
+        
+        // Contact Modal Logic - separate DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const openContactModalBtn = document.getElementById('open-contact-modal');
+            const closeContactModalBtn = document.getElementById('close-contact-modal');
+            const contactModal = document.getElementById('contact-modal');
+            const contactForm = document.getElementById('contact-form-modal');
+            const contactCaptcha = document.getElementById('contact-captcha');
+            const contactSubmit = document.getElementById('contact-submit');
+
+            if (openContactModalBtn && contactModal) {
+                openContactModalBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    contactModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            if (closeContactModalBtn && contactModal) {
+                closeContactModalBtn.addEventListener('click', function() {
+                    contactModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            }
+
+            if (contactModal) {
+                contactModal.addEventListener('click', function(e) {
+                    if (e.target === contactModal) {
+                        contactModal.classList.add('hidden');
+                        document.body.style.overflow = '';
+                    }
+                });
+            }
+
+            // Contact form validation
+            if (contactForm) {
+                const inputs = contactForm.querySelectorAll('input, select, textarea');
+                
+                function validateContactForm() {
+                    let isValid = true;
+                    inputs.forEach(input => {
+                        if (input.hasAttribute('required') && !input.value.trim()) {
+                            isValid = false;
+                        }
+                    });
+                    if (contactCaptcha && contactCaptcha.value.trim() !== '5') {
+                        isValid = false;
+                    }
+                    if (contactSubmit) {
+                        if (isValid) {
+                            contactSubmit.disabled = false;
+                            contactSubmit.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                            contactSubmit.classList.add('bg-primary-blue', 'hover:bg-blue-700');
+                        } else {
+                            contactSubmit.disabled = true;
+                            contactSubmit.classList.add('bg-gray-400', 'cursor-not-allowed');
+                            contactSubmit.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
+                        }
+                    }
+                }
+
+                inputs.forEach(input => {
+                    input.addEventListener('input', validateContactForm);
+                    input.addEventListener('change', validateContactForm);
+                });
+
+                validateContactForm();
+
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    if (contactCaptcha && contactCaptcha.value !== '5') {
+                        alert('Bitte beantworten Sie die Sicherheitsfrage korrekt (3 + 2 = 5).');
+                        contactCaptcha.focus();
+                        return;
+                    }
+                    alert('Ihre Nachricht wurde erfolgreich versendet. Wir werden uns in Kürze bei Ihnen melden.');
+                    contactModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    contactForm.reset();
+                    validateContactForm();
+                });
+            }
+        });
+    </script>

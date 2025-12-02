@@ -307,7 +307,6 @@ footer {
     color: #f0f0f0; 
     text-decoration: none;
     font-size: 1.1em;
-    font-weight: 400; /* ensure links use normal weight site-wide */
     display: flex; 
     align-items: center; 
     padding: 10px 0;
@@ -333,78 +332,6 @@ footer {
 
 .sidebar-nav .sidebar-cta:hover {
     background-color: #0056b3; 
-}
-
-/* Normalize sidebar appearance on Abonenten pages so it matches the homepage
-   exactly. Avoid forcing different colors/sizes — inherit from the global
-   `.sidebar` rules so spacing and positions are identical. */
-.abonenten-page .sidebar-nav ul li > a,
-.abonenten-page .sidebar-nav ul li > div > a,
-.abonenten-page .sidebar-nav ul li.logout-bottom a.logout-link {
-    color: inherit !important;
-    font-size: inherit !important;
-    padding: inherit !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.75rem !important;
-    font-family: inherit !important;
-}
-.abonenten-page .sidebar-nav ul li { margin-bottom: 6px; }
-.abonenten-page .sidebar-nav ul li:last-child { margin-bottom: 0; }
-
-/* Icon + text alignment fixes to match the homepage exactly */
-.sidebar-nav ul li a svg {
-    width: 1.25rem; /* 20px / Tailwind w-5 */
-    height: 1.25rem; /* 20px / Tailwind h-5 */
-    display: block; /* remove inline baseline alignment issues */
-    margin: 0; /* remove unexpected offsets */
-    align-self: center; /* ensure vertical centering in flex container */
-}
-.sidebar-nav ul li a span {
-    display: inline-block;
-    line-height: 1.2; /* consistent text alignment with icons */
-    margin-top: 0; /* ensure no extra offset */
-}
-
-/* Small tweak: ensure icons that use 'flex-shrink-0' keep same layout
-   and icon strokes look consistent */
-.sidebar-nav ul li a .flex-shrink-0 { flex-shrink: 0; }
-
-/* Force consistent icon spacing for all sidebar svgs (catch missing Tailwind
-   utility classes like `mt-1` / `mr-2` on some member pages). Scoped to the
-   sidebar to avoid affecting other inline svgs elsewhere. Uses !important to
-   win over utility classes if necessary. */
-.sidebar .sidebar-nav ul li a svg {
-    flex-shrink: 0 !important;
-    margin-top: 0.25rem !important; /* matches Tailwind's mt-1 */
-    margin-right: 0.5rem !important; /* matches Tailwind's mr-2 */
-    width: 1.25rem !important;
-    height: 1.25rem !important;
-    display: block !important;
-    align-self: center !important;
-}
-
-.sidebar .sidebar-nav ul li a span {
-    line-height: 1.25 !important;
-    vertical-align: middle !important;
-}
-
-/* --- Abonenten: Sidebar spacing alignment --- */
-/* On abonenten pages the header is adjusted (non-sticky), so ensure the
-   sidebar content shifts down to visually match the homepage spacing. */
-.abonenten-page .sidebar {
-    /* Use the same padding as the homepage sidebar so vertical offsets match */
-    padding-top: 20px !important;
-}
-
-.abonenten-page .sidebar-nav ul {
-    /* same top margin as homepage so first item aligns identically */
-    margin-top: 50px !important;
-}
-
-.abonenten-page .close-button {
-    /* match homepage placement */
-    top: 10px !important;
 }
 
 

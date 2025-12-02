@@ -13,8 +13,7 @@
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
         /* Page layout */
-        /* Schlichteres, neutraleres Farbset für den Kalender */
-        :root { --page-white: #ffffff; --muted-white: #fbfbfc; --cap-primary: #0b1220; --cap-accent: #6b7280; --cap-text: #0f172a; --cap-muted: #94a3b8; --cap-success: #059669; --cap-warning: #d97706; }
+        :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
         body { background: var(--muted-white); }
         main { background: transparent; padding-top: 18px; }
 
@@ -57,32 +56,24 @@
         .view-toggle button:hover:not(.active) { color: #0f172a; }
 
         /* Calendar grid */
-        .calendar-container { background: var(--page-white); border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; }
-        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb; }
-        .calendar-header .day-name { text-align: center; font-weight: 600; color: var(--cap-muted); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
-
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: #e5e7eb; border: 1px solid #e5e7eb; }
-        .calendar-day { background: var(--page-white); min-height: 100px; padding: 0.5rem; transition: background 0.12s; position: relative; display: flex; flex-direction: column; border: 1px solid rgba(15,23,42,0.03); }
-        .calendar-day:hover { background: #fbfbfb; }
-        .calendar-day.other-month { background: #fbfbfc; opacity: 0.55; }
-        .calendar-day.today { outline: 2px solid rgba(99,102,241,0.06); box-shadow: inset 0 0 0 1px rgba(99,102,241,0.03); }
-        .calendar-day.today .day-number { color: var(--cap-primary); font-weight: 700; }
-
-        .day-number { font-weight: 500; color: var(--cap-text); font-size: 0.875rem; margin-bottom: 0.5rem; }
-        .calendar-day.other-month .day-number { color: #d1d5db; }
-
-        .calendar-day.has-events .day-number { font-weight: 600; }
-
-        .event-count { position: absolute; top: 0.25rem; right: 0.25rem; background: var(--cap-muted); color: white; font-size: 0.675rem; font-weight: 600; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 5px; }
+        .calendar-container { background: var(--page-white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 6px 20px rgba(2,6,23,0.06); }
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+        .calendar-header .day-name { text-align: center; font-weight: 700; color: #64748b; font-size: 0.85rem; padding: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
+        .calendar-day { background: white; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 120px; padding: 0.75rem; transition: all 0.2s; position: relative; }
+        .calendar-day:hover { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.1); transform: translateY(-2px); }
+        .calendar-day.other-month { background: #f8fafc; opacity: 0.5; }
+        .calendar-day.today { border: 2px solid #3b82f6; background: #eff6ff; }
+        
+        .day-number { font-weight: 700; color: #0f172a; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .calendar-day.other-month .day-number { color: #94a3b8; }
         
         /* Earnings events in calendar */
-        /* Schlichtere Event-Darstellung: nur Kürzel sichtbar, keine starken Farben */
-        .earnings-event { background: transparent; color: var(--cap-primary); padding: 2px 0; margin-bottom: 4px; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: color 0.12s; text-align: left; }
-        .earnings-event:hover { color: var(--cap-accent); }
-        .earnings-event.pre-market, .earnings-event.after-market { background: transparent; }
-        .earnings-event.high { text-decoration: underline; }
-
-        .earnings-event .time-icon { display: none; }
+        .earnings-event { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .earnings-event:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+        .earnings-event.pre-market { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .earnings-event.after-market { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
         
         /* List view */
         .earnings-list { background: var(--page-white); border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); overflow: hidden; }
@@ -107,19 +98,6 @@
         .importance-badge.high { background: #fee2e2; color: #991b1b; }
         .importance-badge.medium { background: #fef3c7; color: #92400e; }
         .importance-badge.low { background: #e0e7ff; color: #3730a3; }
-
-        /* Event Details Modal */
-        .event-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); z-index: 10000; display: none; align-items: center; justify-content: center; }
-        .event-modal.active { display: flex; }
-        .event-modal-content { background: white; border-radius: 8px; padding: 1.25rem; max-width: 420px; width: 90%; box-shadow: 0 8px 20px rgba(0,0,0,0.06); border: 1px solid #eef2f7; }
-        .event-modal-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid #e5e7eb; }
-        .event-modal-title { font-size: 1.125rem; font-weight: 600; color: var(--cap-text); }
-        .event-modal-close { background: transparent; border: none; width: 28px; height: 28px; cursor: pointer; font-size: 1.25rem; color: var(--cap-muted); }
-        .event-modal-close:hover { color: var(--cap-text); }
-        .event-detail-row { display: flex; justify-content: space-between; padding: 0.625rem 0; }
-        .event-detail-row:not(:last-child) { border-bottom: 1px solid #f3f4f6; }
-        .event-detail-label { color: #6b7280; font-weight: 500; font-size: 0.875rem; }
-        .event-detail-value { color: #111827; font-weight: 600; font-size: 0.875rem; }
 
         /* Responsive */
         @media (max-width: 1024px) {
@@ -166,20 +144,11 @@
         <nav class="sidebar-nav" aria-label="Hauptnavigation">
             <ul>
                 <li>
-                    <a href="https://kw-f8.github.io/capitovo/Abonenten/abonenten.html" class="flex items-center space-x-3" aria-label="Startseite">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M3 11.5L12 4l9 7.5" />
-                            <path d="M5 10.5v8a1 1 0 001 1h3v-6h6v6h3a1 1 0 001-1v-8" />
-                        </svg>
-                        <span>Startseite</span>
-                    </a>
-                </li>
-                <li>
                     <div>
                         <a href="./konto.html" class="flex items-center space-x-3" aria-label="Mein Konto">
-                            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <circle cx="12" cy="8" r="3" />
-                                <path d="M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="8" r="3.5" />
                             </svg>
                             <span>Mein Konto</span>
                         </a>
@@ -189,6 +158,81 @@
                     <a href="./alle_analysen.html" class="flex items-center space-x-3">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="10" width="4" height="11" rx="0.5" /><rect x="10" y="6" width="4" height="15" rx="0.5" /><rect x="17" y="3" width="4" height="18" rx="0.5" /></svg>
                         <span>Analysen</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="./earnings_kalender.html" class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Wirtschaftskalender</span>
+                    </a>
+                </li>
+                
+                <li class="logout-bottom">
+                    <a href="./kontaktdaten.html" class="flex items-center space-x-3">
+                        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Kontakt</span>
+                    </a>
+                </li>
+                
+                <li class="logout-bottom">
+                    <a href="#" id="logout-link" class="logout-link" aria-label="Abmelden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <path d="M16 17l5-5-5-5" />
+                            <path d="M21 12H9" />
+                        </svg>
+                        <span>Abmelden</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- Paywall Overlay -->
+    <div class="paywall-overlay" id="paywall-overlay">
+        <div class="paywall-content">
+            <div class="paywall-lock-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h2>Nur für Abonnenten</h2>
+            <p>Der Wirtschaftskalender ist exklusiv für capitovo Mitglieder verfügbar.</p>
+            
+            <div class="paywall-features">
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Vollständiger Wirtschaftskalender</span>
+                </div>
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Pre- & After-Market Zeitpunkte</span>
+                </div>
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>EPS Estimates & Analysen</span>
+                </div>
+                <div class="paywall-feature">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <span>Portfolio-Filter & Alerts</span>
+                </div>
+            </div>
+
+            <a href="../checkout.html" class="paywall-cta">Jetzt Abonnieren</a>
+            <p id="paywall-price-text" style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8;">Ab 99€/Monat · Jederzeit kündbar</p>
+        </div>
+    </div>
 
     <main>
         <div class="earnings-layout">
@@ -282,40 +326,6 @@
                 </div>
             </div>
 
-            <!-- Event Details Modal -->
-            <div class="event-modal" id="event-modal">
-                <div class="event-modal-content">
-                    <div class="event-modal-header">
-                        <div class="event-modal-title" id="modal-company-name">Tesla</div>
-                        <button class="event-modal-close" onclick="closeEventModal()">✕</button>
-                    </div>
-                    <div class="event-detail-row">
-                        <span class="event-detail-label">Ticker:</span>
-                        <span class="event-detail-value" id="modal-ticker">TSLA</span>
-                    </div>
-                    <div class="event-detail-row">
-                        <span class="event-detail-label">Datum:</span>
-                        <span class="event-detail-value" id="modal-date">2. Dezember 2025</span>
-                    </div>
-                    <div class="event-detail-row">
-                        <span class="event-detail-label">Zeit:</span>
-                        <span class="event-detail-value" id="modal-time">After-Market</span>
-                    </div>
-                    <div class="event-detail-row">
-                        <span class="event-detail-label">EPS Schätzung:</span>
-                        <span class="event-detail-value" id="modal-eps">$0.85</span>
-                    </div>
-                    <div class="event-detail-row">
-                        <span class="event-detail-label">Sektor:</span>
-                        <span class="event-detail-value" id="modal-sector">Technologie</span>
-                    </div>
-                    <div class="event-detail-row">
-                        <span class="event-detail-label">Wichtigkeit:</span>
-                        <span class="event-detail-value" id="modal-importance">High</span>
-                    </div>
-                </div>
-            </div>
-
             <!-- List View -->
             <div class="earnings-list" id="list-view" style="display: none;">
                 <div class="earnings-list-header">
@@ -346,275 +356,21 @@
     </footer>
 
     <script>
-        // Financial Modeling Prep API Configuration
-        const USE_PROXY = true; // Set to true to use local proxy (bypasses CORS)
-        const PROXY_URL = 'http://localhost:3000'; // Local proxy server
-        const FMP_API_KEY = 'OQ6IIDD26Cnm3fPtXiQw8O05ZAaBPFRI';
-        const FMP_BASE_URL = 'https://financialmodelingprep.com/api/v3';
-        const CACHE_KEY = 'capitovo_earnings_cache';
-        const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6 Stunden in Millisekunden
-        
-        // Global earnings data - will be populated from API or cache
-        let earningsData = [];
-        let isLoadingData = false;
-
-        // Fetch earnings calendar from FMP API (with caching to save API calls)
-        async function fetchEarningsCalendar(fromDate, toDate) {
-            if (isLoadingData) return;
-            
-            // Check cache first
-            const cachedData = getCachedEarnings();
-            if (cachedData) {
-                console.log('Using cached earnings data (reduces API calls)');
-                earningsData = cachedData;
-                return;
-            }
-            
-            isLoadingData = true;
-            
-            try {
-                // Format dates as YYYY-MM-DD
-                const from = fromDate || new Date().toISOString().split('T')[0];
-                const to = toDate || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-                
-                // Use proxy if enabled (bypasses CORS), otherwise direct API call
-                let url;
-                if (USE_PROXY) {
-                    url = `${PROXY_URL}/earnings-calendar?from=${from}&to=${to}`;
-                    console.log('Fetching via PROXY:', url);
-                } else {
-                    url = `${FMP_BASE_URL}/earning_calendar?from=${from}&to=${to}&apikey=${FMP_API_KEY}`;
-                    console.log('Fetching DIRECT from FMP API:', url);
-                }
-                
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-                
-                console.log('API Response Status:', response.status);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('API Error Response:', errorText);
-                    throw new Error(`FMP API Error: ${response.status} - ${errorText}`);
-                }
-                
-                const data = await response.json();
-                console.log(`Loaded ${data.length} earnings events from FMP`);
-                
-                // Transform FMP data to our format
-                earningsData = data.map(event => {
-                    // Determine sector from FMP data (simplified mapping)
-                    const sector = determineSector(event.symbol);
-                    
-                    // Determine time of day (FMP provides 'time' field: bmo=before market open, amc=after market close)
-                    let time = 'market'; // default
-                    if (event.time) {
-                        if (event.time.toLowerCase().includes('bmo') || event.time.toLowerCase().includes('before')) {
-                            time = 'pre';
-                        } else if (event.time.toLowerCase().includes('amc') || event.time.toLowerCase().includes('after')) {
-                            time = 'after';
-                        }
-                    }
-                    
-                    // Determine importance based on market cap or portfolio relevance
-                    const importance = determineImportance(event.symbol, event.marketCap);
-                    
-                    return {
-                        date: event.date,
-                        company: event.name || event.symbol,
-                        ticker: event.symbol,
-                        sector: sector,
-                        estimate: event.epsEstimated ? `$${event.epsEstimated.toFixed(2)}` : 'N/A',
-                        revenue: event.revenueEstimated ? formatRevenue(event.revenueEstimated) : null,
-                        time: time,
-                        importance: importance,
-                        fiscalDateEnding: event.fiscalDateEnding,
-                        updatedFromPrior: event.updatedFromDate
-                    };
-                }).filter(e => e.ticker); // Remove entries without ticker
-                
-                // Sort by date
-                earningsData.sort((a, b) => new Date(a.date) - new Date(b.date));
-                
-                // Save to cache (6h expiry) to reduce API calls
-                saveCachedEarnings(earningsData);
-                
-                // Re-render calendar and stats
-                const currentDate = new Date();
-                generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
-                updateStats();
-                
-                // If list view is active, re-render it
-                if (listView.style.display !== 'none') {
-                    renderListView();
-                }
-                
-                console.log('Earnings calendar updated successfully');
-                
-            } catch (error) {
-                console.error('Error fetching earnings data:', error);
-                console.error('Error details:', error.message);
-                
-                // Try to use old cache as fallback
-                const oldCache = localStorage.getItem(CACHE_KEY);
-                if (oldCache) {
-                    try {
-                        const parsed = JSON.parse(oldCache);
-                        earningsData = parsed.data || [];
-                        console.log('Using expired cache as fallback');
-                        return;
-                    } catch (e) {
-                        console.error('Cache fallback failed:', e);
-                    }
-                }
-                
-                // Load demo data as last resort
-                console.log('Loading demo data as fallback...');
-                earningsData = getDemoEarningsData();
-                saveCachedEarnings(earningsData); // Cache demo data
-                
-                // Show user-friendly message
-                const calendarGrid = document.getElementById('calendar-grid');
-                if (calendarGrid) {
-                    const notice = document.createElement('div');
-                    notice.style.cssText = 'grid-column: 1 / -1; background: #fef3c7; padding: 1rem; border-radius: 8px; text-align: center; color: #92400e; font-weight: 600; margin-bottom: 1rem;';
-                    notice.innerHTML = '⚠️ API-Verbindung fehlgeschlagen. Demo-Daten werden angezeigt.';
-                    calendarGrid.parentElement.insertBefore(notice, calendarGrid);
-                }
-            } finally {
-                isLoadingData = false;
-            }
-        }
-
-        // Demo data for testing/fallback
-        function getDemoEarningsData() {
-            const today = new Date();
-            const demoData = [];
-            
-            // Generate demo events for next 30 days
-            const companies = [
-                { ticker: 'AAPL', company: 'Apple Inc.', sector: 'tech', importance: 'high', estimate: '$2.10' },
-                { ticker: 'MSFT', company: 'Microsoft Corp.', sector: 'tech', importance: 'high', estimate: '$2.75' },
-                { ticker: 'TSLA', company: 'Tesla Inc.', sector: 'consumer', importance: 'high', estimate: '$0.85' },
-                { ticker: 'NVDA', company: 'NVIDIA Corp.', sector: 'tech', importance: 'high', estimate: '$0.95' },
-                { ticker: 'AMZN', company: 'Amazon.com Inc.', sector: 'consumer', importance: 'high', estimate: '$1.20' },
-                { ticker: 'META', company: 'Meta Platforms', sector: 'tech', importance: 'high', estimate: '$4.50' },
-                { ticker: 'GOOGL', company: 'Alphabet Inc.', sector: 'tech', importance: 'high', estimate: '$1.65' },
-                { ticker: 'JNJ', company: 'Johnson & Johnson', sector: 'healthcare', importance: 'high', estimate: '$2.35' },
-                { ticker: 'JPM', company: 'JPMorgan Chase', sector: 'finance', importance: 'medium', estimate: '$3.20' },
-                { ticker: 'V', company: 'Visa Inc.', sector: 'finance', importance: 'medium', estimate: '$2.15' }
-            ];
-            
-            for (let i = 0; i < 30; i++) {
-                const date = new Date(today);
-                date.setDate(today.getDate() + i);
-                
-                // Add 1-3 random events per day
-                const eventsPerDay = Math.floor(Math.random() * 3) + 1;
-                for (let j = 0; j < eventsPerDay; j++) {
-                    const company = companies[Math.floor(Math.random() * companies.length)];
-                    const time = Math.random() > 0.5 ? 'after' : 'pre';
-                    
-                    demoData.push({
-                        date: date.toISOString().split('T')[0],
-                        company: company.company,
-                        ticker: company.ticker,
-                        sector: company.sector,
-                        estimate: company.estimate,
-                        time: time,
-                        importance: company.importance
-                    });
-                }
-            }
-            
-            return demoData.sort((a, b) => new Date(a.date) - new Date(b.date));
-        }
-
-        // Cache Management Functions (to save API calls - Free Tier: 250/day)
-        function getCachedEarnings() {
-            try {
-                const cached = localStorage.getItem(CACHE_KEY);
-                if (!cached) return null;
-                
-                const parsed = JSON.parse(cached);
-                const now = Date.now();
-                
-                // Check if cache is still valid (6 hours)
-                if (now - parsed.timestamp < CACHE_DURATION) {
-                    console.log(`Cache valid for ${Math.round((CACHE_DURATION - (now - parsed.timestamp)) / 1000 / 60)} more minutes`);
-                    return parsed.data;
-                }
-                
-                // Cache expired
-                console.log('Cache expired, fetching fresh data');
-                return null;
-            } catch (e) {
-                console.error('Cache read error:', e);
-                return null;
-            }
-        }
-
-        function saveCachedEarnings(data) {
-            try {
-                const cacheObject = {
-                    data: data,
-                    timestamp: Date.now()
-                };
-                localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObject));
-                console.log('Earnings data cached for 6 hours');
-            } catch (e) {
-                console.error('Cache write error:', e);
-            }
-        }
-
-        // Helper: Determine sector based on ticker (simplified)
-        function determineSector(ticker) {
-            const techTickers = ['AAPL', 'MSFT', 'GOOGL', 'GOOG', 'META', 'NVDA', 'AMD', 'INTC', 'CRM', 'ORCL', 'ADBE', 'CSCO', 'IBM', 'SAP'];
-            const consumerTickers = ['AMZN', 'TSLA', 'NFLX', 'DIS', 'NKE', 'SBUX', 'MCD', 'HD'];
-            const financeTickers = ['JPM', 'BAC', 'GS', 'MS', 'WFC', 'C', 'BLK', 'AXP'];
-            const healthTickers = ['JNJ', 'UNH', 'PFE', 'ABBV', 'TMO', 'MRK', 'LLY'];
-            const energyTickers = ['XOM', 'CVX', 'COP', 'SLB', 'EOG'];
-            
-            if (techTickers.includes(ticker)) return 'tech';
-            if (consumerTickers.includes(ticker)) return 'consumer';
-            if (financeTickers.includes(ticker)) return 'finance';
-            if (healthTickers.includes(ticker)) return 'healthcare';
-            if (energyTickers.includes(ticker)) return 'energy';
-            
-            return 'other';
-        }
-
-        // Helper: Determine importance (high/medium/low)
-        function determineImportance(ticker, marketCap) {
-            // Portfolio stocks (from capitovo analyses) = high importance
-            const portfolioStocks = ['TSLA', 'AAPL', 'MSFT', 'AMZN', 'NVDA', 'META', 'GOOGL', 'GOOG', 'JNJ', 'SAP'];
-            
-            if (portfolioStocks.includes(ticker)) {
-                return 'high';
-            }
-            
-            // Large cap (>200B) = medium
-            if (marketCap && marketCap > 200000000000) {
-                return 'medium';
-            }
-            
-            // Everything else = low
-            return 'low';
-        }
-
-        // Helper: Format revenue numbers
-        function formatRevenue(revenue) {
-            if (revenue >= 1e9) {
-                return `$${(revenue / 1e9).toFixed(2)}B`;
-            } else if (revenue >= 1e6) {
-                return `$${(revenue / 1e6).toFixed(2)}M`;
-            }
-            return `$${revenue.toFixed(0)}`;
-        }
+        // Mock earnings data - In production, this would come from an API
+        const earningsData = [
+            { date: '2025-12-02', company: 'Tesla', ticker: 'TSLA', sector: 'tech', estimate: '$0.85', time: 'after', importance: 'high' },
+            { date: '2025-12-03', company: 'Apple', ticker: 'AAPL', sector: 'tech', estimate: '$2.10', time: 'after', importance: 'high' },
+            { date: '2025-12-04', company: 'Microsoft', ticker: 'MSFT', sector: 'tech', estimate: '$2.75', time: 'after', importance: 'high' },
+            { date: '2025-12-05', company: 'Amazon', ticker: 'AMZN', sector: 'consumer', estimate: '$1.20', time: 'after', importance: 'high' },
+            { date: '2025-12-06', company: 'NVIDIA', ticker: 'NVDA', sector: 'tech', estimate: '$0.95', time: 'after', importance: 'high' },
+            { date: '2025-12-09', company: 'Meta', ticker: 'META', sector: 'tech', estimate: '$4.50', time: 'after', importance: 'high' },
+            { date: '2025-12-10', company: 'Alphabet', ticker: 'GOOGL', sector: 'tech', estimate: '$1.65', time: 'after', importance: 'high' },
+            { date: '2025-12-11', company: 'Netflix', ticker: 'NFLX', sector: 'consumer', estimate: '$3.20', time: 'after', importance: 'medium' },
+            { date: '2025-12-12', company: 'Salesforce', ticker: 'CRM', sector: 'tech', estimate: '$1.85', time: 'pre', importance: 'medium' },
+            { date: '2025-12-13', company: 'Adobe', ticker: 'ADBE', sector: 'tech', estimate: '$3.50', time: 'after', importance: 'medium' },
+            { date: '2025-12-16', company: 'Oracle', ticker: 'ORCL', sector: 'tech', estimate: '$1.40', time: 'after', importance: 'medium' },
+            { date: '2025-12-17', company: 'SAP', ticker: 'SAP', sector: 'tech', estimate: '$2.10', time: 'pre', importance: 'high' }
+        ];
 
         // View toggle
         const viewCalendarBtn = document.getElementById('view-calendar');
@@ -687,97 +443,17 @@
             if (date) {
                 const dateStr = date.toISOString().split('T')[0];
                 const events = earningsData.filter(e => e.date === dateStr);
-                
-                if (events.length > 0) {
-                    dayDiv.classList.add('has-events');
-                    
-                    // Check if any high-importance events
-                    const hasHighImportance = events.some(e => e.importance === 'high');
-                    if (hasHighImportance) {
-                        dayDiv.classList.add('high-importance');
-                    }
-                    
-                    // Show max 3 events, then show count
-                    const visibleEvents = events.slice(0, 3);
-                    visibleEvents.forEach(event => {
-                        const eventDiv = document.createElement('div');
-                        eventDiv.className = `earnings-event ${event.time}-market`;
-                        if (event.importance === 'high') {
-                            eventDiv.classList.add('high');
-                        }
-                        
-                        // Nur Kürzel anzeigen (ohne Zeit-Icon) — schlankes Layout
-                        eventDiv.textContent = event.ticker ? event.ticker.toUpperCase() : event.ticker;
-                        eventDiv.title = `${event.company}\nEPS: ${event.estimate}\n${event.time === 'pre' ? 'Pre-Market' : event.time === 'after' ? 'After-Market' : 'Während Handelszeit'}`;
-                        
-                        // Click to show details
-                        eventDiv.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            showEventDetails(event);
-                        });
-                        
-                        dayDiv.appendChild(eventDiv);
-                    });
-                    
-                    // If more than 3 events, show count badge
-                    if (events.length > 3) {
-                        const countBadge = document.createElement('div');
-                        countBadge.className = 'event-count';
-                        countBadge.textContent = `+${events.length - 3}`;
-                        countBadge.title = `${events.length} Events gesamt`;
-                        dayDiv.appendChild(countBadge);
-                    }
-                }
+                events.forEach(event => {
+                    const eventDiv = document.createElement('div');
+                    eventDiv.className = `earnings-event ${event.time}-market`;
+                    eventDiv.textContent = `${event.ticker} ${event.time === 'pre' ? '🌅' : '🌙'}`;
+                    eventDiv.title = `${event.company} - ${event.estimate} (${event.time === 'pre' ? 'Pre-Market' : 'After-Market'})`;
+                    dayDiv.appendChild(eventDiv);
+                });
             }
 
             return dayDiv;
         }
-
-        // Show event details modal
-        function showEventDetails(event) {
-            const modal = document.getElementById('event-modal');
-            const eventDate = new Date(event.date);
-            const formattedDate = eventDate.toLocaleDateString('de-DE', { 
-                day: 'numeric', 
-                month: 'long', 
-                year: 'numeric' 
-            });
-            
-            document.getElementById('modal-company-name').textContent = event.company;
-            document.getElementById('modal-ticker').textContent = event.ticker;
-            document.getElementById('modal-date').textContent = formattedDate;
-            
-            const timeText = event.time === 'pre' ? 'Pre-Market (vor Börseneröffnung)' : 
-                            event.time === 'after' ? 'After-Market (nach Börsenschluss)' : 
-                            'Während Handelszeit';
-            document.getElementById('modal-time').textContent = timeText;
-            document.getElementById('modal-eps').textContent = event.estimate;
-            document.getElementById('modal-sector').textContent = getSectorName(event.sector);
-            
-            const importanceText = event.importance === 'high' ? 'Hoch ⭐' : 
-                                  event.importance === 'medium' ? 'Mittel' : 'Niedrig';
-            document.getElementById('modal-importance').textContent = importanceText;
-            
-            modal.classList.add('active');
-            
-            // Close on background click
-            modal.onclick = (e) => {
-                if (e.target === modal) {
-                    closeEventModal();
-                }
-            };
-        }
-
-        function closeEventModal() {
-            document.getElementById('event-modal').classList.remove('active');
-        }
-
-        // Close modal on ESC key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeEventModal();
-            }
-        });
 
         // Render list view
         function renderListView() {
@@ -842,33 +518,10 @@
             generateCalendar(parseInt(year), parseInt(month) - 1);
         });
 
-        // Initialize - Load data from API first
-        async function initializeCalendar() {
-            const currentDate = new Date();
-            
-            // Show loading state
-            const calendarGrid = document.getElementById('calendar-grid');
-            if (calendarGrid) {
-                calendarGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #64748b;">Lade Wirtschaftsdaten...</div>';
-            }
-            
-            // Fetch earnings data for next 3 months
-            const today = new Date();
-            const threeMonthsLater = new Date(today);
-            threeMonthsLater.setMonth(today.getMonth() + 3);
-            
-            await fetchEarningsCalendar(
-                today.toISOString().split('T')[0],
-                threeMonthsLater.toISOString().split('T')[0]
-            );
-            
-            // Now render calendar with real data
-            generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
-            updateStats();
-        }
-
-        // Call initialization
-        initializeCalendar();
+        // Initialize
+        const currentDate = new Date();
+        generateCalendar(currentDate.getFullYear(), currentDate.getMonth());
+        updateStats();
 
         // Logout
         document.querySelector('.logout-btn').addEventListener('click', () => {

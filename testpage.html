@@ -55,14 +55,15 @@
       <!-- TradingView Widget (dynamisch) BEGIN -->
       <div class="mt-6" style="height:420px;">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
-          <label for="tv-symbol-select" style="font-weight:600;">Ticker:</label>
-          <select id="tv-symbol-select" style="padding:6px 10px; border-radius:6px; border:1px solid #e2e8f0;">
+          <label for="tv-symbol-input" style="font-weight:600;">Ticker:</label>
+          <input id="tv-symbol-input" list="tv-suggestions" placeholder="Suche oder eingeben z.B. NASDAQ:TSLA|1D|EUR" style="padding:6px 10px; border-radius:6px; border:1px solid #e2e8f0; min-width:260px;" />
+          <datalist id="tv-suggestions">
             <option value="NASDAQ:AAPL|ALL|EUR">Apple (AAPL)</option>
             <option value="NASDAQ:TSLA|1D|EUR">Tesla (TSLA)</option>
             <option value="NASDAQ:NVDA|1D|EUR">NVIDIA (NVDA)</option>
             <option value="NASDAQ:GOOGL|1D|EUR">Alphabet (GOOGL)</option>
             <option value="CME_MINI:NQ1!|1D|EUR">E-Mini Nasdaq (NQ)</option>
-          </select>
+          </datalist>
           <button id="tv-reload-btn" style="padding:6px 10px; border-radius:6px; background:#0f172a; color:white; border:none; cursor:pointer;">Laden</button>
         </div>
 
@@ -75,7 +76,7 @@
       <script>
         (function(){
           const host = document.getElementById('tv-host');
-          const select = document.getElementById('tv-symbol-select');
+          const input = document.getElementById('tv-symbol-input');
           const btn = document.getElementById('tv-reload-btn');
 
           function loadWidget(symbol) {
@@ -142,10 +143,19 @@
             host.appendChild(script);
           }
 
-          // initial load
-          loadWidget(select.value);
+          // initial load (use input value or default suggestion)
+          const initialSymbol = input.value || document.querySelector('#tv-suggestions option')?.value || 'NASDAQ:AAPL|ALL|EUR';
+          input.value = initialSymbol;
+          loadWidget(initialSymbol);
 
-          btn.addEventListener('click', () => loadWidget(select.value));
+          btn.addEventListener('click', () => loadWidget(input.value));
+          // support Enter key to load
+          input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              loadWidget(input.value);
+            }
+          });
         })();
       </script>
     </div>

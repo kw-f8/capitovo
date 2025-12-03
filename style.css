@@ -317,7 +317,7 @@ header {
     background-color: #ffffff;
     border: 1px solid rgba(15,23,42,0.06);
     border-radius: 12px;
-    padding: 0; /* entferne inneren Abstand, iframe soll den Kasten füllen */
+    padding: 8px 12px; /* Außenabstand innerhalb des Kasten für luftigen Look */
     box-shadow: 0 8px 24px rgba(2,6,23,0.06);
     overflow: hidden;
 }
@@ -336,6 +336,35 @@ header {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+}
+
+/* Feinschliff: alle inneren Linien / Pseudo-Elemente definitiv entfernen */
+.ticker-card *,
+.ticker-card *::before,
+.ticker-card *::after {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    outline: none !important;
+}
+
+/* Entferne explizit mögliche HRs oder copyright/link-Elemente */
+.ticker-card hr { display: none !important; }
+.ticker-card .tradingview-widget-copyright,
+.ticker-card .tv-widget-copyright,
+.ticker-card a[rel~="noopener"],
+.ticker-card .tv-footer { display: none !important; }
+
+/* Einige TradingView-Embeds verwenden Tabellen oder divs mit borders; überschreibe explizit */
+.ticker-card table, .ticker-card td, .ticker-card th, .ticker-card tr { border: none !important; background: transparent !important; }
+
+/* Erzwinge: iframe keinen Rand und keine eigene Rundung - die .ticker-card liefert die Rundung */
+.ticker-card iframe {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    display: block !important;
+    width: 100% !important;
 }
 
 /* Für sehr kleine Geräte die Höhe reduzieren */

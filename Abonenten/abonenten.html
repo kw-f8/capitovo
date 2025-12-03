@@ -187,16 +187,19 @@
                 /* ensure the ticker's inner content aligns with cards that use p-6 (1.5rem) */
                 padding-left: 1.5rem;
                 padding-right: 1.5rem;
+                /* add vertical padding so inner iframe content appears centered */
+                padding-top: 0.6rem;
+                padding-bottom: 0.6rem;
                 margin-top: 1.5rem;
                 margin-bottom: 1.5rem;
-                min-height: 56px;
+                min-height: 64px;
                 overflow: visible;
                 display: flex;
                 align-items: center;
                 justify-content: center;
             }
-            .tradingview-widget-container .tradingview-widget-container__widget { min-height: 56px; width:100%; }
-            .tradingview-widget-container iframe { height: 56px !important; min-height: 56px !important; max-height: 64px !important; }
+            .tradingview-widget-container .tradingview-widget-container__widget { min-height: 48px; width:100%; }
+            .tradingview-widget-container iframe { height: 48px !important; min-height: 48px !important; max-height: 56px !important; display:block; }
         </style>
     <header>
         <div class="header-content">

@@ -8,15 +8,18 @@
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <header style="position:sticky;top:0;background:#ffffff;padding:14px 0;border-bottom:1px solid rgba(0,0,0,0.04);z-index:1000;box-shadow:0 1px 4px rgba(2,6,23,0.04)">
-        <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:flex-start;gap:1rem;">
-            <a href="../index.html">
-                <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" style="height:56px; width:auto;">
-            </a>
+    <header>
+        <div class="header-content" style="max-width:72rem;margin:0 auto;padding-left:1.5rem;padding-right:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+            <div class="logo">
+                <a href="../index.html">
+                    <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo" style="height:64px;width:auto;">
+                </a>
+            </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
         </div>
     </header>
 
-    <main style="max-width:900px;margin:48px auto;padding:0 20px;">
+    <main class="max-w-6xl mx-auto p-6">
         <p style="margin-bottom:16px;"><button onclick="goBack()" style="background:#ffffff;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:10px;color:#0f172a;font-weight:600;cursor:pointer">← Zurück</button></p>
         <h1 style="font-size:2rem;margin-bottom:12px;">Allgemeine Geschäftsbedingungen (AGB)</h1>
 

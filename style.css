@@ -293,6 +293,25 @@ header {
     border-radius: 12px !important;
 }
 
+/* Minimalistisches Ticker-Band: weniger Kästen, keine Ränder */
+.ticker-band { 
+    background: transparent; 
+    padding: 0; 
+    margin: 0; 
+}
+.ticker-band .tradingview-widget-container.minimal {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 6px !important;
+}
+.ticker-band .tradingview-widget-container__widget,
+.ticker-band .tradingview-widget-container.minimal iframe {
+    border-radius: 6px !important;
+}
+.ticker-band .tradingview-widget-copyright { display: none !important; }
+
 
 
 /* --- Footer --- */

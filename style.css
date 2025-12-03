@@ -314,12 +314,13 @@ header {
 
 /* Neuer: sichtbarere einzelne Karte um das Ticker-Band */
 .ticker-card {
-    background-color: #ffffff;
-    border: 1px solid rgba(15,23,42,0.06);
-    border-radius: 12px;
-    padding: 8px 12px; /* Außenabstand innerhalb des Kasten für luftigen Look */
-    box-shadow: 0 8px 24px rgba(2,6,23,0.06);
-    overflow: hidden;
+    /* äußeren Kasten vollständig neutralisieren: kein Hintergrund, kein Rand, kein Schatten */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
 }
 .ticker-card .ticker-band { margin: 0; }
 

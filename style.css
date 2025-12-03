@@ -317,20 +317,31 @@ header {
     background-color: #ffffff;
     border: 1px solid rgba(15,23,42,0.06);
     border-radius: 12px;
-    padding: 8px 12px;
+    padding: 0; /* entferne inneren Abstand, iframe soll den Kasten füllen */
     box-shadow: 0 8px 24px rgba(2,6,23,0.06);
     overflow: hidden;
 }
 .ticker-card .ticker-band { margin: 0; }
 
 /* Erzwinge kompakte Höhe und dass das iframe sich korrekt einpasst */
-.ticker-card .tradingview-widget-container__widget { height: 48px !important; }
-.ticker-card .tradingview-widget-container.minimal iframe { height: 48px !important; max-height: 64px !important; }
+.ticker-card .tradingview-widget-container__widget { height: 56px !important; }
+.ticker-card .tradingview-widget-container.minimal,
+.ticker-card .tradingview-widget-container.minimal > .tradingview-widget-container__widget,
+.ticker-card .tradingview-widget-container.minimal iframe {
+    width: 100% !important;
+    height: 56px !important;
+    max-height: 64px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
 
 /* Für sehr kleine Geräte die Höhe reduzieren */
 @media (max-width: 420px) {
-    .ticker-card .tradingview-widget-container__widget { height: 40px !important; }
-    .ticker-card .tradingview-widget-container.minimal iframe { height: 40px !important; }
+    .ticker-card .tradingview-widget-container__widget { height: 44px !important; }
+    .ticker-card .tradingview-widget-container.minimal iframe { height: 44px !important; }
 }
 
 /* Erzwinge: keine inneren Ränder/Schatten/Boxen innerhalb der ticker-card.

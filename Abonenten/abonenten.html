@@ -198,38 +198,83 @@
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
 
-                <!-- TradingView Ticker-Tape (inline, ohne äußeren Kasten) -->
-                <div class="mb-6">
-                    <!-- TradingView Widget BEGIN (minimal inline, no outer wrapper) -->
-                    <div class="tradingview-widget-container minimal ticker-band">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-                        {
-                            "symbols": [
-                                { "proName": "FOREXCOM:SPXUSD", "title": "S&P 500 Index" },
-                                { "proName": "FOREXCOM:NSXUSD", "title": "US 100 Cash CFD" },
-                                { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" },
-                                { "proName": "BITSTAMP:ETHUSD", "title": "Ethereum" },
-                                { "proName": "NASDAQ:TSLA", "title": "Tesla" },
-                                { "proName": "NASDAQ:MSFT", "title": "Microsoft" },
-                                { "proName": "NASDAQ:FISV", "title": "Fiserv" },
-                                { "proName": "MIL:RACE", "title": "Ferrari" },
-                                { "proName": "NYSE:JNJ", "title": "Johnson & Johnson" },
-                                { "proName": "NASDAQ:NVDA", "title": "Nvidia" },
-                                { "proName": "NASDAQ:META", "title": "Meta" },
-                                { "proName": "NASDAQ:GOOGL", "title": "Alphabet" }
-                            ],
-                            "colorTheme": "light",
-                            "locale": "de_DE",
-                            "largeChartUrl": "",
-                            "isTransparent": false,
-                            "showSymbolLogo": true,
-                            "displayMode": "regular"
-                        }
-                        </script>
-                    </div>
-                    <!-- TradingView Widget END -->
-                </div>
+                                <!-- TradingView Ticker-Tape (ersetzt durch vom Nutzer gelieferten Block) -->
+                                <div class="mb-6">
+    <!-- TradingView Widget BEGIN -->
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright"><a href="https://de.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+        {
+        "symbols": [
+            {
+                "proName": "BLACKBULL:US30",
+                "title": "Dow Jones Industrial Average"
+            },
+            {
+                "proName": "VANTAGE:SP500",
+                "title": "S&P 500"
+            },
+            {
+                "proName": "NASDAQ:NDX",
+                "title": "Nasdaq-100"
+            },
+            {
+                "proName": "XETR:DAX",
+                "title": "DAX Performance Index"
+            },
+            {
+                "proName": "GETTEX:MSF",
+                "title": "Microsoft"
+            },
+            {
+                "proName": "GETTEX:TL0",
+                "title": "Tesla"
+            },
+            {
+                "proName": "GETTEX:NVD",
+                "title": "Nvidia"
+            },
+            {
+                "proName": "GETTEX:ABEA",
+                "title": "Alphabet"
+            },
+            {
+                "proName": "GETTEX:APC",
+                "title": "Apple"
+            },
+            {
+                "proName": "GETTEX:AMZ",
+                "title": "Amazon"
+            },
+            {
+                "proName": "GETTEX:1YD",
+                "title": "Broadcom"
+            },
+            {
+                "proName": "GETTEX:ORC",
+                "title": "Oracle"
+            },
+            {
+                "proName": "GETTEX:FB2A",
+                "title": "Meta"
+            },
+            {
+                "proName": "BITSTAMP:BTCUSD",
+                "title": "Bitcoin"
+            }
+        ],
+        "colorTheme": "light",
+        "locale": "de_DE",
+        "largeChartUrl": "",
+        "isTransparent": true,
+        "showSymbolLogo": true,
+        "displayMode": "adaptive"
+    }
+        </script>
+    </div>
+    <!-- TradingView Widget END -->
+                                </div>
 
         <section class="member-grid">
             <!-- Middle: Analyses list (primary content) -->

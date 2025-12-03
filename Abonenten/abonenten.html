@@ -198,81 +198,94 @@
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
 
-                                <!-- TradingView Ticker-Tape (aktualisiert: unterer Link entfernt) -->
-                                <div class="mb-6">
-    <!-- TradingView Widget BEGIN -->
-    <div class="tradingview-widget-container">
+                                <!-- TradingView Ticker-Tape (aktualisiert: Skeleton + dynamisches Laden) -->
+                                <div class="mb-6" id="ticker-wrapper">
+    <style>
+        /* Lokal: sorgen dafür, dass der Ticker nicht abgeschnitten wirkt */
+        #ticker-wrapper { overflow: visible; }
+        #ticker-skeleton { height: 44px; border-radius: 8px; background: linear-gradient(90deg,#f3f4f6 25%,#e5e7eb 37%,#f3f4f6 63%); background-size: 400% 100%; animation: shimmer 1.4s linear infinite; }
+        @keyframes shimmer { 0%{background-position:200% 0}100%{background-position:-200% 0} }
+        .tradingview-widget-container { min-height:44px; }
+        /* Ensure iframe created by TradingView is visible and has expected height */
+        #tradingview-ticker iframe { height: 44px !important; min-height:44px !important; max-height:44px !important; }
+    </style>
+
+    <!-- skeleton shown immediately to avoid "cut off" perception -->
+    <div id="ticker-skeleton" class="ticker-skeleton" aria-hidden="true"></div>
+
+    <!-- Widget container is hidden until widget iframe is ready -->
+    <div id="tradingview-ticker" class="tradingview-widget-container" style="display:none;opacity:0;transition:opacity .28s ease;">
         <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-        {
-        "symbols": [
-            {
-                "proName": "BLACKBULL:US30",
-                "title": "Dow Jones Industrial Average"
-            },
-            {
-                "proName": "VANTAGE:SP500",
-                "title": "S&P 500"
-            },
-            {
-                "proName": "NASDAQ:NDX",
-                "title": "Nasdaq-100"
-            },
-            {
-                "proName": "XETR:DAX",
-                "title": "DAX Performance Index"
-            },
-            {
-                "proName": "GETTEX:MSF",
-                "title": "Microsoft"
-            },
-            {
-                "proName": "GETTEX:TL0",
-                "title": "Tesla"
-            },
-            {
-                "proName": "GETTEX:NVD",
-                "title": "Nvidia"
-            },
-            {
-                "proName": "GETTEX:ABEA",
-                "title": "Alphabet"
-            },
-            {
-                "proName": "GETTEX:APC",
-                "title": "Apple"
-            },
-            {
-                "proName": "GETTEX:AMZ",
-                "title": "Amazon"
-            },
-            {
-                "proName": "GETTEX:1YD",
-                "title": "Broadcom"
-            },
-            {
-                "proName": "GETTEX:ORC",
-                "title": "Oracle"
-            },
-            {
-                "proName": "GETTEX:FB2A",
-                "title": "Meta"
-            },
-            {
-                "proName": "BITSTAMP:BTCUSD",
-                "title": "Bitcoin"
-            }
-        ],
-        "colorTheme": "light",
-        "locale": "de_DE",
-        "largeChartUrl": "",
-        "isTransparent": true,
-        "showSymbolLogo": true,
-        "displayMode": "regular"
-    }
-        </script>
     </div>
-    <!-- TradingView Widget END -->
+
+    <script>
+    (function(){
+        const cfg = {
+            "symbols": [
+                { "proName": "BLACKBULL:US30", "title": "Dow Jones Industrial Average" },
+                { "proName": "VANTAGE:SP500", "title": "S&P 500" },
+                { "proName": "NASDAQ:NDX", "title": "Nasdaq-100" },
+                { "proName": "XETR:DAX", "title": "DAX Performance Index" },
+                { "proName": "GETTEX:MSF", "title": "Microsoft" },
+                { "proName": "GETTEX:TL0", "title": "Tesla" },
+                { "proName": "GETTEX:NVD", "title": "Nvidia" },
+                { "proName": "GETTEX:ABEA", "title": "Alphabet" },
+                { "proName": "GETTEX:APC", "title": "Apple" },
+                { "proName": "GETTEX:AMZ", "title": "Amazon" },
+                { "proName": "GETTEX:1YD", "title": "Broadcom" },
+                { "proName": "GETTEX:ORC", "title": "Oracle" },
+                { "proName": "GETTEX:FB2A", "title": "Meta" },
+                { "proName": "BITSTAMP:BTCUSD", "title": "Bitcoin" }
+            ],
+            "colorTheme":"light",
+            "locale":"de_DE",
+            "largeChartUrl":"",
+            "isTransparent":true,
+            "showSymbolLogo":true,
+            "displayMode":"regular"
+        };
+
+        function insertScript(){
+            const widget = document.getElementById('tradingview-ticker');
+            if(!widget) return;
+            const s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.async = true;
+            s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js';
+            s.text = JSON.stringify(cfg, null, 2);
+            widget.appendChild(s);
+
+            // Poll for iframe (TradingView injects an iframe). Show widget when iframe loads.
+            let tries = 0;
+            const poll = setInterval(()=>{
+                const iframe = widget.querySelector('iframe');
+                tries++;
+                if(iframe){
+                    // If the iframe already loaded, show immediately; otherwise wait for load
+                    if(iframe.complete) { onReady(); clearInterval(poll); }
+                    else { iframe.addEventListener('load', ()=>{ onReady(); }); clearInterval(poll); }
+                } else if(tries>40){ // fallback after ~4s
+                    onReady(); clearInterval(poll);
+                }
+            }, 100);
+        }
+
+        function onReady(){
+            const sk = document.getElementById('ticker-skeleton');
+            const widget = document.getElementById('tradingview-ticker');
+            if(sk) sk.style.display = 'none';
+            if(widget){ widget.style.display = ''; requestAnimationFrame(()=>{ widget.style.opacity = '1'; }); }
+        }
+
+        // Insert shortly after DOM ready to keep perceived startup snappy.
+        if(document.readyState==='complete' || document.readyState==='interactive'){
+            setTimeout(insertScript, 250);
+        } else {
+            document.addEventListener('DOMContentLoaded', ()=> setTimeout(insertScript, 250));
+        }
+    })();
+    </script>
+
                                 </div>
 
         <section class="member-grid">

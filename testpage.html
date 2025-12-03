@@ -177,6 +177,38 @@
         </div>
       </div>
       <!-- TradingView Market Quotes Widget END -->
+      <!-- TradingView Ticker Tape Widget BEGIN -->
+      <div class="mt-4" style="width:100%;">
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright"><a href="https://de.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+          {
+          "symbols": [
+            {
+              "proName": "TVC:DJI",
+              "title": "Dow Jones Industrial Average"
+            },
+            {
+              "proName": "NASDAQ:NDX",
+              "title": "NASDAQ 100 Index"
+            },
+            {
+              "proName": "NASDAQ:TSLA",
+              "title": "Tesla"
+            }
+          ],
+          "colorTheme": "light",
+          "locale": "de_DE",
+          "largeChartUrl": "",
+          "isTransparent": false,
+          "showSymbolLogo": true,
+          "displayMode": "adaptive"
+        }
+          </script>
+        </div>
+      </div>
+      <!-- TradingView Ticker Tape Widget END -->
     </div>
 
     <aside class="card">

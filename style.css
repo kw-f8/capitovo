@@ -281,6 +281,19 @@ header {
     .tradingview-widget-container { padding: 8px; }
 }
 
+/* Specific card-style override for widgets that should match site cards */
+.tradingview-widget-container.card {
+    padding: 0; /* use card wrapper padding instead */
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(2,6,23,0.06);
+    border: 1px solid rgba(15,23,42,0.06);
+}
+.tradingview-widget-container.card .tradingview-widget-container__widget,
+.tradingview-widget-container.card iframe {
+    border-radius: 12px !important;
+}
+
+
 
 /* --- Footer --- */
 footer {

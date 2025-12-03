@@ -249,6 +249,39 @@ header {
     color: #4a4a4a; 
 }
 
+/* ---------------------------------------------------- */
+/* TradingView & Widget Styling (capitovo look)        */
+/* ---------------------------------------------------- */
+/* Make embedded widgets blend with the capitovo cards: white background, rounded corners, subtle shadow */
+.tradingview-widget-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid rgba(15,23,42,0.06);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.06);
+    overflow: hidden;
+}
+.tradingview-widget-container__widget {
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100% !important;
+    height: 100% !important;
+}
+.tradingview-widget-container iframe {
+    border-radius: 8px !important;
+}
+.tradingview-widget-copyright .blue-text {
+    color: #0f172a !important; /* capitovo dark */
+    font-weight: 700;
+}
+.tradingview-widget-copyright a { text-decoration: none; }
+
+/* Slightly tighter spacing for small widget cards */
+@media (max-width: 768px) {
+    .tradingview-widget-container { padding: 8px; }
+}
+
+
 /* --- Footer --- */
 footer {
     text-align: center;

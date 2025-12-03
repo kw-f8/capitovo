@@ -126,24 +126,14 @@
                     top: 0;
                 }
             }
-                /* Remove local sidebar layout overrides so the global `.sidebar` rules
-                    from `style.css` control appearance and typography like on Startseite. */
-                /* Sidebar nav: keep links stacked with uniform spacing (no forced bottom placement) */
-                .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; gap: 0.5rem; padding: 0; }
-                .sidebar-nav ul li { display: block; }
-                /* Uniform link spacing and alignment for all sidebar items */
-                .sidebar-nav ul li a {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    padding: 12px 0;
-                    color: #f8fafc;
-                    text-decoration: none;
-                }
-                .sidebar-nav ul li a svg { flex-shrink: 0; }
-                /* If any item used logout-bottom class, keep visual spacing but don't push it to the bottom */
+                /* Sidebar: use the same layout/styling as on the Startseite sidebar */
+                .sidebar-nav ul { list-style: none; padding: 0; margin-top: 50px; }
+                .sidebar-nav ul li { margin-bottom: 5px; display: block; }
+                .sidebar-nav ul li a { color: #f0f0f0; text-decoration: none; font-size: 1.1em; display: flex; align-items: center; padding: 10px 0; transition: color 0.2s; }
+                .sidebar-nav ul li a:hover { color: var(--color-accent-blue); }
+                /* Keep logout-bottom for semantics but do not force bottom placement here */
                 .sidebar-nav ul li.logout-bottom { padding: 0; }
-                .sidebar-nav ul li.logout-bottom a.logout-link { padding: 12px 0; }
+                .sidebar-nav ul li.logout-bottom a.logout-link { display:flex; align-items:center; gap:10px; padding:10px 0; color:#f0f0f0; text-decoration:none; }
 
             /* Align header and main content: use same max-width and paddings so left edges line up */
             .abonenten-page .header-content,

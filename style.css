@@ -333,6 +333,34 @@ header {
     .ticker-card .tradingview-widget-container.minimal iframe { height: 40px !important; }
 }
 
+/* Erzwinge: keine inneren Ränder/Schatten/Boxen innerhalb der ticker-card.
+   So bleibt nur der äußere capitovo-Kasten sichtbar. */
+.ticker-card .tradingview-widget-container,
+.ticker-card .tradingview-widget-container.minimal,
+.ticker-card .tradingview-widget-container.minimal .tradingview-widget-container__widget,
+.ticker-card .tradingview-widget-container.minimal iframe,
+.ticker-card .tradingview-widget-container * {
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Damit nur der äußere Kasten abgerundet erscheint, setzen wir das iframe auf keine eigene Rundung
+   und lassen das overflow:hidden der .ticker-card die Ecke maskieren. */
+.ticker-card .tradingview-widget-container.minimal iframe {
+    border-radius: 0 !important;
+    width: 100% !important;
+    height: 48px !important;
+    display: block !important;
+}
+
+/* Extra Sicherung: entferne sichtbare pseudo-elemente falls TradingView welche einfügt */
+.ticker-card .tradingview-widget-container.minimal :where(::before, ::after) {
+    display: none !important;
+}
+
 
 
 /* --- Footer --- */

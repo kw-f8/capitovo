@@ -198,15 +198,42 @@
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
 
-                                <!-- TradingView Ticker (React mount placeholder) -->
-                                <div class="mb-6" id="tradingview-react-root">
-                                    <!--
-                                        This page now expects a React component to render the ticker.
-                                        Created component: `src/components/TradingViewWidget.jsx`.
-                                        Usage (in your React app):
-                                          import TradingViewWidget from './src/components/TradingViewWidget';
-                                          ReactDOM.render(<TradingViewWidget />, document.getElementById('tradingview-react-root'));
-                                    -->
+                                <!-- TradingView Widget BEGIN -->
+                                <div class="tradingview-widget-container">
+                                    <div class="tradingview-widget-container__widget"></div>
+                                    <div class="tradingview-widget-copyright"><a href="https://de.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+                                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                                    {
+                                    "symbols": [
+                                        {
+                                            "proName": "CAPITALCOM:US30",
+                                            "title": "Dow Jones Industrial Average"
+                                        },
+                                        {
+                                            "proName": "VANTAGE:SP500",
+                                            "title": "S&P 500"
+                                        },
+                                        {
+                                            "proName": "NASDAQ:NDX",
+                                            "title": "NDX"
+                                        },
+                                        {
+                                            "proName": "XETR:DAX",
+                                            "title": "DAX Performance Index"
+                                        },
+                                        {
+                                            "proName": "BITSTAMP:BTCUSD",
+                                            "title": "Bitcoin"
+                                        }
+                                    ],
+                                    "colorTheme": "light",
+                                    "locale": "de_DE",
+                                    "largeChartUrl": "",
+                                    "isTransparent": true,
+                                    "showSymbolLogo": true,
+                                    "displayMode": "regular"
+                                }
+                                    </script>
                                 </div>
 
         <section class="member-grid">

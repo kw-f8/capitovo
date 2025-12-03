@@ -112,6 +112,71 @@
         </div>
       </div>
       <!-- TradingView Widget END -->
+      <!-- TradingView Market Quotes Widget BEGIN -->
+      <div class="mt-6" style="max-width:720px;">
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright"><a href="https://de.tradingview.com/markets/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+          {
+          "colorTheme": "light",
+          "locale": "de_DE",
+          "largeChartUrl": "",
+          "isTransparent": false,
+          "showSymbolLogo": true,
+          "backgroundColor": "#ffffff",
+          "support_host": "https://www.tradingview.com",
+          "width": 550,
+          "height": 550,
+          "symbolsGroups": [
+            {
+              "name": "Indices",
+              "symbols": [
+                {
+                  "name": "FOREXCOM:SPXUSD",
+                  "displayName": "S&P 500 Index"
+                },
+                {
+                  "name": "FOREXCOM:NSXUSD",
+                  "displayName": "US 100 Cash CFD"
+                },
+                {
+                  "name": "FOREXCOM:DJI",
+                  "displayName": "Dow Jones Industrial Average Index"
+                },
+                {
+                  "name": "INDEX:NKY",
+                  "displayName": "Japan 225"
+                },
+                {
+                  "name": "INDEX:DEU40",
+                  "displayName": "DAX Index"
+                }
+              ]
+            },
+            {
+              "name": "Bonds",
+              "symbols": [
+                {
+                  "name": "EUREX:FGBL1!",
+                  "displayName": "Euro Bund"
+                },
+                {
+                  "name": "EUREX:FBTP1!",
+                  "displayName": "Euro BTP"
+                },
+                {
+                  "name": "EUREX:FGBM1!",
+                  "displayName": "Euro BOBL"
+                }
+              ]
+            }
+          ]
+        }
+          </script>
+        </div>
+      </div>
+      <!-- TradingView Market Quotes Widget END -->
     </div>
 
     <aside class="card">

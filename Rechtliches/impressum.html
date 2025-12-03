@@ -10,6 +10,7 @@
 <body>
     <header style="background:transparent; padding:20px 0; border-bottom:1px solid rgba(0,0,0,0.04)">
         <div style="max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:flex-start;gap:1rem;">
+            <button onclick="goBack()" style="background:#ffffff;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:10px;color:#0f172a;font-weight:600;cursor:pointer">← Zurück</button>
             <a href="../index.html">
                 <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" style="height:56px; width:auto;">
             </a>
@@ -103,6 +104,15 @@
         </nav>
     </div>
 
+    <script>
+    function goBack(){
+        try{
+            if(document.referrer && new URL(document.referrer).origin === location.origin){ history.back(); return; }
+        }catch(e){}
+        if(history.length>1){ history.back(); setTimeout(function(){ if(location.pathname.indexOf('/Rechtliches/')!==-1) location.href='../index.html'; },300); }
+        else { location.href='../index.html'; }
+    }
+    </script>
     <script src="../script.js?v=5"></script>
 </body>
 </html>

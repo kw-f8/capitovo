@@ -179,6 +179,10 @@
             .card-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 0.5rem 0; }
             .card-excerpt { color: #6b7280; margin-bottom: 0.75rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; line-clamp: 3; overflow: hidden; max-height: calc(1.35rem * 3); }
             .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
+            /* Ticker: ensure visible height and spacing so it doesn't look clipped */
+            .tradingview-widget-container { margin-bottom: 1rem; min-height: 44px; overflow: visible; }
+            .tradingview-widget-container .tradingview-widget-container__widget { min-height: 44px; }
+            .tradingview-widget-container iframe { height: 44px !important; min-height: 44px !important; max-height: 64px !important; }
         </style>
     <header>
         <div class="header-content">
@@ -199,7 +203,7 @@
         </section>
 
                                 <!-- TradingView Widget BEGIN -->
-                                <div class="tradingview-widget-container">
+                                <div class="tradingview-widget-container mb-6">
                                     <div class="tradingview-widget-container__widget"></div>
                                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
                                     {

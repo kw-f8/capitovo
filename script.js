@@ -183,98 +183,47 @@ function openSubscriptionModal() {
 
 /** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */
 function createMemberAnalysisCard(a, idx, showFavorites = false){
-    // Fallback values
     const title = a.title || 'Unbenannte Analyse';
     const summary = a.summary || '';
-    // Resolve relative paths correctly when page sits in /Abonenten/
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
     const base = isInAbonenten ? '../' : '';
     const rawImg = a.image || 'data/vorschaubilder/placeholder.png';
     const img = (/^(https?:)?\/\//i.test(rawImg) || rawImg.startsWith('/')) ? rawImg : (base + rawImg);
     const category = a.category || 'Analyse';
-    const rawLink = a.link || '';
     const link = computeAnalysisLink(a, idx, base);
-    const date = a.date || '';
-    const author = a.author || '';
 
-    // Extract Stock Name from Title
-    let stockName = '';
-    if (title.includes('—')) {
-        stockName = title.split('—')[0].trim();
-    } else if (title.includes(':')) {
-        stockName = title.split(':')[0].trim();
-    }
-    // If stock name is too long (likely a sentence), ignore it
-    if (stockName.length > 25) stockName = '';
-
-    // --- Check Subscription ---
+    // check access (members page usually expects logged-in users)
     let hasAccess = false;
     try {
         const sess = JSON.parse(localStorage.getItem('capitovo_session') || '{}');
-        // Grant access if subscription is present and not 'none'. 
-        // Also fallback for legacy session of 'test@capitovo.de' if needed.
-        if (sess.email === 'test@capitovo.de' || (sess.subscription && sess.subscription !== 'none')) {
-            hasAccess = true;
-        }
+        if (sess.email === 'test@capitovo.de' || (sess.subscription && sess.subscription !== 'none')) hasAccess = true;
     } catch(e) {}
 
-    // --- Favorites Logic (nur für Abo-Kunden und nur auf alle_analysen.html) ---
-    let favButton = '';
-    if (hasAccess && showFavorites) {
-        const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
-        const isFav = favorites.includes(title);
-        const starFill = isFav ? 'currentColor' : 'none';
-        const starColor = isFav ? 'text-yellow-400' : 'text-gray-400';
-        
-        favButton = `
-            <button onclick="toggleFavorite(event, '${title.replace(/'/g, "\\'")}')"
-                    class="absolute top-4 right-4 z-30 p-2 transition-all duration-200 hover:scale-110"
-                    title="${isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}">
-                <svg class="w-6 h-6 ${starColor} drop-shadow-md" fill="${starFill}" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                </svg>
-            </button>
-        `;
-    }    // If locked: use a dummy link and attach onclick handler
     const finalLink = hasAccess ? link : '#';
     const onclickAttr = hasAccess ? '' : 'onclick="event.preventDefault(); openSubscriptionModal();"';
-    
-    const blurClass = hasAccess ? '' : 'filter blur-sm select-none pointer-events-none';
-    // Removed text span, kept icon
-    const lockOverlay = hasAccess ? '' : `
-        <div class="absolute inset-0 z-20 flex flex-col items-center justify-center bg-white/60 backdrop-blur-[2px] transition-opacity duration-300 hover:bg-white/40">
-            <div class="bg-white p-3 rounded-full shadow-xl">
-                <svg class="w-8 h-8 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-            </div>
-        </div>
-    `;
 
+    // Use the same HTML structure and classes as on the homepage for identical visuals
     return `
-        <a href="${finalLink}" ${onclickAttr} class="relative bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
-            ${lockOverlay}
-            ${favButton}
-            <div class="${blurClass} transition duration-300 h-full flex flex-col">
-                <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center flex-shrink-0">
-                    <img src="${img}" alt="Vorschaubild für ${title}" 
-                         class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
-                </div>
-                
-                <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
-                    ${category} ${stockName ? `<span class="text-gray-400 mx-1">•</span> <span class="text-gray-500 font-bold">${stockName}</span>` : ''}
-                </p>
-                
-                <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
-                    ${title}
-                </h4>
-                
-                <p class="text-sm text-gray-600 mb-4 line-clamp-3 flex-grow">
-                    ${summary}
-                </p>
-                
-                <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center mt-auto">
-                    Jetzt lesen →
-                </span>
+        <a href="${finalLink}" ${onclickAttr} class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+            <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
+                <img src="${img}" alt="Vorschaubild für ${title}" class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
             </div>
+
+            <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
+                ${category}
+            </p>
+
+            <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
+                ${title}
+            </h4>
+
+            <p class="text-sm text-gray-600 mb-4 line-clamp-3">
+                ${summary}
+            </p>
+
+            <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
+                Jetzt lesen →
+            </span>
         </a>
     `;
 }

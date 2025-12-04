@@ -13,8 +13,27 @@
 </head>
 <body class="bg-white text-gray-900">
 
-  <div data-include="header"></div>
-  <div data-include="footer"></div>
-  <script src="/src/components/insert_components.js"></script>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <a href="/index.html">
+          <img src="/caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+        </a>
+      </div>
+      <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+    </div>
+  </header>
+
+  <footer class="site-footer border-t py-6 mt-12">
+    <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
+      <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
+      <div class="footer-links">
+        <a href="/Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+        <a href="/Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+        <a href="/Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+        <a href="/Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

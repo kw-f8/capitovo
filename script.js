@@ -314,9 +314,9 @@ async function loadAndRenderMemberAnalyses(){
             return (db - da) || 0;
         });
 
-        // render up to 6 analyses in a responsive grid (ohne Favoriten-Sterne auf abonenten.html)
-        const html = `<div class="grid md:grid-cols-3 gap-8">` + data.slice(0,6).map((d,i) => createMemberAnalysisCard(d,i,false)).join('') + `</div>`;
-        container.innerHTML = html;
+        // render up to 6 analyses directly into the container which already is a grid
+        container.classList.add('grid','md:grid-cols-3','gap-8');
+        container.innerHTML = data.slice(0,6).map((d,i) => createMemberAnalysisCard(d,i,false)).join('');
         try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
     }catch(err){
         console.error('Fehler beim Laden der Member-Analysen', err);

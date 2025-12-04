@@ -645,6 +645,23 @@ details[open] .details-marker {
   text-align: left;
 }
 
+/* Make sure summary/excerpt text in analysis cards is not bold */
+#analysis-grid > * p,
+#member-analyses .grid > * p,
+#all-analyses-grid .grid > * p,
+.card-excerpt,
+.analyses-box p {
+        font-weight: 400 !important;
+}
+
+/* Prevent strong/b tags inside summaries from forcing bold */
+#analysis-grid > * p strong,
+#member-analyses .grid > * p strong,
+#all-analyses-grid .grid > * p strong,
+.analyses-box p strong {
+        font-weight: 400 !important;
+}
+
 /* Optional: etwas Innenabstand für bessere Lesbarkeit */
 #analysis-grid > *,
 #member-analyses .grid > *,

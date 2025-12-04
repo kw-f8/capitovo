@@ -757,7 +757,7 @@ details[open] .details-marker {
     padding: 6px 10px; /* kleinerer Klickbereich, unaufdringlich */
     border-radius: 8px;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     transition: color .12s ease, background-color .12s ease;
     box-shadow: none;
 }
@@ -774,7 +774,7 @@ details[open] .details-marker {
 /* Override für häufig genutzte Tailwind-Blauklassen im HTML */
 .text-blue-200 { color: var(--color-accent-blue) !important; }
 .text-primary-blue { color: var(--color-accent-blue) !important; }
-.site-footer .copyright{ color: #64748b; }
+.site-footer .copyright{ color: #64748b; font-weight: 600; }
 
 @media (max-width: 768px){
     .site-footer .footer-inner{ flex-direction: column; text-align: center; }

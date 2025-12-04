@@ -781,3 +781,12 @@ details[open] .details-marker {
     .footer-links{ margin-top: 8px; }
 }
 
+/* Force exact footer weights in case page-local CSS overrides them */
+.site-footer .footer-inner .footer-links a.footer-btn,
+.site-footer .footer-links a.footer-btn {
+    font-weight: 600 !important;
+}
+.site-footer .copyright {
+    font-weight: 600 !important;
+}
+

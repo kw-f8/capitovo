@@ -411,20 +411,34 @@ header {
 .abonenten-page .tradingview-widget-container {
     background-color: #ffffff !important;
     border: 1px solid rgba(15,23,42,0.04) !important;
-    border-radius: 12px !important;
+    border-radius: 0.75rem !important; /* match rounded-xl (12px) */
     box-shadow: 0 8px 30px rgba(2,6,23,0.04) !important;
     padding: 1.5rem !important; /* matches p-6 (1.5rem) used by analyses box */
     overflow: hidden !important;
 }
 .tradingview-widget-container.ticker-as-card .tradingview-widget-container__widget,
 .abonenten-page .tradingview-widget-container .tradingview-widget-container__widget {
-    border-radius: 8px !important;
+    border-radius: 0 !important; /* let outer container's rounding mask the iframe */
     margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 .tradingview-widget-container.ticker-as-card iframe,
 .abonenten-page .tradingview-widget-container iframe {
     height: 40px !important; /* keep inner ticker compact */
     min-height: 40px !important;
+    border: none !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+/* ensure the outer padding does not create uneven inner offset compared to analyses-box */
+.tradingview-widget-container.ticker-as-card > .tradingview-widget-container__widget,
+.abonenten-page .tradingview-widget-container > .tradingview-widget-container__widget {
+    padding: 0 !important;
 }
 
 

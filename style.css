@@ -258,7 +258,7 @@ header {
     border-radius: 12px;
     padding: 12px;
     border: 1px solid rgba(15,23,42,0.06);
-    box-shadow: 0 8px 30px rgba(2,6,23,0.06);
+    box-shadow: 0 8px 30px rgba(2,6,23,0.04);
     overflow: hidden;
 }
 .tradingview-widget-container__widget {
@@ -285,7 +285,7 @@ header {
 .tradingview-widget-container.card {
     padding: 0; /* use card wrapper padding instead */
     border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(2,6,23,0.06);
+    box-shadow: 0 6px 20px rgba(2,6,23,0.04);
     border: 1px solid rgba(15,23,42,0.06);
 }
 .tradingview-widget-container.card .tradingview-widget-container__widget,

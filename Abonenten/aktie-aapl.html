@@ -3,124 +3,134 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!doctype html>
-  <html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Apple (AAPL) — capitovo Aktien‑Monitor</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/style.css">
-    <style>
-      /* Small page adjustments for consistency with Abonenten pages */
-      .page-hero { padding-top: 1rem; padding-bottom: 1rem; }
-      .header-logo { height: 34px; }
-      .tv-container { border-radius: 8px; overflow: hidden; background: #fff; border: 1px solid rgba(15,23,42,0.04); }
-    </style>
-  </head>
-  <body class="bg-gray-50 text-gray-900">
+  <title>Apple (AAPL) — capitovo Aktien‑Monitor</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    /* Small page adjustments for consistency with Abonenten pages */
+    .page-hero { padding-top: 1rem; padding-bottom: 1rem; }
+    .header-logo { height: 80px; width: auto; }
+    .tv-container { border-radius: 8px; overflow: hidden; background: #fff; border: 1px solid rgba(15,23,42,0.04); }
+    /* Ensure the sidebar is positioned and visible like other Abonenten pages */
+    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: var(--color-primary-blue); padding: 1.25rem; color: #fff; transform: translateX(-100%); transition: transform .28s ease; z-index:60; }
+    .sidebar[aria-hidden="false"]{ transform: translateX(0); }
+    main.with-sidebar { margin-left: 280px; }
+    @media (max-width: 1024px) { main.with-sidebar { margin-left: 0; } }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
 
-    <!-- Header (from components) -->
-    <div data-include="header"></div>
+  <!-- Header (from components) -->
+  <div data-include="header"></div>
 
-    <main class="max-w-6xl mx-auto p-6">
-      <section class="page-hero mb-4">
-        <h1 class="text-2xl font-extrabold">Apple Inc. <span class="text-gray-500 text-lg">(AAPL)</span></h1>
-        <p class="text-gray-600">Seitenübersicht: Kursdaten, Quick‑Chart und Unternehmensdaten.</p>
-      </section>
+  <!-- Sidebar (members) - kept as in other Abonenten pages -->
+  <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
+    <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
+    <nav class="sidebar-nav" aria-label="Hauptnavigation">
+      <ul>
+        <li><a href="/Abonenten/abonenten.html">Startseite</a></li>
+        <li><a href="/Abonenten/konto.html">Mein Konto</a></li>
+        <li><a href="/Abonenten/alle_analysen.html">Analysen</a></li>
+        <li><a href="/Abonenten/aktien-monitor.html">Aktien‑Monitor</a></li>
+        <li><a href="/Abonenten/earnings_kalender.html">Wirtschaftskalender</a></li>
+        <li><a href="#" id="open-contact-modal">Kontakt</a></li>
+        <li class="logout-bottom"><a href="#" id="logout-link">Abmelden</a></li>
+      </ul>
+    </nav>
+  </div>
 
-      <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2">
-          <article class="bg-white p-4 rounded-xl shadow tv-container">
-            <div class="p-4">
-              <h2 class="text-lg font-semibold mb-2">Quick‑Chart</h2>
-              <div id="symbol-overview" style="width:100%;height:360px;"></div>
-            </div>
-          </article>
+  <main class="max-w-6xl mx-auto p-6 with-sidebar">
+    <section class="page-hero mb-4">
+      <h1 class="text-2xl font-extrabold">Apple Inc. <span class="text-gray-500 text-lg">(AAPL)</span></h1>
+      <p class="text-gray-600">Seitenübersicht: Kursdaten, Quick‑Chart und Unternehmensdaten.</p>
+    </section>
 
-          <div class="mt-4 bg-white p-4 rounded-xl shadow">
-            <h3 class="font-semibold mb-2">Finanzdaten</h3>
-            <div id="financials-overview" style="width:100%;height:220px"></div>
+    <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2">
+        <article class="bg-white p-4 rounded-xl shadow tv-container">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold mb-2">Quick‑Chart</h2>
+            <div id="symbol-overview" style="width:100%;height:360px;"></div>
           </div>
+        </article>
+
+        <div class="mt-4 bg-white p-4 rounded-xl shadow">
+          <h3 class="font-semibold mb-2">Finanzdaten</h3>
+          <div id="financials-overview" style="width:100%;height:220px"></div>
         </div>
+      </div>
 
-        <aside class="bg-white p-6 rounded-xl shadow">
-          <div class="text-sm text-gray-600 mb-2">Kurzinfo</div>
-          <div class="text-xl font-semibold mb-2">AAPL</div>
-          <div class="text-sm text-gray-500 mb-4">Sektor: Technologie</div>
+      <aside class="bg-white p-6 rounded-xl shadow">
+        <div class="text-sm text-gray-600 mb-2">Kurzinfo</div>
+        <div class="text-xl font-semibold mb-2">AAPL</div>
+        <div class="text-sm text-gray-500 mb-4">Sektor: Technologie</div>
 
-          <div class="space-y-2">
-            <a href="./aktien-monitor.html" class="block px-4 py-2 bg-gray-100 rounded">Zurück zur Übersicht</a>
-            <a href="./alle_analysen.html" class="block px-4 py-2 bg-primary-blue text-white rounded">Analyse öffnen</a>
-          </div>
-        </aside>
-      </section>
-    </main>
+        <div class="space-y-2">
+          <a href="./aktien-monitor.html" class="block px-4 py-2 bg-gray-100 rounded">Zurück zur Übersicht</a>
+          <a href="./alle_analysen.html" class="block px-4 py-2 bg-primary-blue text-white rounded">Analyse öffnen</a>
+        </div>
+      </aside>
+    </section>
+  </main>
 
-    <!-- Sidebar (members) -->
-    <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
-      <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
-      <nav class="sidebar-nav" aria-label="Hauptnavigation">
-        <ul>
-          <li><a href="https://kw-f8.github.io/capitovo/Abonenten/abonenten.html">Startseite</a></li>
-          <li><a href="./konto.html">Mein Konto</a></li>
-          <li><a href="./alle_analysen.html">Analysen</a></li>
-          <li><a href="./aktien-monitor.html">Aktien‑Monitor</a></li>
-          <li><a href="./earnings_kalender.html">Wirtschaftskalender</a></li>
-          <li><a href="#" id="open-contact-modal">Kontakt</a></li>
-          <li><a href="#" id="logout-link">Abmelden</a></li>
-        </ul>
-      </nav>
-    </div>
+  <!-- Footer (from components) -->
+  <div data-include="footer"></div>
 
-    <!-- Footer (from components) -->
-    <div data-include="footer"></div>
+  <script src="/src/components/insert_components.js"></script>
 
-    <script src="/src/components/insert_components.js"></script>
+  <script>
+    // Sidebar open/close wiring (simple, mirrors other pages)
+    document.addEventListener('click', function(e){
+      if(e.target && e.target.id === 'menu-toggle'){
+        var sb = document.getElementById('sidebar'); if(!sb) return; sb.setAttribute('aria-hidden', sb.getAttribute('aria-hidden')==='false' ? 'true' : 'false');
+      }
+      if(e.target && (e.target.id === 'close-sidebar' || e.target.id === 'logout-link')){
+        var sb = document.getElementById('sidebar'); if(sb) sb.setAttribute('aria-hidden','true');
+      }
+    });
 
-    <script>
-      // Insert TradingView Symbol Overview (programmatic to avoid inline JSON lint noise)
-      (function(){
-        var cfg = {
-          lineWidth: 2,
-          lineType: 0,
-          chartType: 'area',
-          fontColor: 'rgb(106, 109, 120)',
-          gridLineColor: 'rgba(255, 255, 255, 0)',
-          volumeUpColor: 'rgba(34, 171, 148, 0.5)',
-          volumeDownColor: 'rgba(247, 82, 95, 0.5)',
-          backgroundColor: '#ffffff',
-          widgetFontColor: '#0F0F0F',
-          upColor: '#22ab94',
-          downColor: '#f7525f',
-          colorTheme: 'light',
-          locale: 'de_DE',
-          valuesTracking: '1',
-          changeMode: 'price-and-percent',
-          symbols: [['GETTEX:APC|1D']],
-          dateRanges: ['1d|1','1w|15','1m|30','12m|1D','60m|1W','all|1M'],
-          fontSize: '10',
-          headerFontSize: 'medium',
-          autosize: false,
-          dateFormat: 'dd/MM/yyyy',
-          width: '100%',
-          height: 360
-        };
-        var s = document.createElement('script');
-        s.type = 'text/javascript'; s.async = true;
-        s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
-        s.text = JSON.stringify(cfg);
-        document.getElementById('symbol-overview').appendChild(s);
-      })();
+    // Insert TradingView Symbol Overview (programmatic to avoid inline JSON lint noise)
+    (function(){
+      var cfg = {
+        lineWidth: 2,
+        lineType: 0,
+        chartType: 'area',
+        fontColor: 'rgb(106, 109, 120)',
+        gridLineColor: 'rgba(255, 255, 255, 0)',
+        volumeUpColor: 'rgba(34, 171, 148, 0.5)',
+        volumeDownColor: 'rgba(247, 82, 95, 0.5)',
+        backgroundColor: '#ffffff',
+        widgetFontColor: '#0F0F0F',
+        upColor: '#22ab94',
+        downColor: '#f7525f',
+        colorTheme: 'light',
+        locale: 'de_DE',
+        valuesTracking: '1',
+        changeMode: 'price-and-percent',
+        symbols: [['GETTEX:APC|1D']],
+        dateRanges: ['1d|1','1w|15','1m|30','12m|1D','60m|1W','all|1M'],
+        fontSize: '10',
+        headerFontSize: 'medium',
+        autosize: false,
+        dateFormat: 'dd/MM/yyyy',
+        width: '100%',
+        height: 360
+      };
+      var s = document.createElement('script');
+      s.type = 'text/javascript'; s.async = true;
+      s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+      s.text = JSON.stringify(cfg);
+      var target = document.getElementById('symbol-overview'); if(target) target.appendChild(s);
+    })();
 
-      // Financials widget
-      (function(){
-        var cfg = { symbol: 'GETTEX:APC', colorTheme: 'light', displayMode: 'adaptive', isTransparent: true, locale: 'de_DE', width: '100%', height: 220 };
-        var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
-        s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js'; s.text = JSON.stringify(cfg);
-        document.getElementById('financials-overview').appendChild(s);
-      })();
-    </script>
-  </body>
-  </html>
-                  <path d="M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    // Financials widget
+    (function(){
+      var cfg = { symbol: 'GETTEX:APC', colorTheme: 'light', displayMode: 'adaptive', isTransparent: true, locale: 'de_DE', width: '100%', height: 220 };
+      var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
+      s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js'; s.text = JSON.stringify(cfg);
+      var target = document.getElementById('financials-overview'); if(target) target.appendChild(s);
+    })();
+  </script>
+
+</body>
+</html>

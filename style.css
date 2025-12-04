@@ -790,3 +790,54 @@ details[open] .details-marker {
     font-weight: 600 !important;
 }
 
+/* ---------------------------------------------------- */
+/* Force exact footer appearance on subscriber pages     */
+/* High-specificity rules to override any page-local CSS */
+/* ---------------------------------------------------- */
+.abonenten-page .site-footer,
+html body .abonenten-page footer.site-footer {
+    background: #ffffff !important;
+    border-top: 1px solid rgba(15,23,42,0.06) !important;
+    color: #475569 !important;
+    padding: 0 !important;
+}
+.abonenten-page .site-footer .footer-inner,
+html body .abonenten-page .site-footer .footer-inner {
+    max-width: 1280px !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+}
+.abonenten-page .site-footer .footer-links,
+html body .abonenten-page .site-footer .footer-links {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: center !important;
+}
+.abonenten-page .site-footer .footer-btn,
+html body .abonenten-page .site-footer .footer-btn {
+    display: inline-block !important;
+    background: transparent !important;
+    color: #64748b !important;
+    padding: 6px 10px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+}
+.abonenten-page .site-footer .footer-btn:hover,
+html body .abonenten-page .site-footer .footer-btn:hover {
+    color: #0f172a !important;
+    background: rgba(15,23,42,0.03) !important;
+}
+.abonenten-page .site-footer .copyright,
+html body .abonenten-page .site-footer .copyright {
+    color: #64748b !important;
+    font-weight: 600 !important;
+}
+
+

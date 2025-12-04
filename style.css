@@ -402,6 +402,32 @@ header {
     display: none !important;
 }
 
+/* ---------------------------------------------------- */
+/* Aktienticker: gleichen Rahmen wie die große Analysen-Box */
+/* Macht die TradingView-Box identisch zu `.analyses-box` */
+/* ---------------------------------------------------- */
+/* Apply both to explicit ticker class and to abonenten pages */
+.tradingview-widget-container.ticker-as-card,
+.abonenten-page .tradingview-widget-container {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(15,23,42,0.04) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.04) !important;
+    padding: 1.5rem !important; /* matches p-6 (1.5rem) used by analyses box */
+    overflow: hidden !important;
+}
+.tradingview-widget-container.ticker-as-card .tradingview-widget-container__widget,
+.abonenten-page .tradingview-widget-container .tradingview-widget-container__widget {
+    border-radius: 8px !important;
+    margin: 0 !important;
+}
+.tradingview-widget-container.ticker-as-card iframe,
+.abonenten-page .tradingview-widget-container iframe {
+    height: 40px !important; /* keep inner ticker compact */
+    min-height: 40px !important;
+}
+
+
 
 
 /* --- Footer --- */

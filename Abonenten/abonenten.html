@@ -10,8 +10,8 @@
     <body class="bg-white text-gray-900 abonenten-page">
 
         <style>
-            /* Page-local overrides: ensure header matches Startseite visuals (same underline/shadow) */
-            .abonenten-page header { position: sticky !important; top: 0; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
+            /* Page-local overrides: Header NICHT sticky auf Mitgliederseite */
+            .abonenten-page header { position: static !important; box-shadow: none !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
             .abonenten-page .header-content { align-items: center; }
             /* Members layout: single-column by default; main content becomes full-width now that side column was removed */
             .member-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }

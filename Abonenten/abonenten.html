@@ -10,15 +10,15 @@
     <body class="bg-white text-gray-900 abonenten-page">
 
         <style>
-            /* Page-local overrides: make header non-sticky for the Mitgliederseite */
-            .abonenten-page header { position: static !important; box-shadow: none !important; border-bottom: 1px solid rgba(0,0,0,0.04); }
+            /* Page-local overrides: ensure header matches Startseite visuals (same underline/shadow) */
+            .abonenten-page header { position: sticky !important; top: 0; z-index: 50; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
             .abonenten-page .header-content { align-items: center; }
             /* Members layout: single-column by default; main content becomes full-width now that side column was removed */
             .member-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
             @media (min-width: 768px) { .member-grid { grid-template-columns: 1fr; } }
             .profile-card { position: sticky; top: 90px; align-self: start; }
-            /* keep the logo image as-is but ensure it doesn't stick */
-            .header-logo { position: relative; }
+            /* keep the logo image consistent with Startseite */
+            .header-logo { position: relative; height: 80px; width: auto; }
 
             /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
             #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }

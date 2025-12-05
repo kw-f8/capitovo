@@ -410,7 +410,7 @@ header {
 .tradingview-widget-container.ticker-as-card,
 .abonenten-page .tradingview-widget-container {
     background-color: #ffffff !important;
-    border: 1px solid rgba(15,23,42,0.06) !important; /* match analysis cards */
+    border: 1.5px solid rgba(15,23,42,0.06) !important; /* slightly thicker to match analysis cards visually */
     border-radius: 0.75rem !important; /* match rounded-xl (12px) */
     box-shadow: 0 8px 30px rgba(2,6,23,0.12) !important; /* match analysis cards */
     padding: 1.5rem !important; /* matches p-6 (1.5rem) used by analyses box */

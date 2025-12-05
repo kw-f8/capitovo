@@ -698,11 +698,15 @@ function initSidebar() {
     try{
         sidebarElement.classList.remove('open');
         sidebarElement.setAttribute('aria-hidden','true');
-        sidebarElement.style.transform = '';
-        sidebarElement.style.display = '';
-        sidebarElement.style.opacity = '';
-        sidebarElement.style.pointerEvents = '';
-        // keep sidebar z-index as defined in CSS
+        // Force the sidebar off-screen using the right-based transform that our CSS expects.
+        // This is intentionally explicit to avoid stale inline styles or prior debug changes
+        // that left the panel visible after navigation.
+        sidebarElement.style.transform = 'translateX(100%)';
+        sidebarElement.style.display = 'none';
+        sidebarElement.style.opacity = '0';
+        sidebarElement.style.pointerEvents = 'none';
+        // Ensure menu toggle reflects closed state
+        try{ if (menuToggle) menuToggle.setAttribute('aria-expanded','false'); } catch(e){}
     } catch(e) { /* ignore */ }
 
     if (!menuToggle) {

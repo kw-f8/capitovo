@@ -1067,7 +1067,38 @@ document.addEventListener('DOMContentLoaded', () => {
     try { initLogoutHandlers(); } catch (e) { console.error('initLogoutHandlers error', e); }
     // 1c. If we're on a detail page placeholder, render the analysis
     try { if (document.getElementById('analysis-detail')) renderAnalysisDetail(); } catch(e){}
+    // 8. Ensure header logo on Abonenten pages links back to the Abonenten start page
+    try { initLogoLinkBehavior(); } catch(e) { /* ignore */ }
 });
+
+/** Ensure header/logo anchor navigates back to the Abonenten start page in the same tab.
+ * This prevents accidental new-tab navigation caused by absolute URLs or prior markup.
+ */
+function initLogoLinkBehavior(){
+    try{
+        const isAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+        if(!isAbonenten) return;
+        const anchors = Array.from(document.querySelectorAll('.header-content .logo a, header .logo a'));
+        if(!anchors.length) return;
+        anchors.forEach(a=>{
+            try{
+                // Prefer the local Abonenten start page path
+                a.setAttribute('href', './abonenten.html');
+                // Ensure same-tab navigation
+                a.setAttribute('target', '_self');
+                // Remove noopener/noreferrer that might be present and unnecessary here
+                try{ a.removeAttribute('rel'); } catch(e){}
+                // Also add a defensive click handler to force same-tab navigation
+                a.addEventListener('click', function(ev){
+                    // allow modifier clicks (ctrl/cmd/middle) to behave normally
+                    if (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.button === 1) return;
+                    ev.preventDefault();
+                    window.location.assign('./abonenten.html');
+                });
+            }catch(e){}
+        });
+    }catch(e){ console.error('initLogoLinkBehavior error', e); }
+}
 
 /** Initialisiert Logout-Handler auf allen Seiten.
  * Falls ein `#logout-confirm-modal` vorhanden ist, verwendet er dieses,

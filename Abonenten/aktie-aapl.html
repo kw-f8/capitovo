@@ -18,14 +18,16 @@
     /* Keep sidebar visible/positioned like on other Abonenten pages */
     .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: var(--color-primary-blue); padding: 1.25rem; color: #fff; transform: translateX(-100%); transition: transform .28s ease; z-index:60; }
     .sidebar[aria-hidden="false"]{ transform: translateX(0); }
-    main.with-sidebar { margin-left: 280px; }
+    /* By default keep main content centered; only shift when sidebar is opened */
+    main.with-sidebar { margin-left: 0; transition: margin-left .28s ease; }
+    .sidebar[aria-hidden="false"] ~ main.with-sidebar { margin-left: 280px; }
     @media (max-width: 1024px) { main.with-sidebar { margin-left: 0; } }
   </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
 
   <header>
-    <div class="header-content -mx-6">
+    <div class="header-content">
       <div class="logo">
         <a href="../index.html">
           <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
@@ -113,7 +115,7 @@
   </div>
 
   <!-- Wiederhergestellter Hauptinhalt: Artikel/Chart-Platzhalter -->
-  <main class="max-w-6xl mx-auto p-6 with-sidebar">
+  <main class="with-sidebar">
     <div class="header-content">
       <article class="bg-white p-6 rounded-xl shadow">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">

@@ -1,7 +1,8 @@
 (function(){
   'use strict';
   function loadComponent(name, target){
-    var url = 'src/components/capitovo-' + name + '.html';
+    // Use absolute path so components are loaded correctly from any page depth
+    var url = '/src/components/capitovo-' + name + '.html';
     return fetch(url, {cache: 'no-cache'}).then(function(res){
       if(!res.ok) throw new Error('Failed to fetch ' + url + ' ('+res.status+')');
       return res.text();

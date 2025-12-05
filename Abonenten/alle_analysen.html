@@ -127,8 +127,8 @@
         .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
 
         /* Align header and main content to the same left column (logo left edge) */
-        /* Use same container sizing as global .header-content (1200px / 20px) to match logo */
-        header .header-content, main { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
+        /* Use same container sizing as global .header-content from style.css (72rem / 24px) to match logo */
+        header .header-content, main { max-width: 72rem; margin: 0 auto; padding: 0 24px; box-sizing: border-box; }
         /* Sidebar nav adjustments to match Mitgliederbereich style (identical to abonenten.html) */
         .sidebar-nav ul { list-style: none; padding: 0; margin-top: 50px; }
         .sidebar-nav ul li { margin-bottom: 5px; display: block; }
@@ -143,11 +143,11 @@
 
 <header>
         <div class="header-content">
-        <div class="logo">
-            <a href="/capitovo/Abonenten/abonenten.html">
-                <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
-            </a>
-        </div>
+            <div class="logo">
+                <a href="./abonenten.html">
+                    <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
         <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
     </div>
 </header>

@@ -114,31 +114,17 @@ header {
     display: block;
 }
 
-/* Sidebar and page layout helpers used on subscriber pages */
-.sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 260px;
-    background: var(--color-primary-blue);
-    padding: 1.25rem;
-    color: #fff;
-    transform: translateX(-100%);
-    transition: transform .28s ease;
-    z-index: 60;
-}
-.sidebar[aria-hidden="false"]{ transform: translateX(0); }
-
+/* Ensure main content aligns with header content on subscriber pages.
+   Sidebar positioning is defined later in this file (right-based slide-in).
+   We avoid duplicating left/right positioning to prevent conflicts. */
 main.with-sidebar {
     max-width: 72rem;
     margin: 0 auto;
-    padding: 0; /* header-content provides horizontal padding */
+    padding: 0 24px; /* header-content provides horizontal padding, keep same */
     box-sizing: border-box;
-    transition: margin-left .28s ease;
+    transition: margin 0.28s ease;
 }
-.sidebar[aria-hidden="false"] ~ main.with-sidebar { margin-left: 280px; }
-@media (max-width: 1024px) { main.with-sidebar { margin-left: 0; } }
+@media (max-width: 1024px) { main.with-sidebar { margin: 0 auto; } }
 
 /* Tweak menu toggle focus styles and remove default outline where not desired */
 #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }

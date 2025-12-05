@@ -848,6 +848,19 @@ details[open] .details-marker {
 }
 
 /* ---------------------------------------------------- */
+/* Einheitliche Abstände für alle `main > section` auf der Startseite */
+/* Use !important to override inline/styles loaded later in index.html */
+/* ---------------------------------------------------- */
+main > section {
+    margin: 1.25rem 0 !important; /* 20px top & bottom */
+}
+
+@media (min-width: 768px) {
+    main > section { margin-top: 2rem !important; margin-bottom: 2rem !important; }
+}
+
+
+/* ---------------------------------------------------- */
 /* Force exact footer appearance on subscriber pages     */
 /* High-specificity rules to override any page-local CSS */
 /* ---------------------------------------------------- */

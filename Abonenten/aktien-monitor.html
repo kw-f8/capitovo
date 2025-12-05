@@ -6,17 +6,26 @@
     <title>Aktien‑Monitor — capitovo</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
+        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+        /* Provide a subtle visible focus for keyboard users */
+        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+    </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
 
     <header>
         <div class="header-content">
             <div class="logo">
-                <a href="./abonenten.html">
+                <a href="../index.html">
                     <img src="../caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
                 </a>
             </div>
-            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">
+                &#9776;
+            </button>
         </div>
     </header>
 

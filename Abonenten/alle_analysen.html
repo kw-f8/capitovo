@@ -13,6 +13,10 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
+        /* Make header identical to Abonnenten startseite (non-sticky, no shadow) */
+        .abonenten-page header { position: static !important; box-shadow: none !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
+        .abonenten-page .header-content { align-items: center; }
+
         /* Page-local layout: align header and main with logo's left edge */
         :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
         /* page background and unified white tones */

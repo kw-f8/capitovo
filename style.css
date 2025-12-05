@@ -830,6 +830,23 @@ details[open] .details-marker {
     font-weight: 600 !important;
 }
 
+/* Reduce vertical gap between the analyses section and the pricing section on the homepage */
+/* Overrides Tailwind `py-*` classes and the general `main > section` margins for these two sections */
+#analysen {
+    padding-bottom: 1.25rem !important; /* 20px */
+    margin-bottom: 0 !important;
+}
+#pricing {
+    padding-top: 1.25rem !important; /* 20px */
+    margin-top: 0 !important;
+}
+
+/* On larger screens keep a bit more breathing room but still reduced */
+@media (min-width: 768px) {
+    #analysen { padding-bottom: 1.5rem !important; }
+    #pricing { padding-top: 1.5rem !important; }
+}
+
 /* ---------------------------------------------------- */
 /* Force exact footer appearance on subscriber pages     */
 /* High-specificity rules to override any page-local CSS */

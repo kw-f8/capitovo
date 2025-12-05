@@ -96,10 +96,11 @@ header {
 }
 
 .header-content {
-    max-width: 1200px;
+    /* Match Tailwind's `max-w-6xl` and `p-6` to align with main content */
+    max-width: 72rem; /* 1152px - aligns with Tailwind `max-w-6xl` */
     width: 100%;
     margin: 0 auto; 
-    padding: 0 20px; 
+    padding: 0 24px; /* matches Tailwind `p-6` (1.5rem = 24px) */
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -125,27 +125,14 @@
         /* Align header and main content to the same left column (logo left edge) */
         /* Use same container sizing as global .header-content (1200px / 20px) to match logo */
         header .header-content, main { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
-        /* Sidebar nav adjustments to match Mitgliederbereich style */
-        .sidebar-nav ul { display: flex; flex-direction: column; height: 100%; }
-        .sidebar-nav ul li { display: block; }
-        .sidebar-nav ul li.logout-bottom:first-of-type {
-            margin-top: auto;
-            padding-top: 1.75rem;
-            border-top: 1px solid rgba(248, 250, 252, 0.18);
-        }
+        /* Sidebar nav adjustments to match Mitgliederbereich style (identical to abonenten.html) */
+        .sidebar-nav ul { list-style: none; padding: 0; margin-top: 50px; }
+        .sidebar-nav ul li { margin-bottom: 5px; display: block; }
+        .sidebar-nav ul li a { color: #f0f0f0; text-decoration: none; font-size: 1.1em; display: flex; align-items: center; padding: 10px 0; transition: color 0.2s; }
+        .sidebar-nav ul li a:hover { color: var(--color-accent-blue); }
+        /* Keep logout-bottom for semantics but do not force bottom placement here */
         .sidebar-nav ul li.logout-bottom { padding: 0; }
-        .sidebar-nav ul li.logout-bottom a.logout-link {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 0;
-            color: #f8fafc;
-            text-decoration: none;
-        }
-        .sidebar-nav ul li.logout-bottom a.logout-link svg { display: block; }
-        .sidebar-nav ul li.logout-bottom:not(:last-child) {
-            margin-bottom: 0.75rem;
-        }
+        .sidebar-nav ul li.logout-bottom a.logout-link { display:flex; align-items:center; gap:10px; padding:10px 0; color:#f0f0f0; text-decoration:none; }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">

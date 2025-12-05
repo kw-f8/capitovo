@@ -112,9 +112,28 @@
       </nav>
   </div>
 
-  <!-- Main content intentionally removed per request -->
+  <!-- Wiederhergestellter Hauptinhalt: Artikel/Chart-Platzhalter -->
   <main class="max-w-6xl mx-auto p-6 with-sidebar">
-    <!-- Inhalt entfernt — Vorlageseite kopiert, Hauptbereich leer gelassen -->
+    <article class="bg-white p-6 rounded-xl shadow">
+      <h1 class="text-2xl font-bold mb-2">Apple Inc. <span class="text-gray-500 text-lg">(AAPL)</span></h1>
+      <p class="text-gray-600 mb-4">Kurzprofil und Kursdaten für Apple. Hier lassen sich Chart‑Widgets, Kennzahlen und Analysen einbinden.</p>
+
+      <div class="mb-4 p-4 bg-gray-50 rounded">
+        <strong>Aktueller Kurs / Chart</strong>
+        <div id="symbol-overview" style="height:320px;margin-top:8px;border-radius:8px;overflow:hidden;border:1px solid rgba(15,23,42,0.06);background:#fff;display:flex;align-items:center;justify-content:center;color:#6b7280">
+          Chart wird geladen…
+        </div>
+      </div>
+
+      <div id="financials-overview" class="mb-6 p-4 bg-white rounded" style="border:1px solid rgba(15,23,42,0.04);">
+        <!-- Financials widget wird programmgesteuert eingefügt -->
+      </div>
+
+      <div class="flex gap-3">
+        <a href="./aktien-monitor.html" class="px-4 py-2 bg-gray-100 rounded">← Zurück zur Übersicht</a>
+        <a href="./alle_analysen.html" class="px-4 py-2 bg-primary-blue text-white rounded">Analyse öffnen</a>
+      </div>
+    </article>
   </main>
 
     <footer id="abo" class="site-footer" data-scroll="fade-up" data-scroll-delay="40">

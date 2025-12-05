@@ -18,16 +18,21 @@
     /* Keep sidebar visible/positioned like on other Abonenten pages */
     .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; background: var(--color-primary-blue); padding: 1.25rem; color: #fff; transform: translateX(-100%); transition: transform .28s ease; z-index:60; }
     .sidebar[aria-hidden="false"]{ transform: translateX(0); }
-    /* By default keep main content centered; only shift when sidebar is opened */
-    main.with-sidebar { margin-left: 0; transition: margin-left .28s ease; }
+    /* Keep main content centered and aligned with .header-content */
+    main.with-sidebar {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: 0; /* header-content provides horizontal padding */
+      box-sizing: border-box;
+      transition: margin-left .28s ease;
+    }
+    /* When sidebar opens, push content to the right */
     .sidebar[aria-hidden="false"] ~ main.with-sidebar { margin-left: 280px; }
     @media (max-width: 1024px) { main.with-sidebar { margin-left: 0; } }
   </style>
   <style>
-    /* Page-specific fine-tune: nudge article slightly right on desktop to align with logo edge */
-    @media (min-width: 768px) {
-      .page-article-align { margin-left: 38px; margin-right: 0; }
-    }
+    /* Remove page-specific nudges; ensure article fills the header-content width */
+    .page-article-align { margin-left: 0 !important; margin-right: 0 !important; }
   </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">

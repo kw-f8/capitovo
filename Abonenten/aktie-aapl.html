@@ -23,6 +23,12 @@
     .sidebar[aria-hidden="false"] ~ main.with-sidebar { margin-left: 280px; }
     @media (max-width: 1024px) { main.with-sidebar { margin-left: 0; } }
   </style>
+  <style>
+    /* Page-specific fine-tune: nudge article slightly right on desktop to align with logo edge */
+    @media (min-width: 768px) {
+      .page-article-align { margin-left: 38px; margin-right: 0; }
+    }
+  </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
 
@@ -117,7 +123,7 @@
   <!-- Wiederhergestellter Hauptinhalt: Artikel/Chart-Platzhalter -->
   <main class="with-sidebar">
     <div class="header-content">
-      <article class="bg-white p-6 rounded-xl shadow w-full box-border">
+      <article class="bg-white p-6 rounded-xl shadow w-full box-border page-article-align">
       <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
         <div class="md:flex-1">
           <h1 class="text-2xl font-bold mb-2">Apple Inc. <span class="text-gray-500 text-lg">(AAPL)</span></h1>

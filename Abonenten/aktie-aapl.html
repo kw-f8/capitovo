@@ -231,24 +231,25 @@
         var desc = document.getElementById('description-col');
         var tv = document.getElementById('tv-container');
         if(!desc || !tv) return;
-        // compute height of the description column (including its vertical margin/padding)
-        var descRect = desc.getBoundingClientRect();
-        // Use offsetHeight which includes padding
-        var h = desc.offsetHeight;
-        // If there's a heading above the pair that should be considered, adjust accordingly
-        // Set the tv container height to match description height
+        // measure visible height of description
+        var rect = desc.getBoundingClientRect();
+        var h = Math.round(rect.height);
+        if(h <= 0) return;
+        // set container height to match description
         tv.style.height = h + 'px';
-        // Update inner widget element(s)
+        tv.style.minHeight = h + 'px';
+        // set inner widget and any iframes to fill that height
         var inner = tv.querySelector('.tradingview-widget-container__widget');
         if(inner) inner.style.height = '100%';
-        // If TradingView already injected an iframe, set its inline height
-        var iframe = tv.querySelector('iframe');
-        if(iframe){
+        var iframes = tv.querySelectorAll('iframe');
+        iframes.forEach(function(iframe){
           try{ iframe.style.height = h + 'px'; iframe.setAttribute('height', h); } catch(e){}
-        }
+        });
       }
 
       // Run after DOM ready and again after a short delay to account for async iframe insertion
+      // Run immediately in case DOM is already loaded
+      try{ adjustTvHeight(); } catch(e){}
       document.addEventListener('DOMContentLoaded', function(){
         setTimeout(adjustTvHeight, 100);
         setTimeout(adjustTvHeight, 600);

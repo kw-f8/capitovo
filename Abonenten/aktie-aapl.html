@@ -109,7 +109,7 @@
                     <div class="mb-4">
                     <div class="flex flex-col md:flex-row md:items-stretch md:gap-6">
                         <!-- Left: description (takes remaining space) -->
-                        <div class="md:flex-1 text-gray-700">
+                        <div id="description-col" class="md:flex-1 text-gray-700">
                             <p class="text-gray-600 mb-3">Apple ist eines der weltweit führenden Technologieunternehmen und steht für Innovation, Design und digitale Lösungen. Das Unternehmen wurde 1976 gegründet und ist heute bekannt für seine Produkte wie iPhone, iPad, Mac, Apple Watch und AirPods, die weltweit Millionen von Nutzern begeistern.</p>
                             <p class="text-gray-600 mb-3">Neben Hardware bietet Apple auch eine Vielzahl digitaler Dienstleistungen an, darunter den App Store, Apple Music, iCloud und Apple Pay, die einen immer größeren Anteil am Geschäftsmodell einnehmen. Das Unternehmen zeichnet sich durch eine starke Markenloyalität und eine globale Präsenz aus.</p>
                             <p class="text-gray-600 mb-0">Die Produkte von Apple sind nicht nur technisch fortschrittlich, sondern auch für ihr einzigartiges Design und die einfache Bedienung bekannt. Apple setzt zudem auf Nachhaltigkeit und Datenschutz, was die Marke bei vielen Kunden zusätzlich stärkt. Mit Sitz in Cupertino, Kalifornien, beschäftigt das Unternehmen Zehntausende Mitarbeiter und betreibt Geschäfte in fast allen Ländern der Welt.</p>
@@ -117,7 +117,7 @@
 
                         <!-- Right: chart (fixed width on md+, full width on small screens) -->
                         <div class="mt-4 md:mt-0 md:w-80 lg:w-96 h-full">
-                                <div class="tradingview-widget-container card h-full" style="height:100%; width:100%;" role="region" aria-label="Aktueller Kurs und Chart">
+                          <div id="tv-container" class="tradingview-widget-container card h-full" style="height:100%; width:100%;" role="region" aria-label="Aktueller Kurs und Chart">
       <div class="tradingview-widget-container__widget"></div>
       <script>
         (function(){
@@ -221,6 +221,42 @@
       var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
       s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js'; s.text = JSON.stringify(cfg);
       var target = document.getElementById('financials-overview'); if(target) target.appendChild(s);
+    })();
+  </script>
+
+  <script>
+    // Adjust TradingView container and iframe height to match the left description column
+    (function(){
+      function adjustTvHeight(){
+        var desc = document.getElementById('description-col');
+        var tv = document.getElementById('tv-container');
+        if(!desc || !tv) return;
+        // compute height of the description column (including its vertical margin/padding)
+        var descRect = desc.getBoundingClientRect();
+        // Use offsetHeight which includes padding
+        var h = desc.offsetHeight;
+        // If there's a heading above the pair that should be considered, adjust accordingly
+        // Set the tv container height to match description height
+        tv.style.height = h + 'px';
+        // Update inner widget element(s)
+        var inner = tv.querySelector('.tradingview-widget-container__widget');
+        if(inner) inner.style.height = '100%';
+        // If TradingView already injected an iframe, set its inline height
+        var iframe = tv.querySelector('iframe');
+        if(iframe){
+          try{ iframe.style.height = h + 'px'; iframe.setAttribute('height', h); } catch(e){}
+        }
+      }
+
+      // Run after DOM ready and again after a short delay to account for async iframe insertion
+      document.addEventListener('DOMContentLoaded', function(){
+        setTimeout(adjustTvHeight, 100);
+        setTimeout(adjustTvHeight, 600);
+      });
+      // Also adjust on window resize
+      window.addEventListener('resize', function(){ setTimeout(adjustTvHeight, 120); });
+      // Also expose a short interval for a few seconds to catch late iframe injections
+      var tries = 0; var interval = setInterval(function(){ adjustTvHeight(); tries++; if(tries>20) clearInterval(interval); }, 300);
     })();
   </script>
 

@@ -42,6 +42,15 @@
             box-sizing: border-box;
         }
 
+        /* Priorisierte Regel für Header und Main-Content */
+        body.alle-analysen-page header .header-content,
+        body.alle-analysen-page main {
+            max-width: 72rem;
+            margin: 0 auto !important; /* Zentriert den Inhalt und überschreibt andere Regeln */
+            padding: 0 24px !important;
+            box-sizing: border-box;
+        }
+
         .alle-layout .member-grid {
             display: grid;
             grid-template-columns: 1fr; /* Einspaltiges Layout */

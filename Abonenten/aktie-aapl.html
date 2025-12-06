@@ -332,8 +332,11 @@
         }
       }
 
-      // Try to fetch from FinancialModelingPrep if API key is provided
-      var apiKey = window.FMP_API_KEY || null;
+      // Try to fetch from FinancialModelingPrep if API key is provided locally,
+      // or use the server proxy if available at /api/financials/:symbol
+      var localApiKey = window.FMP_API_KEY || null;
+      var proxyAvailable = true; // assume proxy may be started by developer at /server
+      var apiKey = localApiKey;
       if(apiKey){
         var symbol = 'AAPL';
         var profileUrl = 'https://financialmodelingprep.com/api/v3/profile/' + symbol + '?apikey=' + apiKey;
@@ -351,6 +354,62 @@
           return new Intl.NumberFormat('de-DE').format(Math.round(n));
         }
 
+        // If a local key is not present, try the server proxy endpoint first
+        if(!apiKey && proxyAvailable){
+          fetch('/api/financials/' + symbol).then(function(r){
+            if(!r.ok) throw new Error('proxy-not-available');
+            return r.json();
+          }).then(function(payload){
+            var profile = payload.profile && payload.profile[0] ? payload.profile[0] : {};
+            var income = payload.income && payload.income[0] ? payload.income[0] : {};
+            var cash = payload.cash && payload.cash[0] ? payload.cash[0] : {};
+            var ratios = payload.ratios && payload.ratios[0] ? payload.ratios[0] : {};
+            var data = [
+              { title: 'Marktkapitalisierung', value: profile.mktCap ? fmtNumber(profile.mktCap) : '–' },
+              { title: 'KGV (PE)', value: profile.pe ? (Math.round(profile.pe*10)/10) : (ratios.priceEarningsRatio ? ratios.priceEarningsRatio : '–') },
+              { title: 'Umsatz (letzte Periode)', value: income.revenue ? fmtNumber(income.revenue) : '–' },
+              { title: 'EPS', value: (income.eps || profile.eps) ? (Math.round((income.eps||profile.eps)*100)/100) : '–' },
+              { title: 'Free Cash Flow', value: cash.freeCashFlow ? fmtNumber(cash.freeCashFlow) : '–' },
+              { title: 'EBITDA', value: income.ebitda ? fmtNumber(income.ebitda) : '–' },
+              { title: 'Nettoergebnis', value: income.netIncome ? fmtNumber(income.netIncome) : '–' },
+              { title: 'Dividende (letzter)', value: profile.lastDiv ? profile.lastDiv : (profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : '–') },
+              { title: 'Operative Marge', value: ratios.operatingMargin ? (Math.round(ratios.operatingMargin*1000)/10)+'%' : (ratios.operatingProfitMargin ? (Math.round(ratios.operatingProfitMargin*1000)/10)+'%' : '–') }
+            ];
+            renderFallback(data);
+          }).catch(function(){
+            // Proxy not available or failed — fallback to client-side calls if API key present
+            Promise.all([
+              fetch(profileUrl).then(function(r){ return r.json(); }),
+              fetch(incomeUrl).then(function(r){ return r.json(); }),
+              fetch(cashUrl).then(function(r){ return r.json(); }),
+              fetch(ratiosUrl).then(function(r){ return r.json(); })
+            ]).then(function(results){
+              try{
+                var profile = results[0] && results[0][0] ? results[0][0] : {};
+                var income = results[1] && results[1][0] ? results[1][0] : {};
+                var cash = results[2] && results[2][0] ? results[2][0] : {};
+                var ratios = results[3] && results[3][0] ? results[3][0] : {};
+
+                var data = [
+                  { title: 'Marktkapitalisierung', value: profile.mktCap ? fmtNumber(profile.mktCap) : '–' },
+                  { title: 'KGV (PE)', value: profile.pe ? (Math.round(profile.pe*10)/10) : (ratios.priceEarningsRatio ? ratios.priceEarningsRatio : '–') },
+                  { title: 'Umsatz (letzte Periode)', value: income.revenue ? fmtNumber(income.revenue) : '–' },
+                  { title: 'EPS', value: (income.eps || profile.eps) ? (Math.round((income.eps||profile.eps)*100)/100) : '–' },
+                  { title: 'Free Cash Flow', value: cash.freeCashFlow ? fmtNumber(cash.freeCashFlow) : '–' },
+                  { title: 'EBITDA', value: income.ebitda ? fmtNumber(income.ebitda) : '–' },
+                  { title: 'Nettoergebnis', value: income.netIncome ? fmtNumber(income.netIncome) : '–' },
+                  { title: 'Dividende (letzter)', value: profile.lastDiv ? profile.lastDiv : (profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : '–') },
+                  { title: 'Operative Marge', value: ratios.operatingMargin ? (Math.round(ratios.operatingMargin*1000)/10)+'%' : (ratios.operatingProfitMargin ? (Math.round(ratios.operatingProfitMargin*1000)/10)+'%' : '–') }
+                ];
+
+                renderFallback(data);
+              }catch(e){ renderFallback(); }
+            }).catch(function(){ renderFallback(); });
+          });
+          return;
+        }
+
+        // client-side requests using local API key
         Promise.all([
           fetch(profileUrl).then(function(r){ return r.json(); }),
           fetch(incomeUrl).then(function(r){ return r.json(); }),

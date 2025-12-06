@@ -1,0 +1,12 @@
+# Node server env
+/server/.env
+
+# local config
+/src/config.js
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# node_modules
+/server/node_modules

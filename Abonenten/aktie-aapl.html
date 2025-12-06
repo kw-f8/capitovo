@@ -259,5 +259,48 @@
     })();
   </script>
 
+  <script>
+    // Stronger sync + visible debug overlay to diagnose why height change may fail.
+    (function(){
+      function q(s){ try{return document.querySelector(s);}catch(e){return null;} }
+      function setImportant(el, prop, value){ if(!el) return; try{ el.style.setProperty(prop, value, 'important'); }catch(e){} }
+
+      function syncHeights(){
+        var left = q('.md\\:flex-1') || q('.md\\:flex-1.text-gray-700') || q('.text-gray-700');
+        var container = q('.tradingview-widget-container.card') || q('.tradingview-widget-container');
+        var iframe = container ? container.querySelector('iframe') : (document.querySelector('iframe[src*=tradingview]') || null);
+        var widget = container ? container.querySelector('.tradingview-widget-container__widget') : null;
+        var leftH = left ? Math.round(left.getBoundingClientRect().height) : 0;
+        // Apply heights forcibly
+        if(container){
+          // set both cssText and individual important property
+          try{ container.style.cssText = 'height: '+leftH+'px !important; width:100% !important; overflow: visible !important;'; }catch(e){}
+          setImportant(container, 'height', leftH+'px');
+        }
+        if(widget){ try{ widget.style.cssText = 'height: '+leftH+'px !important;'; }catch(e){} }
+        if(iframe){
+          try{ iframe.style.cssText = 'height: '+leftH+'px !important; width:100% !important; display:block !important;'; }catch(e){}
+          setImportant(iframe, 'height', leftH+'px');
+        }
+
+        // Update debug overlay
+        var dbg = q('#cap-debug-heights');
+        if(!dbg){ dbg = document.createElement('div'); dbg.id='cap-debug-heights'; dbg.style.cssText='position:fixed;right:12px;top:12px;z-index:99999;background:rgba(0,0,0,0.7);color:#fff;padding:8px;border-radius:6px;font-size:12px;font-family:monospace;'; document.body.appendChild(dbg); }
+        dbg.innerText = 'leftH: '+leftH+'px\ncontainer: '+(container?Math.round(container.getBoundingClientRect().height)+'px':'none')+'\niframe: '+(iframe?Math.round(iframe.getBoundingClientRect().height)+'px':'none');
+      }
+
+      // Try to sync repeatedly and when DOM changes
+      var tries=0, max=60;
+      var t = setInterval(function(){ syncHeights(); tries++; if(tries>max){ clearInterval(t); var dbg=q('#cap-debug-heights'); if(dbg) setTimeout(function(){dbg.parentNode && dbg.parentNode.removeChild(dbg);},4000); } }, 200);
+
+      var mo = new MutationObserver(function(){ syncHeights(); });
+      mo.observe(document.body, { childList:true, subtree:true });
+
+      window.addEventListener('resize', syncHeights);
+      // initial run
+      setTimeout(syncHeights, 300);
+    })();
+  </script>
+
 </body>
 </html>

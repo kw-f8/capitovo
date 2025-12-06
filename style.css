@@ -317,11 +317,11 @@ main.with-sidebar {
 }
 .tradingview-widget-container.card .tradingview-widget-container__widget {
     height: 100% !important;
-    min-height: 420px !important;
+    min-height: 0 !important;
 }
 .tradingview-widget-container.card iframe {
     height: 100% !important;
-    min-height: 480px !important;
+    min-height: 0 !important;
     display: block !important;
     width: 100% !important;
 }

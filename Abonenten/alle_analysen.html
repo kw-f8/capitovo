@@ -174,6 +174,16 @@
         /* Keep logout-bottom for semantics but do not force bottom placement here */
         .sidebar-nav ul li.logout-bottom { padding: 0; }
         .sidebar-nav ul li.logout-bottom a.logout-link { display:flex; align-items:center; gap:10px; padding:10px 0; color:#f0f0f0; text-decoration:none; }
+
+        /* Anpassung der Kartenbreite und des Grids für alle_analysen.html */
+        body.alle-analysen-page .member-analyses-grid {
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Erhöht die minimale Breite der Karten */
+            gap: 1.5rem; /* Vergrößert den Abstand zwischen den Karten */
+        }
+
+        body.alle-analysen-page .member-card {
+            max-width: 100%; /* Stellt sicher, dass die Karten die volle Breite des Grids nutzen */
+        }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">

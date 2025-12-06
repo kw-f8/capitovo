@@ -117,7 +117,7 @@
 
                         <!-- Right: chart (flexible width on md+, full width on small screens) -->
                         <div class="mt-4 md:mt-0" style="flex:0 0 40%; max-width:40%;">
-                          <div id="tv-container" class="tradingview-widget-container card h-full" style="width:100%; height:100%; visibility:hidden;" role="region" aria-label="Aktueller Kurs und Chart">
+                          <div id="tv-container" class="tradingview-widget-container card h-full" style="width:100%; height:100%;" role="region" aria-label="Aktueller Kurs und Chart">
       <div class="tradingview-widget-container__widget"></div>
       <script>
         (function(){
@@ -159,10 +159,10 @@
             "hideMarketStatus": false,
             "hideSymbolLogo": false
           };
-          // Do not append immediately — store config and let the adjust script inject the widget
-          window.__tv_pending_cfg = cfg;
-          window.__tv_pending_src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
-          window.__tv_injected = window.__tv_injected || false;
+          var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
+          s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+          s.text = JSON.stringify(cfg);
+          var target = document.getElementById('tv-container'); if(target) target.appendChild(s);
         })();
       </script>
     </div>
@@ -223,77 +223,7 @@
     })();
   </script>
 
-  <script>
-    // Adjust TradingView container and iframe height to match the left description column
-    (function(){
-      function adjustTvHeight(){
-        var desc = document.getElementById('description-col');
-        var tv = document.getElementById('tv-container');
-        if(!desc || !tv) return;
-        // measure visible height of description
-        var rect = desc.getBoundingClientRect();
-        var h = Math.round(rect.height);
-        if(h <= 0) return;
-        // subtract a small offset so the widget doesn't overflow the bottom of the text
-        var offset = 6; // pixels to reduce (adjustable) — lowered from 20 to better match text height
-        var targetH = Math.max(100, h - offset);
-        // set container width/height to match description column (with offset)
-        tv.style.width = '100%';
-        tv.style.height = targetH + 'px';
-        tv.style.minHeight = targetH + 'px';
-        // set inner widget and any iframes to fill that height
-        var inner = tv.querySelector('.tradingview-widget-container__widget');
-        if(inner) inner.style.height = '100%';
-        var iframes = tv.querySelectorAll('iframe');
-        iframes.forEach(function(iframe){
-          try{ iframe.style.height = targetH + 'px'; iframe.style.width = '100%'; iframe.setAttribute('height', targetH); iframe.setAttribute('width','100%'); } catch(e){}
-        });
-        // If TradingView embed is pending, inject it now (after sizing) so iframe starts at correct size
-        try{
-          if(window.__tv_pending_cfg && !window.__tv_injected){
-            var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
-            s.src = window.__tv_pending_src || 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
-            s.text = JSON.stringify(window.__tv_pending_cfg);
-            tv.appendChild(s);
-            window.__tv_injected = true;
-            // Wait for the iframe to appear, then reveal the container to avoid visible resizing
-            var revealTries = 0;
-            var revealInterval = setInterval(function(){
-              var iframe = tv.querySelector('iframe');
-              if(iframe){
-                try{ tv.style.visibility = 'visible'; }catch(e){}
-                clearInterval(revealInterval);
-              }
-              revealTries++;
-              if(revealTries>20){ // give up after ~5s
-                try{ tv.style.visibility = 'visible'; }catch(e){}
-                clearInterval(revealInterval);
-              }
-            }, 250);
-          }
-        }catch(e){}
-      }
-
-      // Run after DOM ready and again after a short delay to account for async iframe insertion
-      // Run after fonts are ready (if supported) so measurement uses final font metrics
-      (function(){
-        var runAdjust = function(){ try{ adjustTvHeight(); }catch(e){} };
-        if(document.fonts && document.fonts.ready){
-          document.fonts.ready.then(function(){ runAdjust(); setTimeout(runAdjust,100); setTimeout(runAdjust,600); }).catch(function(){ runAdjust(); });
-        } else {
-          // fallback: try immediately and schedule retries
-          runAdjust();
-          document.addEventListener('DOMContentLoaded', function(){ setTimeout(runAdjust,100); setTimeout(runAdjust,600); });
-        }
-      })();
-      // Also adjust on window resize
-      window.addEventListener('resize', function(){ setTimeout(adjustTvHeight, 120); });
-      // Also expose a short interval for a few seconds to catch late iframe injections
-      var tries = 0; var interval = setInterval(function(){ adjustTvHeight(); tries++; if(tries>20) clearInterval(interval); }, 300);
-    })();
-  </script>
-
-  <!-- scaling script removed: right column now flexible and iframe height/width are set directly -->
+  <!-- sizing handled by CSS (right column flex + iframe 100% height) -->
 
 </body>
 </html>

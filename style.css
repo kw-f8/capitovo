@@ -326,6 +326,19 @@ main.with-sidebar {
     width: 100% !important;
 }
 
+/* Ensure TV widget fills the right flex column height (use flexbox stretch) */
+.analyses-box .flex > div { align-items: stretch; }
+.analyses-box .tradingview-widget-container {
+    height: 100% !important;
+    min-height: 0 !important;
+}
+.analyses-box .tradingview-widget-container__widget,
+.analyses-box .tradingview-widget-container iframe {
+    height: 100% !important;
+    min-height: 0 !important;
+    width: 100% !important;
+}
+
 /* Optional reduced height variant: make widget smaller than the text column (85% of parent) */
 .tradingview-widget-container.card.reduced-height {
     height: 85% !important;

@@ -430,8 +430,7 @@ main.with-sidebar {
 /* Macht die TradingView-Box identisch zu `.analyses-box` */
 /* ---------------------------------------------------- */
 /* Apply both to explicit ticker class and to abonenten pages */
-.tradingview-widget-container.ticker-as-card,
-.abonenten-page .tradingview-widget-container {
+.tradingview-widget-container.ticker-as-card {
     background-color: #ffffff !important;
     border: 1.5px solid rgba(15,23,42,0.06) !important; /* slightly thicker to match analysis cards visually */
     border-radius: 0.75rem !important; /* match rounded-xl (12px) */
@@ -439,16 +438,14 @@ main.with-sidebar {
     padding: 1.5rem !important; /* matches p-6 (1.5rem) used by analyses box */
     overflow: hidden !important;
 }
-.tradingview-widget-container.ticker-as-card .tradingview-widget-container__widget,
-.abonenten-page .tradingview-widget-container .tradingview-widget-container__widget {
+.tradingview-widget-container.ticker-as-card .tradingview-widget-container__widget {
     border-radius: 0 !important; /* let outer container's rounding mask the iframe */
     margin: 0 !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
-.tradingview-widget-container.ticker-as-card iframe,
-.abonenten-page .tradingview-widget-container iframe {
+.tradingview-widget-container.ticker-as-card iframe {
     height: 40px !important; /* keep inner ticker compact */
     min-height: 40px !important;
     border: none !important;
@@ -459,8 +456,7 @@ main.with-sidebar {
 }
 
 /* ensure the outer padding does not create uneven inner offset compared to analyses-box */
-.tradingview-widget-container.ticker-as-card > .tradingview-widget-container__widget,
-.abonenten-page .tradingview-widget-container > .tradingview-widget-container__widget {
+.tradingview-widget-container.ticker-as-card > .tradingview-widget-container__widget {
     padding: 0 !important;
 }
 

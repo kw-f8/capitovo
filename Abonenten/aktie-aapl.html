@@ -100,66 +100,67 @@
 
   <!-- Hauptinhalt: Artikel/Chart-Platzhalter (aligned with site content) -->
   <main class="max-w-6xl mx-auto p-6">
-      <article class="bg-white p-6 rounded-xl shadow w-full box-border page-article-align">
-      <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-        <div class="md:flex-1">
-          <h1 class="text-2xl font-bold mb-2">Apple Inc.</h1>
-          <p class="text-gray-600 mb-3">Apple ist eines der weltweit führenden Technologieunternehmen und steht für Innovation, Design und digitale Lösungen. Das Unternehmen wurde 1976 gegründet und ist heute bekannt für seine Produkte wie iPhone, iPad, Mac, Apple Watch und AirPods, die weltweit Millionen von Nutzern begeistern.</p>
-          <p class="text-gray-600 mb-3">Neben Hardware bietet Apple auch eine Vielzahl digitaler Dienstleistungen an, darunter den App Store, Apple Music, iCloud und Apple Pay, die einen immer größeren Anteil am Geschäftsmodell einnehmen. Das Unternehmen zeichnet sich durch eine starke Markenloyalität und eine globale Präsenz aus.</p>
-          <p class="text-gray-600 mb-0">Die Produkte von Apple sind nicht nur technisch fortschrittlich, sondern auch für ihr einzigartiges Design und die einfache Bedienung bekannt. Apple setzt zudem auf Nachhaltigkeit und Datenschutz, was die Marke bei vielen Kunden zusätzlich stärkt. Mit Sitz in Cupertino, Kalifornien, beschäftigt das Unternehmen Zehntausende Mitarbeiter und betreibt Geschäfte in fast allen Ländern der Welt.</p>
-        </div>
+        <section class="member-grid">
+            <div class="bg-white p-6 rounded-xl shadow analyses-box">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold">Apple Inc.</h2>
+                </div>
 
-        <!-- Kurs-Box entfernt auf Nutzerwunsch -->
-      </div>
+                <div class="mb-4 text-gray-700">
+                    <p class="text-gray-600 mb-3">Apple ist eines der weltweit führenden Technologieunternehmen und steht für Innovation, Design und digitale Lösungen. Das Unternehmen wurde 1976 gegründet und ist heute bekannt für seine Produkte wie iPhone, iPad, Mac, Apple Watch und AirPods, die weltweit Millionen von Nutzern begeistern.</p>
+                    <p class="text-gray-600 mb-3">Neben Hardware bietet Apple auch eine Vielzahl digitaler Dienstleistungen an, darunter den App Store, Apple Music, iCloud und Apple Pay, die einen immer größeren Anteil am Geschäftsmodell einnehmen. Das Unternehmen zeichnet sich durch eine starke Markenloyalität und eine globale Präsenz aus.</p>
+                    <p class="text-gray-600 mb-0">Die Produkte von Apple sind nicht nur technisch fortschrittlich, sondern auch für ihr einzigartiges Design und die einfache Bedienung bekannt. Apple setzt zudem auf Nachhaltigkeit und Datenschutz, was die Marke bei vielen Kunden zusätzlich stärkt. Mit Sitz in Cupertino, Kalifornien, beschäftigt das Unternehmen Zehntausende Mitarbeiter und betreibt Geschäfte in fast allen Ländern der Welt.</p>
+                </div>
 
-      <div class="mb-4 p-4 bg-gray-50 rounded">
-        <strong>Aktueller Kurs / Chart</strong>
+                <div class="mb-4 p-4 bg-gray-50 rounded">
+                    <strong>Aktueller Kurs / Chart</strong>
 
-        <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container" style="height:360px;" role="region" aria-label="Aktueller Kurs und Chart">
-          <div class="tradingview-widget-container__widget"></div>
-          <div class="tradingview-widget-copyright"><a href="https://de.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-          <script>
-            (function(){
-              var cfg = {
-                symbol: 'NASDAQ:AAPL|1D',
-                chartType: 'area',
-                colorTheme: 'light',
-                isTransparent: true,
-                locale: 'de_DE',
-                width: '100%',
-                height: 360,
-                autosize: false,
-                noTimeScale: false
-              };
-              var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
-              s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
-              s.text = JSON.stringify(cfg);
-              var target = document.getElementsByClassName('tradingview-widget-container')[0];
-              if(target) target.appendChild(s);
-            })();
-          </script>
-          <noscript>
-            <div style="padding:1rem;background:#fff;border:1px solid rgba(15,23,42,0.04);border-radius:8px;">Bitte aktiviere JavaScript, um das interaktive Kurs-Chart anzuzeigen.</div>
-          </noscript>
-        </div>
-        <!-- TradingView Widget END -->
+                    <!-- TradingView Widget BEGIN -->
+                    <div class="tradingview-widget-container" style="height:360px;" role="region" aria-label="Aktueller Kurs und Chart">
+                      <div class="tradingview-widget-container__widget"></div>
+                      <div class="tradingview-widget-copyright"><a href="https://de.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+                      <script>
+                        (function(){
+                          var cfg = {
+                            symbol: 'NASDAQ:AAPL|1D',
+                            chartType: 'area',
+                            colorTheme: 'light',
+                            isTransparent: true,
+                            locale: 'de_DE',
+                            width: '100%',
+                            height: 360,
+                            autosize: false,
+                            noTimeScale: false
+                          };
+                          var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
+                          s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+                          s.text = JSON.stringify(cfg);
+                          var target = document.getElementsByClassName('tradingview-widget-container')[0];
+                          if(target) target.appendChild(s);
+                        })();
+                      </script>
+                      <noscript>
+                        <div style="padding:1rem;background:#fff;border:1px solid rgba(15,23,42,0.04);border-radius:8px;">Bitte aktiviere JavaScript, um das interaktive Kurs-Chart anzuzeigen.</div>
+                      </noscript>
+                    </div>
+                    <!-- TradingView Widget END -->
 
-      </div>
+                </div>
 
-      <div id="financials-overview" class="mb-6 p-4 bg-white rounded" style="border:1px solid rgba(15,23,42,0.04);" role="region" aria-label="Finanzdaten">
-        <!-- Financials widget wird programmgesteuert eingefügt -->
-        <noscript>
-          <div style="padding:0.5rem;font-size:0.95rem;color:#6b7280;">Financials: Bitte aktiviere JavaScript, um detaillierte Finanzdaten zu sehen.</div>
-        </noscript>
-      </div>
+                <div id="financials-overview" class="mb-6 p-4 bg-white rounded" style="border:1px solid rgba(15,23,42,0.04);" role="region" aria-label="Finanzdaten">
+                    <!-- Financials widget wird programmgesteuert eingefügt -->
+                    <noscript>
+                      <div style="padding:0.5rem;font-size:0.95rem;color:#6b7280;">Financials: Bitte aktiviere JavaScript, um detaillierte Finanzdaten zu sehen.</div>
+                    </noscript>
+                </div>
 
-      <div class="flex gap-3">
-        <a href="./aktien-monitor.html" class="px-4 py-2 bg-gray-100 rounded">← Zurück zur Übersicht</a>
-        <a href="./alle_analysen.html" class="px-4 py-2 bg-primary-blue text-white rounded">Analyse öffnen</a>
-      </div>
-      </article>
-  </main>
+                <div class="flex gap-3">
+                    <a href="./aktien-monitor.html" class="px-4 py-2 bg-gray-100 rounded">← Zurück zur Übersicht</a>
+                    <a href="./alle_analysen.html" class="px-4 py-2 bg-primary-blue text-white rounded">Analyse öffnen</a>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer id="abo" class="site-footer" data-scroll="fade-up" data-scroll-delay="40">
       <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">

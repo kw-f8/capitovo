@@ -321,7 +321,7 @@ main.with-sidebar {
 }
 .tradingview-widget-container.card iframe {
     height: 100% !important;
-    min-height: 420px !important;
+    min-height: 480px !important;
     display: block !important;
     width: 100% !important;
 }

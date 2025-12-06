@@ -236,7 +236,7 @@
         var h = Math.round(rect.height);
         if(h <= 0) return;
         // subtract a small offset so the widget doesn't overflow the bottom of the text
-        var offset = 20; // pixels to reduce (adjustable)
+        var offset = 6; // pixels to reduce (adjustable) — lowered from 20 to better match text height
         var targetH = Math.max(100, h - offset);
         // set container width/height to match description column (with offset)
         tv.style.width = '100%';

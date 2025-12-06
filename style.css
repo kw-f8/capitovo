@@ -311,6 +311,20 @@ main.with-sidebar {
     box-shadow: 0 6px 20px rgba(2,6,23,0.04);
     border: 1px solid rgba(15,23,42,0.06);
 }
+.tradingview-widget-container.card {
+    /* Ensure the card variant does not clip inner TradingView controls */
+    overflow: visible !important;
+}
+.tradingview-widget-container.card .tradingview-widget-container__widget {
+    height: 100% !important;
+    min-height: 420px !important;
+}
+.tradingview-widget-container.card iframe {
+    height: 100% !important;
+    min-height: 420px !important;
+    display: block !important;
+    width: 100% !important;
+}
 .tradingview-widget-container.card .tradingview-widget-container__widget,
 .tradingview-widget-container.card iframe {
     border-radius: 12px !important;

@@ -235,16 +235,19 @@
         var rect = desc.getBoundingClientRect();
         var h = Math.round(rect.height);
         if(h <= 0) return;
-        // set container width/height to match description column
+        // subtract a small offset so the widget doesn't overflow the bottom of the text
+        var offset = 20; // pixels to reduce (adjustable)
+        var targetH = Math.max(100, h - offset);
+        // set container width/height to match description column (with offset)
         tv.style.width = '100%';
-        tv.style.height = h + 'px';
-        tv.style.minHeight = h + 'px';
+        tv.style.height = targetH + 'px';
+        tv.style.minHeight = targetH + 'px';
         // set inner widget and any iframes to fill that height
         var inner = tv.querySelector('.tradingview-widget-container__widget');
         if(inner) inner.style.height = '100%';
         var iframes = tv.querySelectorAll('iframe');
         iframes.forEach(function(iframe){
-          try{ iframe.style.height = h + 'px'; iframe.style.width = '100%'; iframe.setAttribute('height', h); iframe.setAttribute('width','100%'); } catch(e){}
+          try{ iframe.style.height = targetH + 'px'; iframe.style.width = '100%'; iframe.setAttribute('height', targetH); iframe.setAttribute('width','100%'); } catch(e){}
         });
       }
 

@@ -1009,6 +1009,34 @@ html body .abonenten-page .site-footer .copyright {
     border-radius: 12px !important;
 }
 
+/* Einzelne Finanz-Kästchen (falls wir eigene 3x3 Karten rendern) */
+.financial-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 6px;
+}
+.financial-box .fb-title {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+.financial-box .fb-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+.financial-box .fb-sub {
+    font-size: 0.78rem;
+    color: #9ca3af;
+}
+
+/* Ensure boxes fill their grid cells nicely */
+#financials-overview.three-by-three > .financial-box,
+#financials-overview .three-by-three-inner > .financial-box {
+    height: 100%;
+}
+
 /* Finanzdaten: 3x3 Grid für 9 Datenkästchen
    Wenn das TradingView-Widget seine Kästchen als direkte Kinder einfügt,
    ordnen wir sie in 3 Spalten und 3 Reihen an. Fallback: falls die Embed

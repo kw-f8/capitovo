@@ -296,6 +296,81 @@
     })();
   </script>
 
+  <script>
+    // Fallback: wenn TradingView kein 3x3 liefert (oder ein iframe verwendet),
+    // rendern wir eigene 9 Kästchen. Optional: wenn `window.FMP_API_KEY` gesetzt ist,
+    // versuchen wir, Daten von FinancialModelingPrep zu holen.
+    (function(){
+      var container = document.getElementById('financials-overview');
+      if(!container) return;
+
+      function createBox(title, value, sub){
+        var box = document.createElement('div');
+        box.className = 'financial-box p-3 bg-white rounded';
+        var t = document.createElement('div'); t.className='fb-title'; t.textContent = title;
+        var v = document.createElement('div'); v.className='fb-value'; v.textContent = value;
+        box.appendChild(t); box.appendChild(v);
+        if(sub){ var s = document.createElement('div'); s.className='fb-sub'; s.textContent = sub; box.appendChild(s); }
+        return box;
+      }
+
+      function renderFallback(data){
+        // remove existing children that are scripts/noscript to avoid clutter
+        Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); });
+        // hide any iframe (we will render our boxes instead)
+        var ifr = container.querySelector('iframe'); if(ifr) ifr.style.display='none';
+
+        // clear non-visual nodes
+        // create grid container if not already
+        container.classList.add('three-by-three');
+        // remove existing element children (keep container)
+        Array.from(container.children).forEach(function(ch){ ch.remove(); });
+
+        for(var i=0;i<9;i++){
+          var d = data && data[i] ? data[i] : { title: ['Market Cap','KGV','Umsatz','EPS','Free Cash Flow','EBITDA','Net Income','Dividende','Operative Marge'][i], value: ['–','–','–','–','–','–','–','–','–'][i], sub: '' };
+          container.appendChild(createBox(d.title, d.value, d.sub));
+        }
+      }
+
+      // Try to fetch from FinancialModelingPrep if API key is provided
+      var apiKey = window.FMP_API_KEY || null;
+      if(apiKey){
+        // minimal example: fetch profile + key metrics
+        var symbol = 'AAPL';
+        var profileUrl = 'https://financialmodelingprep.com/api/v3/profile/' + symbol + '?apikey=' + apiKey;
+        fetch(profileUrl).then(function(r){ return r.json(); }).then(function(j){
+          try{
+            var obj = j && j[0] ? j[0] : null;
+            var data = [
+              {title:'Marktkapitalisierung', value: obj ? (obj.mktCap ? (Math.round(obj.mktCap/1e9)+' Mrd') : '–') : '–'},
+              {title:'KGV', value: obj ? (obj.pe ? obj.pe : '–') : '–'},
+              {title:'Umsatz (TTM)', value: obj ? (obj.lastDiv ? obj.lastDiv : '–') : '–'},
+              {title:'EPS', value: obj ? (obj.eps ? obj.eps : '–') : '–'},
+              {title:'Free Cash Flow', value: '–'},
+              {title:'EBITDA', value: '–'},
+              {title:'Nettoergebnis', value: '–'},
+              {title:'Dividende', value: obj ? (obj.lastDiv ? obj.lastDiv : '–') : '–'},
+              {title:'Operative Marge', value: '–'}
+            ];
+            renderFallback(data);
+          }catch(e){ renderFallback(); }
+        }).catch(function(){ renderFallback(); });
+      }else{
+        // No API key: render placeholder boxes so layout is visible
+        // But only if TradingView didn't already inject 9 boxes
+        var hasBoxes = container.classList.contains('three-by-three') || container.querySelector('.three-by-three-inner');
+        var iframePresent = !!container.querySelector('iframe');
+        if(!hasBoxes){
+          // wait a short while to let TradingView potentially create DOM
+          setTimeout(function(){
+            var nowHas = container.classList.contains('three-by-three') || container.querySelector('.three-by-three-inner');
+            if(!nowHas){ renderFallback(); }
+          }, 700);
+        }
+      }
+    })();
+  </script>
+
   <!-- sizing handled by CSS (right column flex + iframe 100% height) -->
 
 </body>

@@ -1006,6 +1006,22 @@ html body .abonenten-page .site-footer .copyright {
     box-shadow: 0 6px 18px rgba(2,6,23,0.04) !important;
 }
 
+/* Falls das Embed ein inneres Wrapper-Element erzeugt, erlauben wir auch
+   das Setzen einer Klasse direkt auf diesem inneren Wrapper. */
+#financials-overview .three-by-three-inner {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
+    align-items: start !important;
+}
+#financials-overview .three-by-three-inner > * {
+    background: #ffffff !important;
+    border: 1px solid rgba(15,23,42,0.06) !important;
+    border-radius: 8px !important;
+    padding: 10px 12px !important;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.04) !important;
+}
+
 @media (max-width: 768px) {
     /* On small screens collapse to 2 columns or 1 column if very narrow */
     #financials-overview.three-by-three { grid-template-columns: repeat(2, 1fr) !important; }

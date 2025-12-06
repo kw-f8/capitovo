@@ -202,11 +202,21 @@
   <script>
     // Sidebar toggle wiring (single, shared handler)
     document.addEventListener('click', function(e){
-      if(e.target && e.target.id === 'menu-toggle'){
-        var sb = document.getElementById('sidebar'); if(!sb) return; sb.setAttribute('aria-hidden', sb.getAttribute('aria-hidden')==='false' ? 'true' : 'false');
+      var toggle = e.target.closest('#menu-toggle, .menu-toggle, [aria-controls="sidebar"]');
+      if(toggle){
+        var sb = document.getElementById('sidebar'); if(!sb) return;
+        var isHidden = sb.getAttribute('aria-hidden') === 'true';
+        // toggle aria-hidden and the visible class
+        sb.setAttribute('aria-hidden', isHidden ? 'false' : 'true');
+        if(isHidden) sb.classList.add('open'); else sb.classList.remove('open');
+        return;
       }
-      if(e.target && (e.target.id === 'close-sidebar' || e.target.id === 'logout-link')){
-        var sb = document.getElementById('sidebar'); if(sb) sb.setAttribute('aria-hidden','true');
+
+      var closeTrigger = e.target.closest('#close-sidebar, #logout-link');
+      if(closeTrigger){
+        var sb2 = document.getElementById('sidebar'); if(!sb2) return;
+        sb2.setAttribute('aria-hidden','true'); sb2.classList.remove('open');
+        return;
       }
     });
   </script>

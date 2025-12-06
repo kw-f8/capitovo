@@ -985,6 +985,30 @@ html body .abonenten-page .site-footer .copyright {
     font-weight: 600 !important;
 }
 
+/* Spezifische Anpassungen für das Financials-Widget-Layout */
+#financials-overview {
+    /* Höhe so setzen, dass das Widget nicht intern scrollt; kann bei Bedarf weiter erhöht werden */
+    height: 560px !important;
+    min-height: 560px !important;
+    overflow: visible !important; /* Container selbst zeigt Inhalte, innerer iframe wird gestreckt */
+    border-radius: 12px !important; /* gleiche Rundung wie Chart-Card */
+}
+
+#financials-overview .tradingview-widget-container.card {
+    height: 100% !important;
+    padding: 0 !important;
+    border-radius: 12px !important; /* match chart widget */
+    overflow: hidden !important; /* Verhindert Scrollbars im inneren */
+}
+
+#financials-overview .tradingview-widget-container.card .tradingview-widget-container__widget,
+#financials-overview .tradingview-widget-container.card iframe {
+    height: 100% !important;
+    min-height: 0 !important;
+    width: 100% !important;
+    border-radius: 12px !important;
+}
+
 /* Finanzdaten: 3x3 Grid für 9 Datenkästchen
    Wenn das TradingView-Widget seine Kästchen als direkte Kinder einfügt,
    ordnen wir sie in 3 Spalten und 3 Reihen an. Fallback: falls die Embed

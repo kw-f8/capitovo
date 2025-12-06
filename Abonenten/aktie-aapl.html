@@ -237,6 +237,43 @@
     })();
   </script>
 
+  <script>
+    // Beobachte den financials-overview Container und wende das 3x3-Grid an,
+    // sobald mindestens 9 Kindelemente (Datenkästchen) vorhanden sind.
+    (function(){
+      var container = document.getElementById('financials-overview');
+      if(!container) return;
+
+      var applyGrid = function(){
+        // Wenn das Embed seine Kästchen als direkte Kinder einfügt,
+        // prüfe die Anzahl und setze die Klasse für das Grid.
+        var children = Array.from(container.children).filter(function(n){
+          // filter out script/noscript nodes and empty text nodes
+          return !(n.tagName==='SCRIPT' || n.tagName==='NOSCRIPT' || (n.nodeType===3 && !/\S/.test(n.nodeValue)));
+        });
+        if(children.length >= 9){
+          container.classList.add('three-by-three');
+          return true;
+        }
+        return false;
+      };
+
+      // Try immediate (fast path)
+      if(applyGrid()) return;
+
+      // Use a MutationObserver to detect when the widget inserts nodes
+      var mo = new MutationObserver(function(muts){
+        if(applyGrid()){
+          mo.disconnect();
+        }
+      });
+      mo.observe(container, { childList: true, subtree: false });
+
+      // As a safety fallback, after 3s try again (in case scripts take longer)
+      setTimeout(function(){ applyGrid(); mo.disconnect(); }, 3000);
+    })();
+  </script>
+
   <!-- sizing handled by CSS (right column flex + iframe 100% height) -->
 
 </body>

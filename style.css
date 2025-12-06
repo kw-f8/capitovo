@@ -985,4 +985,33 @@ html body .abonenten-page .site-footer .copyright {
     font-weight: 600 !important;
 }
 
+/* Finanzdaten: 3x3 Grid für 9 Datenkästchen
+   Wenn das TradingView-Widget seine Kästchen als direkte Kinder einfügt,
+   ordnen wir sie in 3 Spalten und 3 Reihen an. Fallback: falls die Embed
+   ein iframe nutzt, greift diese Regel nicht (Iframe-Inhalt kann nicht
+   von außen gestylt werden). Ein kleines JS sorgt dafür, dass die Klasse
+   `three-by-three` erst nach dem Einfügen der Kästchen gesetzt wird. */
+#financials-overview.three-by-three {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
+    align-items: start !important;
+}
+#financials-overview.three-by-three > * {
+    /* Ensure each data box looks like a small card */
+    background: #ffffff !important;
+    border: 1px solid rgba(15,23,42,0.06) !important;
+    border-radius: 8px !important;
+    padding: 10px 12px !important;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.04) !important;
+}
+
+@media (max-width: 768px) {
+    /* On small screens collapse to 2 columns or 1 column if very narrow */
+    #financials-overview.three-by-three { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 420px) {
+    #financials-overview.three-by-three { grid-template-columns: 1fr !important; }
+}
+
 

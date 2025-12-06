@@ -261,5 +261,49 @@
     })();
   </script>
 
+  <script>
+    // Ensure the TV widget scales down proportionally if it would overflow its right column
+    (function(){
+      function adjustTvScale(){
+        var tv = document.getElementById('tv-container');
+        var desc = document.getElementById('description-col');
+        if(!tv || !desc) return;
+        // fixed desired size
+        var desiredW = 440, desiredH = 400;
+        // flex row container that holds both columns
+        var flexRow = tv.closest('.flex');
+        if(!flexRow) return;
+        // compute available width for right column
+        var totalW = flexRow.clientWidth;
+        var leftW = desc.offsetWidth;
+        // gap: try to read CSS gap, fallback 24px
+        var gap = 24;
+        try{ gap = parseFloat(getComputedStyle(flexRow).columnGap) || gap; }catch(e){}
+        var avail = Math.max(0, totalW - leftW - gap - 16); // small safety margin
+        var scale = 1;
+        if(avail < desiredW) scale = avail / desiredW;
+        scale = Math.max(0.4, Math.min(1, scale));
+
+        // Setup right column to hide overflow and center scaled widget
+        var rightCol = tv.parentElement;
+        rightCol.style.overflow = 'hidden';
+        rightCol.style.display = 'flex';
+        rightCol.style.alignItems = 'flex-start';
+        rightCol.style.justifyContent = 'center';
+
+        // Apply transform scale to tv container
+        tv.style.width = desiredW + 'px';
+        tv.style.height = desiredH + 'px';
+        tv.style.transformOrigin = 'top left';
+        tv.style.transform = 'scale(' + scale + ')';
+      }
+
+      try{ adjustTvScale(); }catch(e){}
+      window.addEventListener('resize', function(){ setTimeout(adjustTvScale, 80); });
+      // run a few times for async iframe injects
+      var t=0; var ti=setInterval(function(){ adjustTvScale(); t++; if(t>20) clearInterval(ti); }, 250);
+    })();
+  </script>
+
 </body>
 </html>

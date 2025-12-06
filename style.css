@@ -326,6 +326,16 @@ main.with-sidebar {
     width: 100% !important;
 }
 
+/* Optional reduced height variant: make widget smaller than the text column (85% of parent) */
+.tradingview-widget-container.card.reduced-height {
+    height: 85% !important;
+}
+.tradingview-widget-container.card.reduced-height .tradingview-widget-container__widget,
+.tradingview-widget-container.card.reduced-height iframe {
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
 /* Ensure the card variant's inner content is top-aligned instead of centered */
 .tradingview-widget-container.card {
     display: block !important;

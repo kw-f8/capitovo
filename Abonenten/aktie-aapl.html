@@ -275,12 +275,17 @@
       }
 
       // Run after DOM ready and again after a short delay to account for async iframe insertion
-      // Run immediately in case DOM is already loaded
-      try{ adjustTvHeight(); } catch(e){}
-      document.addEventListener('DOMContentLoaded', function(){
-        setTimeout(adjustTvHeight, 100);
-        setTimeout(adjustTvHeight, 600);
-      });
+      // Run after fonts are ready (if supported) so measurement uses final font metrics
+      (function(){
+        var runAdjust = function(){ try{ adjustTvHeight(); }catch(e){} };
+        if(document.fonts && document.fonts.ready){
+          document.fonts.ready.then(function(){ runAdjust(); setTimeout(runAdjust,100); setTimeout(runAdjust,600); }).catch(function(){ runAdjust(); });
+        } else {
+          // fallback: try immediately and schedule retries
+          runAdjust();
+          document.addEventListener('DOMContentLoaded', function(){ setTimeout(runAdjust,100); setTimeout(runAdjust,600); });
+        }
+      })();
       // Also adjust on window resize
       window.addEventListener('resize', function(){ setTimeout(adjustTvHeight, 120); });
       // Also expose a short interval for a few seconds to catch late iframe injections

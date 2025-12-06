@@ -117,7 +117,7 @@
 
                         <!-- Right: chart (flexible width on md+, full width on small screens) -->
                         <div class="mt-4 md:mt-0" style="flex:0 0 40%; max-width:40%;">
-                          <div id="tv-container" class="tradingview-widget-container card h-full" style="width:100%; height:100%;" role="region" aria-label="Aktueller Kurs und Chart">
+                          <div id="tv-container" class="tradingview-widget-container card h-full" style="width:100%; height:100%; visibility:hidden;" role="region" aria-label="Aktueller Kurs und Chart">
       <div class="tradingview-widget-container__widget"></div>
       <script>
         (function(){
@@ -256,6 +256,20 @@
             s.text = JSON.stringify(window.__tv_pending_cfg);
             tv.appendChild(s);
             window.__tv_injected = true;
+            // Wait for the iframe to appear, then reveal the container to avoid visible resizing
+            var revealTries = 0;
+            var revealInterval = setInterval(function(){
+              var iframe = tv.querySelector('iframe');
+              if(iframe){
+                try{ tv.style.visibility = 'visible'; }catch(e){}
+                clearInterval(revealInterval);
+              }
+              revealTries++;
+              if(revealTries>20){ // give up after ~5s
+                try{ tv.style.visibility = 'visible'; }catch(e){}
+                clearInterval(revealInterval);
+              }
+            }, 250);
           }
         }catch(e){}
       }

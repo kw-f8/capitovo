@@ -29,9 +29,21 @@
               Adjust the -8px value if you prefer a different offset. */
         .alle-layout {
             max-width: 72rem;
-            margin: 0 auto; /* Entfernt den negativen Rand und zentriert den Inhalt */
+            margin: 0 auto; /* Zentriert den Inhalt */
             padding: 0 24px;
             box-sizing: border-box;
+        }
+
+        .alle-layout .member-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Einspaltiges Layout */
+            gap: 1.25rem;
+        }
+
+        @media (min-width: 768px) {
+            .alle-layout .member-grid {
+                grid-template-columns: 1fr; /* Anpassung für größere Bildschirme */
+            }
         }
 
         /* Top heading: give more breathing room and responsive type scale */

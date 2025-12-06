@@ -224,5 +224,40 @@
     })();
   </script>
 
+  <script>
+    // Sync TradingView iframe height to the left description column height
+    (function(){
+      var leftSelector = '.md\\:flex-1'; // left text column
+      var iframeSelector = '.tradingview-widget-container.card iframe';
+      function applyHeight(){
+        var left = document.querySelector(leftSelector);
+        if(!left) return;
+        var h = left.clientHeight;
+        var ifr = document.querySelector(iframeSelector);
+        var container = document.querySelector('.tradingview-widget-container.card');
+        if(container) container.style.height = h + 'px';
+        if(ifr) {
+          try{ ifr.style.height = h + 'px'; }catch(e){}
+        }
+      }
+
+      // Try to apply repeatedly for a short time in case the tradingview script injects iframe later
+      var tries = 0;
+      var maxTries = 40;
+      var interval = setInterval(function(){
+        applyHeight();
+        tries++;
+        if(tries>maxTries){ clearInterval(interval); }
+      }, 200);
+
+      // Also update on resize
+      window.addEventListener('resize', function(){ applyHeight(); });
+
+      // Observe mutations in case embed replaces iframe later
+      var obs = new MutationObserver(function(){ applyHeight(); });
+      obs.observe(document.body, { childList:true, subtree:true });
+    })();
+  </script>
+
 </body>
 </html>

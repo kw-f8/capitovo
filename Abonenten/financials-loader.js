@@ -45,6 +45,27 @@
     return new Intl.NumberFormat('de-DE').format(Math.round(n));
   }
 
+  function normalizeMarketCap(v){
+    if(v===null||v===undefined||v==='') return null;
+    var n = Number(v);
+    if(!isFinite(n)) return null;
+    while(n > 1e14){ n = n/1000; }
+    if(n >= 1e12) return (Math.round((n/1e12)*10)/10) + ' Bio';
+    if(n >= 1e9) return (Math.round((n/1e9)*10)/10) + ' Mrd';
+    if(n >= 1e6) return (Math.round((n/1e6)*10)/10) + ' Mio';
+    return new Intl.NumberFormat('de-DE').format(Math.round(n));
+  }
+
+  function formatMargin(x){
+    if(x===null||x===undefined||x==='') return '–';
+    var n = Number(x);
+    if(!isFinite(n)) return '–';
+    if(Math.abs(n) <= 1) return (Math.round(n*1000)/10) + '%';
+    if(Math.abs(n) > 1 && Math.abs(n) <= 100) return (Math.round(n*10)/10) + '%';
+    if(Math.abs(n) > 100) return (Math.round((n/100)*10)/10) + '%';
+    return (Math.round(n*10)/10) + '%';
+  }
+
   function fetchFinnhub(){
     if(!FINN_KEY) return Promise.reject(new Error('no-finn-key'));
     var profileUrl = 'https://finnhub.io/api/v1/stock/profile2?symbol=' + symbol + '&token=' + FINN_KEY;
@@ -56,16 +77,20 @@
       var profile = results[0] || {};
       var metricsObj = results[1] || {};
       var m = metricsObj.metric || {};
+      console.debug('FINNHUB profile raw:', profile);
+      console.debug('FINNHUB metrics raw:', m);
+
+      var mkt = profile.marketCapitalization || m.marketCapitalization || null;
       var data = [
-        { title: 'Marktkapitalisierung', value: profile.marketCapitalization ? (Math.round(profile.marketCapitalization/1e9*10)/10)+' Mrd' : (m.marketCapitalization ? (Math.round(m.marketCapitalization/1e9*10)/10)+' Mrd' : '–') },
+        { title: 'Marktkapitalisierung', value: mkt ? normalizeMarketCap(mkt) : '–' },
         { title: 'KGV (PE)', value: (m.peNormalizedAnnual || m.peTTM || m.peBasicExclExtraTTM) ? (Math.round((m.peNormalizedAnnual||m.peTTM||m.peBasicExclExtraTTM)*10)/10) : '–' },
-        { title: 'Umsatz (letzte Periode)', value: (m.revenueTTM || m.revenue) ? (Math.round((m.revenueTTM||m.revenue)/1e9*10)/10)+' Mrd' : '–' },
+        { title: 'Umsatz (letzte Periode)', value: (m.revenueTTM || m.revenue) ? fmtNumber((m.revenueTTM||m.revenue)) : '–' },
         { title: 'EPS', value: (m.epsTTM || m.eps) ? (Math.round((m.epsTTM||m.eps)*100)/100) : '–' },
-        { title: 'Free Cash Flow', value: (m.freeCashFlowTTM || m.freeCashFlow) ? (Math.round((m.freeCashFlowTTM||m.freeCashFlow)/1e9*10)/10)+' Mrd' : '–' },
-        { title: 'EBITDA', value: (m.ebitda || m.ebitdaTTM) ? (Math.round((m.ebitda||m.ebitdaTTM)/1e9*10)/10)+' Mrd' : '–' },
-        { title: 'Nettoergebnis', value: (m.netIncomeTTM || m.netIncome) ? (Math.round((m.netIncomeTTM||m.netIncome)/1e9*10)/10)+' Mrd' : '–' },
+        { title: 'Free Cash Flow', value: (m.freeCashFlowTTM || m.freeCashFlow) ? fmtNumber((m.freeCashFlowTTM||m.freeCashFlow)) : '–' },
+        { title: 'EBITDA', value: (m.ebitda || m.ebitdaTTM) ? fmtNumber((m.ebitda||m.ebitdaTTM)) : '–' },
+        { title: 'Nettoergebnis', value: (m.netIncomeTTM || m.netIncome) ? fmtNumber((m.netIncomeTTM||m.netIncome)) : '–' },
         { title: 'Dividende (letzter)', value: profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : (m.dividendYield ? (Math.round(m.dividendYield*1000)/10)+'%' : '–') },
-        { title: 'Operative Marge', value: (m.operatingMarginTTM || m.operatingMargin) ? (Math.round((m.operatingMarginTTM||m.operatingMargin)*1000)/10)+'%' : '–' }
+        { title: 'Operative Marge', value: (m.operatingMarginTTM || m.operatingMargin) ? formatMargin((m.operatingMarginTTM||m.operatingMargin)) : '–' }
       ];
       return data;
     });

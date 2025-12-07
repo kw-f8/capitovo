@@ -208,7 +208,24 @@
           detectedCurrency = obj.data.currency || null;
           writeStatus('Proxy: Rohdaten erhalten (Quelle: ' + (obj.source||'proxy') + ') — Währung: ' + (detectedCurrency||'unbekannt'), 'info');
           // Normalize and format raw values coming from the proxy so we display German notation + currency
-          function toNumber(x){ if(x===null||x===undefined||x==='') return null; var s = String(x).replace(/[\s\.,€$£¥]/g,''); var n = Number(s); return isFinite(n)? n : null; }
+          function toNumber(x){
+            if(x===null||x===undefined||x==='') return null;
+            var s = String(x).trim();
+            // Remove currency symbols and non-numeric trailing words
+            s = s.replace(/[€$£¥]/g,'').trim();
+            // If both dot and comma present, assume dot is thousand separator and comma decimal: remove dots, replace comma with dot
+            if(s.indexOf('.') !== -1 && s.indexOf(',') !== -1){
+              s = s.replace(/\./g,'').replace(/,/g,'.');
+            } else if(s.indexOf(',') !== -1){
+              // comma only -> decimal separator
+              s = s.replace(/\./g,'').replace(/,/g,'.');
+            } else {
+              // only dots or plain digits: remove non-digit except dot
+              s = s.replace(/[^0-9\.\-eE]/g,'');
+            }
+            var n = Number(s);
+            return isFinite(n) ? n : null;
+          }
           var raw = obj.data.data;
           var formatted = raw.map(function(it){
             var t = it.title || '';

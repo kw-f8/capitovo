@@ -188,7 +188,20 @@
         if(obj.data.data && Array.isArray(obj.data.data)){
           detectedCurrency = obj.data.currency || null;
           writeStatus('Proxy: Rohdaten erhalten (Quelle: ' + (obj.source||'proxy') + ') — Währung: ' + (detectedCurrency||'unbekannt'), 'info');
-          function toNumber(x){ if(x===null||x===undefined||x==='') return null; var s = String(x).replace(/[\s\.,€$£¥]/g,''); var n = Number(s); return isFinite(n)? n : null; }
+          function toNumber(x){
+            if(x===null||x===undefined||x==='') return null;
+            var s = String(x).trim();
+            s = s.replace(/[€$£¥]/g,'').trim();
+            if(s.indexOf('.') !== -1 && s.indexOf(',') !== -1){
+              s = s.replace(/\./g,'').replace(/,/g,'.');
+            } else if(s.indexOf(',') !== -1){
+              s = s.replace(/\./g,'').replace(/,/g,'.');
+            } else {
+              s = s.replace(/[^0-9\.\-eE]/g,'');
+            }
+            var n = Number(s);
+            return isFinite(n) ? n : null;
+          }
           var raw = obj.data.data;
           var formatted = raw.map(function(it){
             var t = it.title || '';

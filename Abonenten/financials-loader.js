@@ -3,6 +3,14 @@
   var symbol = 'AAPL';
   var container = document.getElementById('financials-overview');
   if(!container) return;
+  var detectedCurrency = null;
+
+  function currencySymbol(code){
+    if(!code) return null;
+    var c = String(code).toUpperCase();
+    var map = { 'USD':'$', 'EUR':'€', 'GBP':'£', 'JPY':'¥', 'CHF':'CHF', 'CNY':'¥' };
+    return map[c] || c;
+  }
 
   function createBox(title, value, sub){
     var box = document.createElement('div');
@@ -63,24 +71,39 @@
     }).catch(function(){ renderFallback(); });
   }
 
-  function fmtNumber(n){
+  function fmtNumber(n, currency){
     if(n===null||n===undefined||n==='') return '–';
     if(typeof n !== 'number') n = Number(n);
     if(!isFinite(n)) return '–';
-    if(Math.abs(n) >= 1e9) return (Math.round((n/1e9)*10)/10) + ' Mrd';
-    if(Math.abs(n) >= 1e6) return (Math.round((n/1e6)*10)/10) + ' Mio';
-    return new Intl.NumberFormat('de-DE').format(Math.round(n));
+    if(Math.abs(n) >= 1e9){
+      var v = Math.round((n/1e9)*10)/10;
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(v) + ' Mrd' + (currency ? ' ' + currencySymbol(currency) : '');
+    }
+    if(Math.abs(n) >= 1e6){
+      var v2 = Math.round((n/1e6)*10)/10;
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(v2) + ' Mio' + (currency ? ' ' + currencySymbol(currency) : '');
+    }
+    return new Intl.NumberFormat('de-DE').format(Math.round(n)) + (currency ? ' ' + currencySymbol(currency) : '');
   }
 
-  function normalizeMarketCap(v){
+  function normalizeMarketCap(v, currency){
     if(v===null||v===undefined||v==='') return null;
     var n = Number(v);
     if(!isFinite(n)) return null;
     while(n > 1e14){ n = n/1000; }
-    if(n >= 1e12) return (Math.round((n/1e12)*10)/10) + ' Bio';
-    if(n >= 1e9) return (Math.round((n/1e9)*10)/10) + ' Mrd';
-    if(n >= 1e6) return (Math.round((n/1e6)*10)/10) + ' Mio';
-    return new Intl.NumberFormat('de-DE').format(Math.round(n));
+    if(n >= 1e12) {
+      var b = Math.round((n/1e12)*10)/10;
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(b) + ' Bio' + (currency ? ' ' + currencySymbol(currency) : '');
+    }
+    if(n >= 1e9) {
+      var m = Math.round((n/1e9)*10)/10;
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(m) + ' Mrd' + (currency ? ' ' + currencySymbol(currency) : '');
+    }
+    if(n >= 1e6) {
+      var mi = Math.round((n/1e6)*10)/10;
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(mi) + ' Mio' + (currency ? ' ' + currencySymbol(currency) : '');
+    }
+    return new Intl.NumberFormat('de-DE').format(Math.round(n)) + (currency ? ' ' + currencySymbol(currency) : '');
   }
 
   function formatMargin(x){
@@ -119,15 +142,16 @@
       if(obj && obj['Error Message']){ writeStatus('Alpha Vantage: Error — ' + String(obj['Error Message']).slice(0,200), 'error'); throw new Error('alpha-error-message'); }
       if(!obj || Object.keys(obj).length===0){ writeStatus('Alpha Vantage: Leere Antwort', 'warn'); throw new Error('alpha-empty'); }
       console.debug('ALPHA OVERVIEW raw:', obj);
-      writeStatus('Alpha Vantage: Overview erhalten', 'ok');
+      detectedCurrency = obj.Currency || null;
+      writeStatus('Alpha Vantage: Overview erhalten' + (detectedCurrency ? ' ('+detectedCurrency+')' : ''), 'ok');
       var data = [
-        { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization) : '–' },
+        { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization, detectedCurrency) : '–' },
         { title: 'KGV (PE)', value: obj.PERatio ? (Math.round(Number(obj.PERatio)*10)/10) : '–' },
-        { title: 'Umsatz (letzte Periode)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM)) : '–' },
+        { title: 'Umsatz (letzte Periode)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM), detectedCurrency) : '–' },
         { title: 'EPS', value: obj.EPS ? (Math.round(Number(obj.EPS)*100)/100) : '–' },
-        { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow)) : '–' },
-        { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA)) : '–' },
-        { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM)) : '–' },
+        { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow), detectedCurrency) : '–' },
+        { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA), detectedCurrency) : '–' },
+        { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM), detectedCurrency) : '–' },
         { title: 'Dividende (letzter)', value: obj.DividendYield ? (Math.round(Number(obj.DividendYield)*1000)/10)+'%' : '–' },
         { title: 'Operative Marge', value: obj.ProfitMargin ? formatMargin(Number(obj.ProfitMargin)) : '–' }
       ];
@@ -159,10 +183,19 @@
       if(!r.ok) throw new Error('proxy-error-'+r.status);
       return r.json();
     }).then(function(obj){
-      if(obj && obj.data && Array.isArray(obj.data)){
-        writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'ok');
-        try{ writeCache(symbol, obj.data); }catch(e){}
-        return obj.data;
+      // Proxy may return two shapes: array or wrapped object with currency
+      if(obj && obj.data){
+        if(obj.data.data && Array.isArray(obj.data.data)){
+          detectedCurrency = obj.data.currency || null;
+          writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ') — Währung: ' + (detectedCurrency||'unbekannt'), 'ok');
+          try{ writeCache(symbol, obj.data.data); }catch(e){}
+          return obj.data.data;
+        }
+        if(Array.isArray(obj.data)){
+          writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'ok');
+          try{ writeCache(symbol, obj.data); }catch(e){}
+          return obj.data;
+        }
       }
       throw new Error('proxy-empty');
     });

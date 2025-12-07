@@ -158,6 +158,19 @@
     return base * multiplier;
   }
 
+  // Try to detect currency code from a string token (currency symbol or code)
+  function detectCurrencyFromString(s){
+    if(!s) return null;
+    var str = String(s);
+    if(/\bCHF\b/i.test(str) || /CHF/.test(str)) return 'CHF';
+    if(/\u20AC/.test(str) || /\bEUR\b/i.test(str)) return 'EUR';
+    if(/\$/.test(str) || /\bUSD\b/i.test(str)) return 'USD';
+    if(/\u00A3/.test(str) || /\bGBP\b/i.test(str)) return 'GBP';
+    if(/\u00A5/.test(str) || /\bJPY\b/i.test(str)) return 'JPY';
+    if(/\bCNY\b/i.test(str)) return 'CNY';
+    return null;
+  }
+
   // Finnhub integration removed — Alpha Vantage is used as the single live source.
 
   // Alpha Vantage fallback: use OVERVIEW endpoint to map key fields
@@ -189,8 +202,8 @@
       var data = [
         { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization, detectedCurrency) : '–' },
         { title: 'Umsatz (letzte Periode)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM), detectedCurrency) : '–' },
-        { title: 'KGV (PE)', value: obj.PERatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(Number(obj.PERatio)*10)/10) : '–' },
-        { title: 'EPS', value: obj.EPS ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(Number(obj.EPS)*100)/100) : '–' },
+          { title: 'KGV (PE)', value: obj.PERatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(Number(obj.PERatio)*10)/10) : '–' },
+          { title: 'EPS', value: obj.EPS ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(Number(obj.EPS)*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–' },
         { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow), detectedCurrency) : '–' },
         { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA), detectedCurrency) : '–' },
         { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM), detectedCurrency) : '–' },
@@ -240,7 +253,7 @@
               if(t.indexOf('Marktkapital')!==-1) return { title: t, value: n!==null ? normalizeMarketCap(n, detectedCurrency) : '–', sub: it.sub };
               if(t.indexOf('KGV')!==-1) return { title: t, value: n!==null ? (Math.round(n*10)/10) : '–', sub: it.sub };
               if(t.indexOf('Umsatz')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
-              if(t === 'EPS') return { title: t, value: n!==null ? (Math.round(n*100)/100) : '–', sub: it.sub };
+              if(t === 'EPS') return { title: t, value: n!==null ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(n*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–', sub: it.sub };
               if(t.indexOf('Free Cash')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
               if(t === 'EBITDA') return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
               if(t.indexOf('Netto')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
@@ -276,17 +289,18 @@
       var v = it.value;
       if(v === null || v === undefined) return { title: t, value: '–', sub: it.sub };
       var s = String(v);
+      // determine currency: passed-in currency, or try to detect from value text, or fallback to module detectedCurrency
+      var localCurrency = currency || detectCurrencyFromString(s) || detectedCurrency || (/^[A-Z]{1,5}$/.test(symbol) ? 'USD' : null);
       var n = parseScaledNumber(s);
       if(n === null) return { title: t, value: s, sub: it.sub };
-      if(n === null) return { title: t, value: s, sub: it.sub };
       try{
-        if(t.indexOf('Marktkapital')!==-1) return { title: t, value: normalizeMarketCap(n, currency), sub: it.sub };
+        if(t.indexOf('Marktkapital')!==-1) return { title: t, value: normalizeMarketCap(n, localCurrency), sub: it.sub };
         if(t.indexOf('KGV')!==-1) return { title: t, value: new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(n*10)/10), sub: it.sub };
-        if(t.indexOf('Umsatz')!==-1) return { title: t, value: fmtNumber(n, currency), sub: it.sub };
-        if(t === 'EPS') return { title: t, value: new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(n*100)/100), sub: it.sub };
-        if(t.indexOf('Free Cash')!==-1) return { title: t, value: fmtNumber(n, currency), sub: it.sub };
-        if(t === 'EBITDA') return { title: t, value: fmtNumber(n, currency), sub: it.sub };
-        if(t.indexOf('Netto')!==-1) return { title: t, value: fmtNumber(n, currency), sub: it.sub };
+        if(t.indexOf('Umsatz')!==-1) return { title: t, value: fmtNumber(n, localCurrency), sub: it.sub };
+        if(t === 'EPS') return { title: t, value: (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(n*100)/100) + (localCurrency ? ' ' + currencySymbol(localCurrency) : '')), sub: it.sub };
+        if(t.indexOf('Free Cash')!==-1) return { title: t, value: fmtNumber(n, localCurrency), sub: it.sub };
+        if(t === 'EBITDA') return { title: t, value: fmtNumber(n, localCurrency), sub: it.sub };
+        if(t.indexOf('Netto')!==-1) return { title: t, value: fmtNumber(n, localCurrency), sub: it.sub };
         if(t.indexOf('Dividende')!==-1){
           if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
           return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };

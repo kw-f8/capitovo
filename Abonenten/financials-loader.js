@@ -116,6 +116,26 @@
     return (Math.round(n*10)/10) + '%';
   }
 
+  // Robust number parser usable across the module (accepts German and English formats,
+  // removes currency signs and thousand separators, returns Number or null)
+  function toNumber(x){
+    if(x===null||x===undefined||x==='') return null;
+    var s = String(x).trim();
+    s = s.replace(/[€$£¥]/g,'').trim();
+    // If both dot and comma present, assume dot is thousands and comma is decimal
+    if(s.indexOf('.') !== -1 && s.indexOf(',') !== -1){
+      s = s.replace(/\./g,'').replace(/,/g,'.');
+    } else if(s.indexOf(',') !== -1){
+      // If only comma present, assume comma is decimal separator
+      s = s.replace(/\./g,'').replace(/,/g,'.');
+    } else {
+      // Remove any non-numeric characters except dot, minus and exponent
+      s = s.replace(/[^0-9\.\-eE]/g,'');
+    }
+    var n = Number(s);
+    return isFinite(n) ? n : null;
+  }
+
   // Finnhub integration removed — Alpha Vantage is used as the single live source.
 
   // Alpha Vantage fallback: use OVERVIEW endpoint to map key fields

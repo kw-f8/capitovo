@@ -16,6 +16,22 @@
     }catch(e){ /* ignore in weird environments */ }
   }
 
+  // Caching: cache Alpha Vantage overview in localStorage to avoid frequent requests.
+  var CACHE_TTL_HOURS = (window.FINANCIALS_CACHE_TTL_HOURS && Number(window.FINANCIALS_CACHE_TTL_HOURS)) || 36; // default 36h
+  function cacheKey(sym){ return 'capitovo_fin_overview_v1_' + String(sym).toUpperCase(); }
+  function readCache(sym){
+    try{
+      var k = cacheKey(sym); var raw = localStorage.getItem(k); if(!raw) return null;
+      var obj = JSON.parse(raw); if(!obj || !obj.ts || !obj.data) return null;
+      var ageMs = Date.now() - Number(obj.ts || 0);
+      var ageH = ageMs/36e5;
+      return { ageHours: ageH, data: obj.data };
+    }catch(e){ return null; }
+  }
+  function writeCache(sym, data){
+    try{ var k = cacheKey(sym); localStorage.setItem(k, JSON.stringify({ ts: Date.now(), data: data })); }catch(e){}
+  }
+
   function createBox(title, value, sub){
     var box = document.createElement('div');
     box.className = 'financial-box p-3 bg-white rounded';
@@ -87,6 +103,16 @@
     var key = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
     if(!key) return Promise.reject(new Error('no-alpha-key'));
     var url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + symbol + '&apikey=' + key;
+    // Check cache first
+    try{
+      var cached = readCache(symbol);
+      if(cached && cached.data && cached.ageHours <= CACHE_TTL_HOURS){
+        writeStatus('Alpha Vantage: Verwende gecachte Daten (Alter ' + Math.round(cached.ageHours) + 'h)', 'info');
+        return Promise.resolve(cached.data);
+      }
+      if(cached){ writeStatus('Alpha Vantage: Gecachte Daten vorhanden (Alter ' + Math.round(cached.ageHours) + 'h) — versuche Aktualisierung', 'info'); }
+    }catch(e){}
+
     writeStatus('Alpha Vantage: Anfrage gestartet', 'info');
     return fetch(url).then(function(r){
       if(!r.ok) { writeStatus('Alpha Vantage: HTTP ' + r.status, 'warn'); throw new Error('alpha-error'); }
@@ -119,14 +145,29 @@
         { title: 'Dividende (letzter)', value: obj.DividendYield ? (Math.round(Number(obj.DividendYield)*1000)/10)+'%' : '–' },
         { title: 'Operative Marge', value: obj.ProfitMargin ? formatMargin(Number(obj.ProfitMargin)) : '–' }
       ];
+      // cache successful response
+      try{ writeCache(symbol, data); }catch(e){}
       return data;
+    });
+  }
+
+  // If fetchAlpha fails, but cache exists, return cached data to keep UI populated.
+  function fetchAlphaWithCacheFallback(){
+    var cached = readCache(symbol);
+    return fetchAlpha().catch(function(err){
+      if(cached && cached.data){
+        writeStatus('Alpha Vantage: Fehler — verwende ältere gecachte Daten (Alter ' + Math.round(cached.ageHours) + 'h)', 'warn');
+        return cached.data;
+      }
+      throw err;
     });
   }
 
   // Use Alpha Vantage as the single primary source, fallback to local JSON.
   console.debug('Using Alpha Vantage as primary data source');
-  fetchAlpha().then(function(ad){ renderFallback(ad); }).catch(function(aerr){
+  fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); }).catch(function(aerr){
     console.warn('alpha failed', aerr);
+    writeStatus('Alpha Vantage: Kein Live-Datensatz verfügbar — verwende lokalen Fallback', 'error');
     loadLocalFallback();
   });
 

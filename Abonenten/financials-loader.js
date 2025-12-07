@@ -77,11 +77,11 @@
     if(!isFinite(n)) return '–';
     if(Math.abs(n) >= 1e9){
       var v = Math.round((n/1e9)*10)/10;
-      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(v) + ' Mrd' + (currency ? ' ' + currencySymbol(currency) : '');
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(v) + ' Mrd.' + (currency ? ' ' + currencySymbol(currency) : '');
     }
     if(Math.abs(n) >= 1e6){
       var v2 = Math.round((n/1e6)*10)/10;
-      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(v2) + ' Mio' + (currency ? ' ' + currencySymbol(currency) : '');
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(v2) + ' Mio.' + (currency ? ' ' + currencySymbol(currency) : '');
     }
     return new Intl.NumberFormat('de-DE').format(Math.round(n)) + (currency ? ' ' + currencySymbol(currency) : '');
   }
@@ -93,15 +93,15 @@
     while(n > 1e14){ n = n/1000; }
     if(n >= 1e12) {
       var b = Math.round((n/1e12)*10)/10;
-      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(b) + ' Bio' + (currency ? ' ' + currencySymbol(currency) : '');
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(b) + ' Bio.' + (currency ? ' ' + currencySymbol(currency) : '');
     }
     if(n >= 1e9) {
       var m = Math.round((n/1e9)*10)/10;
-      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(m) + ' Mrd' + (currency ? ' ' + currencySymbol(currency) : '');
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(m) + ' Mrd.' + (currency ? ' ' + currencySymbol(currency) : '');
     }
     if(n >= 1e6) {
       var mi = Math.round((n/1e6)*10)/10;
-      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(mi) + ' Mio' + (currency ? ' ' + currencySymbol(currency) : '');
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(mi) + ' Mio.' + (currency ? ' ' + currencySymbol(currency) : '');
     }
     return new Intl.NumberFormat('de-DE').format(Math.round(n)) + (currency ? ' ' + currencySymbol(currency) : '');
   }

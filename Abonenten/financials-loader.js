@@ -128,7 +128,7 @@
       var cached = readCache(symbol);
       if(cached && cached.data && cached.ageHours <= CACHE_TTL_HOURS){
         writeStatus('Alpha Vantage: Verwende gecachte Daten (Alter ' + Math.round(cached.ageHours) + 'h)', 'info');
-        return Promise.resolve(cached.data);
+        try{ var f = ensureFormatted(cached.data, detectedCurrency); return Promise.resolve(f); }catch(e){ return Promise.resolve(cached.data); }
       }
       if(cached){ writeStatus('Alpha Vantage: Gecachte Daten vorhanden (Alter ' + Math.round(cached.ageHours) + 'h) — versuche Aktualisierung', 'info'); }
     }catch(e){}
@@ -146,9 +146,9 @@
       writeStatus('Alpha Vantage: Overview erhalten' + (detectedCurrency ? ' ('+detectedCurrency+')' : ''), 'ok');
       var data = [
         { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization, detectedCurrency) : '–' },
-        { title: 'KGV (PE)', value: obj.PERatio ? (Math.round(Number(obj.PERatio)*10)/10) : '–' },
         { title: 'Umsatz (letzte Periode)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM), detectedCurrency) : '–' },
-        { title: 'EPS', value: obj.EPS ? (Math.round(Number(obj.EPS)*100)/100) : '–' },
+        { title: 'KGV (PE)', value: obj.PERatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(Number(obj.PERatio)*10)/10) : '–' },
+        { title: 'EPS', value: obj.EPS ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(Number(obj.EPS)*100)/100) : '–' },
         { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow), detectedCurrency) : '–' },
         { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA), detectedCurrency) : '–' },
         { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM), detectedCurrency) : '–' },
@@ -166,7 +166,7 @@
     return fetchAlpha().catch(function(err){
       if(cached && cached.data){
         writeStatus('Alpha Vantage: Fehler — verwende ältere gecachte Daten (Alter ' + Math.round(cached.ageHours) + 'h)', 'warn');
-        return cached.data;
+        try{ return ensureFormatted(cached.data, detectedCurrency); }catch(e){ return cached.data; }
       }
       throw err;
     });
@@ -229,12 +229,43 @@
           return formatted;
         }
         if(Array.isArray(obj.data)){
-          writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'ok');
-          try{ writeCache(symbol, obj.data); }catch(e){}
-          return obj.data;
+          writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'info');
+          // ensure array responses are formatted consistently
+          var fmt = ensureFormatted(obj.data, obj.currency || detectedCurrency);
+          try{ writeCache(symbol, fmt); }catch(e){}
+          return fmt;
         }
       }
       throw new Error('proxy-empty');
+    });
+  }
+  
+  function ensureFormatted(arr, currency){
+    if(!Array.isArray(arr)) return arr;
+    return arr.map(function(it){
+      var t = it.title || '';
+      var v = it.value;
+      if(v === null || v === undefined) return { title: t, value: '–', sub: it.sub };
+      var s = String(v);
+      var m = s.match(/[-+]?([0-9\.\,]+)/);
+      if(!m) return { title: t, value: s, sub: it.sub };
+      var n = toNumber(m[0]);
+      if(n === null) return { title: t, value: s, sub: it.sub };
+      try{
+        if(t.indexOf('Marktkapital')!==-1) return { title: t, value: normalizeMarketCap(n, currency), sub: it.sub };
+        if(t.indexOf('KGV')!==-1) return { title: t, value: new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(n*10)/10), sub: it.sub };
+        if(t.indexOf('Umsatz')!==-1) return { title: t, value: fmtNumber(n, currency), sub: it.sub };
+        if(t === 'EPS') return { title: t, value: new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(n*100)/100), sub: it.sub };
+        if(t.indexOf('Free Cash')!==-1) return { title: t, value: fmtNumber(n, currency), sub: it.sub };
+        if(t === 'EBITDA') return { title: t, value: fmtNumber(n, currency), sub: it.sub };
+        if(t.indexOf('Netto')!==-1) return { title: t, value: fmtNumber(n, currency), sub: it.sub };
+        if(t.indexOf('Dividende')!==-1){
+          if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
+          return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };
+        }
+        if(t.indexOf('Marge')!==-1) return { title: t, value: formatMargin(n), sub: it.sub };
+      }catch(e){ }
+      return { title: t, value: s, sub: it.sub };
     });
   }
 

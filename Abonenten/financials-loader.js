@@ -136,6 +136,28 @@
     return isFinite(n) ? n : null;
   }
 
+  // Parse a possibly scaled string like "4,1 Bio" or "416,2 Mrd" into a raw Number.
+  // Returns Number or null. Recognizes German and English scale words/suffixes.
+  function parseScaledNumber(input){
+    if(input===null||input===undefined||input==='') return null;
+    var s = String(input).trim();
+    // remove currency symbols early for easier matching
+    s = s.replace(/[€$£¥]/g,'').trim();
+    // find numeric token
+    var m = s.match(/[-+]?[0-9\.,]+/);
+    if(!m) return null;
+    var base = toNumber(m[0]);
+    if(base===null) return null;
+    // detect scale suffix (after the number)
+    var rest = s.slice(m.index + m[0].length).toLowerCase();
+    var multiplier = 1;
+    if(/\b(bio|billion|t|trillion)\b/.test(rest)) multiplier = 1e12;
+    else if(/\b(mrd|milliard|bn|b)\b/.test(rest)) multiplier = 1e9;
+    else if(/\b(mio|million|m)\b/.test(rest)) multiplier = 1e6;
+    else if(/\b(tsd|k)\b/.test(rest)) multiplier = 1e3;
+    return base * multiplier;
+  }
+
   // Finnhub integration removed — Alpha Vantage is used as the single live source.
 
   // Alpha Vantage fallback: use OVERVIEW endpoint to map key fields
@@ -208,25 +230,12 @@
         if(obj.data.data && Array.isArray(obj.data.data)){
           detectedCurrency = obj.data.currency || null;
           writeStatus('Proxy: Rohdaten erhalten (Quelle: ' + (obj.source||'proxy') + ') — Währung: ' + (detectedCurrency||'unbekannt'), 'info');
-          function toNumber(x){
-            if(x===null||x===undefined||x==='') return null;
-            var s = String(x).trim();
-            s = s.replace(/[€$£¥]/g,'').trim();
-            if(s.indexOf('.') !== -1 && s.indexOf(',') !== -1){
-              s = s.replace(/\./g,'').replace(/,/g,'.');
-            } else if(s.indexOf(',') !== -1){
-              s = s.replace(/\./g,'').replace(/,/g,'.');
-            } else {
-              s = s.replace(/[^0-9\.\-eE]/g,'');
-            }
-            var n = Number(s);
-            return isFinite(n) ? n : null;
-          }
+          // Use module-level helpers `toNumber` and `parseScaledNumber` for robust parsing
           var raw = obj.data.data;
           var formatted = raw.map(function(it){
             var t = it.title || '';
             var v = it.value;
-            var n = toNumber(v);
+            var n = (typeof v === 'string') ? parseScaledNumber(v) : toNumber(v);
             try{
               if(t.indexOf('Marktkapital')!==-1) return { title: t, value: n!==null ? normalizeMarketCap(n, detectedCurrency) : '–', sub: it.sub };
               if(t.indexOf('KGV')!==-1) return { title: t, value: n!==null ? (Math.round(n*10)/10) : '–', sub: it.sub };
@@ -267,9 +276,8 @@
       var v = it.value;
       if(v === null || v === undefined) return { title: t, value: '–', sub: it.sub };
       var s = String(v);
-      var m = s.match(/[-+]?([0-9\.\,]+)/);
-      if(!m) return { title: t, value: s, sub: it.sub };
-      var n = toNumber(m[0]);
+      var n = parseScaledNumber(s);
+      if(n === null) return { title: t, value: s, sub: it.sub };
       if(n === null) return { title: t, value: s, sub: it.sub };
       try{
         if(t.indexOf('Marktkapital')!==-1) return { title: t, value: normalizeMarketCap(n, currency), sub: it.sub };

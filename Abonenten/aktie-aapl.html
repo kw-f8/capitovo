@@ -316,7 +316,20 @@
     }
 
     var alphaKey = window.ALPHA_VANTAGE_KEY || null;
-    writeStatus('Alpha Vantage Key: ' + (alphaKey ? 'gefunden' : 'nicht gesetzt'), alphaKey ? 'ok' : 'warn');
+    // If a proxy is available or cached data exists, downgrade the missing-key warning to info
+    var proxyUrl = (window.FINANCIALS_PROXY_URL && String(window.FINANCIALS_PROXY_URL).trim()) || null;
+    var cachePresent = false;
+    try{
+      var raw = localStorage.getItem('capitovo_fin_overview_v1_AAPL');
+      if(raw){ var obj = JSON.parse(raw); cachePresent = !!(obj && obj.data); }
+    }catch(e){ cachePresent = false; }
+
+    if(!alphaKey && (proxyUrl || cachePresent)){
+      var reason = proxyUrl ? 'Proxy verfügbar' : 'Gecachte Daten vorhanden';
+      writeStatus('Alpha Vantage Key: nicht gesetzt — ' + reason, 'info');
+    } else {
+      writeStatus('Alpha Vantage Key: ' + (alphaKey ? 'gefunden' : 'nicht gesetzt'), alphaKey ? 'ok' : 'warn');
+    }
 
     if(alphaKey){
       var testUrl = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=AAPL&apikey=' + alphaKey;

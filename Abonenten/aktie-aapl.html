@@ -294,233 +294,42 @@
   </script>
 
     <script>
-    // Fallback: wenn TradingView kein 3x3 liefert (oder ein iframe verwendet),
-    // rendern wir eigene 9 Kästchen. Wenn FMP 403 liefert, nutzen wir lokale Beispielzahlen.
-    (function(){
-      var container = document.getElementById('financials-overview');
-      if(!container) return;
-
-      function createBox(title, value, sub){
-        var box = document.createElement('div');
-        box.className = 'financial-box p-3 bg-white rounded';
-        var t = document.createElement('div'); t.className='fb-title'; t.textContent = title;
-        var v = document.createElement('div'); v.className='fb-value'; v.textContent = value;
-        box.appendChild(t); box.appendChild(v);
-        if(sub){ var s = document.createElement('div'); s.className='fb-sub'; s.textContent = sub; box.appendChild(s); }
-        return box;
-      }
-
-      function renderFallback(data){
-        Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); });
-        var ifr = container.querySelector('iframe'); if(ifr) ifr.style.display='none';
-        container.classList.add('three-by-three');
-        Array.from(container.children).forEach(function(ch){ ch.remove(); });
-        for(var i=0;i<9;i++){
-          var defaults = ['Market Cap','KGV','Umsatz','EPS','Free Cash Flow','EBITDA','Net Income','Dividende','Operative Marge'];
-          var d = data && data[i] ? data[i] : { title: defaults[i], value: '–', sub: '' };
-          container.appendChild(createBox(d.title, d.value, d.sub));
-        }
-      }
-
-      function loadLocalFallback(){
-        // relative path from /Abonenten/ to /data/
-        var url = '../data/fallback_financials_aapl.json';
-        fetch(url).then(function(r){ if(!r.ok) throw new Error('no-local-fallback'); return r.json(); }).then(function(json){
-          if(Array.isArray(json) && json.length>=9){ renderFallback(json); }
-          else renderFallback();
-        }).catch(function(){ renderFallback(); });
-      }
-
-      function fetchAndParse(urls){
-        return Promise.all(urls.map(function(u){
-          return fetch(u).then(function(r){
-            if(r.status === 403) throw { type: 'fmp-403' };
-            if(!r.ok) throw { type: 'fmp-error', status: r.status };
-            return r.json();
-          });
-        }));
-      }
-
-      // Finnhub client-side fetch (used as fallback/live source)
-      function fetchFinnhubAndRender(finnKey){
-        if(!finnKey) return Promise.reject(new Error('no-finn-key'));
-        var purl = 'https://finnhub.io/api/v1/stock/profile2?symbol=' + symbol + '&token=' + finnKey;
-        var murl = 'https://finnhub.io/api/v1/stock/metric?symbol=' + symbol + '&metric=all&token=' + finnKey;
-        return Promise.all([fetch(purl), fetch(murl)]).then(function(res){
-          if(!res[0].ok || !res[1].ok) throw new Error('finnhub-error');
-          return Promise.all([res[0].json(), res[1].json()]);
-        }).then(function(results){
-          var profile = results[0] || {};
-          var metricsObj = results[1] || {};
-          var m = metricsObj.metric || {};
-
-          function safeFn(){ return '–'; }
-
-          var data = [
-            { title: 'Marktkapitalisierung', value: profile.marketCapitalization ? (Math.round(profile.marketCapitalization*10)/10)+' Mrd' : (m.marketCapitalization ? (Math.round(m.marketCapitalization*10)/10)+' Mrd' : '–') },
-            { title: 'KGV (PE)', value: (m.peNormalizedAnnual || m.peTTM || m.peBasicExclExtraTTM) ? (Math.round((m.peNormalizedAnnual||m.peTTM||m.peBasicExclExtraTTM)*10)/10) : '–' },
-            { title: 'Umsatz (letzte Periode)', value: (m.revenueTTM || m.revenue) ? (Math.round((m.revenueTTM||m.revenue)/1e9*10)/10)+' Mrd' : '–' },
-            { title: 'EPS', value: (m.epsTTM || m.eps) ? (Math.round((m.epsTTM||m.eps)*100)/100) : '–' },
-            { title: 'Free Cash Flow', value: (m.freeCashFlowTTM || m.freeCashFlow) ? (Math.round((m.freeCashFlowTTM||m.freeCashFlow)/1e9*10)/10)+' Mrd' : '–' },
-            { title: 'EBITDA', value: (m.ebitda || m.ebitdaTTM) ? (Math.round((m.ebitda||m.ebitdaTTM)/1e9*10)/10)+' Mrd' : '–' },
-            { title: 'Nettoergebnis', value: (m.netIncomeTTM || m.netIncome) ? (Math.round((m.netIncomeTTM||m.netIncome)/1e9*10)/10)+' Mrd' : '–' },
-            { title: 'Dividende (letzter)', value: profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : (m.dividendYield ? (Math.round(m.dividendYield*1000)/10)+'%' : '–') },
-            { title: 'Operative Marge', value: (m.operatingMarginTTM || m.operatingMargin) ? (Math.round((m.operatingMarginTTM||m.operatingMargin)*1000)/10)+'%' : '–' }
-          ];
-
-          renderFallback(data);
-          return true;
-        });
-      }
-
-      var localApiKey = window.FMP_API_KEY || null;
-      var proxyAvailable = true;
-      var apiKey = localApiKey;
-      var symbol = 'AAPL';
-      var profileUrl = 'https://financialmodelingprep.com/api/v3/profile/' + symbol + '?apikey=' + apiKey;
-      var incomeUrl = 'https://financialmodelingprep.com/api/v3/income-statement/' + symbol + '?limit=1&apikey=' + apiKey;
-      var cashUrl = 'https://financialmodelingprep.com/api/v3/cash-flow-statement/' + symbol + '?limit=1&apikey=' + apiKey;
-      var ratiosUrl = 'https://financialmodelingprep.com/api/v3/ratios-ttm/' + symbol + '?limit=1&apikey=' + apiKey;
-
-      function fmtNumber(n){
-        if(n===null||n===undefined||n==='') return '–';
-        if(typeof n !== 'number') n = Number(n);
-        if(!isFinite(n)) return '–';
-        if(Math.abs(n) >= 1e9) return (Math.round((n/1e9)*10)/10) + ' Mrd';
-        if(Math.abs(n) >= 1e6) return (Math.round((n/1e6)*10)/10) + ' Mio';
-        return new Intl.NumberFormat('de-DE').format(Math.round(n));
-      }
-
-      // If a local key is not present, try the server proxy endpoint first
-      if(!apiKey && proxyAvailable){
-        fetch('/api/financials/' + symbol).then(function(r){
-          if(!r.ok) throw new Error('proxy-not-available');
-          return r.json();
-        }).then(function(payload){
-          var profile = payload.profile && payload.profile[0] ? payload.profile[0] : {};
-          var income = payload.income && payload.income[0] ? payload.income[0] : {};
-          var cash = payload.cash && payload.cash[0] ? payload.cash[0] : {};
-          var ratios = payload.ratios && payload.ratios[0] ? payload.ratios[0] : {};
-          var data = [
-            { title: 'Marktkapitalisierung', value: profile.mktCap ? fmtNumber(profile.mktCap) : '–' },
-            { title: 'KGV (PE)', value: profile.pe ? (Math.round(profile.pe*10)/10) : (ratios.priceEarningsRatio ? ratios.priceEarningsRatio : '–') },
-            { title: 'Umsatz (letzte Periode)', value: income.revenue ? fmtNumber(income.revenue) : '–' },
-            { title: 'EPS', value: (income.eps || profile.eps) ? (Math.round((income.eps||profile.eps)*100)/100) : '–' },
-            { title: 'Free Cash Flow', value: cash.freeCashFlow ? fmtNumber(cash.freeCashFlow) : '–' },
-            { title: 'EBITDA', value: income.ebitda ? fmtNumber(income.ebitda) : '–' },
-            { title: 'Nettoergebnis', value: income.netIncome ? fmtNumber(income.netIncome) : '–' },
-            { title: 'Dividende (letzter)', value: profile.lastDiv ? profile.lastDiv : (profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : '–') },
-            { title: 'Operative Marge', value: ratios.operatingMargin ? (Math.round(ratios.operatingMargin*1000)/10)+'%' : (ratios.operatingProfitMargin ? (Math.round(ratios.operatingProfitMargin*1000)/10)+'%' : '–') }
-          ];
-          renderFallback(data);
-        }).catch(function(){
-          // Proxy not available — try Finnhub (if key present) then local fallback
-          var fkey = window.FINNHUB_API_KEY || null;
-          if(fkey){
-            fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); });
-          } else {
-            if(!apiKey){ loadLocalFallback(); }
-          }
-          return;
-        });
-      }
-
-      if(apiKey){
-        fetchAndParse([profileUrl, incomeUrl, cashUrl, ratiosUrl]).then(function(results){
-          try{
-            var profile = results[0] && results[0][0] ? results[0][0] : {};
-            var income = results[1] && results[1][0] ? results[1][0] : {};
-            var cash = results[2] && results[2][0] ? results[2][0] : {};
-            var ratios = results[3] && results[3][0] ? results[3][0] : {};
-
-            var data = [
-              { title: 'Marktkapitalisierung', value: profile.mktCap ? fmtNumber(profile.mktCap) : '–' },
-              { title: 'KGV (PE)', value: profile.pe ? (Math.round(profile.pe*10)/10) : (ratios.priceEarningsRatio ? ratios.priceEarningsRatio : '–') },
-              { title: 'Umsatz (letzte Periode)', value: income.revenue ? fmtNumber(income.revenue) : '–' },
-              { title: 'EPS', value: (income.eps || profile.eps) ? (Math.round((income.eps||profile.eps)*100)/100) : '–' },
-              { title: 'Free Cash Flow', value: cash.freeCashFlow ? fmtNumber(cash.freeCashFlow) : '–' },
-              { title: 'EBITDA', value: income.ebitda ? fmtNumber(income.ebitda) : '–' },
-              { title: 'Nettoergebnis', value: income.netIncome ? fmtNumber(income.netIncome) : '–' },
-              { title: 'Dividende (letzter)', value: profile.lastDiv ? profile.lastDiv : (profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : '–') },
-              { title: 'Operative Marge', value: ratios.operatingMargin ? (Math.round(ratios.operatingMargin*1000)/10)+'%' : (ratios.operatingProfitMargin ? (Math.round(ratios.operatingProfitMargin*1000)/10)+'%' : '–') }
-            ];
-            renderFallback(data);
-          }catch(e){ loadLocalFallback(); }
-        }).catch(function(err){
-          // If FMP responded with 403 or other error, try Finnhub if available
-          var fkey = window.FINNHUB_API_KEY || null;
-          if(err && err.type === 'fmp-403' && fkey){
-            fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); });
-          } else if(fkey){
-            // try finn hub anyway
-            fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); });
-          } else { loadLocalFallback(); }
-        });
-      } else {
-        // No API key: render local fallback so numbers are visible
-        // but allow TradingView to inject real boxes first
-        var hasBoxes = container.classList.contains('three-by-three') || container.querySelector('.three-by-three-inner');
-        setTimeout(function(){ if(!hasBoxes && !container.querySelector('iframe')){
-            var fkey = window.FINNHUB_API_KEY || null;
-            if(fkey){ fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); }); }
-            else loadLocalFallback();
-          } }, 600);
-      }
-    })();
-  </script>
+    // Fallback removed: the external `financials-loader.js` uses Alpha Vantage and local fallback.
+    // This page relies on that loader to populate `#financials-overview` and the
+    // MutationObserver above to apply the 3x3 grid.
+    </script>
 
   <!-- sizing handled by CSS (right column flex + iframe 100% height) -->
 
   <script>
-    // Diagnostic helper: writes simple status messages into the financials box
-    (function(){
-      var container = document.getElementById('financials-overview');
-      if(!container) return;
-      function writeStatus(msg, level){
-        var el = document.createElement('div');
-        el.style.fontSize = '0.95rem';
-        el.style.padding = '6px 0';
-        el.style.color = (level==='error' ? '#b91c1c' : (level==='warn' ? '#92400e' : '#374151'));
-        el.textContent = msg;
-        // prepend so it's visible immediately
-        container.insertBefore(el, container.firstChild);
-      }
+  // Simple diagnostic: check presence of Alpha Vantage key and attempt a quick overview fetch.
+  (function(){
+    var container = document.getElementById('financials-overview');
+    if(!container) return;
+    function writeStatus(msg, level){
+      var el = document.createElement('div');
+      el.style.fontSize = '0.95rem';
+      el.style.padding = '6px 0';
+      el.style.color = (level==='error' ? '#b91c1c' : (level==='warn' ? '#92400e' : '#374151'));
+      el.textContent = msg;
+      container.insertBefore(el, container.firstChild);
+    }
 
-      // Key presence
-      var key = window.FMP_API_KEY || null;
-      writeStatus('FMP API Key: ' + (key ? 'gefunden' : 'nicht gefunden'), key ? 'ok' : 'warn');
+    var alphaKey = window.ALPHA_VANTAGE_KEY || null;
+    writeStatus('Alpha Vantage Key: ' + (alphaKey ? 'gefunden' : 'nicht gesetzt'), alphaKey ? 'ok' : 'warn');
 
-      // Test proxy availability
-      fetch('/api/financials/AAPL',{ method: 'GET' }).then(function(r){
-        if(r.ok){ writeStatus('Lokaler Proxy: erreichbar (Status ' + r.status + ')', 'ok'); }
-        else { writeStatus('Lokaler Proxy: antwortet mit Status ' + r.status, 'warn'); }
-      }).catch(function(err){
-        writeStatus('Lokaler Proxy: nicht erreichbar (' + String(err) + ')', 'warn');
-      });
-
-      // Test Finnhub availability (if key present)
-      var fkey = window.FINNHUB_API_KEY || null;
-      if(fkey){
-        var fu = 'https://finnhub.io/api/v1/stock/profile2?symbol=AAPL&token='+fkey;
-        fetch(fu).then(function(r){
-          if(!r.ok){ writeStatus('Finnhub: Antwort Status ' + r.status, 'warn'); return r.text().then(function(t){ writeStatus('Finnhub Antwort: '+t.slice(0,200), 'warn'); }); }
-          return r.json().then(function(j){ writeStatus('Finnhub: Profil erhalten (Name: ' + (j.name||'n/a') + ')', 'ok'); });
-        }).catch(function(err){ writeStatus('Finnhub: Fehler beim Abruf ('+String(err)+')', 'error'); });
-      } else {
-        writeStatus('Finnhub: Key nicht gesetzt', 'warn');
-      }
-
-      // If key present, test direct FMP fetch
-      if(key){
-        var url = 'https://financialmodelingprep.com/api/v3/profile/AAPL?apikey=' + key;
-        fetch(url).then(function(r){
-          if(!r.ok){ writeStatus('Direkter FMP‑Abruf: Fehler Status ' + r.status, 'error'); return r.text().then(function(t){ writeStatus('Antwort: '+t.slice(0,200), 'warn'); }); }
-          return r.json().then(function(j){ writeStatus('Direkter FMP‑Abruf: OK — Profil erhalten', 'ok'); });
-        }).catch(function(err){ writeStatus('Direkter FMP‑Abruf: Fehler (' + String(err) + ') — CORS oder Netzwerk?', 'error'); });
-      } else {
-        writeStatus('Direkter FMP‑Abruf: übersprungen (kein Key)', 'warn');
-      }
-    })();
+    if(alphaKey){
+      var testUrl = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=AAPL&apikey=' + alphaKey;
+      fetch(testUrl).then(function(r){
+        if(!r.ok) { writeStatus('Alpha Vantage: Antwort Status ' + r.status, 'warn'); return; }
+        return r.json().then(function(j){
+          if(j && Object.keys(j).length>0 && !j.Note){ writeStatus('Alpha Vantage: Überblick erhalten', 'ok'); }
+          else if(j && j.Note){ writeStatus('Alpha Vantage: API Limit/Notice: ' + (j.Note||'—'), 'warn'); }
+          else { writeStatus('Alpha Vantage: Keine Daten im Overview', 'warn'); }
+        });
+      }).catch(function(err){ writeStatus('Alpha Vantage: Abruf fehlgeschlagen ('+String(err)+')', 'error'); });
+    }
+  })();
   </script>
 
 </body>

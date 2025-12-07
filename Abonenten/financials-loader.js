@@ -1,6 +1,5 @@
 (function(){
-  // External loader for financials — uses Finnhub and falls back to local JSON.
-  var FINN_KEY = (window.FINNHUB_API_KEY && String(window.FINNHUB_API_KEY).trim()) || '';
+  // External loader for financials — uses Alpha Vantage OVERVIEW and falls back to local JSON.
   var symbol = 'AAPL';
   var container = document.getElementById('financials-overview');
   if(!container) return;
@@ -66,35 +65,7 @@
     return (Math.round(n*10)/10) + '%';
   }
 
-  function fetchFinnhub(){
-    if(!FINN_KEY) return Promise.reject(new Error('no-finn-key'));
-    var profileUrl = 'https://finnhub.io/api/v1/stock/profile2?symbol=' + symbol + '&token=' + FINN_KEY;
-    var metricUrl = 'https://finnhub.io/api/v1/stock/metric?symbol=' + symbol + '&metric=all&token=' + FINN_KEY;
-    return Promise.all([fetch(profileUrl), fetch(metricUrl)]).then(function(res){
-      if(!res[0].ok || !res[1].ok) throw new Error('finnhub-error');
-      return Promise.all([res[0].json(), res[1].json()]);
-    }).then(function(results){
-      var profile = results[0] || {};
-      var metricsObj = results[1] || {};
-      var m = metricsObj.metric || {};
-      console.debug('FINNHUB profile raw:', profile);
-      console.debug('FINNHUB metrics raw:', m);
-
-      var mkt = profile.marketCapitalization || m.marketCapitalization || null;
-      var data = [
-        { title: 'Marktkapitalisierung', value: mkt ? normalizeMarketCap(mkt) : '–' },
-        { title: 'KGV (PE)', value: (m.peNormalizedAnnual || m.peTTM || m.peBasicExclExtraTTM) ? (Math.round((m.peNormalizedAnnual||m.peTTM||m.peBasicExclExtraTTM)*10)/10) : '–' },
-        { title: 'Umsatz (letzte Periode)', value: (m.revenueTTM || m.revenue) ? fmtNumber((m.revenueTTM||m.revenue)) : '–' },
-        { title: 'EPS', value: (m.epsTTM || m.eps) ? (Math.round((m.epsTTM||m.eps)*100)/100) : '–' },
-        { title: 'Free Cash Flow', value: (m.freeCashFlowTTM || m.freeCashFlow) ? fmtNumber((m.freeCashFlowTTM||m.freeCashFlow)) : '–' },
-        { title: 'EBITDA', value: (m.ebitda || m.ebitdaTTM) ? fmtNumber((m.ebitda||m.ebitdaTTM)) : '–' },
-        { title: 'Nettoergebnis', value: (m.netIncomeTTM || m.netIncome) ? fmtNumber((m.netIncomeTTM||m.netIncome)) : '–' },
-        { title: 'Dividende (letzter)', value: profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : (m.dividendYield ? (Math.round(m.dividendYield*1000)/10)+'%' : '–') },
-        { title: 'Operative Marge', value: (m.operatingMarginTTM || m.operatingMargin) ? formatMargin((m.operatingMarginTTM||m.operatingMargin)) : '–' }
-      ];
-      return data;
-    });
-  }
+  // Finnhub integration removed — Alpha Vantage is used as the single live source.
 
   // Alpha Vantage fallback: use OVERVIEW endpoint to map key fields
   function fetchAlpha(){

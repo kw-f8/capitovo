@@ -14,6 +14,18 @@
     return box;
   }
 
+  function writeStatus(msg, level){
+    try{
+      var el = document.createElement('div');
+      el.className = 'fb-status';
+      el.style.fontSize = '0.9rem';
+      el.style.padding = '6px 0';
+      el.style.color = (level==='error' ? '#b91c1c' : (level==='warn' ? '#92400e' : '#374151'));
+      el.textContent = msg;
+      container.insertBefore(el, container.firstChild);
+    }catch(e){}
+  }
+
   function renderFallback(data){
     Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); });
     var ifr = container.querySelector('iframe'); if(ifr) ifr.style.display='none';
@@ -72,10 +84,16 @@
     var key = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
     if(!key) return Promise.reject(new Error('no-alpha-key'));
     var url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + symbol + '&apikey=' + key;
+    writeStatus('Alpha Vantage: Anfrage gestartet', 'info');
     return fetch(url).then(function(r){
-      if(!r.ok) throw new Error('alpha-error');
+      if(!r.ok) { writeStatus('Alpha Vantage: HTTP ' + r.status, 'warn'); throw new Error('alpha-error'); }
       return r.json();
     }).then(function(obj){
+      if(obj && obj.Note){ writeStatus('Alpha Vantage: Notice/Limit — ' + String(obj.Note).slice(0,200), 'warn'); throw new Error('alpha-limit'); }
+      if(obj && obj['Error Message']){ writeStatus('Alpha Vantage: Error — ' + String(obj['Error Message']).slice(0,200), 'error'); throw new Error('alpha-error-message'); }
+      if(!obj || Object.keys(obj).length===0){ writeStatus('Alpha Vantage: Leere Antwort', 'warn'); throw new Error('alpha-empty'); }
+      console.debug('ALPHA OVERVIEW raw:', obj);
+      writeStatus('Alpha Vantage: Overview erhalten', 'ok');
       var data = [
         { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization) : '–' },
         { title: 'KGV (PE)', value: obj.PERatio ? (Math.round(Number(obj.PERatio)*10)/10) : '–' },
@@ -87,7 +105,6 @@
         { title: 'Dividende (letzter)', value: obj.DividendYield ? (Math.round(Number(obj.DividendYield)*1000)/10)+'%' : '–' },
         { title: 'Operative Marge', value: obj.ProfitMargin ? formatMargin(Number(obj.ProfitMargin)) : '–' }
       ];
-      console.debug('ALPHA OVERVIEW raw:', obj);
       return data;
     });
   }

@@ -100,7 +100,39 @@
     });
   }
 
-  // Try Finnhub first. If it fails, load local fallback.
-  fetchFinnhub().then(function(data){ renderFallback(data); }).catch(function(err){ console.warn('finnhub failed', err); loadLocalFallback(); });
+  // Alpha Vantage fallback: use OVERVIEW endpoint to map key fields
+  function fetchAlpha(){
+    var key = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
+    if(!key) return Promise.reject(new Error('no-alpha-key'));
+    var url = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + symbol + '&apikey=' + key;
+    return fetch(url).then(function(r){
+      if(!r.ok) throw new Error('alpha-error');
+      return r.json();
+    }).then(function(obj){
+      // Alpha Vantage OVERVIEW fields: MarketCapitalization, PERatio, EBITDA, RevenueTTM, EPS, DividendYield, ProfitMargin
+      var data = [
+        { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization) : '–' },
+        { title: 'KGV (PE)', value: obj.PERatio ? (Math.round(Number(obj.PERatio)*10)/10) : '–' },
+        { title: 'Umsatz (letzte Periode)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM)) : '–' },
+        { title: 'EPS', value: obj.EPS ? (Math.round(Number(obj.EPS)*100)/100) : '–' },
+        { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow)) : '–' },
+        { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA)) : '–' },
+        { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM)) : '–' },
+        { title: 'Dividende (letzter)', value: obj.DividendYield ? (Math.round(Number(obj.DividendYield)*1000)/10)+'%' : '–' },
+        { title: 'Operative Marge', value: obj.ProfitMargin ? formatMargin(Number(obj.ProfitMargin)) : '–' }
+      ];
+      console.debug('ALPHA OVERVIEW raw:', obj);
+      return data;
+    });
+  }
+
+  // Try Finnhub first. If it fails, try Alpha Vantage, then local fallback.
+  fetchFinnhub().then(function(data){ renderFallback(data); }).catch(function(err){
+    console.warn('finnhub failed', err);
+    fetchAlpha().then(function(ad){ renderFallback(ad); }).catch(function(aerr){
+      console.warn('alpha failed', aerr);
+      loadLocalFallback();
+    });
+  });
 
 })();

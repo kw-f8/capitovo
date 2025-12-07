@@ -110,10 +110,22 @@
     if(x===null||x===undefined||x==='') return '–';
     var n = Number(x);
     if(!isFinite(n)) return '–';
-    if(Math.abs(n) <= 1) return (Math.round(n*1000)/10) + '%';
-    if(Math.abs(n) > 1 && Math.abs(n) <= 100) return (Math.round(n*10)/10) + '%';
-    if(Math.abs(n) > 100) return (Math.round((n/100)*10)/10) + '%';
-    return (Math.round(n*10)/10) + '%';
+    // Use German number formatting (comma as decimal separator)
+    try{
+      if(Math.abs(n) <= 1){
+        var pct = Math.round(n*1000)/10; // e.g. 0.123 -> 12.3%
+        return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pct) + '%';
+      }
+      if(Math.abs(n) > 1 && Math.abs(n) <= 100){
+        var pct2 = Math.round(n*10)/10; // already a percent-like number
+        return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pct2) + '%';
+      }
+      if(Math.abs(n) > 100){
+        var pct3 = Math.round((n/100)*10)/10;
+        return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pct3) + '%';
+      }
+      return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(n*10)/10) + '%';
+    }catch(e){ return (Math.round(n*10)/10) + '%'; }
   }
 
   // Robust number parser usable across the module (accepts German and English formats,
@@ -256,7 +268,7 @@
         { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow), detectedCurrency) : '–' },
         { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA), detectedCurrency) : '–' },
         { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM), detectedCurrency) : '–' },
-        { title: 'Dividende (letzter)', value: obj.DividendYield ? (Math.round(Number(obj.DividendYield)*1000)/10)+'%' : '–' },
+        { title: 'Dividende (letzter)', value: (function(){ try{ var dy = Number(obj.DividendYield); if(!isFinite(dy)) return '–'; var pct = (Math.abs(dy) <= 1) ? (Math.round(dy*1000)/10) : (Math.round(dy*10)/10); return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pct) + '%'; }catch(e){ return '–'; } })() },
         { title: 'Operative Marge', value: obj.ProfitMargin ? formatMargin(Number(obj.ProfitMargin)) : '–' }
       ];
       // enrich with live price (replaces Free Cash Flow slot) before caching
@@ -310,8 +322,13 @@
               if(t.indexOf('Netto')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
               if(t.indexOf('Dividende')!==-1){
                 if(n===null) return { title: t, value: (v||'–'), sub: it.sub };
-                if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
-                return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };
+                try{
+                  var pctVal = (Math.abs(n) <= 1) ? (Math.round(n*1000)/10) : (Math.round(n*10)/10);
+                  return { title: t, value: (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pctVal) + '%'), sub: it.sub };
+                }catch(e){
+                  if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
+                  return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };
+                }
               }
               if(t.indexOf('Marge')!==-1) return { title: t, value: n!==null ? formatMargin(n) : '–', sub: it.sub };
             }catch(e){ }
@@ -358,8 +375,17 @@
         if(t === 'EBITDA') return { title: t, value: fmtNumber(n, localCurrency), sub: it.sub };
         if(t.indexOf('Netto')!==-1) return { title: t, value: fmtNumber(n, localCurrency), sub: it.sub };
         if(t.indexOf('Dividende')!==-1){
-          if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
-          return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };
+          try{
+            if(Math.abs(n) <= 1) {
+              var pctA = Math.round(n*1000)/10;
+              return { title: t, value: new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pctA) + '%', sub: it.sub };
+            }
+            var pctB = Math.round(n*10)/10;
+            return { title: t, value: new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pctB) + '%', sub: it.sub };
+          }catch(e){
+            if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
+            return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };
+          }
         }
         if(t.indexOf('Marge')!==-1) return { title: t, value: formatMargin(n), sub: it.sub };
       }catch(e){ }

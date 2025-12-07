@@ -187,9 +187,33 @@
       if(obj && obj.data){
         if(obj.data.data && Array.isArray(obj.data.data)){
           detectedCurrency = obj.data.currency || null;
-          writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ') — Währung: ' + (detectedCurrency||'unbekannt'), 'ok');
-          try{ writeCache(symbol, obj.data.data); }catch(e){}
-          return obj.data.data;
+          writeStatus('Proxy: Rohdaten erhalten (Quelle: ' + (obj.source||'proxy') + ') — Währung: ' + (detectedCurrency||'unbekannt'), 'info');
+          function toNumber(x){ if(x===null||x===undefined||x==='') return null; var s = String(x).replace(/[\s\.,€$£¥]/g,''); var n = Number(s); return isFinite(n)? n : null; }
+          var raw = obj.data.data;
+          var formatted = raw.map(function(it){
+            var t = it.title || '';
+            var v = it.value;
+            var n = toNumber(v);
+            try{
+              if(t.indexOf('Marktkapital')!==-1) return { title: t, value: n!==null ? normalizeMarketCap(n, detectedCurrency) : '–', sub: it.sub };
+              if(t.indexOf('KGV')!==-1) return { title: t, value: n!==null ? (Math.round(n*10)/10) : '–', sub: it.sub };
+              if(t.indexOf('Umsatz')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
+              if(t === 'EPS') return { title: t, value: n!==null ? (Math.round(n*100)/100) : '–', sub: it.sub };
+              if(t.indexOf('Free Cash')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
+              if(t === 'EBITDA') return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
+              if(t.indexOf('Netto')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
+              if(t.indexOf('Dividende')!==-1){
+                if(n===null) return { title: t, value: (v||'–'), sub: it.sub };
+                if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
+                return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };
+              }
+              if(t.indexOf('Marge')!==-1) return { title: t, value: n!==null ? formatMargin(n) : '–', sub: it.sub };
+            }catch(e){ }
+            return { title: t, value: (v||'–'), sub: it.sub };
+          });
+          try{ writeCache(symbol, formatted); }catch(e){}
+          writeStatus('Proxy: Rohdaten formatiert und zwischengespeichert', 'ok');
+          return formatted;
         }
         if(Array.isArray(obj.data)){
           writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'ok');

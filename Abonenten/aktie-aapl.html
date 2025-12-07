@@ -456,5 +456,45 @@
 
   <!-- sizing handled by CSS (right column flex + iframe 100% height) -->
 
+  <script>
+    // Diagnostic helper: writes simple status messages into the financials box
+    (function(){
+      var container = document.getElementById('financials-overview');
+      if(!container) return;
+      function writeStatus(msg, level){
+        var el = document.createElement('div');
+        el.style.fontSize = '0.95rem';
+        el.style.padding = '6px 0';
+        el.style.color = (level==='error' ? '#b91c1c' : (level==='warn' ? '#92400e' : '#374151'));
+        el.textContent = msg;
+        // prepend so it's visible immediately
+        container.insertBefore(el, container.firstChild);
+      }
+
+      // Key presence
+      var key = window.FMP_API_KEY || null;
+      writeStatus('FMP API Key: ' + (key ? 'gefunden' : 'nicht gefunden'), key ? 'ok' : 'warn');
+
+      // Test proxy availability
+      fetch('/api/financials/AAPL',{ method: 'GET' }).then(function(r){
+        if(r.ok){ writeStatus('Lokaler Proxy: erreichbar (Status ' + r.status + ')', 'ok'); }
+        else { writeStatus('Lokaler Proxy: antwortet mit Status ' + r.status, 'warn'); }
+      }).catch(function(err){
+        writeStatus('Lokaler Proxy: nicht erreichbar (' + String(err) + ')', 'warn');
+      });
+
+      // If key present, test direct FMP fetch
+      if(key){
+        var url = 'https://financialmodelingprep.com/api/v3/profile/AAPL?apikey=' + key;
+        fetch(url).then(function(r){
+          if(!r.ok){ writeStatus('Direkter FMP‑Abruf: Fehler Status ' + r.status, 'error'); return r.text().then(function(t){ writeStatus('Antwort: '+t.slice(0,200), 'warn'); }); }
+          return r.json().then(function(j){ writeStatus('Direkter FMP‑Abruf: OK — Profil erhalten', 'ok'); });
+        }).catch(function(err){ writeStatus('Direkter FMP‑Abruf: Fehler (' + String(err) + ') — CORS oder Netzwerk?', 'error'); });
+      } else {
+        writeStatus('Direkter FMP‑Abruf: übersprungen (kein Key)', 'warn');
+      }
+    })();
+  </script>
+
 </body>
 </html>

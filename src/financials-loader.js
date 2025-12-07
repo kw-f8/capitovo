@@ -165,10 +165,40 @@
 
   // Use Alpha Vantage as the single primary source, fallback to local JSON.
   console.debug('Using Alpha Vantage as primary data source');
-  fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); }).catch(function(aerr){
+  // Schedule refresh logic: attempt to update once per TTL (default 24h)
+  var __cap_refresh_timer = null;
+  function scheduleRefresh(){
+    try{
+      if(__cap_refresh_timer) { clearTimeout(__cap_refresh_timer); __cap_refresh_timer = null; }
+      var cached = readCache(symbol);
+      var nextMs = CACHE_TTL_HOURS * 3600000; // default
+      if(cached && typeof cached.ageHours === 'number'){
+        var remainingH = CACHE_TTL_HOURS - cached.ageHours;
+        nextMs = Math.max(0, remainingH * 3600000);
+      }
+      // If nextMs is 0, schedule immediate refresh with slight debounce
+      var delay = nextMs <= 0 ? 1000 : nextMs;
+      __cap_refresh_timer = setTimeout(function(){
+        // Attempt refresh but avoid replacing UI with errors — use cache fallback
+        fetchAlphaWithCacheFallback().then(function(newData){
+          try{ renderFallback(newData); }catch(e){}
+        }).catch(function(err){
+          console.warn('scheduled alpha refresh failed', err);
+        }).finally(function(){
+          // reschedule next refresh
+          scheduleRefresh();
+        });
+      }, delay);
+    }catch(e){ /* ignore scheduling errors */ }
+  }
+
+  // initial render then schedule next refresh
+  fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); scheduleRefresh(); }).catch(function(aerr){
     console.warn('alpha failed', aerr);
     writeStatus('Alpha Vantage: Kein Live-Datensatz verfügbar — verwende lokalen Fallback', 'error');
     loadLocalFallback();
+    // still schedule attempt to refresh later
+    scheduleRefresh();
   });
 
 })();

@@ -228,7 +228,11 @@
       var cached = readCache(symbol);
       if(cached && cached.data && cached.ageHours <= CACHE_TTL_HOURS){
         writeStatus('Alpha Vantage: Verwende gecachte Daten (Alter ' + Math.round(cached.ageHours) + 'h)', 'info');
-        try{ var f = ensureFormatted(cached.data, detectedCurrency); return Promise.resolve(f); }catch(e){ return Promise.resolve(cached.data); }
+        try{
+          var f = ensureFormatted(cached.data, detectedCurrency);
+          // ensure cached result is enriched with a live price slot as well
+          return enrichWithPrice(f, detectedCurrency).then(function(enriched){ return Promise.resolve(enriched); }).catch(function(){ return Promise.resolve(f); });
+        }catch(e){ return Promise.resolve(cached.data); }
       }
       if(cached){ writeStatus('Alpha Vantage: Gecachte Daten vorhanden (Alter ' + Math.round(cached.ageHours) + 'h) — versuche Aktualisierung', 'info'); }
     }catch(e){}

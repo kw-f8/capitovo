@@ -502,6 +502,18 @@
         writeStatus('Lokaler Proxy: nicht erreichbar (' + String(err) + ')', 'warn');
       });
 
+      // Test Finnhub availability (if key present)
+      var fkey = window.FINNHUB_API_KEY || null;
+      if(fkey){
+        var fu = 'https://finnhub.io/api/v1/stock/profile2?symbol=AAPL&token='+fkey;
+        fetch(fu).then(function(r){
+          if(!r.ok){ writeStatus('Finnhub: Antwort Status ' + r.status, 'warn'); return r.text().then(function(t){ writeStatus('Finnhub Antwort: '+t.slice(0,200), 'warn'); }); }
+          return r.json().then(function(j){ writeStatus('Finnhub: Profil erhalten (Name: ' + (j.name||'n/a') + ')', 'ok'); });
+        }).catch(function(err){ writeStatus('Finnhub: Fehler beim Abruf ('+String(err)+')', 'error'); });
+      } else {
+        writeStatus('Finnhub: Key nicht gesetzt', 'warn');
+      }
+
       // If key present, test direct FMP fetch
       if(key){
         var url = 'https://financialmodelingprep.com/api/v3/profile/AAPL?apikey=' + key;

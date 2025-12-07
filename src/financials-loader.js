@@ -126,13 +126,11 @@
     });
   }
 
-  // Try Finnhub first. If it fails, try Alpha Vantage, then local fallback.
-  fetchFinnhub().then(function(data){ renderFallback(data); }).catch(function(err){
-    console.warn('finnhub failed', err);
-    fetchAlpha().then(function(ad){ renderFallback(ad); }).catch(function(aerr){
-      console.warn('alpha failed', aerr);
-      loadLocalFallback();
-    });
+  // Use Alpha Vantage as the single primary source, fallback to local JSON.
+  console.debug('Using Alpha Vantage as primary data source');
+  fetchAlpha().then(function(ad){ renderFallback(ad); }).catch(function(aerr){
+    console.warn('alpha failed', aerr);
+    loadLocalFallback();
   });
 
 })();

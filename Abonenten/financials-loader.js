@@ -36,7 +36,7 @@
 
   // Caching: cache Alpha Vantage overview in localStorage to avoid frequent requests.
   var CACHE_TTL_HOURS = (window.FINANCIALS_CACHE_TTL_HOURS && Number(window.FINANCIALS_CACHE_TTL_HOURS)) || 36; // default 36h
-  function cacheKey(sym){ return 'capitovo_fin_overview_v1_' + String(sym).toUpperCase(); }
+  function cacheKey(sym){ return 'capitovo_fin_overview_v2_' + String(sym).toUpperCase(); }
   function readCache(sym){
     try{
       var k = cacheKey(sym); var raw = localStorage.getItem(k); if(!raw) return null;

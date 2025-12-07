@@ -5,3 +5,6 @@
 // deinen `window.ALPHA_VANTAGE_KEY` (diese Datei ist gitignored).
 // Cache TTL (Stunden) für Finanzdaten (Client-side). Standard 24 Stunden
 window.FINANCIALS_CACHE_TTL_HOURS = 24;
+// Proxy URL: setze hier die öffentliche URL deines Proxys, damit Clients live Daten erhalten.
+// Beispiel: https://api.dein-host.tld/api
+window.FINANCIALS_PROXY_URL = 'https://api.dein-host.tld/api';

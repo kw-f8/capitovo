@@ -350,6 +350,38 @@
         }));
       }
 
+      // Finnhub client-side fetch (used as fallback/live source)
+      function fetchFinnhubAndRender(finnKey){
+        if(!finnKey) return Promise.reject(new Error('no-finn-key'));
+        var purl = 'https://finnhub.io/api/v1/stock/profile2?symbol=' + symbol + '&token=' + finnKey;
+        var murl = 'https://finnhub.io/api/v1/stock/metric?symbol=' + symbol + '&metric=all&token=' + finnKey;
+        return Promise.all([fetch(purl), fetch(murl)]).then(function(res){
+          if(!res[0].ok || !res[1].ok) throw new Error('finnhub-error');
+          return Promise.all([res[0].json(), res[1].json()]);
+        }).then(function(results){
+          var profile = results[0] || {};
+          var metricsObj = results[1] || {};
+          var m = metricsObj.metric || {};
+
+          function safeFn(){ return '–'; }
+
+          var data = [
+            { title: 'Marktkapitalisierung', value: profile.marketCapitalization ? (Math.round(profile.marketCapitalization*10)/10)+' Mrd' : (m.marketCapitalization ? (Math.round(m.marketCapitalization*10)/10)+' Mrd' : '–') },
+            { title: 'KGV (PE)', value: (m.peNormalizedAnnual || m.peTTM || m.peBasicExclExtraTTM) ? (Math.round((m.peNormalizedAnnual||m.peTTM||m.peBasicExclExtraTTM)*10)/10) : '–' },
+            { title: 'Umsatz (letzte Periode)', value: (m.revenueTTM || m.revenue) ? (Math.round((m.revenueTTM||m.revenue)/1e9*10)/10)+' Mrd' : '–' },
+            { title: 'EPS', value: (m.epsTTM || m.eps) ? (Math.round((m.epsTTM||m.eps)*100)/100) : '–' },
+            { title: 'Free Cash Flow', value: (m.freeCashFlowTTM || m.freeCashFlow) ? (Math.round((m.freeCashFlowTTM||m.freeCashFlow)/1e9*10)/10)+' Mrd' : '–' },
+            { title: 'EBITDA', value: (m.ebitda || m.ebitdaTTM) ? (Math.round((m.ebitda||m.ebitdaTTM)/1e9*10)/10)+' Mrd' : '–' },
+            { title: 'Nettoergebnis', value: (m.netIncomeTTM || m.netIncome) ? (Math.round((m.netIncomeTTM||m.netIncome)/1e9*10)/10)+' Mrd' : '–' },
+            { title: 'Dividende (letzter)', value: profile.dividendYield ? (Math.round(profile.dividendYield*1000)/10)+'%' : (m.dividendYield ? (Math.round(m.dividendYield*1000)/10)+'%' : '–') },
+            { title: 'Operative Marge', value: (m.operatingMarginTTM || m.operatingMargin) ? (Math.round((m.operatingMarginTTM||m.operatingMargin)*1000)/10)+'%' : '–' }
+          ];
+
+          renderFallback(data);
+          return true;
+        });
+      }
+
       var localApiKey = window.FMP_API_KEY || null;
       var proxyAvailable = true;
       var apiKey = localApiKey;
@@ -391,9 +423,14 @@
           ];
           renderFallback(data);
         }).catch(function(){
-          // Proxy not available — if no API key, show local fallback
-          if(!apiKey){ loadLocalFallback(); return; }
-          // if apiKey exists (unlikely here), try client fetch with robust error handling
+          // Proxy not available — try Finnhub (if key present) then local fallback
+          var fkey = window.FINNHUB_API_KEY || null;
+          if(fkey){
+            fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); });
+          } else {
+            if(!apiKey){ loadLocalFallback(); }
+          }
+          return;
         });
       }
 
@@ -419,15 +456,24 @@
             renderFallback(data);
           }catch(e){ loadLocalFallback(); }
         }).catch(function(err){
-          // If we detected a 403 from FMP, show local fallback; otherwise try local fallback too
-          if(err && err.type === 'fmp-403'){ loadLocalFallback(); }
-          else { loadLocalFallback(); }
+          // If FMP responded with 403 or other error, try Finnhub if available
+          var fkey = window.FINNHUB_API_KEY || null;
+          if(err && err.type === 'fmp-403' && fkey){
+            fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); });
+          } else if(fkey){
+            // try finn hub anyway
+            fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); });
+          } else { loadLocalFallback(); }
         });
       } else {
         // No API key: render local fallback so numbers are visible
         // but allow TradingView to inject real boxes first
         var hasBoxes = container.classList.contains('three-by-three') || container.querySelector('.three-by-three-inner');
-        setTimeout(function(){ if(!hasBoxes && !container.querySelector('iframe')) loadLocalFallback(); }, 600);
+        setTimeout(function(){ if(!hasBoxes && !container.querySelector('iframe')){
+            var fkey = window.FINNHUB_API_KEY || null;
+            if(fkey){ fetchFinnhubAndRender(fkey).catch(function(){ loadLocalFallback(); }); }
+            else loadLocalFallback();
+          } }, 600);
       }
     })();
   </script>

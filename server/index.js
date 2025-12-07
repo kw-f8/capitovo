@@ -1,9 +1,14 @@
 const express = require('express');
-const fetch = (...args) => import('node-fetch').then(m => m.default(...args));
 const cors = require('cors');
 const dotenv = require('dotenv');
 
 dotenv.config();
+
+// Use global fetch available in Node 18+. If not available, developer should
+// install node-fetch or run Node >=18.
+if (typeof fetch === 'undefined') {
+  console.warn('Global fetch is not available in this Node runtime. Please use Node 18+ or install node-fetch.');
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;

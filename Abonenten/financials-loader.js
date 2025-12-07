@@ -171,6 +171,51 @@
     return null;
   }
 
+  // Fetch current price using Alpha Vantage GLOBAL_QUOTE when possible
+  function fetchCurrentPrice(){
+    return new Promise(function(resolve){
+      var key = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
+      if(!key){ return resolve(null); }
+      var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + encodeURIComponent(symbol) + '&apikey=' + key;
+      fetch(url).then(function(r){ if(!r.ok) return resolve(null); return r.json(); }).then(function(j){
+        try{
+          var q = j && (j['Global Quote'] || j['Global quote'] || j['globalQuote']);
+          if(q){
+            var p = q['05. price'] || q['05 price'] || q.price || null;
+            if(p){ var n = toNumber(p); return resolve(n); }
+          }
+        }catch(e){}
+        return resolve(null);
+      }).catch(function(){ return resolve(null); });
+    });
+  }
+
+  // Replace the 'Free Cash Flow' entry in the data array with the current price (Aktueller Kurs)
+  function enrichWithPrice(arr, currency){
+    if(!Array.isArray(arr)) return Promise.resolve(arr);
+    return fetchCurrentPrice().then(function(priceNum){
+      var out = arr.slice();
+      var priceLabel = 'Aktueller Kurs';
+      if(priceNum === null){
+        // no live price available — keep Free Cash Flow if present
+        for(var i=0;i<out.length;i++){ if(out[i] && out[i].title && out[i].title.indexOf('Free Cash')!==-1){ out[i].title = priceLabel; out[i].value = '–'; break; } }
+        return out;
+      }
+      var formatted = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(priceNum*100)/100) + (currency ? ' ' + currencySymbol(currency) : '');
+      // Replace first matching Free Cash Flow slot, otherwise append
+      var replaced = false;
+      for(var j=0;j<out.length;j++){
+        if(out[j] && out[j].title && out[j].title.indexOf('Free Cash')!==-1){ out[j].title = priceLabel; out[j].value = formatted; replaced = true; break; }
+      }
+      if(!replaced){
+        // try to find a sensible position (index 4) and replace
+        if(out.length >= 5){ out[4] = { title: priceLabel, value: formatted }; }
+        else { out.push({ title: priceLabel, value: formatted }); }
+      }
+      return out;
+    });
+  }
+
   // Finnhub integration removed — Alpha Vantage is used as the single live source.
 
   // Alpha Vantage fallback: use OVERVIEW endpoint to map key fields
@@ -202,17 +247,19 @@
       var data = [
         { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization, detectedCurrency) : '–' },
         { title: 'Umsatz (letzte Periode)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM), detectedCurrency) : '–' },
-          { title: 'KGV (PE)', value: obj.PERatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(Number(obj.PERatio)*10)/10) : '–' },
-          { title: 'EPS', value: obj.EPS ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(Number(obj.EPS)*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–' },
+        { title: 'KGV (PE)', value: obj.PERatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(Number(obj.PERatio)*10)/10) : '–' },
+        { title: 'EPS', value: obj.EPS ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(Number(obj.EPS)*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–' },
         { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow), detectedCurrency) : '–' },
         { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA), detectedCurrency) : '–' },
         { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM), detectedCurrency) : '–' },
         { title: 'Dividende (letzter)', value: obj.DividendYield ? (Math.round(Number(obj.DividendYield)*1000)/10)+'%' : '–' },
         { title: 'Operative Marge', value: obj.ProfitMargin ? formatMargin(Number(obj.ProfitMargin)) : '–' }
       ];
-      // cache successful response
-      try{ writeCache(symbol, data); }catch(e){}
-      return data;
+      // enrich with live price (replaces Free Cash Flow slot) before caching
+      return enrichWithPrice(data, detectedCurrency).then(function(enriched){
+        try{ writeCache(symbol, enriched); }catch(e){}
+        return enriched;
+      });
     });
   }
 
@@ -266,16 +313,21 @@
             }catch(e){ }
             return { title: t, value: (v||'–'), sub: it.sub };
           });
-          try{ writeCache(symbol, formatted); }catch(e){}
-          writeStatus('Proxy: Rohdaten formatiert und zwischengespeichert', 'ok');
-          return formatted;
+          // enrich with live price (if available) before caching/returning
+          return enrichWithPrice(formatted, detectedCurrency).then(function(enriched){
+            try{ writeCache(symbol, enriched); }catch(e){}
+            writeStatus('Proxy: Rohdaten formatiert und zwischengespeichert', 'ok');
+            return enriched;
+          });
         }
         if(Array.isArray(obj.data)){
           writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'info');
           // ensure array responses are formatted consistently
           var fmt = ensureFormatted(obj.data, obj.currency || detectedCurrency);
-          try{ writeCache(symbol, fmt); }catch(e){}
-          return fmt;
+          return enrichWithPrice(fmt, obj.currency || detectedCurrency).then(function(enriched){
+            try{ writeCache(symbol, enriched); }catch(e){}
+            return enriched;
+          });
         }
       }
       throw new Error('proxy-empty');

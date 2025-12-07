@@ -1,6 +1,7 @@
 // Lokale Konfiguration für die Abonnenten-Seite (wird auf GitHub Pages ausgeliefert)
 // Nur Alpha Vantage wird als Datenquelle genutzt. Für Produktion: nutze einen serverseitigen Proxy.
-// Alpha Vantage Key (client-side test only)
-window.ALPHA_VANTAGE_KEY = 'YO8C9ZRNBDVLAZ83';
-// Cache TTL (Stunden) für Finanzdaten (Client-side). Standard 36 = 1.5 Tage
+// Alpha Vantage Key: ENTFERNT für öffentliche Auslieferung.
+// Für lokale Entwicklung kopiere `src/config.example.js` -> `src/config.js` und setze dort
+// deinen `window.ALPHA_VANTAGE_KEY` (diese Datei ist gitignored).
+// Cache TTL (Stunden) für Finanzdaten (Client-side). Standard 24 Stunden
 window.FINANCIALS_CACHE_TTL_HOURS = 24;

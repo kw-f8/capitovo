@@ -150,6 +150,24 @@
 
   // Use Alpha Vantage as the single primary source, fallback to local JSON.
   console.debug('Using Alpha Vantage as primary data source');
+  // Helper: try server proxy if configured or default
+  function fetchProxy(){
+    var proxyBase = (window.FINANCIALS_PROXY_URL && String(window.FINANCIALS_PROXY_URL).trim()) || '/api';
+    var url = proxyBase.replace(/\/$/, '') + '/financials/' + encodeURIComponent(symbol);
+    writeStatus('Proxy: Anfrage an ' + url, 'info');
+    return fetch(url).then(function(r){
+      if(!r.ok) throw new Error('proxy-error-'+r.status);
+      return r.json();
+    }).then(function(obj){
+      if(obj && obj.data && Array.isArray(obj.data)){
+        writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'ok');
+        try{ writeCache(symbol, obj.data); }catch(e){}
+        return obj.data;
+      }
+      throw new Error('proxy-empty');
+    });
+  }
+
   // Schedule refresh logic: attempt to update once per TTL (default 24h)
   var __cap_refresh_timer = null;
   function scheduleRefresh(){
@@ -174,11 +192,24 @@
     }catch(e){ }
   }
 
-  fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); scheduleRefresh(); }).catch(function(aerr){
-    console.warn('alpha failed', aerr);
-    writeStatus('Alpha Vantage: Kein Live-Datensatz verfügbar — verwende lokalen Fallback', 'error');
-    loadLocalFallback();
-    scheduleRefresh();
-  });
+  var alphaKey = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
+  if(!alphaKey){
+    // No client key: try proxy first, then cache/local fallback
+    fetchProxy().then(function(d){ renderFallback(d); scheduleRefresh(); }).catch(function(){
+      fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); scheduleRefresh(); }).catch(function(aerr){
+        console.warn('alpha failed', aerr);
+        writeStatus('Keine Live-Daten verfügbar — verwende lokalen Fallback', 'error');
+        loadLocalFallback();
+        scheduleRefresh();
+      });
+    });
+  } else {
+    // client has key: use alpha directly (with cache) and schedule
+    fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); scheduleRefresh(); }).catch(function(aerr){
+      console.warn('alpha failed', aerr);
+      writeStatus('Alpha Vantage: Kein Live-Datensatz verfügbar — versuche Proxy oder lokalen Fallback', 'warn');
+      fetchProxy().then(function(d){ renderFallback(d); scheduleRefresh(); }).catch(function(){ loadLocalFallback(); scheduleRefresh(); });
+    });
+  }
 
 })();

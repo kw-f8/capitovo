@@ -1,4 +1,19 @@
 {
+  "name": "capitovo-proxy",
+  "version": "0.1.0",
+  "description": "Simple proxy for Alpha Vantage with caching for capitovo",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
+{
   "name": "capitovo-fmp-proxy",
   "version": "0.1.0",
   "description": "Simple proxy to fetch FinancialModelingPrep data and keep API key server-side",

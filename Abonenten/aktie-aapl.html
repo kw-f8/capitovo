@@ -213,33 +213,40 @@
                   </script>
                 </div>
 
-                <!-- Enforce iframe height in case TradingView injects its own inline styles; target only the financials wrapper -->
+                <!-- Enforce consistent container border, rounded corners and iframe sizing -->
                 <style>
-                  .tradingview-financials-wrapper .tradingview-widget-container iframe,
-                  .tradingview-financials-wrapper .tradingview-widget-container__widget iframe {
+                  /* Reset any iframe borders and make iframe match parent rounding */
+                  #tv-financials-container {
+                    box-sizing: border-box;
+                    border: 1px solid rgba(15,23,42,0.04);
+                    border-radius: 8px;
+                    overflow: hidden;
+                    background: #fff;
+                  }
+                  #tv-financials-container, #tv-financials-container .tradingview-widget-container__widget {
+                    -webkit-font-smoothing: antialiased;
+                  }
+                  /* Target iframe(s) injected by TradingView */
+                  #tv-financials-container iframe,
+                  #tv-financials-container .tradingview-widget-container__widget iframe {
+                    display: block;
+                    width: 100% !important;
                     height: 950px !important;
                     min-height: 950px !important;
                     max-height: none !important;
+                    border: 0 !important;
+                    box-sizing: border-box !important;
+                    border-radius: 8px !important; /* match parent */
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    background: transparent !important;
+                  }
+                  /* Ensure no duplicated borders if inner elements add their own stroke */
+                  #tv-financials-container * {
+                    box-shadow: none !important;
+                    outline: none !important;
                   }
                 </style>
-                <script>
-                  // If TradingView injects the iframe after load, ensure its height is enforced
-                  (function(){
-                    function applyHeight(){
-                      var ifr = document.querySelector('.tradingview-financials-wrapper .tradingview-widget-container iframe') || document.querySelector('.tradingview-financials-wrapper .tradingview-widget-container__widget iframe');
-                      if(ifr){ ifr.style.height = '950px'; ifr.style.minHeight = '950px'; }
-                    }
-                    // Try now and also when DOM changes inside the container
-                    applyHeight();
-                    var container = document.querySelector('.tradingview-financials-wrapper .tradingview-widget-container');
-                    if(container && window.MutationObserver){
-                      var mo = new MutationObserver(function(){ applyHeight(); });
-                      mo.observe(container, { childList: true, subtree: true });
-                      // stop observing after 7s to avoid unnecessary work
-                      setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 7000);
-                    }
-                  })();
-                </script>
 
                 <!-- Aktions-Buttons entfernt auf Wunsch des Nutzers -->
             </div>

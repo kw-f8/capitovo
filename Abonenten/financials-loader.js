@@ -608,6 +608,18 @@
     }catch(e){ }
   }
 
+  // Ensure the spinner is painted before we proceed to render cached content.
+  // Uses double requestAnimationFrame to give the browser a chance to paint the
+  // inserted loading element so the user actually sees it for the minimum time.
+  function ensurePaintThen(fn){
+    try{
+      // ensure loading UI exists and timestamp is recorded
+      try{ showLoading(); }catch(e){}
+      // let browser paint the spinner
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ try{ fn(); }catch(e){} }); });
+    }catch(e){ try{ fn(); }catch(e){} }
+  }
+
   // Encapsulate the data-loading decision so we can re-use it when the user selects another stock.
   function loadData(){
     try{ showLoading('Daten für ' + (symbol||'') + ' werden geladen…'); }catch(e){}
@@ -621,8 +633,11 @@
         writeStatus('Verwende gecachte Daten (Alter ' + Math.round(cached.ageHours) + 'h)', 'info');
         try{
           var f = ensureFormatted(cached.data, detectedCurrency);
-          renderFallback(f);
-        }catch(e){ renderFallback(cached.data); }
+          // Ensure the spinner is actually painted before we call renderFallback,
+          // which itself enforces the minimal visible time. This prevents the
+          // UI from jumping directly into the content without showing the loader.
+          ensurePaintThen(function(){ renderFallback(f); });
+        }catch(e){ ensurePaintThen(function(){ renderFallback(cached.data); }); }
         // schedule a background refresh for when the cache becomes stale
         try{ scheduleRefresh(); }catch(e){}
         return;

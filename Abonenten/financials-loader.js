@@ -51,15 +51,78 @@
   }
 
   function renderFallback(data){
+    // Render a single large overview box with many metrics (two-column layout inside)
     Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); });
     var ifr = container.querySelector('iframe'); if(ifr) ifr.style.display='none';
-    container.classList.add('three-by-three');
+    container.classList.remove('three-by-three');
     Array.from(container.children).forEach(function(ch){ ch.remove(); });
-    for(var i=0;i<9;i++){
-      var defaults = ['Market Cap','KGV','Umsatz','EPS','Free Cash Flow','EBITDA','Net Income','Dividende','Operative Marge'];
-      var d = data && data[i] ? data[i] : { title: defaults[i], value: '–', sub: '' };
-      container.appendChild(createBox(d.title, d.value, d.sub));
-    }
+
+    var metrics = Array.isArray(data) ? data : [];
+    // Fallback metric titles/values if not provided
+    var defaults = [
+      { title: 'Marktkapitalisierung', value: '–' },
+      { title: 'Aktueller Kurs', value: '–' },
+      { title: 'KGV (PE)', value: '–' },
+      { title: 'PEG Ratio', value: '–' },
+      { title: 'Umsatz (TTM)', value: '–' },
+      { title: 'EPS', value: '–' },
+      { title: 'EBITDA', value: '–' },
+      { title: 'Nettoergebnis (TTM)', value: '–' },
+      { title: 'Operative Marge', value: '–' },
+      { title: 'Dividendenrendite', value: '–' },
+      { title: 'Free Cash Flow', value: '–' },
+      { title: 'Beta', value: '–' },
+      { title: 'EV/EBITDA', value: '–' },
+      { title: 'Kursziel Analysten', value: '–' },
+      { title: '52W‑Hoch', value: '–' },
+      { title: '52W‑Tief', value: '–' },
+      { title: 'Ausstehende Aktien', value: '–' },
+      { title: 'KBV', value: '–' },
+      { title: 'KUV (TTM)', value: '–' },
+      { title: 'ROE (TTM)', value: '–' }
+    ];
+
+    // Merge provided metrics (by title) into a lookup for easy access
+    var map = {};
+    metrics.forEach(function(m){ if(m && m.title) map[m.title] = m; });
+
+    // build large box
+    var box = document.createElement('div');
+    box.className = 'financial-large-box p-3 bg-white rounded';
+    box.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)';
+    box.style.border = '1px solid rgba(0,0,0,0.04)';
+    box.style.display = 'flex';
+    box.style.flexDirection = 'column';
+    box.style.gap = '12px';
+
+    var header = document.createElement('div');
+    header.style.display = 'flex';
+    header.style.justifyContent = 'space-between';
+    header.style.alignItems = 'center';
+    var htitle = document.createElement('div'); htitle.textContent = (symbol||'') + ' — Kennzahlen'; htitle.style.fontWeight = '600'; htitle.style.fontSize = '1.05rem';
+    var hsub = document.createElement('div'); hsub.textContent = 'Quelle: Alpha Vantage / Cache'; hsub.style.fontSize = '0.85rem'; hsub.style.color = '#6b7280';
+    header.appendChild(htitle); header.appendChild(hsub);
+    box.appendChild(header);
+
+    var grid = document.createElement('div');
+    grid.style.display = 'grid';
+    grid.style.gridTemplateColumns = '1fr 1fr';
+    grid.style.gap = '10px 18px';
+
+    defaults.forEach(function(def){
+      var m = map[def.title] || def;
+      var row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.justifyContent = 'space-between';
+      row.style.alignItems = 'baseline';
+      var t = document.createElement('div'); t.textContent = m.title; t.style.color='#374151'; t.style.fontSize='0.95rem';
+      var v = document.createElement('div'); v.textContent = (m.value||m.value===0) ? m.value : '–'; v.style.fontWeight='600'; v.style.fontSize='0.95rem';
+      row.appendChild(t); row.appendChild(v);
+      grid.appendChild(row);
+    });
+
+    box.appendChild(grid);
+    container.appendChild(box);
   }
 
   function loadLocalFallback(){
@@ -262,14 +325,25 @@
       writeStatus('Alpha Vantage: Overview erhalten' + (detectedCurrency ? ' ('+detectedCurrency+')' : ''), 'ok');
       var data = [
         { title: 'Marktkapitalisierung', value: obj.MarketCapitalization ? normalizeMarketCap(obj.MarketCapitalization, detectedCurrency) : '–' },
-        { title: 'Umsatz (letzte Periode)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM), detectedCurrency) : '–' },
-        { title: 'KGV (PE)', value: obj.PERatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(Number(obj.PERatio)*10)/10) : '–' },
-        { title: 'EPS', value: obj.EPS ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(Number(obj.EPS)*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–' },
+        // Free Cash Flow kept so enrichWithPrice can replace it with 'Aktueller Kurs'
         { title: 'Free Cash Flow', value: obj.FreeCashFlow ? fmtNumber(Number(obj.FreeCashFlow), detectedCurrency) : '–' },
+        { title: 'KGV (PE)', value: obj.PERatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(Number(obj.PERatio)*10)/10) : '–' },
+        { title: 'PEG Ratio', value: obj.PEGRatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj.PEGRatio)) : '–' },
+        { title: 'Umsatz (TTM)', value: obj.RevenueTTM ? fmtNumber(Number(obj.RevenueTTM), detectedCurrency) : '–' },
+        { title: 'EPS', value: obj.EPS ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(Number(obj.EPS)*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–' },
         { title: 'EBITDA', value: obj.EBITDA ? fmtNumber(Number(obj.EBITDA), detectedCurrency) : '–' },
-        { title: 'Nettoergebnis', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM), detectedCurrency) : '–' },
-        { title: 'Dividende (letzter)', value: (function(){ try{ var dy = Number(obj.DividendYield); if(!isFinite(dy)) return '–'; var pct = (Math.abs(dy) <= 1) ? (Math.round(dy*1000)/10) : (Math.round(dy*10)/10); return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pct) + '%'; }catch(e){ return '–'; } })() },
-        { title: 'Operative Marge', value: obj.ProfitMargin ? formatMargin(Number(obj.ProfitMargin)) : '–' }
+        { title: 'Nettoergebnis (TTM)', value: obj.NetIncomeTTM ? fmtNumber(Number(obj.NetIncomeTTM), detectedCurrency) : '–' },
+        { title: 'Operative Marge', value: (obj.OperatingMarginTTM || obj.ProfitMargin) ? formatMargin(Number(obj.OperatingMarginTTM || obj.ProfitMargin)) : '–' },
+        { title: 'Dividendenrendite', value: (function(){ try{ var dy = Number(obj.DividendYield); if(!isFinite(dy)) return '–'; var pct = (Math.abs(dy) <= 1) ? (Math.round(dy*1000)/10) : (Math.round(dy*10)/10); return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pct) + '%'; }catch(e){ return '–'; } })() },
+        { title: 'Beta', value: obj.Beta ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj.Beta)) : '–' },
+        { title: 'EV/EBITDA', value: (obj.EVToEBITDA || obj['EVToEBITDA']) ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj.EVToEBITDA || obj['EVToEBITDA'])) : '–' },
+        { title: 'Kursziel Analysten', value: obj.AnalystTargetPrice ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj.AnalystTargetPrice)) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–' },
+        { title: '52W‑Hoch', value: (obj['52WeekHigh'] || obj.WeekHigh52) ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj['52WeekHigh'] || obj.WeekHigh52)) : '–' },
+        { title: '52W‑Tief', value: (obj['52WeekLow'] || obj.WeekLow52) ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj['52WeekLow'] || obj.WeekLow52)) : '–' },
+        { title: 'Ausstehende Aktien', value: obj.SharesOutstanding ? new Intl.NumberFormat('de-DE').format(Math.round(Number(obj.SharesOutstanding))) : '–' },
+        { title: 'KBV', value: obj.PriceToBookRatio ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj.PriceToBookRatio)) : '–' },
+        { title: 'KUV (TTM)', value: obj.PriceToSalesRatioTTM ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj.PriceToSalesRatioTTM)) : '–' },
+        { title: 'ROE (TTM)', value: obj.ReturnOnEquityTTM ? formatMargin(Number(obj.ReturnOnEquityTTM)) : '–' }
       ];
       // enrich with live price (replaces Free Cash Flow slot) before caching
       return enrichWithPrice(data, detectedCurrency).then(function(enriched){

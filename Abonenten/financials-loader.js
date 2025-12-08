@@ -248,20 +248,32 @@
 
   // Fetch current price using Alpha Vantage GLOBAL_QUOTE when possible
   function fetchCurrentPrice(){
+    // Try proxy first (if configured), then fall back to client Alpha Vantage key
     return new Promise(function(resolve){
-      var key = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
-      if(!key){ return resolve(null); }
-      var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + encodeURIComponent(symbol) + '&apikey=' + key;
-      fetch(url).then(function(r){ if(!r.ok) return resolve(null); return r.json(); }).then(function(j){
-        try{
-          var q = j && (j['Global Quote'] || j['Global quote'] || j['globalQuote']);
-          if(q){
-            var p = q['05. price'] || q['05 price'] || q.price || null;
-            if(p){ var n = toNumber(p); return resolve(n); }
-          }
-        }catch(e){}
+      var proxyBase = (window.FINANCIALS_PROXY_URL && String(window.FINANCIALS_PROXY_URL).trim()) || '/api';
+      var purl = proxyBase.replace(/\/$/, '') + '/quote/' + encodeURIComponent(symbol);
+      fetch(purl).then(function(r){ if(!r.ok) throw new Error('no-proxy'); return r.json(); }).then(function(j){
+        if(j && j.data && (j.data.price || j.data.price===0)){
+          var n = toNumber(j.data.price);
+          return resolve(n);
+        }
+        // proxy returned no price
         return resolve(null);
-      }).catch(function(){ return resolve(null); });
+      }).catch(function(){
+        var key = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
+        if(!key){ return resolve(null); }
+        var url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + encodeURIComponent(symbol) + '&apikey=' + key;
+        fetch(url).then(function(r){ if(!r.ok) return resolve(null); return r.json(); }).then(function(j){
+          try{
+            var q = j && (j['Global Quote'] || j['Global quote'] || j['globalQuote']);
+            if(q){
+              var p = q['05. price'] || q['05 price'] || q.price || null;
+              if(p){ var n = toNumber(p); return resolve(n); }
+            }
+          }catch(e){}
+          return resolve(null);
+        }).catch(function(){ return resolve(null); });
+      });
     });
   }
 

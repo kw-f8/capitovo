@@ -84,11 +84,60 @@ const server = http.createServer(async (req, res) => {
       return sendJson(res, 200, { ok: true });
     }
     const parts = url.pathname.split('/').filter(Boolean);
-    if(parts.length === 2 && parts[0] === 'api' && parts[1].startsWith('financials')){
-      // support /api/financials: symbol as query ?symbol= or route /api/financials/AAPL
+
+    // Helper: symbol extraction
+    const symbolFrom = function(ix){ return parts[ix] || url.searchParams.get('symbol') || null; };
+
+    // /api/quote/:symbol -> current price (GLOBAL_QUOTE)
+    if(parts[0] === 'api' && parts[1] === 'quote'){
+      const symbol = symbolFrom(2);
+      if(!symbol) return sendJson(res, 400, { error: 'symbol missing' });
+      const ck = 'QUOTE_' + cacheKey(symbol);
+      const cached = cache.get(ck);
+      if(cached){ const ageH = (now() - cached.ts)/36e5; if(ageH <= CACHE_TTL_HOURS) return sendJson(res, 200, { source: 'cache', ageHours: ageH, data: cached.data }); }
+      try{
+        if(!ALPHA_KEY) throw { code: 502, message: 'Alpha Vantage API key not configured on server.' };
+        const qurl = `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${encodeURIComponent(symbol)}&apikey=${ALPHA_KEY}`;
+        const qr = await fetch(qurl);
+        if(!qr.ok) throw { code: 502, message: 'Alpha Vantage: HTTP ' + qr.status };
+        const qj = await qr.json();
+        if(qj && qj.Note) throw { code: 429, message: 'Alpha Vantage: ' + qj.Note };
+        const g = qj && (qj['Global Quote'] || qj['globalQuote'] || qj['Global quote']);
+        const out = g ? {
+          symbol: symbol.toUpperCase(),
+          price: g['05. price'] || g['05 price'] || g.price || null,
+          change: g['09. change'] || g['09 change'] || g.change || null,
+          changePercent: g['10. change percent'] || g['10 change percent'] || g.changePercent || null,
+          volume: g['06. volume'] || g.volume || null
+        } : null;
+        setCache(ck, out);
+        return sendJson(res, 200, { source: 'alpha', data: out });
+      }catch(err){ if(err && err.code) return sendJson(res, err.code === 429 ? 429 : 502, { error: err.message }); return sendJson(res, 502, { error: 'Unknown error fetching quote' }); }
     }
+
+    // /api/financials/quarterly/:symbol -> income statement quarterly reports
+    if(parts[0] === 'api' && parts[1] === 'financials' && parts[2] === 'quarterly'){
+      const symbol = symbolFrom(3);
+      if(!symbol) return sendJson(res, 400, { error: 'symbol missing' });
+      const ck = 'QTR_' + cacheKey(symbol);
+      const cached = cache.get(ck);
+      if(cached){ const ageH = (now() - cached.ts)/36e5; if(ageH <= CACHE_TTL_HOURS) return sendJson(res, 200, { source: 'cache', ageHours: ageH, data: cached.data }); }
+      try{
+        if(!ALPHA_KEY) throw { code: 502, message: 'Alpha Vantage API key not configured on server.' };
+        const iurl = `https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=${encodeURIComponent(symbol)}&apikey=${ALPHA_KEY}`;
+        const ir = await fetch(iurl);
+        if(!ir.ok) throw { code: 502, message: 'Alpha Vantage: HTTP ' + ir.status };
+        const ij = await ir.json();
+        if(ij && ij.Note) throw { code: 429, message: 'Alpha Vantage: ' + ij.Note };
+        const reports = Array.isArray(ij.quarterlyReports) ? ij.quarterlyReports : (ij.quarters || null);
+        setCache(ck, reports);
+        return sendJson(res, 200, { source: 'alpha', data: reports });
+      }catch(err){ if(err && err.code) return sendJson(res, err.code === 429 ? 429 : 502, { error: err.message }); return sendJson(res, 502, { error: 'Unknown error fetching quarterly reports' }); }
+    }
+
+    // /api/financials/:symbol -> overview (existing)
     if(parts[0] === 'api' && parts[1] === 'financials'){
-      const symbol = parts[2] || url.searchParams.get('symbol');
+      const symbol = symbolFrom(2);
       if(!symbol){ return sendJson(res, 400, { error: 'symbol missing' }); }
       // Try cache first
       const cached = getCached(symbol);

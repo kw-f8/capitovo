@@ -34,6 +34,14 @@
       try{ container.insertBefore(el, container.firstChild); }catch(e){ document.body.insertBefore(el, document.body.firstChild); }
     }catch(e){}
   }
+  // timestamp when loading was shown (used to ensure minimal visible time)
+  var __cap_last_loading_ts = 0;
+  // wrap showLoading to record timestamp
+  var __cap_orig_showLoading = showLoading;
+  showLoading = function(msg){
+    try{ __cap_last_loading_ts = Date.now(); }catch(e){}
+    return __cap_orig_showLoading(msg);
+  };
   // expose debug helpers
   try{ window.capitovoShowLoading = showLoading; window.capitovoHideLoading = hideLoading; }catch(e){}
   function hideLoading(){ try{ var el = container.querySelector('#fb-loading'); if(el) el.remove(); }catch(e){} }
@@ -88,6 +96,15 @@
   }
 
   function renderFallback(data){
+    try{
+      // ensure loading is visible for at least 1.5s
+      var since = Date.now() - (Number(__cap_last_loading_ts) || 0);
+      var minMs = 1500;
+      if(since < minMs){
+        try{ setTimeout(function(){ renderFallback(data); }, minMs - since); }catch(e){ /* ignore */ }
+        return;
+      }
+    }catch(e){}
     try{ hideLoading(); }catch(e){}
     // Render a single large overview box with many metrics (two-column layout inside)
     try{ ensureContainer(); }catch(e){}

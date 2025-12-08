@@ -204,9 +204,7 @@
 
                 <!-- Enforce iframe height in case TradingView injects its own inline styles -->
                 <style>
-                  /* Only target the financials wrapper so the chart widget is unaffected */
-                  .tradingview-financials-wrapper .tradingview-widget-container iframe,
-                  .tradingview-financials-wrapper .tradingview-widget-container__widget iframe {
+                  .tradingview-widget-container iframe, .tradingview-widget-container__widget iframe {
                     height: 900px !important;
                     min-height: 900px !important;
                     max-height: none !important;
@@ -218,14 +216,14 @@
                     var TARGET_HEIGHT = '900px';
                     function setImportant(el, prop, value){ try{ el.style.setProperty(prop, value, 'important'); }catch(e){ try{ el.style[prop]=value; }catch(e){} } }
                     function applyHeight(){
-                      // scope to the financials wrapper so we don't affect the chart widget
-                      var containers = document.querySelectorAll('.tradingview-financials-wrapper .tradingview-widget-container, .tradingview-financials-wrapper .tradingview-widget-container .tradingview-widget-container__widget');
+                      // ensure main containers have the height
+                      var containers = document.querySelectorAll('.tradingview-widget-container, .tradingview-widget-container .tradingview-widget-container__widget');
                       containers.forEach(function(c){ setImportant(c, 'height', TARGET_HEIGHT); setImportant(c, 'min-height', TARGET_HEIGHT); setImportant(c, 'max-height', 'none'); });
-                      // adjust any iframe inserted by TradingView inside financials wrapper
-                      var iframes = document.querySelectorAll('.tradingview-financials-wrapper .tradingview-widget-container iframe, .tradingview-financials-wrapper .tradingview-widget-container__widget iframe');
+                      // adjust any iframe inserted by TradingView
+                      var iframes = document.querySelectorAll('.tradingview-widget-container iframe, .tradingview-widget-container__widget iframe');
                       iframes.forEach(function(i){ setImportant(i, 'height', TARGET_HEIGHT); setImportant(i, 'min-height', TARGET_HEIGHT); setImportant(i, 'max-height', 'none'); i.removeAttribute('height'); });
-                      // remove copyright/link elements if present inside the financials wrapper
-                      var cops = document.querySelectorAll('.tradingview-financials-wrapper .tradingview-widget-copyright, .tradingview-financials-wrapper .tradingview-widget-copyright *');
+                      // remove copyright/link elements if present
+                      var cops = document.querySelectorAll('.tradingview-widget-copyright, .tradingview-widget-copyright *');
                       cops.forEach(function(n){ try{ n.remove(); }catch(e){} });
                     }
                     // apply immediately and when DOM changes inside widget

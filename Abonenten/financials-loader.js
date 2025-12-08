@@ -3,7 +3,29 @@
   var symbol = 'AAPL';
   var container = document.getElementById('financials-overview');
   if(!container) return;
+  // Insert loading UI and styles
+  function insertLoadingStyles(){
+    if(document.getElementById('capitovo-fb-loading-style')) return;
+    var s = document.createElement('style'); s.id = 'capitovo-fb-loading-style';
+    s.textContent = '\n#fb-loading { display:flex; align-items:center; gap:10px; font-size:0.95rem; color:#374151; padding:8px 0; }\n#fb-loading .spinner { width:18px; height:18px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); border-top-color:#2563eb; animation:capspin 1s linear infinite; }\n@keyframes capspin { to { transform:rotate(360deg); } }\n';
+    document.head.appendChild(s);
+  }
+  function showLoading(msg){
+    try{
+      insertLoadingStyles();
+      var ex = container.querySelector('#fb-loading');
+      if(ex) ex.remove();
+      var el = document.createElement('div'); el.id = 'fb-loading';
+      var spin = document.createElement('div'); spin.className = 'spinner';
+      var txt = document.createElement('div'); txt.className = 'fb-loading-text'; txt.textContent = msg || 'Daten werden geladen…';
+      el.appendChild(spin); el.appendChild(txt);
+      container.insertBefore(el, container.firstChild);
+    }catch(e){}
+  }
+  function hideLoading(){ try{ var el = container.querySelector('#fb-loading'); if(el) el.remove(); }catch(e){} }
   var detectedCurrency = null;
+  // show loading right away
+  try{ showLoading(); }catch(e){}
 
   function currencySymbol(code){
     if(!code) return null;
@@ -51,6 +73,7 @@
   }
 
   function renderFallback(data){
+    try{ hideLoading(); }catch(e){}
     // Render a single large overview box with many metrics (two-column layout inside)
     Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); });
     var ifr = container.querySelector('iframe'); if(ifr) ifr.style.display='none';

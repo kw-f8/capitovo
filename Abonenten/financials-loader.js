@@ -32,6 +32,25 @@
       var txt = document.createElement('div'); txt.className = 'fb-loading-text'; txt.textContent = msg || 'Daten werden geladen…';
       el.appendChild(spin); el.appendChild(txt);
       try{ container.insertBefore(el, container.firstChild); }catch(e){ document.body.insertBefore(el, document.body.firstChild); }
+      // also ensure a global overlay spinner exists so the user always sees a visual
+      // indicator even if the container is obscured or styled differently by the page
+      try{
+        if(!document.getElementById('fb-loading-global')){
+          var g = document.createElement('div'); g.id = 'fb-loading-global';
+          g.setAttribute('aria-hidden','true');
+          g.style.position = 'fixed'; g.style.right = '16px'; g.style.top = '16px';
+          g.style.zIndex = '99999'; g.style.background = 'rgba(255,255,255,0.95)';
+          g.style.border = '1px solid rgba(0,0,0,0.06)'; g.style.padding = '6px 8px';
+          g.style.borderRadius = '6px'; g.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08)';
+          var gs = document.createElement('div'); gs.className='spinner'; gs.style.display='inline-block'; gs.style.verticalAlign='middle';
+          var gt = document.createElement('span'); gt.textContent = msg || 'Lade...'; gt.style.marginLeft='8px'; gt.style.fontSize='0.95rem'; gt.style.color='#374151';
+          g.appendChild(gs); g.appendChild(gt);
+          try{ document.body.appendChild(g); }catch(e){}
+        } else {
+          // update text when exists
+          try{ document.getElementById('fb-loading-global').querySelector('span').textContent = msg || 'Lade...'; }catch(e){}
+        }
+      }catch(e){}
     }catch(e){}
   }
   // timestamp when loading was shown (used to ensure minimal visible time)
@@ -39,12 +58,14 @@
   // wrap showLoading to record timestamp
   var __cap_orig_showLoading = showLoading;
   showLoading = function(msg){
-    try{ __cap_last_loading_ts = Date.now(); }catch(e){}
+    try{ __cap_last_loading_ts = Date.now(); console.debug('showLoading called, ts=', __cap_last_loading_ts, 'msg=', msg); }catch(e){}
     return __cap_orig_showLoading(msg);
   };
   // expose debug helpers
   try{ window.capitovoShowLoading = showLoading; window.capitovoHideLoading = hideLoading; }catch(e){}
   function hideLoading(){ try{ var el = container.querySelector('#fb-loading'); if(el) el.remove(); }catch(e){} }
+  // hide the global overlay too
+  function hideGlobalLoading(){ try{ var g = document.getElementById('fb-loading-global'); if(g) g.remove(); }catch(e){} }
   var detectedCurrency = null;
   // show loading right away
   try{ showLoading(); }catch(e){}
@@ -96,6 +117,7 @@
   }
 
   function renderFallback(data){
+    console.debug('renderFallback start, last_loading_ts=', __cap_last_loading_ts);
     try{
       // ensure loading is visible for at least 1.5s
       var since = Date.now() - (Number(__cap_last_loading_ts) || 0);
@@ -105,7 +127,7 @@
         return;
       }
     }catch(e){}
-    try{ hideLoading(); }catch(e){}
+    try{ hideLoading(); hideGlobalLoading(); }catch(e){}
     // Render a single large overview box with many metrics (two-column layout inside)
     try{ ensureContainer(); }catch(e){}
     try{ Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); }); }catch(e){}
@@ -179,6 +201,7 @@
 
     box.appendChild(grid);
     container.appendChild(box);
+    console.debug('renderFallback done, content appended for symbol=', symbol);
   }
 
   function loadLocalFallback(){
@@ -616,7 +639,7 @@
       // ensure loading UI exists and timestamp is recorded
       try{ showLoading(); }catch(e){}
       // let browser paint the spinner
-      requestAnimationFrame(function(){ requestAnimationFrame(function(){ try{ fn(); }catch(e){} }); });
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ try{ console.debug('ensurePaintThen: browser painted, invoking fn'); fn(); }catch(e){} }); });
     }catch(e){ try{ fn(); }catch(e){} }
   }
 

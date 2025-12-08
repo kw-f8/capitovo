@@ -2,7 +2,18 @@
   // External loader for financials — uses Alpha Vantage OVERVIEW and falls back to local JSON.
   var symbol = 'AAPL';
   var container = document.getElementById('financials-overview');
-  if(!container) return;
+
+  // Ensure we have a container to render into. If the target element isn't present
+  // yet (scripts loaded before the DOM section), fall back to `document.body` and
+  // try to re-resolve when needed.
+  function ensureContainer(){
+    if(container) return true;
+    container = document.getElementById('financials-overview');
+    if(container) return true;
+    // last-resort fallback so the loading UI is visible somewhere
+    container = document.body || document.documentElement;
+    return !!container;
+  }
   // Insert loading UI and styles
   function insertLoadingStyles(){
     if(document.getElementById('capitovo-fb-loading-style')) return;
@@ -13,15 +24,18 @@
   function showLoading(msg){
     try{
       insertLoadingStyles();
-      var ex = container.querySelector('#fb-loading');
+      ensureContainer();
+      var ex = container.querySelector && container.querySelector('#fb-loading');
       if(ex) ex.remove();
       var el = document.createElement('div'); el.id = 'fb-loading';
       var spin = document.createElement('div'); spin.className = 'spinner';
       var txt = document.createElement('div'); txt.className = 'fb-loading-text'; txt.textContent = msg || 'Daten werden geladen…';
       el.appendChild(spin); el.appendChild(txt);
-      container.insertBefore(el, container.firstChild);
+      try{ container.insertBefore(el, container.firstChild); }catch(e){ document.body.insertBefore(el, document.body.firstChild); }
     }catch(e){}
   }
+  // expose debug helpers
+  try{ window.capitovoShowLoading = showLoading; window.capitovoHideLoading = hideLoading; }catch(e){}
   function hideLoading(){ try{ var el = container.querySelector('#fb-loading'); if(el) el.remove(); }catch(e){} }
   var detectedCurrency = null;
   // show loading right away
@@ -46,13 +60,14 @@
 
   function writeStatus(msg, level){
     try{
+      ensureContainer();
       var el = document.createElement('div');
       el.className = 'fb-status';
       el.style.fontSize = '0.9rem';
       el.style.padding = '6px 0';
       el.style.color = (level==='error' ? '#b91c1c' : (level==='warn' ? '#92400e' : '#374151'));
       el.textContent = msg;
-      container.insertBefore(el, container.firstChild);
+      try{ container.insertBefore(el, container.firstChild); }catch(e){ document.body.insertBefore(el, document.body.firstChild); }
     }catch(e){}
   }
 
@@ -75,10 +90,11 @@
   function renderFallback(data){
     try{ hideLoading(); }catch(e){}
     // Render a single large overview box with many metrics (two-column layout inside)
-    Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); });
-    var ifr = container.querySelector('iframe'); if(ifr) ifr.style.display='none';
-    container.classList.remove('three-by-three');
-    Array.from(container.children).forEach(function(ch){ ch.remove(); });
+    try{ ensureContainer(); }catch(e){}
+    try{ Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); }); }catch(e){}
+    try{ var ifr = container.querySelector && container.querySelector('iframe'); if(ifr) ifr.style.display='none'; }catch(e){}
+    try{ container.classList.remove && container.classList.remove('three-by-three'); }catch(e){}
+    try{ Array.from(container.children).forEach(function(ch){ ch.remove(); }); }catch(e){}
 
     var metrics = Array.isArray(data) ? data : [];
     // Fallback metric titles/values if not provided

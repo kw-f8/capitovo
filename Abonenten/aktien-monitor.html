@@ -218,5 +218,28 @@
     </div>
 
     <script src="../script.js?v=5"></script>
+        <script>
+        // Intercept clicks on stock links and show a centered pre‑load modal before navigating
+        (function(){
+            document.addEventListener('click', function(e){
+                var a = e.target.closest && e.target.closest('a');
+                if(!a) return;
+                var href = a.getAttribute('href') || '';
+                // Only intercept local stock pages (aktie-*.html)
+                if(/\.\/aktie-[a-z0-9\-]+\.html$/i.test(href)){
+                    e.preventDefault();
+                    try{
+                        // Prefer loader's modal if available, otherwise fall back to simple overlay
+                        if(window.capitovoShowModalLoading) window.capitovoShowModalLoading('Seite wird geladen…');
+                        else {
+                            var ov = document.createElement('div'); ov.style.position='fixed'; ov.style.left=0; ov.style.top=0; ov.style.right=0; ov.style.bottom=0; ov.style.background='rgba(0,0,0,0.6)'; ov.style.zIndex=100000; document.body.appendChild(ov);
+                        }
+                    }catch(e){}
+                    // Wait briefly to let the modal paint (and show at least 400ms) then navigate.
+                    setTimeout(function(){ window.location.href = href; }, 700);
+                }
+            }, false);
+        })();
+        </script>
 </body>
 </html>

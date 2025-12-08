@@ -66,6 +66,38 @@
   function hideLoading(){ try{ var el = container.querySelector('#fb-loading'); if(el) el.remove(); }catch(e){} }
   // hide the global overlay too
   function hideGlobalLoading(){ try{ var g = document.getElementById('fb-loading-global'); if(g) g.remove(); }catch(e){} }
+
+  // Modal (centered) blocker similar to a login modal. Exposed globally so other
+  // pages (e.g. aktien-monitor) can show a full-screen pre-load modal before navigation.
+  function showModalLoading(msg){
+    try{
+      if(document.getElementById('fb-modal-overlay')) return;
+      var ov = document.createElement('div'); ov.id = 'fb-modal-overlay';
+      ov.style.position = 'fixed'; ov.style.left = '0'; ov.style.top = '0'; ov.style.right = '0'; ov.style.bottom = '0';
+      ov.style.background = 'rgba(15,23,42,0.6)'; ov.style.zIndex = '100000'; ov.style.display = 'flex';
+      ov.style.alignItems = 'center'; ov.style.justifyContent = 'center'; ov.setAttribute('aria-hidden','true');
+
+      var box = document.createElement('div'); box.id = 'fb-modal-box';
+      box.style.background = '#fff'; box.style.padding = '22px'; box.style.borderRadius = '10px'; box.style.minWidth = '320px';
+      box.style.maxWidth = '90%'; box.style.boxShadow = '0 10px 30px rgba(2,6,23,0.3)'; box.style.display='flex'; box.style.alignItems='center';
+
+      var spinner = document.createElement('div'); spinner.className='spinner'; spinner.style.width='26px'; spinner.style.height='26px'; spinner.style.borderWidth='3px';
+      var text = document.createElement('div'); text.style.marginLeft='14px'; text.style.fontSize='1rem'; text.style.color='#0f172a'; text.textContent = msg || 'Lade Seite…';
+      box.appendChild(spinner); box.appendChild(text);
+      ov.appendChild(box);
+      document.body.appendChild(ov);
+      // ensure spinner styles exist
+      insertLoadingStyles();
+      console.debug('showModalLoading shown:', msg);
+    }catch(e){ console.warn('showModalLoading failed', e); }
+  }
+
+  function hideModalLoading(){ try{ var ov = document.getElementById('fb-modal-overlay'); if(ov) ov.remove(); }catch(e){}
+    console.debug('hideModalLoading called');
+  }
+
+  // Expose modal functions globally for other pages
+  try{ window.capitovoShowModalLoading = showModalLoading; window.capitovoHideModalLoading = hideModalLoading; }catch(e){}
   var detectedCurrency = null;
   // show loading right away
   try{ showLoading(); }catch(e){}

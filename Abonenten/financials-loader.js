@@ -18,7 +18,7 @@
   function insertLoadingStyles(){
     if(document.getElementById('capitovo-fb-loading-style')) return;
     var s = document.createElement('style'); s.id = 'capitovo-fb-loading-style';
-    s.textContent = '\n#fb-loading { display:flex; align-items:center; gap:10px; font-size:0.95rem; color:#374151; padding:8px 0; }\n#fb-loading .spinner { width:18px; height:18px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); border-top-color:#2563eb; animation:capspin 1s linear infinite; }\n@keyframes capspin { to { transform:rotate(360deg); } }\n';
+    s.textContent = '\n/* Inline loading + modal styles for capitovo */\n#fb-loading { display:flex; align-items:center; gap:10px; font-size:0.95rem; color:#374151; padding:8px 0; }\n#fb-loading .spinner, .spinner, .fb-spinner { width:18px; height:18px; border-radius:50%; border:3px solid rgba(0,0,0,0.08); border-top-color:#0ea5a3; animation:capspin 1s linear infinite; }\n@keyframes capspin { to { transform:rotate(360deg); } }\n\n/* Modal overlay (centered) */\n#fb-modal-overlay, #capitovo-fallback-modal { position:fixed; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; background:rgba(2,6,23,0.55); z-index:100000; }\n#fb-modal-box, .fb-modal-box { background:linear-gradient(180deg, #ffffff, #fbfdff); border-radius:12px; padding:18px 20px; min-width:300px; max-width:92%; box-shadow:0 12px 40px rgba(2,6,23,0.35); display:flex; align-items:center; gap:14px; font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, \'Helvetica Neue\', Arial; }\n#fb-modal-box .fb-modal-left { display:flex; align-items:center; gap:12px; }\n.fb-modal-logo{ width:38px; height:38px; object-fit:contain; border-radius:8px; background:linear-gradient(180deg,#0ea5a3,#06b6d4); padding:6px; box-shadow:0 4px 14px rgba(14,165,163,0.12);}\n.fb-modal-text { display:flex; flex-direction:column; }\n.fb-modal-title{ font-weight:700; color:#0f172a; font-size:1rem; }\n.fb-modal-sub{ color:#6b7280; font-size:0.95rem; margin-top:2px; }\n.fb-modal-actions{ margin-left:auto; display:flex; align-items:center; gap:10px; }\n/* small subtle pulse under title */\n.fb-modal-pulse{ width:8px; height:8px; border-radius:50%; background:#06b6d4; box-shadow:0 0 10px rgba(6,182,212,0.28); animation:fbpulse 1.6s ease-in-out infinite; }\n@keyframes fbpulse{ 0%{ transform:scale(1); opacity:1 }50%{ transform:scale(1.4); opacity:0.6 }100%{ transform:scale(1); opacity:1 } }\n';
     document.head.appendChild(s);
   }
   function showLoading(msg){
@@ -533,71 +533,6 @@
         try{ return ensureFormatted(cached.data, detectedCurrency); }catch(e){ return cached.data; }
       }
       throw err;
-    });
-  }
-
-  // Use Alpha Vantage as the single primary source, fallback to local JSON.
-  console.debug('Using Alpha Vantage as primary data source');
-  // Helper: try server proxy if configured or default
-  function fetchProxy(){
-    var proxyBase = (window.FINANCIALS_PROXY_URL && String(window.FINANCIALS_PROXY_URL).trim()) || '/api';
-    var url = proxyBase.replace(/\/$/, '') + '/financials/' + encodeURIComponent(symbol);
-    writeStatus('Proxy: Anfrage an ' + url, 'info');
-    return fetch(url).then(function(r){
-      if(!r.ok) throw new Error('proxy-error-'+r.status);
-      return r.json();
-    }).then(function(obj){
-      // Proxy may return two shapes: array or wrapped object with currency
-      if(obj && obj.data){
-        if(obj.data.data && Array.isArray(obj.data.data)){
-          detectedCurrency = obj.data.currency || null;
-          writeStatus('Proxy: Rohdaten erhalten (Quelle: ' + (obj.source||'proxy') + ') — Währung: ' + (detectedCurrency||'unbekannt'), 'info');
-          // Use module-level helpers `toNumber` and `parseScaledNumber` for robust parsing
-          var raw = obj.data.data;
-          var formatted = raw.map(function(it){
-            var t = it.title || '';
-            var v = it.value;
-            var n = (typeof v === 'string') ? parseScaledNumber(v) : toNumber(v);
-            try{
-              if(t.indexOf('Marktkapital')!==-1) return { title: t, value: n!==null ? normalizeMarketCap(n, detectedCurrency) : '–', sub: it.sub };
-              if(t.indexOf('KGV')!==-1) return { title: t, value: n!==null ? (Math.round(n*10)/10) : '–', sub: it.sub };
-              if(t.indexOf('Umsatz')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
-              if(t === 'EPS') return { title: t, value: n!==null ? (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(n*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '')) : '–', sub: it.sub };
-              if(t.indexOf('Free Cash')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
-              if(t === 'EBITDA') return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
-              if(t.indexOf('Netto')!==-1) return { title: t, value: n!==null ? fmtNumber(n, detectedCurrency) : '–', sub: it.sub };
-              if(t.indexOf('Dividende')!==-1){
-                if(n===null) return { title: t, value: (v||'–'), sub: it.sub };
-                try{
-                  var pctVal = (Math.abs(n) <= 1) ? (Math.round(n*1000)/10) : (Math.round(n*10)/10);
-                  return { title: t, value: (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(pctVal) + '%'), sub: it.sub };
-                }catch(e){
-                  if(Math.abs(n) <= 1) return { title: t, value: (Math.round(n*1000)/10) + '%', sub: it.sub };
-                  return { title: t, value: (Math.round(n*10)/10) + '%', sub: it.sub };
-                }
-              }
-              if(t.indexOf('Marge')!==-1) return { title: t, value: n!==null ? formatMargin(n) : '–', sub: it.sub };
-            }catch(e){ }
-            return { title: t, value: (v||'–'), sub: it.sub };
-          });
-          // enrich with live price (if available) before caching/returning
-          return enrichWithPrice(formatted, detectedCurrency).then(function(enriched){
-            try{ writeCache(symbol, enriched); }catch(e){}
-            writeStatus('Proxy: Rohdaten formatiert und zwischengespeichert', 'ok');
-            return enriched;
-          });
-        }
-        if(Array.isArray(obj.data)){
-          writeStatus('Proxy: Daten erhalten (Quelle: ' + (obj.source||'proxy') + ')', 'info');
-          // ensure array responses are formatted consistently
-          var fmt = ensureFormatted(obj.data, obj.currency || detectedCurrency);
-          return enrichWithPrice(fmt, obj.currency || detectedCurrency).then(function(enriched){
-            try{ writeCache(symbol, enriched); }catch(e){}
-            return enriched;
-          });
-        }
-      }
-      throw new Error('proxy-empty');
     });
   }
   

@@ -221,8 +221,8 @@
                 <style>
                   .tradingview-financials-wrapper .tradingview-widget-container iframe,
                   .tradingview-financials-wrapper .tradingview-widget-container__widget iframe {
-                    height: 1200px !important;
-                    min-height: 1200px !important;
+                    height: 1000px !important;
+                    min-height: 1000px !important;
                     max-height: none !important;
                   }
                 </style>
@@ -231,7 +231,7 @@
                   (function(){
                     function applyHeight(){
                       var ifr = document.querySelector('.tradingview-financials-wrapper .tradingview-widget-container iframe') || document.querySelector('.tradingview-financials-wrapper .tradingview-widget-container__widget iframe');
-                      if(ifr){ ifr.style.height = '1200px'; ifr.style.minHeight = '1200px'; }
+                      if(ifr){ ifr.style.height = '1000px'; ifr.style.minHeight = '1000px'; }
                     }
                     // Try now and also when DOM changes inside the container
                     applyHeight();

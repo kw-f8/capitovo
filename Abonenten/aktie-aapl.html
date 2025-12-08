@@ -187,12 +187,12 @@
                 <!-- TradingView Financials Widget (angepasst für Apple, keine Scrollbars) -->
                 <div class="tradingview-financials-wrapper mb-6" style="width:100%; max-width:100%;">
                   <!-- Widget container: height is computed at runtime so all data fits without internal scroll -->
-                  <div id="tv-financials-container" class="tradingview-widget-container" style="width:100%; height:1000px; border:1px solid rgba(15,23,42,0.04); border-radius:8px; overflow:hidden; background:#fff;">
+                  <div id="tv-financials-container" class="tradingview-widget-container" style="width:100%; height:950px; border:1px solid rgba(15,23,42,0.04); border-radius:8px; overflow:hidden; background:#fff;">
                     <div class="tradingview-widget-container__widget"></div>
                     <!-- copyright/link removed per request -->
                     <script>
                       (function(){
-                        var desired = 1000;
+                        var desired = 950;
                         var outer = document.getElementById('tv-financials-container');
                         if(outer) outer.style.height = desired + 'px';
                         var cfg = {"symbol":"NASDAQ:AAPL","colorTheme":"light","displayMode":"regular","isTransparent":false,"locale":"de_DE","width":"100%","height": desired };
@@ -221,8 +221,8 @@
                 <style>
                   .tradingview-financials-wrapper .tradingview-widget-container iframe,
                   .tradingview-financials-wrapper .tradingview-widget-container__widget iframe {
-                    height: 1000px !important;
-                    min-height: 1000px !important;
+                    height: 950px !important;
+                    min-height: 950px !important;
                     max-height: none !important;
                   }
                 </style>
@@ -231,7 +231,7 @@
                   (function(){
                     function applyHeight(){
                       var ifr = document.querySelector('.tradingview-financials-wrapper .tradingview-widget-container iframe') || document.querySelector('.tradingview-financials-wrapper .tradingview-widget-container__widget iframe');
-                      if(ifr){ ifr.style.height = '1000px'; ifr.style.minHeight = '1000px'; }
+                      if(ifr){ ifr.style.height = '950px'; ifr.style.minHeight = '950px'; }
                     }
                     // Try now and also when DOM changes inside the container
                     applyHeight();

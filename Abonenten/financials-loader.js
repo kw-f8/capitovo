@@ -159,7 +159,7 @@
         return;
       }
     }catch(e){}
-    try{ hideLoading(); hideGlobalLoading(); }catch(e){}
+    try{ hideLoading(); hideGlobalLoading(); hideModalLoading(); }catch(e){}
     // Render a single large overview box with many metrics (two-column layout inside)
     try{ ensureContainer(); }catch(e){}
     try{ Array.from(container.querySelectorAll('script,noscript')).forEach(function(n){ n.remove(); }); }catch(e){}

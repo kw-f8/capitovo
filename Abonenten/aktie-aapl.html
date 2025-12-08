@@ -236,6 +236,23 @@
   </script>
 
   <script>
+    // Show a centered pre-load modal when the page itself is opened directly
+    // (or when the modal wasn't shown by the previous page). The modal will
+    // be hidden by `financials-loader.js` once data rendering completes.
+    document.addEventListener('DOMContentLoaded', function(){
+      try{
+        if(window.capitovoShowModalLoading) window.capitovoShowModalLoading('Seite wird geladen…');
+        else {
+          // best-effort minimal overlay if loader not yet available
+          var ov = document.createElement('div'); ov.id='capitovo-local-overlay'; ov.style.position='fixed'; ov.style.left=0; ov.style.top=0; ov.style.right=0; ov.style.bottom=0; ov.style.background='rgba(0,0,0,0.55)'; ov.style.zIndex=100000; document.body.appendChild(ov);
+        }
+      }catch(e){}
+      // Safety: ensure the modal is removed after 6s in case something fails.
+      setTimeout(function(){ try{ if(window.capitovoHideModalLoading) window.capitovoHideModalLoading(); var loc = document.getElementById('capitovo-local-overlay'); if(loc) loc.remove(); }catch(e){} }, 6000);
+    });
+  </script>
+
+  <script>
     // Beobachte den financials-overview Container und wende das 3x3-Grid an,
     // sobald mindestens 9 Kindelemente (Datenkästchen) vorhanden sind.
     (function(){

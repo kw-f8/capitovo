@@ -265,6 +265,33 @@
     });
   }
 
+  // Fetch quarterly income statement / earnings to derive last-quarter metrics.
+  // Tries proxy first (if configured) then Alpha Vantage INCOME_STATEMENT (requires key).
+  function fetchQuarterlyReports(){
+    return new Promise(function(resolve){
+      var proxyBase = (window.FINANCIALS_PROXY_URL && String(window.FINANCIALS_PROXY_URL).trim()) || '/api';
+      var proxyUrl = proxyBase.replace(/\/$/, '') + '/financials/quarterly/' + encodeURIComponent(symbol);
+      // Try proxy
+      fetch(proxyUrl).then(function(r){ if(!r.ok) throw new Error('proxy-quarterly-error'); return r.json(); }).then(function(obj){
+        // Expecting obj.quarterlyReports or similar shape
+        var reports = obj && (obj.quarterlyReports || obj.quarters || obj.data || null);
+        if(Array.isArray(reports) && reports.length>0){ return resolve(reports); }
+        return resolve(null);
+      }).catch(function(){
+        // Fallback to Alpha Vantage INCOME_STATEMENT if client key available
+        var key = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
+        if(!key) return resolve(null);
+        var url = 'https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol=' + encodeURIComponent(symbol) + '&apikey=' + key;
+        fetch(url).then(function(r){ if(!r.ok) return resolve(null); return r.json(); }).then(function(j){
+          try{
+            if(j && Array.isArray(j.quarterlyReports) && j.quarterlyReports.length>0) return resolve(j.quarterlyReports);
+          }catch(e){}
+          return resolve(null);
+        }).catch(function(){ return resolve(null); });
+      });
+    });
+  }
+
   // Replace the 'Free Cash Flow' entry in the data array with the current price (Aktueller Kurs)
   function enrichWithPrice(arr, currency){
     if(!Array.isArray(arr)) return Promise.resolve(arr);
@@ -345,10 +372,32 @@
         { title: 'KUV (TTM)', value: obj.PriceToSalesRatioTTM ? new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Number(obj.PriceToSalesRatioTTM)) : '–' },
         { title: 'ROE (TTM)', value: obj.ReturnOnEquityTTM ? formatMargin(Number(obj.ReturnOnEquityTTM)) : '–' }
       ];
-      // enrich with live price (replaces Free Cash Flow slot) before caching
-      return enrichWithPrice(data, detectedCurrency).then(function(enriched){
-        try{ writeCache(symbol, enriched); }catch(e){}
-        return enriched;
+      // fetch quarterly reports and insert last-quarter metrics if available
+      return fetchQuarterlyReports().then(function(reports){
+        try{
+          if(Array.isArray(reports) && reports.length>0){
+            var latest = reports[0];
+            var prev = reports[1] || null;
+            // totalRevenue, netIncome, reportedEPS, fiscalDateEnding
+            var revLatest = latest.totalRevenue ? toNumber(latest.totalRevenue) : (latest.totalRevenue ? toNumber(latest.totalRevenue) : null);
+            var revPrev = prev && prev.totalRevenue ? toNumber(prev.totalRevenue) : null;
+            var epsLatest = latest.reportedEPS ? toNumber(latest.reportedEPS) : null;
+            var epsPrev = prev && prev.reportedEPS ? toNumber(prev.reportedEPS) : null;
+            if(revLatest !== null){ data.unshift({ title: 'Umsatz (letztes Q)', value: fmtNumber(revLatest, detectedCurrency) });
+              if(revPrev !== null){ var change = ((revLatest - revPrev) / Math.abs(revPrev)) * 100; data.splice(1,0,{ title: 'Umsatz q/q', value: (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(change*10)/10) + '%') }); }
+            }
+            if(epsLatest !== null){ data.splice(2,0,{ title: 'EPS (letztes Q)', value: new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(Math.round(epsLatest*100)/100) + (detectedCurrency ? ' ' + currencySymbol(detectedCurrency) : '') });
+              if(epsPrev !== null){ var epsChange = ((epsLatest - epsPrev)/Math.abs(epsPrev))*100; data.splice(3,0,{ title: 'EPS q/q', value: (new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 }).format(Math.round(epsChange*10)/10) + '%') }); }
+            }
+          }
+        }catch(e){ }
+        // enrich with live price (replaces Free Cash Flow slot) before caching
+        return enrichWithPrice(data, detectedCurrency).then(function(enriched){
+          try{ writeCache(symbol, enriched); }catch(e){}
+          return enriched;
+        });
+      }).catch(function(){
+        return enrichWithPrice(data, detectedCurrency).then(function(enriched){ try{ writeCache(symbol, enriched); }catch(e){}; return enriched; });
       });
     });
   }

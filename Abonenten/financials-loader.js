@@ -57,7 +57,7 @@
   }
 
   // Caching: cache Alpha Vantage overview in localStorage to avoid frequent requests.
-  var CACHE_TTL_HOURS = (window.FINANCIALS_CACHE_TTL_HOURS && Number(window.FINANCIALS_CACHE_TTL_HOURS)) || 36; // default 36h
+  var CACHE_TTL_HOURS = (window.FINANCIALS_CACHE_TTL_HOURS && Number(window.FINANCIALS_CACHE_TTL_HOURS)) || 24; // default 24h to respect API limits
   function cacheKey(sym){ return 'capitovo_fin_overview_v1_' + String(sym).toUpperCase(); }
   function readCache(sym){
     try{
@@ -575,24 +575,63 @@
     }catch(e){ }
   }
 
-  var alphaKey = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
-  if(!alphaKey){
-    // No client key: try proxy first, then cache/local fallback
-    fetchProxy().then(function(d){ renderFallback(d); scheduleRefresh(); }).catch(function(){
+  // Encapsulate the data-loading decision so we can re-use it when the user selects another stock.
+  function loadData(){
+    try{ showLoading('Daten für ' + (symbol||'') + ' werden geladen…'); }catch(e){}
+    // clear previous status messages
+    try{ Array.from(container.querySelectorAll('.fb-status')).forEach(function(n){ n.remove(); }); }catch(e){}
+
+    // If we have recent cached data (<= TTL), render it immediately and avoid hitting the API.
+    try{
+      var cached = readCache(symbol);
+      if(cached && cached.data && typeof cached.ageHours === 'number' && cached.ageHours <= CACHE_TTL_HOURS){
+        writeStatus('Verwende gecachte Daten (Alter ' + Math.round(cached.ageHours) + 'h)', 'info');
+        try{
+          var f = ensureFormatted(cached.data, detectedCurrency);
+          renderFallback(f);
+        }catch(e){ renderFallback(cached.data); }
+        // schedule a background refresh for when the cache becomes stale
+        try{ scheduleRefresh(); }catch(e){}
+        return;
+      }
+    }catch(e){}
+
+    // No recent cache -> perform live fetch (proxy preferred)
+    var alphaKey = (window.ALPHA_VANTAGE_KEY && String(window.ALPHA_VANTAGE_KEY).trim()) || '';
+    if(!alphaKey){
+      // No client key: try proxy first, then cache/local fallback
+      fetchProxy().then(function(d){ renderFallback(d); scheduleRefresh(); }).catch(function(){
+        fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); scheduleRefresh(); }).catch(function(aerr){
+          console.warn('alpha failed', aerr);
+          writeStatus('Keine Live-Daten verfügbar — verwende lokalen Fallback', 'error');
+          loadLocalFallback();
+          scheduleRefresh();
+        });
+      });
+    } else {
+      // client has key: use alpha directly (with cache) and schedule
       fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); scheduleRefresh(); }).catch(function(aerr){
         console.warn('alpha failed', aerr);
-        writeStatus('Keine Live-Daten verfügbar — verwende lokalen Fallback', 'error');
-        loadLocalFallback();
-        scheduleRefresh();
+        writeStatus('Alpha Vantage: Kein Live-Datensatz verfügbar — versuche Proxy oder lokalen Fallback', 'warn');
+        fetchProxy().then(function(d){ renderFallback(d); scheduleRefresh(); }).catch(function(){ loadLocalFallback(); scheduleRefresh(); });
       });
-    });
-  } else {
-    // client has key: use alpha directly (with cache) and schedule
-    fetchAlphaWithCacheFallback().then(function(ad){ renderFallback(ad); scheduleRefresh(); }).catch(function(aerr){
-      console.warn('alpha failed', aerr);
-      writeStatus('Alpha Vantage: Kein Live-Datensatz verfügbar — versuche Proxy oder lokalen Fallback', 'warn');
-      fetchProxy().then(function(d){ renderFallback(d); scheduleRefresh(); }).catch(function(){ loadLocalFallback(); scheduleRefresh(); });
-    });
+    }
   }
+
+  // Public helper: allow external pages (z.B. aktien-monitor) to request a reload for a given symbol.
+  // Usage: window.capitovoLoadFinancials('AAPL') — shows loading UI and loads data (cached within 24h)
+  window.capitovoLoadFinancials = function(newSymbol){
+    try{
+      if(!newSymbol) return;
+      symbol = String(newSymbol).toUpperCase();
+      // Always show loading when user selects a new stock
+      try{ showLoading('Daten für ' + symbol + ' werden geladen…'); }catch(e){}
+      // trigger the same load flow (which respects the 24h TTL)
+      loadData();
+    }catch(e){ console.warn('capitovoLoadFinancials error', e); }
+  };
+
+  // initial load
+  loadData();
 
 })();

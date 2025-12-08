@@ -232,7 +232,26 @@
                         // Prefer loader's modal if available, otherwise fall back to simple overlay
                         if(window.capitovoShowModalLoading) window.capitovoShowModalLoading('Seite wird geladen…');
                         else {
-                            var ov = document.createElement('div'); ov.style.position='fixed'; ov.style.left=0; ov.style.top=0; ov.style.right=0; ov.style.bottom=0; ov.style.background='rgba(0,0,0,0.6)'; ov.style.zIndex=100000; document.body.appendChild(ov);
+                            // create a centered modal similar to the loader's modal (fallback)
+                            try{
+                                var ov = document.createElement('div'); ov.id='capitovo-fallback-modal';
+                                ov.style.position='fixed'; ov.style.left='0'; ov.style.top='0'; ov.style.right='0'; ov.style.bottom='0';
+                                ov.style.background='rgba(15,23,42,0.6)'; ov.style.zIndex=100000; ov.style.display='flex';
+                                ov.style.alignItems='center'; ov.style.justifyContent='center';
+
+                                var box = document.createElement('div');
+                                box.style.background='#fff'; box.style.padding='18px'; box.style.borderRadius='10px';
+                                box.style.minWidth='280px'; box.style.boxShadow='0 10px 30px rgba(2,6,23,0.3)'; box.style.display='flex'; box.style.alignItems='center';
+                                var spinner = document.createElement('div'); spinner.className='spinner'; spinner.style.width='24px'; spinner.style.height='24px'; spinner.style.borderWidth='3px';
+                                var text = document.createElement('div'); text.style.marginLeft='12px'; text.style.fontSize='1rem'; text.style.color='#0f172a'; text.textContent='Seite wird geladen…';
+                                box.appendChild(spinner); box.appendChild(text);
+                                ov.appendChild(box);
+                                // ensure spinner CSS exists (best-effort)
+                                try{ var s = document.getElementById('capitovo-fb-loading-style'); if(!s){ var st = document.createElement('style'); st.id='capitovo-fb-loading-style'; st.textContent = '#fb-loading .spinner, .spinner { width:18px; height:18px; border-radius:50%; border:2px solid rgba(0,0,0,0.08); border-top-color:#2563eb; animation:capspin 1s linear infinite; } @keyframes capspin { to { transform:rotate(360deg); } }'; document.head.appendChild(st); } }catch(e){}
+                                document.body.appendChild(ov);
+                            }catch(e){
+                                var ov2 = document.createElement('div'); ov2.style.position='fixed'; ov2.style.left=0; ov2.style.top=0; ov2.style.right=0; ov2.style.bottom=0; ov2.style.background='rgba(0,0,0,0.6)'; ov2.style.zIndex=100000; document.body.appendChild(ov2);
+                            }
                         }
                     }catch(e){}
                     // Wait to let the modal paint and display for at least 1.5s, then navigate.

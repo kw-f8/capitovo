@@ -188,8 +188,7 @@
                 <div class="tradingview-financials-wrapper mb-6" style="width:100%; max-width:100%;">
                   <!-- Widget container with fixed height so content does not scroll -->
                   <div class="tradingview-widget-container" style="width:100%; height:900px; border:1px solid rgba(15,23,42,0.04); border-radius:8px; overflow:hidden; background:#fff;">
-                    <div class="tradingview-widget-container__widget"></div>
-                    <div class="tradingview-widget-copyright" style="padding:8px 12px; text-align:right; font-size:12px; color:#6b7280;"><a href="https://de.tradingview.com/symbols/NASDAQ-AAPL/financials-overview/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+                    <div class="tradingview-widget-container__widget" style="height:900px;"></div>
                     <script>
                       (function(){
                         var cfg = {"symbol":"NASDAQ:AAPL","colorTheme":"light","displayMode":"regular","isTransparent":false,"locale":"de_DE","width":"100%","height":"900"};
@@ -212,21 +211,32 @@
                   }
                 </style>
                 <script>
-                  // If TradingView injects the iframe after load, ensure its height is enforced
+                  // Robustly enforce height and remove the copyright/link added by TradingView.
                   (function(){
+                    var TARGET_HEIGHT = '900px';
+                    function setImportant(el, prop, value){ try{ el.style.setProperty(prop, value, 'important'); }catch(e){ try{ el.style[prop]=value; }catch(e){} } }
                     function applyHeight(){
-                      var ifr = document.querySelector('.tradingview-widget-container iframe') || document.querySelector('.tradingview-widget-container__widget iframe');
-                      if(ifr){ ifr.style.height = '900px'; ifr.style.minHeight = '900px'; }
+                      // ensure main containers have the height
+                      var containers = document.querySelectorAll('.tradingview-widget-container, .tradingview-widget-container .tradingview-widget-container__widget');
+                      containers.forEach(function(c){ setImportant(c, 'height', TARGET_HEIGHT); setImportant(c, 'min-height', TARGET_HEIGHT); setImportant(c, 'max-height', 'none'); });
+                      // adjust any iframe inserted by TradingView
+                      var iframes = document.querySelectorAll('.tradingview-widget-container iframe, .tradingview-widget-container__widget iframe');
+                      iframes.forEach(function(i){ setImportant(i, 'height', TARGET_HEIGHT); setImportant(i, 'min-height', TARGET_HEIGHT); setImportant(i, 'max-height', 'none'); i.removeAttribute('height'); });
+                      // remove copyright/link elements if present
+                      var cops = document.querySelectorAll('.tradingview-widget-copyright, .tradingview-widget-copyright *');
+                      cops.forEach(function(n){ try{ n.remove(); }catch(e){} });
                     }
-                    // Try now and also when DOM changes inside the container
+                    // apply immediately and when DOM changes inside widget
                     applyHeight();
-                    var container = document.querySelector('.tradingview-widget-container');
+                    var container = document.querySelector('.tradingview-financials-wrapper');
                     if(container && window.MutationObserver){
                       var mo = new MutationObserver(function(){ applyHeight(); });
                       mo.observe(container, { childList: true, subtree: true });
-                      // stop observing after 5s to avoid unnecessary work
-                      setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 5000);
+                      setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 6000);
                     }
+                    // Also re-run after a short delay in case widget loads slowly
+                    setTimeout(applyHeight, 800);
+                    setTimeout(applyHeight, 1600);
                   })();
                 </script>
 

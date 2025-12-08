@@ -196,6 +196,33 @@
                   </div>
                 </div>
 
+                <!-- Enforce iframe height in case TradingView injects its own inline styles -->
+                <style>
+                  .tradingview-widget-container iframe, .tradingview-widget-container__widget iframe {
+                    height: 900px !important;
+                    min-height: 900px !important;
+                    max-height: none !important;
+                  }
+                </style>
+                <script>
+                  // If TradingView injects the iframe after load, ensure its height is enforced
+                  (function(){
+                    function applyHeight(){
+                      var ifr = document.querySelector('.tradingview-widget-container iframe') || document.querySelector('.tradingview-widget-container__widget iframe');
+                      if(ifr){ ifr.style.height = '900px'; ifr.style.minHeight = '900px'; }
+                    }
+                    // Try now and also when DOM changes inside the container
+                    applyHeight();
+                    var container = document.querySelector('.tradingview-widget-container');
+                    if(container && window.MutationObserver){
+                      var mo = new MutationObserver(function(){ applyHeight(); });
+                      mo.observe(container, { childList: true, subtree: true });
+                      // stop observing after 5s to avoid unnecessary work
+                      setTimeout(function(){ try{ mo.disconnect(); }catch(e){} }, 5000);
+                    }
+                  })();
+                </script>
+
                 <!-- Aktions-Buttons entfernt auf Wunsch des Nutzers -->
             </div>
         </section>

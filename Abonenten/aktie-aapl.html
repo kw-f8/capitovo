@@ -177,12 +177,7 @@
                 <div class="flex items-center justify-between mb-2 section-heading">
                   <h3 class="text-lg font-semibold">Apple Finanzdaten</h3>
                 </div>
-                <div id="financials-overview" class="mb-6 p-4 bg-white rounded" style="border:1px solid rgba(15,23,42,0.04); height:560px; overflow:visible;" role="region" aria-label="Apple Finanzdaten">
-                  <!-- Financials widget wird programmgesteuert eingefügt -->
-                    <noscript>
-                      <div style="padding:0.5rem;font-size:0.95rem;color:#6b7280;">Financials: Bitte aktiviere JavaScript, um detaillierte Finanzdaten zu sehen.</div>
-                    </noscript>
-                </div>
+                <!-- TradingView Financials wird direkt unten eingebettet; kein API-Loader erforderlich -->
 
                 <!-- TradingView Financials Widget (styled like chart widget) -->
                 <div id="tv-financials-container" class="tradingview-widget-container card" style="width:100%; height:930px; margin-bottom:0; border:1px solid rgba(15,23,42,0.06); border-radius:12px; overflow:hidden; background:#fff; box-shadow:0 6px 20px rgba(2,6,23,0.04);">
@@ -268,7 +263,6 @@
 
   <script src="../src/components/insert_components.js"></script>
   <script src="./config.js"></script>
-  <script src="./financials-loader.js"></script>
   <script>
     // Sidebar toggle wiring (single, shared handler)
     document.addEventListener('click', function(e){
@@ -316,63 +310,7 @@
     });
   </script>
 
-  <script>
-    // Beobachte den financials-overview Container und wende das 3x3-Grid an,
-    // sobald mindestens 9 Kindelemente (Datenkästchen) vorhanden sind.
-    (function(){
-      var container = document.getElementById('financials-overview');
-      if(!container) return;
-
-      var applyGrid = function(){
-        // 1) Direkte Kinder prüfen
-        var direct = Array.from(container.children).filter(function(n){
-          return !(n.tagName==='SCRIPT' || n.tagName==='NOSCRIPT' || (n.nodeType===3 && !/\S/.test(n.nodeValue)));
-        });
-        if(direct.length >= 9){
-          container.classList.add('three-by-three');
-          return true;
-        }
-
-        // 2) Suche verschachtelte Wrapper, die 9+ Kindelemente enthalten
-        var all = container.querySelectorAll('*');
-        for(var i=0;i<all.length;i++){
-          var el = all[i];
-          // ignore script/noscript nodes
-          if(el.tagName==='SCRIPT' || el.tagName==='NOSCRIPT') continue;
-          var childElems = Array.from(el.children).filter(function(n){ return !(n.tagName==='SCRIPT' || n.tagName==='NOSCRIPT'); });
-          if(childElems.length >= 9){
-            // Setze die Klasse auf das innere Wrapper-Element
-            el.classList.add('three-by-three-inner');
-            return true;
-          }
-        }
-
-        // 3) Falls ein iframe vorhanden ist, erkennen wir, dass das Embed in einem iframe läuft
-        // und nicht von außen gestylt werden kann. Wir brechen dann ab.
-        if(container.querySelector('iframe')){
-          // optional: markiere container zur leichteren Diagnose
-          container.classList.add('financials-iframe');
-          return false;
-        }
-
-        return false;
-      };
-
-      // Try immediate (fast path)
-      if(applyGrid()) return;
-
-      // MutationObserver beobachtet Einfügungen innerhalb des Containers
-      var mo = new MutationObserver(function(muts){
-        if(applyGrid()){
-          mo.disconnect();
-        }
-      });
-      mo.observe(container, { childList: true, subtree: true });
-
-      // Safety fallback nach 3s
-      setTimeout(function(){ applyGrid(); mo.disconnect(); }, 3000);
-    })();
-  </script>
+  <!-- Finanzdaten-API/Loader entfernt; TradingView-Widget übernimmt die Darstellung -->
 
     <script>
     // Fallback removed: the external `financials-loader.js` uses Alpha Vantage and local fallback.
@@ -382,49 +320,7 @@
 
   <!-- sizing handled by CSS (right column flex + iframe 100% height) -->
 
-  <script>
-  // Simple diagnostic: check presence of Alpha Vantage key and attempt a quick overview fetch.
-  (function(){
-    var container = document.getElementById('financials-overview');
-    if(!container) return;
-    function writeStatus(msg, level){
-      var el = document.createElement('div');
-      el.style.fontSize = '0.95rem';
-      el.style.padding = '6px 0';
-      el.style.color = (level==='error' ? '#b91c1c' : (level==='warn' ? '#92400e' : '#374151'));
-      el.textContent = msg;
-      container.insertBefore(el, container.firstChild);
-    }
-
-    var alphaKey = window.ALPHA_VANTAGE_KEY || null;
-    // If a proxy is available or cached data exists, downgrade the missing-key warning to info
-    var proxyUrl = (window.FINANCIALS_PROXY_URL && String(window.FINANCIALS_PROXY_URL).trim()) || null;
-    var cachePresent = false;
-    try{
-      var raw = localStorage.getItem('capitovo_fin_overview_v1_AAPL');
-      if(raw){ var obj = JSON.parse(raw); cachePresent = !!(obj && obj.data); }
-    }catch(e){ cachePresent = false; }
-
-    if(!alphaKey && (proxyUrl || cachePresent)){
-      var reason = proxyUrl ? 'Proxy verfügbar' : 'Gecachte Daten vorhanden';
-      writeStatus('Alpha Vantage Key: nicht gesetzt — ' + reason, 'info');
-    } else {
-      writeStatus('Alpha Vantage Key: ' + (alphaKey ? 'gefunden' : 'nicht gesetzt'), alphaKey ? 'ok' : 'warn');
-    }
-
-    if(alphaKey){
-      var testUrl = 'https://www.alphavantage.co/query?function=OVERVIEW&symbol=AAPL&apikey=' + alphaKey;
-      fetch(testUrl).then(function(r){
-        if(!r.ok) { writeStatus('Alpha Vantage: Antwort Status ' + r.status, 'warn'); return; }
-        return r.json().then(function(j){
-          if(j && Object.keys(j).length>0 && !j.Note){ writeStatus('Alpha Vantage: Überblick erhalten', 'ok'); }
-          else if(j && j.Note){ writeStatus('Alpha Vantage: API Limit/Notice: ' + (j.Note||'—'), 'warn'); }
-          else { writeStatus('Alpha Vantage: Keine Daten im Overview', 'warn'); }
-        });
-      }).catch(function(err){ writeStatus('Alpha Vantage: Abruf fehlgeschlagen ('+String(err)+')', 'error'); });
-    }
-  })();
-  </script>
+  <!-- API-Diagnose entfernt (wir nutzen nun ausschließlich das TradingView-Widget) -->
 
 </body>
 </html>

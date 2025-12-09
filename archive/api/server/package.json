@@ -1,0 +1,6 @@
+{
+  "name": "capitovo-proxy",
+  "version": "0.1.0",
+  "description": "Alpha Vantage proxy with in-memory cache for Capitovo (archived)",
+  "main": "index.js"
+}

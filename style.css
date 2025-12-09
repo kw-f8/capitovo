@@ -986,28 +986,8 @@ html body .abonenten-page .site-footer .copyright {
 }
 
 /* Spezifische Anpassungen für das Financials-Widget-Layout */
-#financials-overview {
-    /* Höhe so setzen, dass das Widget nicht intern scrollt; kann bei Bedarf weiter erhöht werden */
-    height: 560px !important;
-    min-height: 560px !important;
-    overflow: visible !important; /* Container selbst zeigt Inhalte, innerer iframe wird gestreckt */
-    border-radius: 12px !important; /* gleiche Rundung wie Chart-Card */
-}
-
-#financials-overview .tradingview-widget-container.card {
-    height: 100% !important;
-    padding: 0 !important;
-    border-radius: 12px !important; /* match chart widget */
-    overflow: hidden !important; /* Verhindert Scrollbars im inneren */
-}
-
-#financials-overview .tradingview-widget-container.card .tradingview-widget-container__widget,
-#financials-overview .tradingview-widget-container.card iframe {
-    height: 100% !important;
-    min-height: 0 !important;
-    width: 100% !important;
-    border-radius: 12px !important;
-}
+/* Financials widget styles removed (archived). TradingView embed is used directly in pages now. */
+/* If you need to re-enable per-widget styling, restore rules from archive/api/style-financials.css */
 
 /* Einzelne Finanz-Kästchen (falls wir eigene 3x3 Karten rendern) */
 .financial-box {
@@ -1032,47 +1012,7 @@ html body .abonenten-page .site-footer .copyright {
 }
 
 /* Ensure boxes fill their grid cells nicely */
-#financials-overview.three-by-three > .financial-box,
-#financials-overview .three-by-three-inner > .financial-box {
-    height: 100%;
-}
-
-/* Finanzdaten: 3x3 Grid für 9 Datenkästchen
-   Wenn das TradingView-Widget seine Kästchen als direkte Kinder einfügt,
-   ordnen wir sie in 3 Spalten und 3 Reihen an. Fallback: falls die Embed
-   ein iframe nutzt, greift diese Regel nicht (Iframe-Inhalt kann nicht
-   von außen gestylt werden). Ein kleines JS sorgt dafür, dass die Klasse
-   `three-by-three` erst nach dem Einfügen der Kästchen gesetzt wird. */
-#financials-overview.three-by-three {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 12px !important;
-    align-items: start !important;
-}
-#financials-overview.three-by-three > * {
-    /* Ensure each data box looks like a small card */
-    background: #ffffff !important;
-    border: 1px solid rgba(15,23,42,0.06) !important;
-    border-radius: 8px !important;
-    padding: 10px 12px !important;
-    box-shadow: 0 6px 18px rgba(2,6,23,0.04) !important;
-}
-
-/* Falls das Embed ein inneres Wrapper-Element erzeugt, erlauben wir auch
-   das Setzen einer Klasse direkt auf diesem inneren Wrapper. */
-#financials-overview .three-by-three-inner {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 12px !important;
-    align-items: start !important;
-}
-#financials-overview .three-by-three-inner > * {
-    background: #ffffff !important;
-    border: 1px solid rgba(15,23,42,0.06) !important;
-    border-radius: 8px !important;
-    padding: 10px 12px !important;
-    box-shadow: 0 6px 18px rgba(2,6,23,0.04) !important;
-}
+/* Styling for old financials grid removed (archived). If needed, restore from archive/api/style-financials.css */
 
 @media (max-width: 768px) {
     /* On small screens collapse to 2 columns or 1 column if very narrow */

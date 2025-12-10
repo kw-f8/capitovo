@@ -1012,14 +1012,6 @@ html body .abonenten-page .site-footer .copyright {
 }
 
 /* Ensure boxes fill their grid cells nicely */
-/* Styling for old financials grid removed (archived). If needed, restore from archive/api/style-financials.css */
-
-@media (max-width: 768px) {
-    /* On small screens collapse to 2 columns or 1 column if very narrow */
-    #financials-overview.three-by-three { grid-template-columns: repeat(2, 1fr) !important; }
-}
-@media (max-width: 420px) {
-    #financials-overview.three-by-three { grid-template-columns: 1fr !important; }
-}
+/* All #financials-overview styles removed (archived). TradingView widget used instead. */
 
 

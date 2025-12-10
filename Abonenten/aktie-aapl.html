@@ -280,6 +280,18 @@
         sb2.setAttribute('aria-hidden','true'); sb2.classList.remove('open');
         return;
       }
+
+      // Wenn Sidebar offen ist, Klick außerhalb schließt sie
+      try{
+        var sbEl = document.getElementById('sidebar');
+        if(sbEl && sbEl.getAttribute('aria-hidden') === 'false'){
+          // Falls das Klickziel weder in der Sidebar noch der Toggle ist, schließen
+          if(!e.target.closest('#sidebar') && !e.target.closest('#menu-toggle') && !e.target.closest('.menu-toggle') && !e.target.closest('[aria-controls="sidebar"]')){
+            sbEl.setAttribute('aria-hidden','true');
+            sbEl.classList.remove('open');
+          }
+        }
+      }catch(err){ /* ignore */ }
     });
   </script>
 

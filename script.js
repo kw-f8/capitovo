@@ -333,7 +333,7 @@ async function loadAndRenderMemberAnalyses(){
                 // If page requests a carousel layout, render horizontally with navigation
                 if (layout === 'carousel') {
                         const slice = items.slice(0, 12); // up to 12 in carousel
-                        const cards = slice.map((d,i) => `<div class="w-[320px] flex-shrink-0">${createMemberAnalysisCard(d,i,false)}</div>`).join('');
+                        const cards = slice.map((d,i) => `<div style="flex:0 0 300px; max-width:300px;">${createMemberAnalysisCard(d,i,false)}</div>`).join('');
                         const html = `
                                 <div class="relative">
                                     <button class="carousel-prev absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white border shadow" aria-label="Vorherige">
@@ -352,13 +352,18 @@ async function loadAndRenderMemberAnalyses(){
 
                         // attach simple prev/next behavior
                         try{
-                                const track = container.querySelector('.carousel-track');
-                                const prev = container.querySelector('.carousel-prev');
-                                const next = container.querySelector('.carousel-next');
-                                if (prev && next && track){
-                                        prev.addEventListener('click', function(){ track.scrollBy({ left: -Math.max(track.clientWidth * 0.6, 320), behavior: 'smooth' }); });
-                                        next.addEventListener('click', function(){ track.scrollBy({ left: Math.max(track.clientWidth * 0.6, 320), behavior: 'smooth' }); });
-                                }
+                            // enforce sizes similar to grid cards (image height, card max width)
+                            const style = document.createElement('style');
+                            style.appendChild(document.createTextNode('\n.carousel-track .member-card { max-width: 300px; }\n.carousel-track .member-card .media { height: 220px !important; }\n.carousel-track .member-card img { height: 100% !important; }\n'));
+                            document.head.appendChild(style);
+
+                            const track = container.querySelector('.carousel-track');
+                            const prev = container.querySelector('.carousel-prev');
+                            const next = container.querySelector('.carousel-next');
+                            if (prev && next && track){
+                                prev.addEventListener('click', function(){ track.scrollBy({ left: -Math.max(track.clientWidth * 0.6, 300), behavior: 'smooth' }); });
+                                next.addEventListener('click', function(){ track.scrollBy({ left: Math.max(track.clientWidth * 0.6, 300), behavior: 'smooth' }); });
+                            }
                         }catch(e){}
 
                 } else {

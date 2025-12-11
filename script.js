@@ -314,10 +314,59 @@ async function loadAndRenderMemberAnalyses(){
             return (db - da) || 0;
         });
 
-        // render up to 6 analyses in a responsive grid (ohne Favoriten-Sterne auf abonenten.html)
-        const html = `<div class="grid md:grid-cols-3 gap-8">` + data.slice(0,6).map((d,i) => createMemberAnalysisCard(d,i,false)).join('') + `</div>`;
-        container.innerHTML = html;
-        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
+                // Optional: allow page to request a filtered set (e.g. only Apple) via data attributes on the container
+                const filterValue = (container.dataset && container.dataset.filter) ? String(container.dataset.filter).toLowerCase().trim() : '';
+                const layout = (container.dataset && container.dataset.layout) ? String(container.dataset.layout).toLowerCase().trim() : '';
+
+                let items = data.slice();
+                if (filterValue) {
+                        items = items.filter(d => {
+                                try{
+                                        const title = (d.title||'').toString().toLowerCase();
+                                        const category = (d.category||'').toString().toLowerCase();
+                                        const tags = Array.isArray(d.tags) ? d.tags.map(t=>String(t).toLowerCase()) : [];
+                                        return title.includes(filterValue) || category.includes(filterValue) || tags.includes(filterValue);
+                                }catch(e){ return false; }
+                        });
+                }
+
+                // If page requests a carousel layout, render horizontally with navigation
+                if (layout === 'carousel') {
+                        const slice = items.slice(0, 12); // up to 12 in carousel
+                        const cards = slice.map((d,i) => `<div class="w-[320px] flex-shrink-0">${createMemberAnalysisCard(d,i,false)}</div>`).join('');
+                        const html = `
+                                <div class="relative">
+                                    <button class="carousel-prev absolute left-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white border shadow" aria-label="Vorherige">
+                                        &#8249;
+                                    </button>
+                                    <div class="carousel-track flex gap-6 overflow-x-auto no-scrollbar" style="scroll-behavior:smooth; padding:8px 56px;">
+                                        ${cards}
+                                    </div>
+                                    <button class="carousel-next absolute right-0 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full bg-white border shadow" aria-label="Nächste">
+                                        &#8250;
+                                    </button>
+                                </div>`;
+                        container.innerHTML = html;
+
+                        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
+
+                        // attach simple prev/next behavior
+                        try{
+                                const track = container.querySelector('.carousel-track');
+                                const prev = container.querySelector('.carousel-prev');
+                                const next = container.querySelector('.carousel-next');
+                                if (prev && next && track){
+                                        prev.addEventListener('click', function(){ track.scrollBy({ left: -Math.max(track.clientWidth * 0.6, 320), behavior: 'smooth' }); });
+                                        next.addEventListener('click', function(){ track.scrollBy({ left: Math.max(track.clientWidth * 0.6, 320), behavior: 'smooth' }); });
+                                }
+                        }catch(e){}
+
+                } else {
+                        // default: render up to 6 analyses in a responsive grid (ohne Favoriten-Sterne auf abonenten.html)
+                        const html = `<div class="grid md:grid-cols-3 gap-8">` + items.slice(0,6).map((d,i) => createMemberAnalysisCard(d,i,false)).join('') + `</div>`;
+                        container.innerHTML = html;
+                        try { ScrollReveal.add(container.querySelectorAll('[data-scroll]'), { stagger: true, baseDelay: 80 }); } catch(err) { /* ignore */ }
+                }
     }catch(err){
         console.error('Fehler beim Laden der Member-Analysen', err);
         container.innerHTML = '<p class="text-sm text-gray-500">Analysen konnten nicht geladen werden.</p>';

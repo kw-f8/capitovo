@@ -830,7 +830,7 @@ details[open] .details-marker {
 .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
 
 /* Global grid for member analyses to match other pages */
-.member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
+.member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); align-items: stretch; }
 
 /* Alle weißen Texte im Pricing dunkel machen, außer im hervorgehobenen Premium-Card */
 #pricing .text-white { color: #0f172a !important; }

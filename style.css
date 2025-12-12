@@ -829,6 +829,9 @@ details[open] .details-marker {
 .card-excerpt { color: #6b7280; margin-bottom: 0.75rem; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; max-height: calc(1.35rem * 3); }
 .card-meta { display:flex; justify-content:space-between; align-items:center; gap:8px; color:#6b7280; font-size:0.9rem; }
 
+/* Global grid for member analyses to match other pages */
+.member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
+
 /* Alle weißen Texte im Pricing dunkel machen, außer im hervorgehobenen Premium-Card */
 #pricing .text-white { color: #0f172a !important; }
 #pricing .bg-primary-blue .text-white { color: #ffffff !important; }

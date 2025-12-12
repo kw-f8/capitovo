@@ -203,8 +203,8 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
     const onclickAttr = hasAccess ? '' : 'onclick="event.preventDefault(); openSubscriptionModal();"';
 
     // Return the same markup used on the homepage so visuals match exactly
-    return `
-            <a href="${finalLink}" ${onclickAttr} class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+        return `
+            <a href="${finalLink}" ${onclickAttr} class="member-card bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
             
             <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${img}" alt="Vorschaubild für ${title}" 

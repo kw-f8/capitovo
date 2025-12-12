@@ -832,18 +832,6 @@ details[open] .details-marker {
 /* Global grid for member analyses to match other pages */
 .member-analyses-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); align-items: stretch; }
 
-/* Members page: remove boxed card chrome so previews span the full grid width */
-.abonenten-page .member-card {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-}
-.abonenten-page .member-card .media { border-radius: 12px; }
-.abonenten-page .member-card .media img { border-radius: 12px; }
-.abonenten-page .member-card .card-body { padding: 0.75rem 0 1rem 0; }
-.abonenten-page .member-analyses-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
-
 /* Alle weißen Texte im Pricing dunkel machen, außer im hervorgehobenen Premium-Card */
 #pricing .text-white { color: #0f172a !important; }
 #pricing .bg-primary-blue .text-white { color: #ffffff !important; }

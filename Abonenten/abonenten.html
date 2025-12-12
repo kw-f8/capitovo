@@ -208,6 +208,13 @@
             .tradingview-widget-container iframe { height: 40px !important; min-height: 40px !important; max-height: 48px !important; display:block; }
             /* Local override: remove boxed wrapper for specific elements so analyses can span full width */
             .member-grid > .no-wrapper { background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; }
+
+            /* Visual spacing tweaks requested */
+            /* Reduce gap between the "Ihre letzten Analysen / Alle anzeigen" header and the grid of analyses */
+            .member-grid > .no-wrapper { margin-bottom: 0.5rem !important; }
+
+            /* Increase spacing between the ticker bar and the analyses heading */
+            .tradingview-widget-container.ticker-as-card { margin-bottom: 3rem !important; }
         </style>
     <header>
         <div class="header-content">

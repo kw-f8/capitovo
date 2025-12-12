@@ -219,6 +219,16 @@
 
             /* Increase spacing between the ticker bar and the analyses heading */
             .tradingview-widget-container.ticker-as-card { margin-bottom: 4rem !important; }
+
+            /* Styles for the Aktien‑Monitor (page‑lokal) */
+            .stock-monitor-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: stretch; }
+            .monitor-card { display:flex; flex-direction:column; transition: transform .28s ease, box-shadow .28s ease; }
+            .monitor-card .media { height: 140px; aspect-ratio: 16/9; border-top-left-radius: 12px; border-top-right-radius:12px; overflow:hidden; }
+            .monitor-card .media img { width:100%; height:100%; object-fit:cover; display:block; }
+            .monitor-sparkline { height:36px; margin-top:8px; background: linear-gradient(90deg, rgba(0,145,214,0.08), rgba(0,145,214,0.02)); border-radius:6px; }
+            .monitor-price { color: #0f172a; }
+            .monitor-change.positive { color: #16a34a; }
+            .monitor-change.negative { color: #dc2626; }
         </style>
     <header>
         <div class="header-content">
@@ -236,6 +246,99 @@
             <!-- Überschrift wird vom globalen Script wie auf der Startseite getippt -->
             <h1 id="typing-heading" class="text-3xl font-extrabold mb-2" style="min-height: 1.2em;">Willkommen im Mitgliederbereich</h1>
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
+        </section>
+        
+        <!-- Aktien‑Monitor Section (neu) -->
+        <section id="aktien-monitor" class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold">Aktien‑Monitor</h2>
+                <a href="./aktien-monitor.html" class="text-sm font-semibold uppercase tracking-wide text-primary-blue">Zum Monitor</a>
+            </div>
+
+            <p class="text-gray-500 mb-4">Behalte ausgewählte Titel im Blick — Preis, Veränderung und kurzer Trend.</p>
+
+            <div id="stock-monitor" class="stock-monitor-grid">
+                <!-- Beispielkarten: Logo, Ticker, Preis, Veränderung, Mini‑Sparkline -->
+                <article class="monitor-card member-card">
+                    <div class="media">
+                        <img src="../data/vorschaubilder/aktie-aapl.png" alt="Apple" />
+                        <span class="category-pill">Technologie</span>
+                    </div>
+                    <div class="card-body">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                            <div>
+                                <h3 class="card-title">Apple Inc. <span style="font-weight:600;color:#6b7280;font-size:0.9rem;margin-left:6px;">AAPL</span></h3>
+                                <div class="card-excerpt" style="margin:0;font-size:0.9rem;color:#9ca3af;">iPhone, Services & Innovation</div>
+                            </div>
+                            <div style="text-align:right;min-width:90px;">
+                                <div class="monitor-price text-xl font-bold">—</div>
+                                <div class="monitor-change text-sm text-gray-500">—</div>
+                            </div>
+                        </div>
+                        <div class="monitor-sparkline" aria-hidden="true"></div>
+                    </div>
+                </article>
+
+                <article class="monitor-card member-card">
+                    <div class="media">
+                        <img src="../data/vorschaubilder/aktie-msft.png" alt="Microsoft" />
+                        <span class="category-pill">Technologie</span>
+                    </div>
+                    <div class="card-body">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                            <div>
+                                <h3 class="card-title">Microsoft Corp. <span style="font-weight:600;color:#6b7280;font-size:0.9rem;margin-left:6px;">MSFT</span></h3>
+                                <div class="card-excerpt" style="margin:0;font-size:0.9rem;color:#9ca3af;">Cloud, Office & AI</div>
+                            </div>
+                            <div style="text-align:right;min-width:90px;">
+                                <div class="monitor-price text-xl font-bold">—</div>
+                                <div class="monitor-change text-sm text-gray-500">—</div>
+                            </div>
+                        </div>
+                        <div class="monitor-sparkline" aria-hidden="true"></div>
+                    </div>
+                </article>
+
+                <article class="monitor-card member-card">
+                    <div class="media">
+                        <img src="../data/vorschaubilder/aktie-nvda.png" alt="NVIDIA" />
+                        <span class="category-pill">Halbleiter</span>
+                    </div>
+                    <div class="card-body">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                            <div>
+                                <h3 class="card-title">NVIDIA Corp. <span style="font-weight:600;color:#6b7280;font-size:0.9rem;margin-left:6px;">NVDA</span></h3>
+                                <div class="card-excerpt" style="margin:0;font-size:0.9rem;color:#9ca3af;">GPU‑Plattform & KI</div>
+                            </div>
+                            <div style="text-align:right;min-width:90px;">
+                                <div class="monitor-price text-xl font-bold">—</div>
+                                <div class="monitor-change text-sm text-gray-500">—</div>
+                            </div>
+                        </div>
+                        <div class="monitor-sparkline" aria-hidden="true"></div>
+                    </div>
+                </article>
+
+                <article class="monitor-card member-card">
+                    <div class="media">
+                        <img src="../data/vorschaubilder/aktie-tsla.png" alt="Tesla" />
+                        <span class="category-pill">Automobil</span>
+                    </div>
+                    <div class="card-body">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                            <div>
+                                <h3 class="card-title">Tesla Inc. <span style="font-weight:600;color:#6b7280;font-size:0.9rem;margin-left:6px;">TSLA</span></h3>
+                                <div class="card-excerpt" style="margin:0;font-size:0.9rem;color:#9ca3af;">EVs, Energiespeicher</div>
+                            </div>
+                            <div style="text-align:right;min-width:90px;">
+                                <div class="monitor-price text-xl font-bold">—</div>
+                                <div class="monitor-change text-sm text-gray-500">—</div>
+                            </div>
+                        </div>
+                        <div class="monitor-sparkline" aria-hidden="true"></div>
+                    </div>
+                </article>
+            </div>
         </section>
 
                                 <!-- TradingView Widget BEGIN -->

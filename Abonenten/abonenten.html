@@ -211,10 +211,14 @@
 
             /* Visual spacing tweaks requested */
             /* Reduce gap between the "Ihre letzten Analysen / Alle anzeigen" header and the grid of analyses */
-            .member-grid > .no-wrapper { margin-bottom: 0.5rem !important; }
+            .member-grid > .no-wrapper { margin-bottom: 0.25rem !important; }
+            .member-grid > .no-wrapper h2 { margin-bottom: 0 !important; }
+
+            /* Fine-tune the grid gap for tighter card layout (smaller vertical gap) */
+            .member-analyses-grid { gap: 0.75rem !important; }
 
             /* Increase spacing between the ticker bar and the analyses heading */
-            .tradingview-widget-container.ticker-as-card { margin-bottom: 3rem !important; }
+            .tradingview-widget-container.ticker-as-card { margin-bottom: 4rem !important; }
         </style>
     <header>
         <div class="header-content">

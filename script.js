@@ -202,30 +202,19 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
     const finalLink = hasAccess ? link : '#';
     const onclickAttr = hasAccess ? '' : 'onclick="event.preventDefault(); openSubscriptionModal();"';
 
-    // Return the same markup used on the homepage so visuals match exactly
-        return `
-            <a href="${finalLink}" ${onclickAttr} class="member-card bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
-            
-            <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
-                <img src="${img}" alt="Vorschaubild für ${title}" 
-                     class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
+    // Use the canonical member-card layout so CSS from style.css applies consistently
+    return `
+        <a href="${finalLink}" ${onclickAttr} class="member-card" data-scroll="fade-up">
+            <div class="media">
+                <img src="${img}" alt="Vorschaubild für ${title}" class="w-full h-full object-cover transition duration-300">
+                <div class="category-pill">${category}</div>
             </div>
-            
-            <p class="text-xs font-semibold uppercase tracking-widest text-primary-blue mb-1">
-                ${category}
-            </p>
-            
-            <h4 class="text-lg font-bold text-gray-900 mb-2 leading-snug">
-                ${title}
-            </h4>
-            
-            <p class="text-sm text-gray-600 mb-4 line-clamp-3">
-                ${summary}
-            </p>
-            
-            <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
-                Jetzt lesen →
-            </span>
+
+            <div class="card-body">
+                <h4 class="card-title">${title}</h4>
+                <p class="card-excerpt">${summary}</p>
+                <div class="card-meta"><span class="text-sm font-medium text-primary-blue">Jetzt lesen →</span></div>
+            </div>
         </a>
     `;
 }

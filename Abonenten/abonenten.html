@@ -247,31 +247,7 @@
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
         
-        <!-- Aktien‑Monitor Section (neu) -->
-        <section id="aktien-monitor" class="mb-6">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-xl font-semibold">Aktien‑Monitor</h2>
-                <a href="./aktien-monitor.html" class="text-sm font-semibold uppercase tracking-wide text-primary-blue">Zum Monitor</a>
-            </div>
-
-            <p class="text-gray-500 mb-4">Behalte ausgewählte Titel im Blick — Preis, Veränderung und kurzer Trend.</p>
-
-            <div id="stock-monitor" class="stock-monitor-grid logo-tiles">
-                <!-- Logo-only tiles (minimal) -->
-                <a href="./aktien-monitor.html#AAPL" class="logo-tile" aria-label="Apple (AAPL)">
-                    <img src="../data/vorschaubilder/aktie-aapl.png" alt="Apple Logo">
-                </a>
-                <a href="./aktien-monitor.html#MSFT" class="logo-tile" aria-label="Microsoft (MSFT)">
-                    <img src="../data/vorschaubilder/aktie-msft.png" alt="Microsoft Logo">
-                </a>
-                <a href="./aktien-monitor.html#NVDA" class="logo-tile" aria-label="NVIDIA (NVDA)">
-                    <img src="../data/vorschaubilder/aktie-nvda.png" alt="NVIDIA Logo">
-                </a>
-                <a href="./aktien-monitor.html#TSLA" class="logo-tile" aria-label="Tesla (TSLA)">
-                    <img src="../data/vorschaubilder/aktie-tsla.png" alt="Tesla Logo">
-                </a>
-            </div>
-        </section>
+        <!-- Aktien‑Monitor (wird nach den Analysen angezeigt) -->
 
                                 <!-- TradingView Widget BEGIN -->
                                                                 <div class="tradingview-widget-container ticker-as-card">
@@ -313,6 +289,32 @@
             </div>
 
             <!-- Right column removed as requested: Downloads & Subscription moved to account page -->
+        </section>
+        
+        <!-- Aktien‑Monitor Section (neu, korrekt positioniert unter den Analysen) -->
+        <section id="aktien-monitor" class="mb-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold">Aktien‑Monitor</h2>
+                <a href="./aktien-monitor.html" class="text-sm font-semibold uppercase tracking-wide text-primary-blue">Zum Monitor</a>
+            </div>
+
+            <p class="text-gray-500 mb-4">Behalte ausgewählte Titel im Blick — Kurzlinks zu einzelnen Monitor‑Ansichten.</p>
+
+            <div id="stock-monitor" class="stock-monitor-grid logo-tiles">
+                <!-- Logo-only tiles (minimal) -->
+                <a href="./aktien-monitor.html#AAPL" class="logo-tile" aria-label="Apple (AAPL)">
+                    <img src="../data/vorschaubilder/aktie-aapl.png" alt="Apple Logo">
+                </a>
+                <a href="./aktien-monitor.html#MSFT" class="logo-tile" aria-label="Microsoft (MSFT)">
+                    <img src="../data/vorschaubilder/aktie-msft.png" alt="Microsoft Logo">
+                </a>
+                <a href="./aktien-monitor.html#NVDA" class="logo-tile" aria-label="NVIDIA (NVDA)">
+                    <img src="../data/vorschaubilder/aktie-nvda.png" alt="NVIDIA Logo">
+                </a>
+                <a href="./aktien-monitor.html#TSLA" class="logo-tile" aria-label="Tesla (TSLA)">
+                    <img src="../data/vorschaubilder/aktie-tsla.png" alt="Tesla Logo">
+                </a>
+            </div>
         </section>
     </main>
 

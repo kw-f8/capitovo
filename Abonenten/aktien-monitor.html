@@ -12,6 +12,42 @@
         #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
+        /* Monitor list + filters (like alle_analysen, simplified) */
+        .stock-filter-bar { background: rgba(255,255,255,0.96); padding: 0.75rem; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); border: 1px solid rgba(15,23,42,0.06); }
+        .stock-filter-row { display:flex; flex-wrap: wrap; align-items:center; gap: 0.75rem; }
+        .stock-filter-bar label { color:#0f172a; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
+        .stock-filter-bar select, .stock-filter-bar input[type="search"], .stock-filter-bar button {
+            height: 40px;
+            padding: 0 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(15,23,42,0.08);
+            background: #ffffff;
+            font-size: 0.98rem;
+            color: #0f172a;
+            line-height: 1;
+            box-shadow: none;
+            box-sizing: border-box;
+        }
+        .stock-filter-bar input[type="search"] { min-width: 220px; flex: 1 1 260px; }
+
+        .stock-list { margin-top: 1rem; border: 1px solid rgba(15,23,42,0.06); border-radius: 12px; overflow: hidden; background: #ffffff; }
+        .stock-row { display:flex; align-items:center; justify-content:space-between; gap: 12px; padding: 14px 14px; border-bottom: 1px solid rgba(15,23,42,0.06); text-decoration:none; }
+        .stock-row:last-child { border-bottom: none; }
+        .stock-row:hover { background: rgba(15,23,42,0.02); }
+        .stock-left { display:flex; align-items:center; gap: 12px; min-width: 0; }
+        .stock-logo { width: 42px; height: 42px; border-radius: 10px; border: 1px solid rgba(15,23,42,0.06); background: #ffffff; display:flex; align-items:center; justify-content:center; overflow:hidden; flex-shrink:0; }
+        .stock-logo img { width: 26px; height: 26px; object-fit: contain; display:block; }
+        .stock-fallback { font-weight: 800; color: #0f172a; font-size: 0.9rem; }
+        .stock-name { font-weight: 700; color:#0f172a; line-height: 1.15; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+        .stock-meta { color:#64748b; font-size: 0.9rem; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+        .stock-pill { display:inline-flex; align-items:center; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(15,23,42,0.08); color:#0f172a; font-weight: 600; font-size: 0.8rem; background: rgba(255,255,255,0.9); }
+
+        @media (max-width: 640px){
+            .stock-filter-bar select, .stock-filter-bar input[type="search"], .stock-filter-bar button { height: 36px; font-size: 0.92rem; }
+            .stock-row { padding: 12px 12px; }
+            .stock-pill { display:none; }
+        }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
@@ -42,83 +78,22 @@
                     <h2 class="text-xl font-semibold">Ausgewählte Aktien</h2>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    <!-- ca. 15 Aktien -->
-                    <a href="./aktie-aapl.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Apple</div>
-                            <img src="./Bilder/apple_logo.svg" alt="Apple Logo" class="h-8 ml-2">
-                        </div>
-                    </a>
-                    <a href="./aktie-msft.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Microsoft</div>
-                            <img src="./Bilder/microsoft_logo.svg" alt="Microsoft Logo" class="h-8 ml-2">
-                        </div>
-                    </a>
-                    <a href="./aktie-amzn.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Amazon</div>
-                            <img src="./Bilder/amazon_logo.svg" alt="Amazon Logo" class="h-8 ml-2">
-                        </div>
-                    </a>
-                    <a href="./aktie-googl.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Alphabet</div>
-                        </div>
-                    </a>
-                    <a href="./aktie-tsla.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Tesla</div>
-                            <img src="./Bilder/tesla_logo.svg" alt="Tesla Logo" class="h-8 ml-2">
-                        </div>
-                    </a>
-                    <a href="./aktie-meta.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Meta Platforms</div>
-                        </div>
-                    </a>
-                    <a href="./aktie-nvda.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">NVIDIA</div>
-                            <img src="./Bilder/nvidia_logo.svg" alt="NVIDIA Logo" class="h-8 ml-2">
-                        </div>
-                    </a>
-                    <a href="./aktie-jpm.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">JPMorgan</div>
-                        </div>
-                    </a>
-                    <a href="./aktie-v.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Visa</div>
-                        </div>
-                    </a>
-                    <a href="./aktie-nflx.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Netflix</div>
-                        </div>
-                    </a>
-                    <a href="./aktie-dis.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Disney</div>
-                        </div>
-                    </a>
-                    <a href="./aktie-baba.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Alibaba</div>
-                        </div>
-                    </a>
-                    <a href="./aktie-sap.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">SAP</div>
-                        </div>
-                    </a>
-                    <a href="./porsche.html" class="block p-4 bg-gray-50 rounded-lg border hover:shadow transition">
-                        <div class="flex items-center">
-                            <div class="text-lg font-semibold">Porsche</div>
-                        </div>
-                    </a>
+                <div class="stock-filter-bar">
+                    <div class="stock-filter-row">
+                        <label for="stock-search" class="sr-only">Suche</label>
+                        <input id="stock-search" type="search" placeholder="Suche nach Unternehmen oder Kürzel" aria-label="Suche nach Unternehmen oder Kürzel">
+
+                        <label for="stock-sector" class="sr-only">Branche</label>
+                        <select id="stock-sector" aria-label="Branche filtern">
+                            <option value="">Alle Branchen</option>
+                        </select>
+
+                        <button id="stock-clear" type="button" aria-label="Suche zurücksetzen">Zurücksetzen</button>
+                    </div>
+                </div>
+
+                <div id="stock-list" class="stock-list" aria-live="polite">
+                    <div class="p-4 text-sm text-gray-500">Lade Aktien…</div>
                 </div>
             </div>
         </section>
@@ -218,6 +193,139 @@
     </div>
 
     <script src="../script.js?v=5"></script>
+
+    <script>
+        (function () {
+            const stocks = [
+                { name: 'Apple', ticker: 'AAPL', sector: 'Technologie', href: './aktie-aapl.html', logo: './Bilder/apple_logo.svg' },
+                { name: 'Microsoft', ticker: 'MSFT', sector: 'Technologie', href: './aktie-msft.html', logo: './Bilder/microsoft_logo.svg' },
+                { name: 'Amazon', ticker: 'AMZN', sector: 'Konsum', href: './aktie-amzn.html', logo: './Bilder/amazon_logo.svg' },
+                { name: 'Alphabet', ticker: 'GOOGL', sector: 'Technologie', href: './aktie-googl.html' },
+                { name: 'Tesla', ticker: 'TSLA', sector: 'Automobil', href: './aktie-tsla.html', logo: './Bilder/tesla_logo.svg' },
+                { name: 'Meta Platforms', ticker: 'META', sector: 'Technologie', href: './aktie-meta.html' },
+                { name: 'NVIDIA', ticker: 'NVDA', sector: 'Technologie', href: './aktie-nvda.html', logo: './Bilder/nvidia_logo.svg' },
+                { name: 'JPMorgan', ticker: 'JPM', sector: 'Finanzen', href: './aktie-jpm.html' },
+                { name: 'Visa', ticker: 'V', sector: 'Finanzen', href: './aktie-v.html' },
+                { name: 'Netflix', ticker: 'NFLX', sector: 'Medien', href: './aktie-nflx.html' },
+                { name: 'Disney', ticker: 'DIS', sector: 'Medien', href: './aktie-dis.html' },
+                { name: 'Alibaba', ticker: 'BABA', sector: 'Konsum', href: './aktie-baba.html' },
+                { name: 'SAP', ticker: 'SAP', sector: 'Technologie', href: './aktie-sap.html' },
+                { name: 'Porsche', ticker: 'P911', sector: 'Automobil', href: './porsche.html' }
+            ];
+
+            const searchEl = document.getElementById('stock-search');
+            const sectorEl = document.getElementById('stock-sector');
+            const clearEl = document.getElementById('stock-clear');
+            const listEl = document.getElementById('stock-list');
+            if (!searchEl || !sectorEl || !clearEl || !listEl) return;
+
+            function normalize(str) {
+                return (str || '')
+                    .toString()
+                    .toLowerCase()
+                    .normalize('NFD')
+                    .replace(/\p{Diacritic}/gu, '')
+                    .trim();
+            }
+
+            function buildSectorOptions() {
+                const sectors = Array.from(new Set(stocks.map(s => s.sector).filter(Boolean)))
+                    .sort((a, b) => a.localeCompare(b, 'de'));
+                for (const sector of sectors) {
+                    const opt = document.createElement('option');
+                    opt.value = sector;
+                    opt.textContent = sector;
+                    sectorEl.appendChild(opt);
+                }
+            }
+
+            function render(items) {
+                listEl.innerHTML = '';
+                if (!items.length) {
+                    const empty = document.createElement('div');
+                    empty.className = 'p-4 text-sm text-gray-500';
+                    empty.textContent = 'Keine Treffer. Passe Suche oder Filter an.';
+                    listEl.appendChild(empty);
+                    return;
+                }
+
+                for (const stock of items) {
+                    const row = document.createElement('a');
+                    row.className = 'stock-row';
+                    row.href = stock.href;
+
+                    const left = document.createElement('div');
+                    left.className = 'stock-left';
+
+                    const logoWrap = document.createElement('div');
+                    logoWrap.className = 'stock-logo';
+                    if (stock.logo) {
+                        const img = document.createElement('img');
+                        img.src = stock.logo;
+                        img.alt = `${stock.name} Logo`;
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        logoWrap.appendChild(img);
+                    } else {
+                        const fallback = document.createElement('div');
+                        fallback.className = 'stock-fallback';
+                        fallback.textContent = (stock.ticker || stock.name || '?').slice(0, 1);
+                        logoWrap.appendChild(fallback);
+                    }
+
+                    const textWrap = document.createElement('div');
+                    textWrap.style.minWidth = '0';
+
+                    const name = document.createElement('div');
+                    name.className = 'stock-name';
+                    name.textContent = stock.name;
+
+                    const meta = document.createElement('div');
+                    meta.className = 'stock-meta';
+                    meta.textContent = `${stock.ticker || ''}${stock.ticker && stock.sector ? ' • ' : ''}${stock.sector || ''}`;
+
+                    textWrap.appendChild(name);
+                    textWrap.appendChild(meta);
+
+                    left.appendChild(logoWrap);
+                    left.appendChild(textWrap);
+
+                    const pill = document.createElement('div');
+                    pill.className = 'stock-pill';
+                    pill.textContent = 'Details';
+
+                    row.appendChild(left);
+                    row.appendChild(pill);
+                    listEl.appendChild(row);
+                }
+            }
+
+            function applyFilters() {
+                const q = normalize(searchEl.value);
+                const sector = sectorEl.value;
+                const filtered = stocks.filter(s => {
+                    if (sector && s.sector !== sector) return false;
+                    if (!q) return true;
+                    const hay = normalize(`${s.name} ${s.ticker} ${s.sector}`);
+                    return hay.includes(q);
+                });
+                render(filtered);
+            }
+
+            buildSectorOptions();
+            applyFilters();
+
+            searchEl.addEventListener('input', applyFilters);
+            sectorEl.addEventListener('change', applyFilters);
+            clearEl.addEventListener('click', () => {
+                searchEl.value = '';
+                sectorEl.value = '';
+                applyFilters();
+                searchEl.focus();
+            });
+        })();
+    </script>
+
     <!-- Preload/modal-on-click removed — direct navigation to stock pages retained. -->
 </body>
 </html>

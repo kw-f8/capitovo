@@ -110,7 +110,7 @@
                   </a>
                 </div>
 
-                    <div class="mb-4">
+                    <div id="intro-row" class="mb-4">
                     <div class="flex flex-col md:flex-row md:items-stretch md:gap-6">
                         <!-- Left: description (takes remaining space) -->
                         <div id="description-col" class="md:flex-1 text-gray-700">
@@ -221,6 +221,9 @@
 
                 <!-- Enforce consistent container border, rounded corners and iframe sizing -->
                 <style>
+                  /* Page-local spacing tweaks */
+                  #intro-row { margin-bottom: 2.5rem !important; }
+                  #tv-financials-container { margin-top: 3rem !important; }
                   /* Reset any iframe borders and make iframe match parent rounding */
                   #tv-financials-container {
                     box-sizing: border-box;

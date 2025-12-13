@@ -250,10 +250,13 @@
             /* Circular cluster: logos arranged around a round container without individual boxes */
             .monitor-logos { position: relative; width: 280px; height: 280px; margin: 0 auto; padding: 0; --radius: 120px; }
             /* Center chart: larger, rotated diagonal and placed behind logos */
-            .monitor-center-chart { position:absolute; top:50%; left:50%; width: calc(var(--radius) * 2 + 40px); height: calc(var(--radius) * 1.4 + 40px); transform: translate(-50%, -50%) rotate(-22deg); background: #ffffff; border:1px solid rgba(15,23,42,0.06); border-radius:12px; padding:8px; box-shadow: 0 12px 30px rgba(15,23,42,0.08); display:flex; align-items:center; justify-content:center; z-index: 5; pointer-events: none; overflow: hidden; }
-            .monitor-center-chart img { width:120%; height:120%; object-fit:cover; display:block; transform: rotate(22deg); }
+            /* Enlarged diagonal chart: runs from bottom-left to top-right, sits behind logos */
+            .monitor-center-chart { position:absolute; top:50%; left:50%; width: calc(var(--radius) * 2.6); height: calc(var(--radius) * 1.9); /* larger than before */ transform: translate(-70%, 18%) rotate(-22deg); background: #ffffff; border:1px solid rgba(15,23,42,0.06); border-radius: 0; padding:6px; box-shadow: 0 18px 44px rgba(15,23,42,0.10); display:flex; align-items:center; justify-content:center; z-index: 2; pointer-events: none; overflow: hidden; }
+            .monitor-center-chart img { width:140%; height:140%; object-fit:cover; display:block; transform: rotate(22deg); }
             /* Ensure logos are drawn above the chart */
             .monitor-logo-card { z-index: 20; }
+            /* Place PayPal logo outside the ring (last child) */
+            .monitor-logo-card:nth-child(13) { transform: translate(-50%, -50%) rotate(var(--angle)) translate(calc(var(--radius) + 48px)) rotate(calc(-1 * var(--angle))); }
             .monitor-logo-card { position: absolute; top: 50%; left: 50%; width: 44px; height: 44px; background: transparent !important; border: none !important; border-radius: 0; display:flex; align-items:center; justify-content:center; padding: 0; transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease; box-shadow: none !important; -webkit-box-shadow: none !important; transform-origin: center; }
             .monitor-logo-card img { width:100%; height:100%; object-fit:contain; display:block; border-radius: 50%; background: transparent !important; box-shadow: none !important; -webkit-box-shadow: none !important; }
             /* Force-remove any residual box, outline or shadow on logos and container */
@@ -283,8 +286,9 @@
             .monitor-logo-card:hover { transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1.08); z-index: 40; box-shadow: none !important; -webkit-box-shadow: none !important; }
             @media (max-width: 900px) {
                 .monitor-logos { width: 230px; height: 230px; --radius: 95px; }
-                .monitor-center-chart { width: 130px; height: 96px; padding: 8px; }
+                .monitor-center-chart { width: calc(var(--radius) * 2.4); height: calc(var(--radius) * 1.5); transform: translate(-60%, 18%) rotate(-22deg); }
                 .monitor-logo-card { width: 40px; height: 40px; }
+                .monitor-logo-card:nth-child(13) { transform: translate(-50%, -50%) rotate(var(--angle)) translate(calc(var(--radius) + 32px)) rotate(calc(-1 * var(--angle))); }
             }
             @media (max-width: 640px) {
                 .monitor-logos { position: static; width: auto; height: auto; display: grid; grid-template-columns: repeat(3, minmax(48px, 1fr)); gap: 0.45rem; }

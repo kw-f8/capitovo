@@ -252,7 +252,7 @@
                 display: grid;
                 grid-template-columns: repeat(4, 54px);
                 grid-template-rows: repeat(3, 54px);
-                gap: 0.2rem 0.5rem;
+                gap: 0.7rem 1.2rem;
                 width: max-content;
                 margin: 0 auto;
                 padding: 0.5rem 0;
@@ -284,10 +284,19 @@
                 -webkit-box-shadow: none !important;
             }
             /* Versetzte, lockere Anordnung für coolen Look */
-            .monitor-logo-card:nth-child(2), .monitor-logo-card:nth-child(10) { margin-top: 18px; }
-            .monitor-logo-card:nth-child(3), .monitor-logo-card:nth-child(11) { margin-top: 32px; }
-            .monitor-logo-card:nth-child(5), .monitor-logo-card:nth-child(13) { margin-top: -10px; }
-            .monitor-logo-card:nth-child(6), .monitor-logo-card:nth-child(7) { margin-top: 12px; }
+            /* Feintuning für harmonische, lockere Verteilung */
+            .monitor-logo-card:nth-child(2) { margin-top: 18px; margin-left: 10px; }
+            .monitor-logo-card:nth-child(3) { margin-top: 32px; margin-left: 18px; }
+            .monitor-logo-card:nth-child(4) { margin-top: 8px; }
+            .monitor-logo-card:nth-child(5) { margin-top: -10px; margin-left: 12px; }
+            .monitor-logo-card:nth-child(6) { margin-top: 18px; }
+            .monitor-logo-card:nth-child(7) { margin-top: 24px; margin-left: 8px; }
+            .monitor-logo-card:nth-child(8) { margin-top: 6px; }
+            .monitor-logo-card:nth-child(9) { margin-top: 0; margin-left: 16px; }
+            .monitor-logo-card:nth-child(10) { margin-top: 24px; margin-left: 0; }
+            .monitor-logo-card:nth-child(11) { margin-top: 32px; margin-left: 10px; }
+            .monitor-logo-card:nth-child(12) { margin-top: 12px; }
+            .monitor-logo-card:nth-child(13) { margin-top: -6px; margin-left: 8px; }
             .monitor-logo-card:hover { transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1.08); z-index: 40; box-shadow: none !important; -webkit-box-shadow: none !important; }
             @media (max-width: 900px) {
                 .monitor-logos { width: 230px; height: 230px; --radius: 95px; }

@@ -410,7 +410,7 @@ async function initAllAnalysesPage(){
         favToggle.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
         const span = favToggle.querySelector('span');
         const icon = favToggle.querySelector('svg');
-        if(span) span.textContent = 'Alle anzeigen';
+        if(span) span.textContent = 'Alle Analyse';
         if(icon) icon.style.display = 'none';
     }
 
@@ -566,7 +566,7 @@ async function initAllAnalysesPage(){
             if (showFavoritesOnly) {
                 favToggle.classList.add('bg-red-50', 'text-red-600', 'border-red-200');
                 favToggle.classList.remove('bg-white', 'text-gray-600', 'border-gray-200');
-                if(span) span.textContent = 'Alle anzeigen';
+                if(span) span.textContent = 'Alle Analyse';
                 if(icon) icon.style.display = 'none';
                 // Update URL without reload
                 const url = new URL(window.location);

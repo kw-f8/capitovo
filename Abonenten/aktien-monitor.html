@@ -13,8 +13,9 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
-        /* Monitor list + filters (like alle_analysen, simplified) */
-        .stock-filter-bar { background: rgba(255,255,255,0.96); padding: 0.75rem; border-radius: 10px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); border: 1px solid rgba(15,23,42,0.06); }
+        /* Monitor list + filters (combined panel) */
+        .stock-panel { background: #ffffff; border-radius: 12px; border: 1px solid rgba(15,23,42,0.06); box-shadow: 0 6px 20px rgba(2,6,23,0.04); overflow: hidden; }
+        .stock-filter-bar { background: transparent; padding: 0.75rem; border-radius: 0; box-shadow: none; border: none; border-bottom: 1px solid rgba(15,23,42,0.06); }
         .stock-filter-row { display:flex; flex-wrap: wrap; align-items:center; gap: 0.75rem; }
         .stock-filter-bar label { color:#0f172a; font-weight: 600; font-size: 0.88rem; white-space: nowrap; }
         .stock-filter-bar select, .stock-filter-bar input[type="search"], .stock-filter-bar button {
@@ -34,7 +35,7 @@
         /* Slightly increase spacing between intro paragraph and the stock section header */
         .member-grid { margin-top: 1.75rem; }
 
-        .stock-list { margin-top: 1rem; border: 1px solid rgba(15,23,42,0.06); border-radius: 12px; overflow: hidden; background: #ffffff; }
+        .stock-list { margin-top: 0; border: none; background: transparent; }
         .stock-row { display:flex; align-items:center; justify-content:space-between; gap: 12px; padding: 14px 14px; border-bottom: 1px solid rgba(15,23,42,0.06); text-decoration:none; }
         .stock-row:last-child { border-bottom: none; }
         .stock-row:hover { background: rgba(15,23,42,0.02); }
@@ -81,8 +82,9 @@
                     <h2 class="text-xl font-semibold">Ausgewählte Aktien</h2>
                 </div>
 
-                <div class="stock-filter-bar">
-                    <div class="stock-filter-row">
+                <div class="stock-panel">
+                    <div class="stock-filter-bar">
+                        <div class="stock-filter-row">
                         <label for="stock-search" class="sr-only">Suche</label>
                         <input id="stock-search" type="search" placeholder="Suche nach Unternehmen oder Kürzel" aria-label="Suche nach Unternehmen oder Kürzel">
 
@@ -103,8 +105,9 @@
                     </div>
                 </div>
 
-                <div id="stock-list" class="stock-list" aria-live="polite">
-                    <div class="p-4 text-sm text-gray-500">Lade Aktien…</div>
+                    <div id="stock-list" class="stock-list" aria-live="polite">
+                        <div class="p-4 text-sm text-gray-500">Lade Aktien…</div>
+                    </div>
                 </div>
             </div>
         </section>

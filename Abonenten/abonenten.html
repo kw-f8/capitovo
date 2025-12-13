@@ -250,7 +250,7 @@
             /* Circular cluster: logos arranged around a round container without individual boxes */
             .monitor-logos { position: relative; width: 220px; height: 220px; margin: 0 auto; padding: 0; }
             .monitor-logo-card { position: absolute; width: 56px; height: 56px; background: transparent; border: none; border-radius: 0; display:flex; align-items:center; justify-content:center; padding: 0; transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease; }
-            .monitor-logo-card img { width:100%; height:100%; object-fit:contain; display:block; filter: drop-shadow(0 6px 14px rgba(2,6,23,0.08)); transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease; }
+            .monitor-logo-card img { width:100%; height:100%; object-fit:contain; display:block; }
             /* Positions around a circle (approximate) */
             .monitor-logo-card:nth-child(1) { top: 6%; left: 50%; transform: translate(-50%, -50%); }
             .monitor-logo-card:nth-child(2) { top: 18%; left: 78%; transform: translate(-50%, -50%); }
@@ -261,8 +261,7 @@
             .monitor-logo-card:nth-child(7) { top: 42%; left: 10%; transform: translate(-50%, -50%); }
             .monitor-logo-card:nth-child(8) { top: 18%; left: 22%; transform: translate(-50%, -50%); }
             .monitor-logo-card:nth-child(9) { top: 48%; left: 50%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:hover { transform: translate(-50%, -60%) scale(1.12); z-index: 40; filter: none; }
-            .monitor-logo-card:hover img { filter: drop-shadow(0 18px 36px rgba(2,6,23,0.18)); }
+            .monitor-logo-card:hover { transform: translate(-50%, -60%) scale(1.12); z-index: 40; filter: drop-shadow(0 12px 26px rgba(2,6,23,0.15)); }
             @media (max-width: 900px) { .monitor-logos { width: 180px; height: 180px; } .monitor-logo-card { width:48px; height:48px; } }
             @media (max-width: 640px) { .monitor-logos { position: static; width: auto; height: auto; display: grid; grid-template-columns: repeat(3, minmax(56px, 1fr)); gap: 0.45rem; } .monitor-logo-card { position: static; width:56px; height:56px; transform: none; } .monitor-logo-card img { width:44px; height:44px; } }
             @media (max-width: 640px) { .monitor-logos { grid-template-columns: repeat(3, minmax(56px, 1fr)); gap: 0.45rem; } .monitor-logo-card img { width:44px; height:44px; } }

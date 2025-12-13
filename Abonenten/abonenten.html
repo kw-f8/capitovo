@@ -248,8 +248,8 @@
 
             /* Floating logo cluster */
             /* Circular cluster: logos arranged around a round container without individual boxes */
-            .monitor-logos { position: relative; width: 220px; height: 220px; margin: 0 auto; padding: 0; }
-            .monitor-logo-card { position: absolute; width: 56px; height: 56px; background: transparent !important; border: none !important; border-radius: 0; display:flex; align-items:center; justify-content:center; padding: 0; transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease; box-shadow: none !important; -webkit-box-shadow: none !important; }
+            .monitor-logos { position: relative; width: 280px; height: 280px; margin: 0 auto; padding: 0; }
+            .monitor-logo-card { position: absolute; width: 48px; height: 48px; background: transparent !important; border: none !important; border-radius: 0; display:flex; align-items:center; justify-content:center; padding: 0; transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease; box-shadow: none !important; -webkit-box-shadow: none !important; }
             .monitor-logo-card img { width:100%; height:100%; object-fit:contain; display:block; border-radius: 50%; background: transparent !important; box-shadow: none !important; -webkit-box-shadow: none !important; }
             /* Force-remove any residual box, outline or shadow on logos and container */
             .monitor-logos,
@@ -263,23 +263,23 @@
             }
             /* Positions around a circle (approximate) */
             .monitor-logo-card:nth-child(1) { top: 6%; left: 50%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(2) { top: 18%; left: 78%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(3) { top: 42%; left: 90%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(4) { top: 66%; left: 78%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(2) { top: 16%; left: 76%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(3) { top: 34%; left: 92%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(4) { top: 58%; left: 86%; transform: translate(-50%, -50%); }
             .monitor-logo-card:nth-child(5) { top: 86%; left: 50%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(6) { top: 66%; left: 22%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(7) { top: 42%; left: 10%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(8) { top: 18%; left: 22%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(6) { top: 58%; left: 14%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(7) { top: 34%; left: 8%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(8) { top: 16%; left: 24%; transform: translate(-50%, -50%); }
             .monitor-logo-card:nth-child(9) { top: 48%; left: 50%; transform: translate(-50%, -50%); }
             /* Reposition additional logos to the right side to avoid overlap */
-            .monitor-logo-card:nth-child(10) { top: 24%; left: 84%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(11) { top: 38%; left: 92%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(12) { top: 62%; left: 92%; transform: translate(-50%, -50%); }
-            .monitor-logo-card:nth-child(13) { top: 78%; left: 84%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(10) { top: 28%; left: 72%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(11) { top: 42%; left: 80%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(12) { top: 62%; left: 80%; transform: translate(-50%, -50%); }
+            .monitor-logo-card:nth-child(13) { top: 76%; left: 72%; transform: translate(-50%, -50%); }
             .monitor-logo-card:hover { transform: translate(-50%, -60%) scale(1.12); z-index: 40; box-shadow: none !important; -webkit-box-shadow: none !important; }
-            @media (max-width: 900px) { .monitor-logos { width: 180px; height: 180px; } .monitor-logo-card { width:48px; height:48px; } }
-            @media (max-width: 640px) { .monitor-logos { position: static; width: auto; height: auto; display: grid; grid-template-columns: repeat(3, minmax(56px, 1fr)); gap: 0.45rem; } .monitor-logo-card { position: static; width:56px; height:56px; transform: none; } .monitor-logo-card img { width:44px; height:44px; } }
-            @media (max-width: 640px) { .monitor-logos { grid-template-columns: repeat(3, minmax(56px, 1fr)); gap: 0.45rem; } .monitor-logo-card img { width:44px; height:44px; } }
+            @media (max-width: 900px) { .monitor-logos { width: 230px; height: 230px; } .monitor-logo-card { width:44px; height:44px; } }
+            @media (max-width: 640px) { .monitor-logos { position: static; width: auto; height: auto; display: grid; grid-template-columns: repeat(3, minmax(48px, 1fr)); gap: 0.45rem; } .monitor-logo-card { position: static; width:48px; height:48px; transform: none; } .monitor-logo-card img { width:40px; height:40px; } }
+            @media (max-width: 640px) { .monitor-logos { grid-template-columns: repeat(3, minmax(48px, 1fr)); gap: 0.45rem; } .monitor-logo-card img { width:40px; height:40px; } }
         </style>
     <header>
         <div class="header-content">

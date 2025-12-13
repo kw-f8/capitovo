@@ -299,10 +299,19 @@
                 background: transparent !important;
                 box-shadow: none !important;
                 -webkit-box-shadow: none !important;
+                opacity: 0.55;
+                filter: grayscale(1);
+                transition: opacity 0.18s, filter 0.18s, box-shadow 0.18s, transform 0.18s;
             }
             /* Versetzte, lockere Anordnung für coolen Look */
             /* Gleichmäßiges Grid, keine Margins, keine gezielten Versätze */
-            .monitor-logo-card:hover { transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1.08); z-index: 40; box-shadow: none !important; -webkit-box-shadow: none !important; }
+            .monitor-logo-card:hover img {
+                opacity: 1;
+                filter: grayscale(0);
+                box-shadow: 0 4px 16px rgba(2,6,23,0.13);
+                transform: scale(1.13);
+                z-index: 40;
+            }
             @media (max-width: 900px) {
                 .monitor-logos { width: 230px; height: 230px; --radius: 95px; }
                 .monitor-center-chart { width: 280px; height: 140px; bottom: -15px; left: -30px; }

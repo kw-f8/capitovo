@@ -94,10 +94,8 @@
                         <label for="stock-sort" class="sr-only">Sortierung</label>
                         <select id="stock-sort" aria-label="Sortierung">
                             <option value="">Keine Sortierung</option>
-                            <option value="name-asc">Name A–Z</option>
-                            <option value="name-desc">Name Z–A</option>
-                            <option value="ticker-asc">Kürzel A–Z</option>
-                            <option value="ticker-desc">Kürzel Z–A</option>
+                            <option value="name-asc" selected>Unternehmen A–Z</option>
+                            <option value="name-desc">Unternehmen Z–A</option>
                             <option value="sector-asc">Branche A–Z</option>
                         </select>
 
@@ -334,12 +332,6 @@
                             break;
                         case 'name-desc':
                             sorted.sort((a,b) => b.name.localeCompare(a.name, 'de'));
-                            break;
-                        case 'ticker-asc':
-                            sorted.sort((a,b) => (a.ticker||'').localeCompare(b.ticker||'', 'de'));
-                            break;
-                        case 'ticker-desc':
-                            sorted.sort((a,b) => (b.ticker||'').localeCompare(a.ticker||'', 'de'));
                             break;
                         case 'sector-asc':
                             sorted.sort((a,b) => (a.sector||'').localeCompare(b.sector||'', 'de'));

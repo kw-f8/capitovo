@@ -248,37 +248,46 @@
 
             /* Floating logo cluster */
             /* Circular cluster: logos arranged around a round container without individual boxes */
-            .monitor-logos { position: relative; width: 220px; height: 220px; margin: 0 auto; padding: 0; --radius: 80px; }
-            /* Diagonal chart: no box, runs from bottom-left to top-right behind logos */
-            .monitor-center-chart { position:absolute; bottom: -60px; left: -80px; width: 440px; height: 260px; transform: rotate(-18deg); background: transparent !important; border: none !important; border-radius: 0; padding: 0; box-shadow: none !important; display:flex; align-items:center; justify-content:center; z-index: 1; pointer-events: none; overflow: visible; }
-            .monitor-center-chart img { width: 100%; height: 100%; object-fit: contain; display: block; }
-            /* Ensure logos are drawn above the chart */
-            .monitor-logo-card { z-index: 20; }
-            .monitor-logo-card { position: absolute; top: 50%; left: 50%; width: 54px; height: 54px; background: transparent !important; border: none !important; border-radius: 50%; display:flex; align-items:center; justify-content:center; padding: 0; transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease; box-shadow: none !important; -webkit-box-shadow: none !important; transform-origin: center; }
-            .monitor-logo-card img { width:90%; height:90%; object-fit:contain; display:block; border-radius: 50%; background: transparent !important; box-shadow: none !important; -webkit-box-shadow: none !important; }
-            /* Force-remove any residual box, outline or shadow on logos and container */
-            .monitor-logos,
-            .monitor-logo-card,
-            .monitor-logo-card img {
+            .monitor-logos {
+                display: grid;
+                grid-template-columns: repeat(4, 54px);
+                grid-template-rows: repeat(3, 54px);
+                gap: 0.2rem 0.5rem;
+                width: max-content;
+                margin: 0 auto;
+                padding: 0.5rem 0;
+                position: relative;
+            }
+            .monitor-logo-card {
+                position: static;
+                width: 54px;
+                height: 54px;
                 background: transparent !important;
                 border: none !important;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0;
                 box-shadow: none !important;
                 -webkit-box-shadow: none !important;
-                outline: none !important;
+                transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease;
             }
-            /* Tighter, cool circle arrangement (logos closer, less Platz in der Mitte) */
-            .monitor-logo-card:nth-child(1) { --angle: -90deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(2) { --angle: -62deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(3) { --angle: -34deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(4) { --angle: -6deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(5) { --angle: 22deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(6) { --angle: 50deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(7) { --angle: 78deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(8) { --angle: 106deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(9) { --angle: 134deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(10) { --angle: 162deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(11) { --angle: 190deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
-            .monitor-logo-card:nth-child(12) { --angle: 218deg; transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))); }
+            .monitor-logo-card img {
+                width: 90%;
+                height: 90%;
+                object-fit: contain;
+                display: block;
+                border-radius: 50%;
+                background: transparent !important;
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+            }
+            /* Versetzte, lockere Anordnung für coolen Look */
+            .monitor-logo-card:nth-child(2), .monitor-logo-card:nth-child(10) { margin-top: 18px; }
+            .monitor-logo-card:nth-child(3), .monitor-logo-card:nth-child(11) { margin-top: 32px; }
+            .monitor-logo-card:nth-child(5), .monitor-logo-card:nth-child(13) { margin-top: -10px; }
+            .monitor-logo-card:nth-child(6), .monitor-logo-card:nth-child(7) { margin-top: 12px; }
             .monitor-logo-card:hover { transform: translate(-50%, -50%) rotate(var(--angle)) translate(var(--radius)) rotate(calc(-1 * var(--angle))) scale(1.08); z-index: 40; box-shadow: none !important; -webkit-box-shadow: none !important; }
             @media (max-width: 900px) {
                 .monitor-logos { width: 230px; height: 230px; --radius: 95px; }

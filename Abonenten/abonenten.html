@@ -299,15 +299,13 @@
                 background: transparent !important;
                 box-shadow: none !important;
                 -webkit-box-shadow: none !important;
-                opacity: 0.8;
-                filter: grayscale(0.25) saturate(0.92);
-                transition: opacity 0.18s, filter 0.18s, box-shadow 0.18s, transform 0.18s;
+                opacity: 1;
+                filter: none;
+                transition: box-shadow 0.18s, transform 0.18s;
             }
             /* Versetzte, lockere Anordnung für coolen Look */
             /* Gleichmäßiges Grid, keine Margins, keine gezielten Versätze */
             .monitor-logo-card:hover img {
-                opacity: 1;
-                filter: grayscale(0) saturate(1.08);
                 box-shadow: 0 4px 16px rgba(2,6,23,0.13);
                 transform: scale(1.13);
                 z-index: 40;
@@ -405,33 +403,7 @@
                         <li><span aria-hidden="true"></span>Strukturierte Detailansicht je Aktie</li>
                     </ul>
 
-                                <div class="monitor-logos-wrapper" style="position:relative; display:flex; justify-content:center; align-items:center; width:fit-content; margin:0 auto;">
-                                    <svg class="monitor-svg-bg" width="260" height="200" viewBox="0 0 260 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:0; pointer-events:none;">
-                                        <defs>
-                                            <radialGradient id="studio-screen-glow" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
-                                                <stop offset="0%" stop-color="#fafdff" stop-opacity="1"/>
-                                                <stop offset="100%" stop-color="#dbeafe" stop-opacity="0.85"/>
-                                            </radialGradient>
-                                            <linearGradient id="studio-body" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stop-color="#e5e7eb"/>
-                                                <stop offset="100%" stop-color="#bfc5cc"/>
-                                            </linearGradient>
-                                            <linearGradient id="studio-foot" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stop-color="#e5e7eb"/>
-                                                <stop offset="100%" stop-color="#b0b6be"/>
-                                            </linearGradient>
-                                        </defs>
-                                        <!-- Apple Studio Display Rahmen -->
-                                        <rect x="15" y="18" width="230" height="130" rx="22" fill="url(#studio-body)" stroke="#bfc5cc" stroke-width="3.2"/>
-                                        <!-- Bildschirm -->
-                                        <rect x="28" y="32" width="204" height="102" rx="13" fill="url(#studio-screen-glow)" stroke="#cbd5e1" stroke-width="1.6"/>
-                                        <!-- Kamera Notch -->
-                                        <ellipse cx="130" cy="28" rx="4.5" ry="2.2" fill="#bfc5cc" fill-opacity="0.7"/>
-                                        <!-- Standfuß -->
-                                        <rect x="110" y="154" width="40" height="14" rx="6" fill="url(#studio-foot)" stroke="#bfc5cc" stroke-width="1.2"/>
-                                        <ellipse cx="130" cy="176" rx="32" ry="8" fill="#bfc5cc" fill-opacity="0.45"/>
-                                    </svg>
-                                    <div class="monitor-logos" aria-label="Beispiele" style="position:relative; z-index:1; background:transparent; padding:0.5rem 0; min-width:166px; min-height:86px; display:grid; place-items:center;">
+                                <div class="monitor-logos" aria-label="Beispiele">
                         <!-- Chart entfernt, nur noch Logos im Kreis -->
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/apple_logo.svg" alt="Apple Logo"></div>
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/microsoft_logo.svg" alt="Microsoft Logo"></div>
@@ -445,7 +417,6 @@
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/illumina_logo.svg" alt="Illumina Logo"></div>
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/oracle_logo.svg" alt="Oracle Logo"></div>
                                                 <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/palantir_logo.svg" alt="Palantir Logo"></div>
-                                    </div>
                                 </div>
                     </div>
                 </div>

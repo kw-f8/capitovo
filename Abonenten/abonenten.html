@@ -405,7 +405,27 @@
                         <li><span aria-hidden="true"></span>Strukturierte Detailansicht je Aktie</li>
                     </ul>
 
-                    <div class="monitor-logos" aria-label="Beispiele">
+                                <div class="monitor-logos-wrapper" style="position:relative; display:flex; justify-content:center; align-items:center; width:fit-content; margin:0 auto;">
+                                    <svg class="monitor-svg-bg" width="210" height="140" viewBox="0 0 210 140" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); z-index:0; pointer-events:none;">
+                                        <defs>
+                                            <radialGradient id="screen-glow" cx="50%" cy="50%" r="60%" fx="50%" fy="50%">
+                                                <stop offset="0%" stop-color="#eaf3ff" stop-opacity="0.95"/>
+                                                <stop offset="100%" stop-color="#b6c6d6" stop-opacity="0.7"/>
+                                            </radialGradient>
+                                            <linearGradient id="monitor-body" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#e5e7eb"/>
+                                                <stop offset="100%" stop-color="#b0b6be"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <!-- Monitor Rahmen -->
+                                        <rect x="10" y="10" width="190" height="110" rx="14" fill="url(#monitor-body)" stroke="#7b8794" stroke-width="2.5"/>
+                                        <!-- Bildschirm -->
+                                        <rect x="22" y="22" width="166" height="86" rx="7" fill="url(#screen-glow)" stroke="#a3b1c2" stroke-width="1.5"/>
+                                        <!-- Standfuß -->
+                                        <rect x="90" y="122" width="30" height="8" rx="3" fill="#b0b6be" stroke="#7b8794" stroke-width="1.2"/>
+                                        <ellipse cx="105" cy="134" rx="22" ry="5" fill="#b0b6be" fill-opacity="0.7"/>
+                                    </svg>
+                                    <div class="monitor-logos" aria-label="Beispiele" style="position:relative; z-index:1; background:transparent; padding:0.5rem 0; min-width:166px; min-height:86px; display:grid; place-items:center;">
                         <!-- Chart entfernt, nur noch Logos im Kreis -->
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/apple_logo.svg" alt="Apple Logo"></div>
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/microsoft_logo.svg" alt="Microsoft Logo"></div>
@@ -418,7 +438,9 @@
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/ferrari_logo.svg" alt="Ferrari Logo"></div>
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/illumina_logo.svg" alt="Illumina Logo"></div>
                         <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/oracle_logo.svg" alt="Oracle Logo"></div>
-                        <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/palantir_logo.svg" alt="Palantir Logo"></div>
+                                                <div class="monitor-logo-card" aria-hidden="true"><img src="Bilder/palantir_logo.svg" alt="Palantir Logo"></div>
+                                    </div>
+                                </div>
                     </div>
                 </div>
 

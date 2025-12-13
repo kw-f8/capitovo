@@ -222,8 +222,6 @@
 
             /* Styles for the Aktien‑Monitor (page‑lokal) */
             .stock-monitor-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); align-items: center; }
-            /* Make member analyses single wide column and center it for fuller preview cards */
-            .member-analyses-grid { grid-template-columns: 1fr !important; max-width: 980px; margin: 0 auto; gap: 1rem !important; }
             /* Logo tiles: minimal, centered logos only */
             .logo-tiles { align-items: center; }
             .logo-tile { display:flex; align-items:center; justify-content:center; background:#ffffff; border:1px solid rgba(15,23,42,0.06); border-radius:12px; padding:12px; height:100px; transition: transform .18s ease, box-shadow .18s ease; }
@@ -287,20 +285,7 @@
             </div>
 
             <div id="member-analyses" class="member-analyses-grid text-gray-700 no-wrapper">
-                <article class="member-card">
-                    <div class="media">
-                        <img src="../data/vorschaubilder/apple_111225.png" alt="Vorschaubild für Apple Inc.: Investment‑Analyse (Dezember 2025)">
-                        <span class="category-pill">TECHNOLOGIE</span>
-                    </div>
-                    <div class="card-body">
-                        <h3 class="card-title">Apple Inc.: Investment‑Analyse (Dezember 2025)</h3>
-                        <p class="card-excerpt">Kurzprofil und Kennzahlen zur Apple Inc. (AAPL). Einschätzung zu Wachstumstreibern, Prognosen und Risiken.</p>
-                        <div class="card-meta" style="margin-top:auto;">
-                            <a href="Abonenten/apple.html" class="text-accent-blue font-semibold">Jetzt lesen →</a>
-                            <span style="color:#9ca3af; font-size:0.9rem;">capitovo Research — Dez 2025</span>
-                        </div>
-                    </div>
-                </article>
+                <p class="text-sm text-gray-400">Lade Analysen…</p>
             </div>
 
             <!-- Right column removed as requested: Downloads & Subscription moved to account page -->

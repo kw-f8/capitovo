@@ -31,6 +31,9 @@
         }
         .stock-filter-bar input[type="search"] { min-width: 220px; flex: 1 1 260px; }
 
+        /* Slightly increase spacing between intro paragraph and the stock section header */
+        .member-grid { margin-top: 1.75rem; }
+
         .stock-list { margin-top: 1rem; border: 1px solid rgba(15,23,42,0.06); border-radius: 12px; overflow: hidden; background: #ffffff; }
         .stock-row { display:flex; align-items:center; justify-content:space-between; gap: 12px; padding: 14px 14px; border-bottom: 1px solid rgba(15,23,42,0.06); text-decoration:none; }
         .stock-row:last-child { border-bottom: none; }
@@ -86,6 +89,16 @@
                         <label for="stock-sector" class="sr-only">Branche</label>
                         <select id="stock-sector" aria-label="Branche filtern">
                             <option value="">Alle Branchen</option>
+                        </select>
+
+                        <label for="stock-sort" class="sr-only">Sortierung</label>
+                        <select id="stock-sort" aria-label="Sortierung">
+                            <option value="">Keine Sortierung</option>
+                            <option value="name-asc">Name A–Z</option>
+                            <option value="name-desc">Name Z–A</option>
+                            <option value="ticker-asc">Kürzel A–Z</option>
+                            <option value="ticker-desc">Kürzel Z–A</option>
+                            <option value="sector-asc">Branche A–Z</option>
                         </select>
 
                         <button id="stock-clear" type="button" aria-label="Suche zurücksetzen">Zurücksetzen</button>
@@ -215,9 +228,10 @@
 
             const searchEl = document.getElementById('stock-search');
             const sectorEl = document.getElementById('stock-sector');
+            const sortEl = document.getElementById('stock-sort');
             const clearEl = document.getElementById('stock-clear');
             const listEl = document.getElementById('stock-list');
-            if (!searchEl || !sectorEl || !clearEl || !listEl) return;
+            if (!searchEl || !sectorEl || !sortEl || !clearEl || !listEl) return;
 
             function normalize(str) {
                 return (str || '')
@@ -303,12 +317,39 @@
             function applyFilters() {
                 const q = normalize(searchEl.value);
                 const sector = sectorEl.value;
-                const filtered = stocks.filter(s => {
+                const sortVal = sortEl.value;
+
+                let filtered = stocks.filter(s => {
                     if (sector && s.sector !== sector) return false;
                     if (!q) return true;
                     const hay = normalize(`${s.name} ${s.ticker} ${s.sector}`);
                     return hay.includes(q);
                 });
+
+                if (sortVal) {
+                    const sorted = filtered.slice();
+                    switch (sortVal) {
+                        case 'name-asc':
+                            sorted.sort((a,b) => a.name.localeCompare(b.name, 'de'));
+                            break;
+                        case 'name-desc':
+                            sorted.sort((a,b) => b.name.localeCompare(a.name, 'de'));
+                            break;
+                        case 'ticker-asc':
+                            sorted.sort((a,b) => (a.ticker||'').localeCompare(b.ticker||'', 'de'));
+                            break;
+                        case 'ticker-desc':
+                            sorted.sort((a,b) => (b.ticker||'').localeCompare(a.ticker||'', 'de'));
+                            break;
+                        case 'sector-asc':
+                            sorted.sort((a,b) => (a.sector||'').localeCompare(b.sector||'', 'de'));
+                            break;
+                        default:
+                            break;
+                    }
+                    filtered = sorted;
+                }
+
                 render(filtered);
             }
 
@@ -317,9 +358,11 @@
 
             searchEl.addEventListener('input', applyFilters);
             sectorEl.addEventListener('change', applyFilters);
+            sortEl.addEventListener('change', applyFilters);
             clearEl.addEventListener('click', () => {
                 searchEl.value = '';
                 sectorEl.value = '';
+                sortEl.value = '';
                 applyFilters();
                 searchEl.focus();
             });

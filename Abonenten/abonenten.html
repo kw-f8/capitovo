@@ -264,7 +264,7 @@
                 height: 54px;
                 background: transparent !important;
                 border: none !important;
-                border-radius: 50%;
+                border-radius: 0;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -274,11 +274,11 @@
                 transition: transform .22s cubic-bezier(.2,.9,.2,1), filter .18s ease;
             }
             .monitor-logo-card img {
-                width: 90%;
-                height: 90%;
+                width: 100%;
+                height: 100%;
                 object-fit: contain;
                 display: block;
-                border-radius: 50%;
+                border-radius: 0;
                 background: transparent !important;
                 box-shadow: none !important;
                 -webkit-box-shadow: none !important;
@@ -289,13 +289,13 @@
             @media (max-width: 900px) {
                 .monitor-logos { width: 230px; height: 230px; --radius: 95px; }
                 .monitor-center-chart { width: 280px; height: 140px; bottom: -15px; left: -30px; }
-                .monitor-logo-card { width: 40px; height: 40px; }
+                .monitor-logo-card { width: 40px; height: 40px; border-radius: 0; }
             }
             @media (max-width: 640px) {
                 .monitor-logos { position: static; width: auto; height: auto; display: grid; grid-template-columns: repeat(3, minmax(48px, 1fr)); gap: 0.45rem; }
                 .monitor-center-chart { display: none; }
-                .monitor-logo-card { position: static; width:48px; height:48px; transform: none; }
-                .monitor-logo-card img { width:40px; height:40px; }
+                .monitor-logo-card { position: static; width:48px; height:48px; transform: none; border-radius: 0; }
+                .monitor-logo-card img { width:48px; height:48px; border-radius: 0; }
             }
         </style>
     <header>

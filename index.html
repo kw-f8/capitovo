@@ -13,15 +13,6 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
-          /* Slightly increase vertical spacing between main sections on the homepage
-              (adds extra breathing room between Pricing, Vorteile, FAQ, etc.)
-              Keep spacing uniform between all sections. */
-          main > section { margin: 4rem 0; }
-        /* Consistent spacing on wider screens */
-        @media (min-width: 768px) {
-            main > section { margin-top: 4rem; margin-bottom: 4rem; }
-        }
-
           /* Hero image styling */
           .hero { position: relative; overflow: visible; min-height: 36vh; display:block; padding: 3rem 1rem 2rem; }
           .hero-inner { position: relative; z-index: 2; width:100%; max-width:1200px; margin:0 auto; text-align: left; padding: 0 1rem; }
@@ -497,7 +488,7 @@
 
 
         
-        <section id="analysen" class="text-center bg-white">
+        <section id="analysen" class="text-center bg-white py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Top Analysen</h2>
             
@@ -591,7 +582,7 @@
 
         </section>
         
-        <section id="pricing">
+        <section id="pricing" class="py-16">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h2 class="text-4xl font-extrabold text-white mb-8" data-scroll="fade-up" data-scroll-delay="40">Wählen Sie das passende Abo-Modell</h2>
                 <p class="text-xl text-gray-300 mb-16" data-scroll="fade-up" data-scroll-delay="100">Erhöhen Sie Ihren Marktvorsprung mit unseren exklusiven Analyse-Berichten.</p>
@@ -700,7 +691,7 @@
             </div>
         </section>
         
-        <section id="vorteile" class="vorteile-grid">
+        <section id="vorteile" class="vorteile-grid py-16">
             <h2 class="text-4xl font-extrabold text-center mb-16 text-gray-900" data-scroll="fade-up" data-scroll-delay="40">Warum capitovo?</h2>
             <div class="grid-container">
                 <div class="vorteil-item" data-scroll="fade-up">
@@ -718,7 +709,7 @@
             </div>
         </section>            
         
-        <section id="faq" class="bg-white">
+        <section id="faq" class="bg-white py-16">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 
                 <h2 id="faq-title" class="text-4xl font-extrabold text-gray-900 text-center mb-16" data-scroll="fade-up" data-scroll-delay="40">
@@ -779,7 +770,7 @@
             </div>
         </section> 
         
-        <section id="kontakt" class="bg-white">
+        <section id="kontakt" class="bg-white py-16">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-16" data-scroll="fade-up" data-scroll-delay="40">Kontakt aufnehmen</h2>
                 

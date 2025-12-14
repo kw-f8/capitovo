@@ -51,6 +51,19 @@
             .monitor-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.48rem 1rem; border-radius: 8px; background: #f3f4f6; color: #0f172a !important; text-decoration: none !important; font-weight: 600; box-shadow: none; border: 1px solid #e5e7eb; transition: background 0.18s, color 0.18s; }
             .monitor-cta:hover { background: #e5e7eb; color: #0f172a !important; box-shadow: none; }
             @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
+
+            /* Increase internal spacing for analysis cards inside the Top Analysen grid
+               Only changes padding and gaps of card children; does not alter typography or overall layout */
+            #analysis-grid { gap: 3rem; }
+            #analysis-grid > * {
+                padding: 1.125rem; /* 18px */
+                display: flex;
+                flex-direction: column;
+                gap: 0.9rem;
+                box-sizing: border-box;
+            }
+            #analysis-grid h3, #analysis-grid .card-title { margin-bottom: 0.75rem; }
+            #analysis-grid p, #analysis-grid .card-excerpt { margin-bottom: 1rem; }
     </style>
 </head>
 <body>
@@ -492,7 +505,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Top Analysen</h2>
             
-            <div id="analysis-grid" class="grid md:grid-cols-3 gap-8">
+            <div id="analysis-grid" class="grid md:grid-cols-3 gap-12">
                 </div>
 
             <!-- Monitor card placed inside the Analysen section so it matches the analyses width -->

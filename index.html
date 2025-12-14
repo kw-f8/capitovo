@@ -34,75 +34,7 @@
             .monitor-mockup svg.inline-mockup-svg {
                 width:100%;
                 max-width:none;
-                height:auto;
-                display:block;
-                border-radius:0;
-                box-shadow: none;
-                border: none;
-                shape-rendering: geometricPrecision;
-                image-rendering: -webkit-optimize-contrast;
-                image-rendering: crisp-edges;
-                transform: translateZ(0);
-                will-change: transform;
-            }
-            @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:none; } }
-            .monitor-desc { text-align: justify; text-justify: inter-word; }
-            .monitor-footer { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-top: -6.4rem; }
-            .monitor-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.48rem 1rem; border-radius: 8px; background: #f3f4f6; color: #0f172a !important; text-decoration: none !important; font-weight: 600; box-shadow: none; border: 1px solid #e5e7eb; transition: background 0.18s, color 0.18s; }
-            .monitor-cta:hover { background: #e5e7eb; color: #0f172a !important; box-shadow: none; }
-            @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
-    </style>
-</head>
-<body>
-
-    <div class="hero-wrapper">
-        <header>
-            <div class="header-content">
-                <div class="logo">
-                    <a href="index.html">
-                        <img src="caitavo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
-                    </a>
-                </div>
-                <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">
-                    &#9776;
-                </button>
-            </div>
-        </header>
-
-        <section class="hero" aria-label="Hero Bereich">
-            <div class="hero-inner">
-                <h2>Marktführer von morgen erkennen</h2>
-                <div class="hero-graphic" aria-hidden="true">
-                <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" class="hero-image">
-                
-<defs>
-<style>
-.candle-group { opacity: 0; animation: appear 0.4s ease-out forwards; }
-@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
-</style>
-<filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
-<feGaussianBlur in="SourceAlpha" stdDeviation="5"/>
-<feOffset dx="6" dy="8" result="offsetblur"/>
-<feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
-<feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
-</filter>
-<linearGradient id="fadeGradient" x1="0" x2="1" y1="0" y2="0">
-<stop offset="0%" stop-color="white" stop-opacity="0"/>
-<stop offset="15%" stop-color="white" stop-opacity="1"/>
-<stop offset="85%" stop-color="white" stop-opacity="1"/>
-<stop offset="100%" stop-color="white" stop-opacity="0"/>
-</linearGradient>
-<mask id="fadeMask">
-<rect x="0" y="0" width="600" height="200" fill="url(#fadeGradient)"/>
-</mask>
-</defs>
-<g mask="url(#fadeMask)" filter="url(#dropShadow)">
-<g class="candle-group" style="animation-delay: 0.000s">
-<line x1="22.9" y1="135.0" x2="22.9" y2="171.1" stroke="#1e293b" stroke-width="1" />
-<rect x="21.0" y="149.2" width="3.8" height="19.6" fill="#475569" fill-opacity="0.9" rx="1" />
-</g>
-<g class="candle-group" style="animation-delay: 0.040s">
-<line x1="28.8" y1="141.8" x2="28.8" y2="180.0" stroke="#1e293b" stroke-width="1" />
+        
 <rect x="26.9" y="154.4" width="3.8" height="14.4" fill="#3DA7E2" fill-opacity="0.9" rx="1" />
 </g>
 <g class="candle-group" style="animation-delay: 0.080s">
@@ -492,11 +424,11 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Top Analysen</h2>
             
-            <div id="analysis-grid" class="grid md:grid-cols-3 gap-8">
+            <div id="analysis-grid" class="grid md:grid-cols-3 gap-8 mb-16">
                 </div>
 
             <!-- Monitor card placed inside the Analysen section so it matches the analyses width -->
-            <div class="mt-24 w-full">
+            <div class="mt-16 w-full">
                 <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Aktien-Monitor</h2>
                 <div class="w-full">
                     <div class="monitor-card">

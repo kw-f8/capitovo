@@ -277,12 +277,26 @@
                 overflow: visible;
             }
             /* Right column wrapper: stack logos above the mockup image */
-            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: -1.6rem; }
+            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: -2.8rem; }
             .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0; }
-            .monitor-mockup img { width:100%; max-width:1200px; height:auto; display:block; border-radius:0; box-shadow: none; border: none; image-rendering: auto; }
-            @media (min-width:1400px) { .monitor-mockup img { max-width:1400px; } }
-            @media (max-width:1024px) { .monitor-mockup img { max-width:800px; } }
-            @media (max-width:640px) { .monitor-mockup img { max-width:360px; } }
+            /* Ensure inline SVG and images render crisply and scale responsively */
+            .monitor-mockup img,
+            .monitor-mockup svg.inline-mockup-svg {
+                width:100%;
+                max-width:1200px;
+                height:auto;
+                display:block;
+                border-radius:0;
+                box-shadow: none;
+                border: none;
+                shape-rendering: geometricPrecision;
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+                transform: translateZ(0); /* promote to its own layer for sharper rendering */
+            }
+            @media (min-width:1400px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:1400px; } }
+            @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:800px; } }
+            @media (max-width:640px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:360px; } }
             /* Beschreibung im Blocksatz */
             .monitor-desc { text-align: justify; text-justify: inter-word; }
             .monitor-logo-card {

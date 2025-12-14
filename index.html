@@ -36,11 +36,9 @@
             .monitor-bullets li { display:flex; align-items:flex-start; gap: 8px; color:#0f172a; font-weight:600; }
             .monitor-bullets li span { display:block; width:8px; height:8px; margin-top:6px; border-radius:50%; background: var(--color-accent-blue); }
             .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: -2.8rem; }
-            .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0; }
-            .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { width:100%; max-width:1200px; height:auto; display:block; border-radius:0; box-shadow: none; border: none; shape-rendering: geometricPrecision; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; transform: translateZ(0); }
-            @media (min-width:1400px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:1400px; } }
-            @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:800px; } }
-            @media (max-width:640px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:360px; } }
+            .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0; width:100%; }
+            .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { width:100%; max-width:none; height:auto; display:block; border-radius:0; box-shadow: none; border: none; shape-rendering: geometricPrecision; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; transform: translateZ(0); }
+            @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:none; } }
             .monitor-desc { text-align: justify; text-justify: inter-word; }
             .monitor-footer { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-top: -6.4rem; }
             .monitor-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.48rem 1rem; border-radius: 8px; background: #f3f4f6; color: #0f172a !important; text-decoration: none !important; font-weight: 600; box-shadow: none; border: 1px solid #e5e7eb; transition: background 0.18s, color 0.18s; }

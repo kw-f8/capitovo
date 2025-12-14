@@ -29,7 +29,7 @@
           .hero-graphic { margin-top: 1.25rem; width:100%; }
           .hero-image { width:100%; height:auto; display:block; object-fit:contain; filter: saturate(0.95) contrast(0.98); }
             /* -- Monitor card (copied from Abonenten/abonenten.html) -- */
-            .monitor-card { position: relative; background: #fff; border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; box-shadow: 0 10px 30px rgba(2,6,23,0.07); padding: 1.4rem; display: flex; flex-direction: column; gap: 1rem; width:100%; box-sizing: border-box; }
+            .monitor-card { position: relative; background: #fff; border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; box-shadow: 0 10px 30px rgba(2,6,23,0.07); padding: 1.4rem; display: flex; flex-direction: column; gap: 1rem; width:100%; max-width: none; box-sizing: border-box; }
             .monitor-header { display:flex; justify-content:space-between; align-items:flex-start; gap: 1rem; }
             .monitor-body { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items:start; }
             .monitor-bullets { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; margin-top: 0.6rem; }
@@ -524,13 +524,11 @@
             </section>
 
             <section id="pricing" class="py-20">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <!-- Überschrift entfernt (Duplikat) -->
-                                    <feComposite in="shadowColor" in2="offsetBlur" operator="in" result="shadow"/>
-                                    <feMerge>
-                                        <feMergeNode in="shadow"/>
-                                        <feMergeNode in="SourceGraphic"/>
-                                    </feMerge>
+                        <div class="monitor-header">
+                            <div>
+                                <p class="text-gray-600 leading-relaxed monitor-desc">Zentrale Übersicht zur Analyse einzelner Aktien. Wählen Sie ein<br>Unternehmen und erhalten Sie Kursverläufe, Finanzkennzahlen<br>und Unternehmensinformationen auf einer strukturierten Detailseite.</p>
+                            </div>
+                        </div>
                                 </filter>
                                 <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                                     <feGaussianBlur stdDeviation="2" result="blur" />

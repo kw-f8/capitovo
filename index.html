@@ -37,7 +37,23 @@
             .monitor-bullets li span { display:block; width:8px; height:8px; margin-top:6px; border-radius:50%; background: var(--color-accent-blue); }
             .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: -2.8rem; }
             .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0; width:100%; }
-            .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { width:100%; max-width:none; height:auto; display:block; border-radius:0; box-shadow: none; border: none; shape-rendering: geometricPrecision; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges; transform: translateZ(0); }
+            .monitor-mockup object,
+            .monitor-mockup .monitor-mockup-img,
+            .monitor-mockup img,
+            .monitor-mockup svg.inline-mockup-svg {
+                width:100%;
+                max-width:none;
+                height:auto;
+                display:block;
+                border-radius:0;
+                box-shadow: none;
+                border: none;
+                shape-rendering: geometricPrecision;
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+                transform: translateZ(0);
+                will-change: transform;
+            }
             @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:none; } }
             .monitor-desc { text-align: justify; text-justify: inter-word; }
             .monitor-footer { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-top: -6.4rem; }
@@ -509,7 +525,7 @@
 
                             <div class="monitor-right">
                                 <div class="monitor-mockup" aria-hidden="true">
-                                    <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;transform:translateY(-2.8rem);will-change:transform;"> 
+                                    <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;transform:translateY(-2.8rem);will-change:transform;"> 
                                         <img src="studiodisplay_mockup.svg" alt="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;image-rendering:-webkit-optimize-contrast;shape-rendering:geometricPrecision;" />
                                     </object>
                                 </div>

@@ -279,9 +279,10 @@
             /* Right column wrapper: stack logos above the mockup image */
             .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; }
             .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:6px; }
-            .monitor-mockup img { width:560px; max-width:100%; height:auto; display:block; border-radius:0; box-shadow: none; border: none; }
-            @media (min-width:1024px) { .monitor-mockup img { width:720px; } }
-            @media (max-width:640px) { .monitor-mockup img { width:360px; } }
+            .monitor-mockup img { width:100%; max-width:920px; height:auto; display:block; border-radius:0; box-shadow: none; border: none; image-rendering: auto; }
+            @media (min-width:1200px) { .monitor-mockup img { max-width:1100px; } }
+            @media (max-width:1024px) { .monitor-mockup img { max-width:720px; } }
+            @media (max-width:640px) { .monitor-mockup img { max-width:360px; } }
             /* Beschreibung im Blocksatz */
             .monitor-desc { text-align: justify; text-justify: inter-word; }
             .monitor-logo-card {
@@ -392,7 +393,7 @@
                 <div class="monitor-header">
                     <div>
                         <h2 class="text-xl font-semibold mb-1">Aktien Monitor</h2>
-                        <p class="text-gray-600 leading-relaxed monitor-desc">Zentrale Übersicht zur Analyse einzelner Aktien. Wählen Sie ein<br>Unternehmen und erhalten Sie Kursverläufe, Finanzkennzahlen und Unternehmensinformationen auf einer strukturierten Detailseite.</p>
+                        <p class="text-gray-600 leading-relaxed monitor-desc">Zentrale Übersicht zur Analyse einzelner Aktien. Wählen Sie ein<br>Unternehmen und erhalten Sie Kursverläufe, Finanzkennzahlen<br>und Unternehmensinformationen auf einer strukturierten Detailseite.</p>
                     </div>
 
                 </div>

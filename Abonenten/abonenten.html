@@ -233,7 +233,7 @@
             .monitor-card { position: relative; background: #fff; border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; box-shadow: 0 10px 30px rgba(2,6,23,0.07); padding: 1.4rem; display: flex; flex-direction: column; gap: 1rem; }
             .monitor-header { display:flex; justify-content:space-between; align-items:flex-start; gap: 1rem; }
             .monitor-badge { font-size: 0.78rem; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(15,23,42,0.08); background: #0f172a; color:#fff; letter-spacing: 0.01em; white-space: nowrap; }
-            .monitor-body { display:grid; grid-template-columns: 1.2fr 0.9fr; gap: 1rem; align-items:start; }
+                .monitor-body { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items:start; }
             .monitor-bullets { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; }
             .monitor-bullets li { display:flex; align-items:flex-start; gap: 8px; color:#0f172a; font-weight:600; }
             .monitor-bullets li span { display:block; width:8px; height:8px; margin-top:6px; border-radius:50%; background: var(--color-accent-blue); }
@@ -277,11 +277,11 @@
                 overflow: visible;
             }
             /* Right column wrapper: stack logos above the mockup image */
-            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; }
-            .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:6px; }
-            .monitor-mockup img { width:100%; max-width:920px; height:auto; display:block; border-radius:0; box-shadow: none; border: none; image-rendering: auto; }
-            @media (min-width:1200px) { .monitor-mockup img { max-width:1100px; } }
-            @media (max-width:1024px) { .monitor-mockup img { max-width:720px; } }
+            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: -1.6rem; }
+            .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0; }
+            .monitor-mockup img { width:100%; max-width:1200px; height:auto; display:block; border-radius:0; box-shadow: none; border: none; image-rendering: auto; }
+            @media (min-width:1400px) { .monitor-mockup img { max-width:1400px; } }
+            @media (max-width:1024px) { .monitor-mockup img { max-width:800px; } }
             @media (max-width:640px) { .monitor-mockup img { max-width:360px; } }
             /* Beschreibung im Blocksatz */
             .monitor-desc { text-align: justify; text-justify: inter-word; }

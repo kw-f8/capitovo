@@ -16,10 +16,10 @@
           /* Slightly increase vertical spacing between main sections on the homepage
               (adds extra breathing room between Pricing, Vorteile, FAQ, etc.)
               Keep spacing uniform between all sections. */
-          main > section { margin: 2.5rem 0; }
-        /* Larger spacing on wider screens */
+          main > section { margin: 4rem 0; }
+        /* Consistent spacing on wider screens */
         @media (min-width: 768px) {
-            main > section { margin-top: 3.5rem; margin-bottom: 4rem; }
+            main > section { margin-top: 4rem; margin-bottom: 4rem; }
         }
 
           /* Hero image styling */
@@ -486,40 +486,44 @@
             
             <div id="analysis-grid" class="grid md:grid-cols-3 gap-8">
                 </div>
+        </section>
 
-            <!-- Monitor card placed inside the Analysen section so it matches the analyses width -->
-            <div class="mt-8 w-full">
-                <div class="monitor-card">
-                    <div class="monitor-header">
-                        <div>
-                            <p class="text-gray-600 leading-relaxed monitor-desc">Zentrale Übersicht zur Analyse einzelner Aktien. Wählen Sie ein<br>Unternehmen und erhalten Sie Kursverläufe, Finanzkennzahlen<br>und Unternehmensinformationen auf einer strukturierten Detailseite.</p>
-                        </div>
-                    </div>
+        <section id="aktien-monitor" class="text-center bg-white py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-4" data-scroll="fade-up" data-scroll-delay="60">Aktien-Monitor</h2>
 
-                    <div class="monitor-body">
-                        <ul class="monitor-bullets" aria-label="Highlights des Aktien Monitors">
-                            <li><span aria-hidden="true"></span>Strukturierte Detailansicht je Aktie</li>
-                            <li><span aria-hidden="true"></span>Unternehmensprofil und Geschäftsmodell</li>
-                            <li><span aria-hidden="true"></span>Charts und Kursverläufe</li>
-                            <li><span aria-hidden="true"></span>Zentrale Finanzkennzahlen</li>
-                        </ul>
-
-                        <div class="monitor-right">
-                            <div class="monitor-mockup" aria-hidden="true">
-                                <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;transform:translateY(-2.8rem);will-change:transform;"> 
-                                    <img src="studiodisplay_mockup.svg" alt="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;image-rendering:-webkit-optimize-contrast;shape-rendering:geometricPrecision;" />
-                                </object>
+                <div class="mt-16 w-full">
+                    <div class="monitor-card">
+                        <div class="monitor-header">
+                            <div>
+                                <p class="text-gray-600 leading-relaxed monitor-desc">Zentrale Übersicht zur Analyse einzelner Aktien. Wählen Sie ein<br>Unternehmen und erhalten Sie Kursverläufe, Finanzkennzahlen<br>und Unternehmensinformationen auf einer strukturierten Detailseite.</p>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="monitor-footer">
-                        <a class="monitor-cta" href="Abonenten/aktien-monitor.html">Zum Aktien Monitor</a>
+                        <div class="monitor-body">
+                            <ul class="monitor-bullets" aria-label="Highlights des Aktien Monitors">
+                                <li><span aria-hidden="true"></span>Strukturierte Detailansicht je Aktie</li>
+                                <li><span aria-hidden="true"></span>Unternehmensprofil und Geschäftsmodell</li>
+                                <li><span aria-hidden="true"></span>Charts und Kursverläufe</li>
+                                <li><span aria-hidden="true"></span>Zentrale Finanzkennzahlen</li>
+                            </ul>
+
+                            <div class="monitor-right">
+                                <div class="monitor-mockup" aria-hidden="true">
+                                    <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;transform:translateY(-2.8rem);will-change:transform;"> 
+                                        <img src="studiodisplay_mockup.svg" alt="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;image-rendering:-webkit-optimize-contrast;shape-rendering:geometricPrecision;" />
+                                    </object>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="monitor-footer">
+                            <a class="monitor-cta" href="Abonenten/aktien-monitor.html">Zum Aktien Monitor</a>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            </section>
+        </section>
 
             
 

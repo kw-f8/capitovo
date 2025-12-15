@@ -20,13 +20,13 @@
           .hero-graphic { margin-top: 1.25rem; width:100%; }
           .hero-image { width:100%; height:auto; display:block; object-fit:contain; filter: saturate(0.95) contrast(0.98); }
             /* -- Monitor card (copied from Abonenten/abonenten.html) -- */
-            .monitor-card { position: relative; background: #fff; border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; box-shadow: 0 10px 30px rgba(2,6,23,0.07); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; width:100%; max-width: none; box-sizing: border-box; }
+            .monitor-card { position: relative; background: #fff; border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; box-shadow: 0 10px 30px rgba(2,6,23,0.07); padding: 0.5rem 1rem 0.6rem 1rem; display: flex; flex-direction: column; gap: 0.45rem; width:100%; max-width: none; box-sizing: border-box; }
             .monitor-header { display:flex; justify-content:space-between; align-items:flex-start; gap: 0.75rem; }
-            .monitor-body { display:grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; align-items:start; }
+            .monitor-body { display:grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; align-items:center; }
             .monitor-bullets { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.35rem; margin-top: 0.4rem; }
             .monitor-bullets li { display:flex; align-items:flex-start; gap: 8px; color:#0f172a; font-weight:600; }
             .monitor-bullets li span { display:block; width:8px; height:8px; margin-top:6px; border-radius:50%; background: var(--color-accent-blue); }
-            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: 0rem; }
+            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: center; margin-top: 0rem; }
             .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0.25rem; width:100%; }
             .monitor-mockup object,
             .monitor-mockup .monitor-mockup-img,
@@ -45,26 +45,7 @@
                 transform: translateZ(0);
                 will-change: transform;
             }
-            /* Keep the mockup visually compact so the monitor card height matches content */
-            .monitor-mockup object,
-            .monitor-mockup .monitor-mockup-img,
-            .monitor-mockup img,
-            .monitor-mockup svg.inline-mockup-svg {
-                max-height: 220px;
-                object-fit: contain;
-            }
-            @media (min-width: 1280px) {
-                .monitor-mockup object,
-                .monitor-mockup .monitor-mockup-img,
-                .monitor-mockup img,
-                .monitor-mockup svg.inline-mockup-svg { max-height: 260px; }
-            }
-            @media (max-width: 900px) {
-                .monitor-mockup object,
-                .monitor-mockup .monitor-mockup-img,
-                .monitor-mockup img,
-                .monitor-mockup svg.inline-mockup-svg { max-height: 160px; }
-            }
+            /* mockup size left unconstrained to preserve original image fidelity */
             @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:none; } }
             .monitor-desc { text-align: justify; text-justify: inter-word; }
             .monitor-footer { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-top: 0rem; }

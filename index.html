@@ -45,6 +45,26 @@
                 transform: translateZ(0);
                 will-change: transform;
             }
+            /* Keep the mockup visually compact so the monitor card height matches content */
+            .monitor-mockup object,
+            .monitor-mockup .monitor-mockup-img,
+            .monitor-mockup img,
+            .monitor-mockup svg.inline-mockup-svg {
+                max-height: 220px;
+                object-fit: contain;
+            }
+            @media (min-width: 1280px) {
+                .monitor-mockup object,
+                .monitor-mockup .monitor-mockup-img,
+                .monitor-mockup img,
+                .monitor-mockup svg.inline-mockup-svg { max-height: 260px; }
+            }
+            @media (max-width: 900px) {
+                .monitor-mockup object,
+                .monitor-mockup .monitor-mockup-img,
+                .monitor-mockup img,
+                .monitor-mockup svg.inline-mockup-svg { max-height: 160px; }
+            }
             @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:none; } }
             .monitor-desc { text-align: justify; text-justify: inter-word; }
             .monitor-footer { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-top: 0rem; }

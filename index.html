@@ -52,7 +52,18 @@
             .monitor-cta:hover { background: #e5e7eb; color: #0f172a !important; box-shadow: none; }
             @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
 
-            /* Grid/internal spacing left to utility classes in the markup (gap-12 etc.) */
+            /* Increase internal spacing for analysis cards inside the Top Analysen grid
+               Only changes padding and gaps of card children; does not alter typography or overall layout */
+            #analysis-grid { gap: 3rem; }
+            #analysis-grid > * {
+                padding: 1.125rem; /* 18px */
+                display: flex;
+                flex-direction: column;
+                gap: 0.9rem;
+                box-sizing: border-box;
+            }
+            #analysis-grid h3, #analysis-grid .card-title { margin-bottom: 0.75rem; }
+            #analysis-grid p, #analysis-grid .card-excerpt { margin-bottom: 1rem; }
     </style>
 </head>
 <body>
@@ -498,7 +509,7 @@
                 </div>
 
             <!-- Monitor card placed inside the Analysen section so it matches the analyses width -->
-            <div class="mt-16 w-full">
+            <div class="mt-24 w-full">
                 <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Aktien-Monitor</h2>
                 <div class="w-full">
                     <div class="monitor-card">
@@ -518,7 +529,7 @@
 
                             <div class="monitor-right">
                                 <div class="monitor-mockup" aria-hidden="true">
-                                    <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;transform:translateY(0rem);will-change:transform;"> 
+                                    <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;transform:translateY(-2.8rem);will-change:transform;"> 
                                         <img src="studiodisplay_mockup.svg" alt="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;image-rendering:-webkit-optimize-contrast;shape-rendering:geometricPrecision;" />
                                     </object>
                                 </div>

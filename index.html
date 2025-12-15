@@ -53,6 +53,11 @@
             .monitor-cta:hover { background: #e5e7eb; color: #0f172a !important; box-shadow: none; }
             @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
 
+            /* Fine-tune: move mockup slightly down without changing text alignment */
+            .monitor-mockup { transform: translateY(1.6rem); }
+            /* ensure card keeps balanced top/bottom spacing */
+            .monitor-card { padding-top: 0.5rem; padding-bottom: 0.75rem; }
+
             /* Increase internal spacing for analysis cards inside the Top Analysen grid
                Only changes padding and gaps of card children; does not alter typography or overall layout */
             #analysis-grid { gap: 3rem; }

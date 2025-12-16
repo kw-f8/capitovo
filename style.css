@@ -211,8 +211,8 @@ main.with-sidebar {
     margin-bottom: 40px;
 }
 
-.grid-container {
-    max-width: 1200px;
+ .grid-container {
+    max-width: 1040px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;

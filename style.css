@@ -50,9 +50,9 @@ main {
 #analysen {
     /* Negatives margin entfernt; sorgt sonst für Überlagerung mit Header */
     margin-top: 0;
-    /* Moderates Padding oben, überschreibt Tailwind nur falls nötig */
-    padding-top: 40px !important;
-    padding-bottom: 40px;
+    /* Padding wird jetzt von der globalen main > section Regel gesteuert */
+    padding-top: 0;
+    padding-bottom: 0;
 }
 /* ------------------------------------------------- */
 

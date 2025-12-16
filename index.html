@@ -13,14 +13,7 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
-          /* Slightly increase vertical spacing between main sections on the homepage
-              (adds extra breathing room between Pricing, Vorteile, FAQ, etc.)
-              Keep spacing uniform between all sections. */
-          main > section { margin: 4rem 0; }
-        /* Consistent spacing on wider screens */
-        @media (min-width: 768px) {
-            main > section { margin-top: 4rem; margin-bottom: 4rem; }
-        }
+          /* Section spacing is handled with utility classes (py-16) per guidelines. */
 
           /* Hero image styling */
           .hero { position: relative; overflow: visible; min-height: 36vh; display:block; padding: 3rem 1rem 2rem; }

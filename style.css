@@ -630,11 +630,6 @@ details[open] .details-marker {
     /* ------------------------------------------- */
 
     /* --- VORTEILE Sektion --- */
-    .grid-container {
-        flex-direction: column; 
-        gap: 20px;
-        padding: 0 40px; 
-    }
 
     .vorteil-item {
         flex-basis: auto; 

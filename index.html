@@ -53,6 +53,11 @@
             .monitor-cta:hover { background: #e5e7eb; color: #0f172a !important; box-shadow: none; }
             @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
 
+            /* Override for Aktien-Monitor only: move intro text down, then reduce card height */
+            #monitor .monitor-desc { margin-top: 1.1rem; }
+            #monitor .monitor-card { padding-top: 0.4rem; padding-bottom: 0.25rem; gap: 0.3rem; }
+            #monitor .monitor-mockup { transform: translateY(3.2rem); width:84%; max-width:84%; margin:0 auto; }
+
             /* Fine-tune: move mockup slightly down without changing text alignment */
             .monitor-mockup { transform: translateY(3.2rem); }
             /* ensure card keeps balanced top/bottom spacing */

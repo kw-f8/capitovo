@@ -211,13 +211,13 @@ main.with-sidebar {
     margin-bottom: 40px;
 }
 
- .grid-container {
+.grid-container {
     max-width: 1040px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
     gap: 30px;
-    padding: 0 20px; 
+    padding: 0; 
 }
 
 

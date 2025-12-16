@@ -220,12 +220,15 @@ main.with-sidebar {
     padding: 0 20px; 
 }
 
+
 .vorteil-item {
-    flex-basis: 33%;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 333px;
     text-align: left;
     padding: 20px;
     border-radius: 8px;
-    background-color: #ffffff; 
+    background-color: #ffffff;
     border: 1px solid rgba(15,23,42,0.06);
     box-shadow: 0 8px 30px rgba(2,6,23,0.12);
     transition: transform .28s ease, box-shadow .28s ease;

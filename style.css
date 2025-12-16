@@ -927,11 +927,11 @@ details[open] .details-marker {
 /* Use !important to override inline/styles loaded later in index.html */
 /* ---------------------------------------------------- */
 main > section {
-    margin: 4rem 0 !important; /* 64px top & bottom */
+    margin: 1.25rem 0 !important; /* 20px top & bottom */
 }
 
 @media (min-width: 768px) {
-    main > section { margin-top: 4rem !important; margin-bottom: 4rem !important; }
+    main > section { margin-top: 2rem !important; margin-bottom: 2rem !important; }
 }
 
 

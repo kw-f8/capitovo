@@ -13,6 +13,15 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
+          /* Slightly increase vertical spacing between main sections on the homepage
+              (adds extra breathing room between Pricing, Vorteile, FAQ, etc.)
+              Keep spacing uniform between all sections. */
+          main > section { margin: 4rem 0; }
+        /* Consistent spacing on wider screens */
+        @media (min-width: 768px) {
+            main > section { margin-top: 4rem; margin-bottom: 4rem; }
+        }
+
           /* Hero image styling */
           .hero { position: relative; overflow: visible; min-height: 36vh; display:block; padding: 3rem 1rem 2rem; }
           .hero-inner { position: relative; z-index: 2; width:100%; max-width:1200px; margin:0 auto; text-align: left; padding: 0 1rem; }
@@ -20,21 +29,20 @@
           .hero-graphic { margin-top: 1.25rem; width:100%; }
           .hero-image { width:100%; height:auto; display:block; object-fit:contain; filter: saturate(0.95) contrast(0.98); }
             /* -- Monitor card (copied from Abonenten/abonenten.html) -- */
-            .monitor-card { position: relative; background: #fff; border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; box-shadow: 0 10px 30px rgba(2,6,23,0.07); padding: 0.25rem 1rem; display: flex; flex-direction: column; gap: 0.35rem; width:100%; max-width: none; box-sizing: border-box; }
-            .monitor-header { display:flex; justify-content:space-between; align-items:flex-start; gap: 0.75rem; }
-            .monitor-body { display:grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; align-items:start; }
-            .monitor-bullets { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.28rem; margin-top: 0.2rem; }
+            .monitor-card { position: relative; background: #fff; border: 1px solid rgba(15,23,42,0.06); border-radius: 14px; box-shadow: 0 10px 30px rgba(2,6,23,0.07); padding: 1.4rem; display: flex; flex-direction: column; gap: 1rem; width:100%; max-width: none; box-sizing: border-box; }
+            .monitor-header { display:flex; justify-content:space-between; align-items:flex-start; gap: 1rem; }
+            .monitor-body { display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items:start; }
+            .monitor-bullets { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.4rem; margin-top: 0.6rem; }
             .monitor-bullets li { display:flex; align-items:flex-start; gap: 8px; color:#0f172a; font-weight:600; }
             .monitor-bullets li span { display:block; width:8px; height:8px; margin-top:6px; border-radius:50%; background: var(--color-accent-blue); }
-            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: 0rem; }
-            .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0.25rem; width:100%; }
+            .monitor-right { display:flex; flex-direction:column; gap:0.6rem; align-items:center; justify-content:center; align-self: start; margin-top: -2.8rem; }
+            .monitor-mockup { display:flex; align-items:center; justify-content:center; padding-top:0; width:100%; }
             .monitor-mockup object,
             .monitor-mockup .monitor-mockup-img,
             .monitor-mockup img,
             .monitor-mockup svg.inline-mockup-svg {
-                width:86%;
-                max-width:86%;
-                margin:0 auto;
+                width:100%;
+                max-width:none;
                 height:auto;
                 display:block;
                 border-radius:0;
@@ -48,33 +56,10 @@
             }
             @media (max-width:1024px) { .monitor-mockup img, .monitor-mockup svg.inline-mockup-svg { max-width:none; } }
             .monitor-desc { text-align: justify; text-justify: inter-word; }
-            .monitor-footer { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-top: 0rem; }
+            .monitor-footer { display:flex; flex-wrap:wrap; gap:0.75rem; align-items:center; margin-top: -6.4rem; }
             .monitor-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.48rem 1rem; border-radius: 8px; background: #f3f4f6; color: #0f172a !important; text-decoration: none !important; font-weight: 600; box-shadow: none; border: 1px solid #e5e7eb; transition: background 0.18s, color 0.18s; }
             .monitor-cta:hover { background: #e5e7eb; color: #0f172a !important; box-shadow: none; }
             @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
-
-            /* Override for Aktien-Monitor only: move intro text down, then reduce card height */
-            #monitor .monitor-desc { margin-top: 1.1rem; }
-            #monitor .monitor-card { padding-top: 0.4rem; padding-bottom: 0.25rem; gap: 0.3rem; }
-            #monitor .monitor-mockup { transform: translateY(3.2rem); width:84%; max-width:84%; margin:0 auto; }
-
-            /* Fine-tune: move mockup slightly down without changing text alignment */
-            .monitor-mockup { transform: translateY(3.2rem); }
-            /* ensure card keeps balanced top/bottom spacing */
-            .monitor-card { padding-top: 0.35rem; padding-bottom: 0.6rem; }
-
-            /* Increase internal spacing for analysis cards inside the Top Analysen grid
-               Only changes padding and gaps of card children; does not alter typography or overall layout */
-            #analysis-grid { gap: 3rem; }
-            #analysis-grid > * {
-                padding: 1.125rem; /* 18px */
-                display: flex;
-                flex-direction: column;
-                gap: 0.9rem;
-                box-sizing: border-box;
-            }
-            #analysis-grid h3, #analysis-grid .card-title { margin-bottom: 0.75rem; }
-            #analysis-grid p, #analysis-grid .card-excerpt { margin-bottom: 1rem; }
     </style>
 </head>
 <body>
@@ -509,29 +494,20 @@
     </div> 
     
     <main>
-        <!-- Abschnitts‑Richtlinien:
-             - Neue Abschnitte immer als <section id="..." class="bg-white py-16"> ... </section>
-             - Inhalt innerhalb: <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> ... </div>
-             - Überschriften: <h2 class="text-4xl font-extrabold text-gray-900 mb-16">...
-             - Abstandsvorgabe: nur Utility‑Klassen verwenden (z. B. `py-16`, `gap-12`); keine negativen Margins
-             - Für schmalere Blöcke `max-w-4xl` statt `max-w-7xl` nutzen
-        -->
 
 
         
-        <section id="analysen" class="text-center bg-white py-16">
+        <section id="analysen" class="text-center bg-white py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Top Analysen</h2>
+            <h2 class="text-4xl font-extrabold text-gray-900 mb-4" data-scroll="fade-up" data-scroll-delay="60">Top Analysen</h2>
             
-            <div id="analysis-grid" class="grid md:grid-cols-3 gap-12">
+            <div id="analysis-grid" class="grid md:grid-cols-3 gap-8">
                 </div>
-            </div>
-        </section>
 
-        <section id="monitor" class="text-center bg-white py-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Aktien-Monitor</h2>
-                <div class="w-full">
+            <!-- Monitor card placed inside the Analysen section so it matches the analyses width -->
+            <div class="mt-8 w-full">
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-4" data-scroll="fade-up" data-scroll-delay="60">Aktien-Monitor</h2>
+                <div class="mt-8 w-full">
                     <div class="monitor-card">
                         <div class="monitor-header">
                             <div>
@@ -549,7 +525,7 @@
 
                             <div class="monitor-right">
                                 <div class="monitor-mockup" aria-hidden="true">
-                                    <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;transform:translateY(0);will-change:transform;"> 
+                                    <object data="studiodisplay_mockup.svg" type="image/svg+xml" class="monitor-mockup-img" aria-label="Aktien Monitor Mockup" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;transform:translateY(-2.8rem);will-change:transform;"> 
                                         <img src="studiodisplay_mockup.svg" alt="Aktien Monitor Mockup" style="width:100%;height:auto;display:block;image-rendering:-webkit-optimize-contrast;shape-rendering:geometricPrecision;" />
                                     </object>
                                 </div>
@@ -563,9 +539,11 @@
                 </div>
             </div>
         </section>
-        </section>
-        
-        </filter>
+
+            
+
+            <section id="pricing" class="py-20">
+                                </filter>
                                 <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                                     <feGaussianBlur stdDeviation="2" result="blur" />
                                     <feComposite in="SourceGraphic" in2="blur" operator="over" />
@@ -616,9 +594,9 @@
 
         </section>
         
-        <section id="pricing" class="py-16">
+        <section id="pricing" class="py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-4xl font-extrabold text-white mb-8" data-scroll="fade-up" data-scroll-delay="40">Wählen Sie das passende Abo-Modell</h2>
+                <h2 class="text-4xl font-extrabold text-white mb-4" data-scroll="fade-up" data-scroll-delay="40">Wählen Sie das passende Abo-Modell</h2>
                 <p class="text-xl text-gray-300 mb-16" data-scroll="fade-up" data-scroll-delay="100">Erhöhen Sie Ihren Marktvorsprung mit unseren exklusiven Analyse-Berichten.</p>
                 
                 <div class="grid md:grid-cols-3 gap-8 items-stretch">
@@ -725,8 +703,8 @@
             </div>
         </section>
         
-        <section id="vorteile" class="vorteile-grid py-16">
-            <h2 class="text-4xl font-extrabold text-center mb-16 text-gray-900" data-scroll="fade-up" data-scroll-delay="40">Warum capitovo?</h2>
+        <section id="vorteile" class="vorteile-grid">
+            <h3 class="text-3xl font-bold text-center mb-12 text-gray-900" data-scroll="fade-up" data-scroll-delay="40">Warum capitovo?</h3>
             <div class="grid-container">
                 <div class="vorteil-item" data-scroll="fade-up">
                     <h4>Datengetriebene Tiefe</h4>
@@ -743,12 +721,12 @@
             </div>
         </section>            
         
-        <section id="faq" class="bg-white py-16">
+        <section id="faq" class="py-16 bg-white">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 
-                <h2 id="faq-title" class="text-4xl font-extrabold text-gray-900 text-center mb-16" data-scroll="fade-up" data-scroll-delay="40">
+                <h3 id="faq-title" class="text-3xl font-bold text-gray-900 text-center mb-12" data-scroll="fade-up" data-scroll-delay="40">
                     Häufig gestellte Fragen
-                </h2>
+                </h3>
 
                 <div id="faq-list" class="space-y-6">
                     <details id="faq-item-1" class="bg-white p-6 rounded-xl shadow-lg border border-gray-200 cursor-pointer transition-all duration-300 open:bg-gray-100" data-scroll="fade-up">
@@ -804,9 +782,9 @@
             </div>
         </section> 
         
-        <section id="kontakt" class="bg-white py-16">
+        <section id="kontakt" class="py-16 bg-white">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 class="text-4xl font-extrabold text-gray-900 text-center mb-16" data-scroll="fade-up" data-scroll-delay="40">Kontakt aufnehmen</h2>
+                <h2 class="text-3xl font-bold text-gray-900 text-center mb-12" data-scroll="fade-up">Kontakt aufnehmen</h2>
                 
                 <div class="bg-white rounded-xl shadow-xl border border-gray-200 p-8 md:p-12" data-scroll="fade-up" data-scroll-delay="40">
                     <form id="contact-form" action="#" method="POST" class="space-y-6">

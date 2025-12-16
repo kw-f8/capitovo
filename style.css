@@ -903,33 +903,18 @@ details[open] .details-marker {
     font-weight: 600 !important;
 }
 
-/* Reduce vertical gap between the analyses section and the pricing section on the homepage */
-/* Overrides Tailwind `py-*` classes and the general `main > section` margins for these two sections */
-#analysen {
-    padding-bottom: 1.25rem !important; /* 20px */
-    margin-bottom: 0 !important;
-}
-#pricing {
-    padding-top: 1.25rem !important; /* 20px */
-    margin-top: 0 !important;
-}
-
-/* On larger screens keep a bit more breathing room but still reduced */
-@media (min-width: 768px) {
-    #analysen { padding-bottom: 1.5rem !important; }
-    #pricing { padding-top: 1.5rem !important; }
-}
-
-/* ---------------------------------------------------- */
-/* Einheitliche Abstände für alle `main > section` auf der Startseite */
-/* Use !important to override inline/styles loaded later in index.html */
-/* ---------------------------------------------------- */
+/* Einheitliche vertikale Abstände für alle Sektionen auf der Startseite */
+/* Ziel: gleiche Distanz wie zwischen 'Wählen Sie das passende Abo-Modell' und 'Warum capitovo' */
+/* Verwende Padding statt zusätzlichen Margins, damit jede Sektion innen genügend Abstand hat. */
 main > section {
-    margin: 1.25rem 0 !important; /* 20px top & bottom */
+    margin: 0 !important;
+    padding-top: 5rem !important;    /* 80px */
+    padding-bottom: 5rem !important; /* 80px */
 }
 
-@media (min-width: 768px) {
-    main > section { margin-top: 2rem !important; margin-bottom: 2rem !important; }
+/* Auf kleinen Bildschirmen etwas enger */
+@media (max-width: 767px) {
+    main > section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
 }
 
 

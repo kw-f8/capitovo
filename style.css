@@ -193,7 +193,6 @@ main.with-sidebar {
 #pricing {
     background-color: var(--color-primary-blue); /* Hintergrund Dunkelblau */
     color: #f0f0f0; 
-    padding: 80px 0 80px 0; 
 }
 
 
@@ -201,7 +200,6 @@ main.with-sidebar {
     /* Hintergrund Weiß, falls es nach Pricing kommt */
     background-color: #ffffff; 
     color: #1a1a1a; 
-    padding: 80px 0 80px 0; 
     text-align: center;
 }
 

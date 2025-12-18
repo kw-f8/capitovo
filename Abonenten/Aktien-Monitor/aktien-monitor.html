@@ -6,7 +6,8 @@
     <title>Aktien‑Monitor — capitovo</title>
         <title>capitovo — Aktien‑Monitor</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script src="../../src/components/insert_components.js" defer></script>
     <style>
         /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
         #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
@@ -62,19 +63,7 @@
             <div class="logo">
                 <a href="../abonenten.html">
                     <img src="../../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
-                </a>
-            </div>
-            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">
-                &#9776;
-            </button>
-        </div>
-    </header>
-
-    <main class="max-w-6xl mx-auto p-6">
-
-        <section class="mb-6">
-            <h1 class="text-3xl font-extrabold mb-2">Aktien‑Monitor</h1>
-            <p class="text-gray-600">Der Aktien Monitor stellt eine strukturierte Übersicht ausgewählter Unternehmen bereit. Nach Auswahl einer Aktie werden detaillierte Informationen zu Kursverlauf, Finanzkennzahlen, Geschäftsmodell und Unternehmensbeschreibung angezeigt.</p>
+                    <div data-include="header"></div>
         </section>
 
         <section class="member-grid">
@@ -115,16 +104,7 @@
     </main>
 
     <footer id="abo" class="site-footer" data-scroll="fade-up" data-scroll-delay="40">
-        <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
-
-            <div class="footer-links flex items-center gap-3">
-                <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
-                <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
-                <a href="../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
-                <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
-            </div>
-        </div>
+        <div data-include="footer"></div>
     </footer>
 
     <!-- Sidebar (members) -->
@@ -212,13 +192,13 @@
     <script>
         (function () {
             const stocks = [
-                { name: 'Apple', ticker: 'AAPL', sector: 'Technologie', href: './aktien-monitor_apple.html', logo: '../../logos/apple_logo.svg' },
-                { name: 'Microsoft', ticker: 'MSFT', sector: 'Technologie', href: './aktie-msft.html', logo: '../../logos/microsoft_logo.svg' },
-                { name: 'Amazon', ticker: 'AMZN', sector: 'Konsum', href: './aktie-amzn.html', logo: '../../logos/amazon_logo.svg' },
-                { name: 'Alphabet', ticker: 'GOOGL', sector: 'Technologie', href: './aktie-googl.html', logo: '../../logos/alphabet_logo.svg' },
-                { name: 'Tesla', ticker: 'TSLA', sector: 'Automobil', href: './aktie-tsla.html', logo: '../../logos/tesla_logo.svg' },
-                { name: 'Meta Platforms', ticker: 'META', sector: 'Technologie', href: './aktie-meta.html', logo: '../../logos/meta_logo.svg' },
-                { name: 'NVIDIA', ticker: 'NVDA', sector: 'Technologie', href: './aktie-nvda.html', logo: '../../logos/nvidia_logo.svg' },
+                { name: 'Apple', ticker: 'AAPL', sector: 'Technologie', href: './aktien-monitor_apple.html', logo: '/logos/apple_logo.svg' },
+                { name: 'Microsoft', ticker: 'MSFT', sector: 'Technologie', href: './aktie-msft.html', logo: '/logos/microsoft_logo.svg' },
+                { name: 'Amazon', ticker: 'AMZN', sector: 'Konsum', href: './aktie-amzn.html', logo: '/logos/amazon_logo.svg' },
+                { name: 'Alphabet', ticker: 'GOOGL', sector: 'Technologie', href: './aktie-googl.html', logo: '/logos/alphabet_logo.svg' },
+                { name: 'Tesla', ticker: 'TSLA', sector: 'Automobil', href: './aktie-tsla.html', logo: '/logos/tesla_logo.svg' },
+                { name: 'Meta Platforms', ticker: 'META', sector: 'Technologie', href: './aktie-meta.html', logo: '/logos/meta_logo.svg' },
+                { name: 'NVIDIA', ticker: 'NVDA', sector: 'Technologie', href: './aktie-nvda.html', logo: '/logos/nvidia_logo.svg' },
                 { name: 'JPMorgan', ticker: 'JPM', sector: 'Finanzen', href: './aktie-jpm.html' },
                 { name: 'Visa', ticker: 'V', sector: 'Finanzen', href: './aktie-v.html' },
                 { name: 'Netflix', ticker: 'NFLX', sector: 'Medien', href: './aktie-nflx.html' },

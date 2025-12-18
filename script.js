@@ -187,7 +187,7 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
     const summary = a.summary || '';
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
     const base = isInAbonenten ? '../' : '';
-    const rawImg = a.image || 'data/vorschaubilder/placeholder.png';
+    const rawImg = a.image || 'data/vorschaubilder_analysen/placeholder.png';
     const img = (/^(https?:)?\/\//i.test(rawImg) || rawImg.startsWith('/')) ? rawImg : (base + rawImg);
     const category = a.category || 'Analyse';
     const link = computeAnalysisLink(a, idx, base);
@@ -1224,7 +1224,7 @@ async function renderAnalysisDetail(){
         const category = analysis.category || '';
         const author = analysis.author || '';
         const date = analysis.date || '';
-        const imgRaw = analysis.image || 'data/vorschaubilder/placeholder.png';
+        const imgRaw = analysis.image || 'data/vorschaubilder_analysen/placeholder.png';
         const img = (/^(https?:)?\/\//i.test(imgRaw) || imgRaw.startsWith('/')) ? imgRaw : ((isInAbonenten ? '../' : '') + imgRaw);
         const bodyHtml = analysis.content ? analysis.content : `<p class="text-gray-700">${(analysis.summary || '')}</p>`;
 

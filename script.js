@@ -202,10 +202,34 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
     const finalLink = hasAccess ? link : '#';
     const onclickAttr = hasAccess ? '' : 'onclick="event.preventDefault(); openSubscriptionModal();"';
 
-    // Return the exact same markup used on the homepage so visuals match site-wide
+    // Favoriten-Status lesen
+    let favorites = [];
+    try { favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favorites = []; }
+    const isFav = favorites.includes(title);
+    const safeTitle = title.replace(/"/g, '&quot;');
+    const favClasses = isFav ? 'text-yellow-400' : 'text-gray-400';
+    const favFill = isFav ? 'currentColor' : 'none';
+    const favLabel = isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen';
+
+    // Return the exact same markup used on the homepage so visuals match site-wide, plus optional Favoriten-Stern
     return `
-            <a href="${finalLink}" ${onclickAttr} class="bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
+            <a href="${finalLink}" ${onclickAttr} class="relative bg-gray-100 p-6 rounded-xl shadow-lg hover:shadow-xl transition duration-300 block overflow-hidden group" data-scroll="fade-up">
             
+            ${showFavorites ? `
+                <button
+                    class="absolute top-3 right-3 inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/90 backdrop-blur border border-gray-200 shadow-sm text-gray-400 hover:text-yellow-500 transition"
+                    aria-label="${favLabel}"
+                    aria-pressed="${isFav ? 'true' : 'false'}"
+                    title="${favLabel}"
+                    data-title="${safeTitle}"
+                    onclick="toggleFavorite(event, this.dataset.title)"
+                >
+                    <svg class="w-5 h-5 ${favClasses}" viewBox="0 0 24 24" fill="${favFill}" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9" />
+                    </svg>
+                </button>
+            ` : ''}
+
             <div class="media bg-gray-200 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
                 <img src="${img}" alt="Vorschaubild für ${title}" 
                      class="w-full h-full object-cover group-hover:opacity-85 transition duration-300">
@@ -249,6 +273,7 @@ function toggleFavorite(event, title) {
     // Update UI icon immediately
     const btn = event.currentTarget;
     const icon = btn.querySelector('svg');
+    btn.setAttribute('aria-pressed', index === -1 ? 'true' : 'false');
     if (index === -1) {
         // Added
         icon.setAttribute('fill', 'currentColor');

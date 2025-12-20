@@ -31,7 +31,8 @@ body {
     background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
     background: none; /* Gradient/Farbe entfernt */
     color: #1a1a1a; /* Textfarbe auf Dunkel gesetzt */
-    padding-bottom: 80px; /* Reduziert den unteren Padding leicht */
+    padding-bottom: 0; /* Hero selbst übernimmt den Innenabstand */
+    margin-bottom: 5rem; /* Abstand zur nächsten Sektion wie bei den übrigen Sections */
     position: relative; 
     overflow: hidden; 
     width: 100%; /* ensure hero wrapper spans full viewport width */
@@ -155,7 +156,7 @@ main.with-sidebar {
 /* --- Hero Sektion --- */
 .hero {
     margin-top: 28px;
-    margin-bottom: 16px;
+    margin-bottom: 0; /* Abstand wird über hero-wrapper + main Sections geregelt */
     text-align: left; /* Überschrift wieder linksbündig */
     padding-top: 1rem;
 }

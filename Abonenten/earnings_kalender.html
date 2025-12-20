@@ -42,11 +42,11 @@
         body.paywall-active header { filter: blur(4px); }
         body.paywall-active footer { filter: blur(4px); }
         
-        .earnings-layout { max-width: 80rem; margin: 0 auto; padding-left: 24px; padding-right: 24px; box-sizing: border-box; }
+        .earnings-layout { max-width: 1090px; margin: 0 auto; padding-left: 24px; padding-right: 24px; box-sizing: border-box; }
 
         /* Hero section */
-        .earnings-hero { background: linear-gradient(135deg, #ffffff 0%, #f3f6fb 100%); border: 1px solid rgba(15,23,42,0.06); border-radius: 16px; padding: 2.25rem; margin-bottom: 1.75rem; box-shadow: var(--shadow-strong); position: relative; overflow: hidden; }
-        .earnings-hero::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at 18% 20%, rgba(59,130,246,0.10), transparent 34%), radial-gradient(circle at 80% 10%, rgba(16,185,129,0.10), transparent 32%); pointer-events:none; }
+        .earnings-hero { background: transparent; border: none; border-radius: 0; padding: 0; margin-bottom: 1.5rem; box-shadow: none; position: relative; overflow: visible; }
+        .earnings-hero::after { content: none; }
         .earnings-hero > * { position: relative; z-index: 1; }
         .earnings-hero h1 { margin: 0 0 10px 0; font-weight: 800; color: #0f172a; font-size: clamp(1.8rem, 2.6vw, 2.5rem); letter-spacing: -0.02em; display:flex; align-items:center; gap:0.6rem; }
         .earnings-hero .subtitle { color: #475569; font-size: 1rem; max-width: 72ch; margin-bottom: 1.25rem; line-height: 1.6; }

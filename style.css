@@ -1014,9 +1014,15 @@ html body .abonenten-page .site-footer .copyright {
 /* Ensure boxes fill their grid cells nicely */
 /* All #financials-overview styles removed (archived). TradingView widget used instead. */
 
-/* Make `#aktien-monitor` visually identical to `#pricing` by forcing colors */
-/* This ensures headings and descriptions appear the same regardless of utility classes */
-#aktien-monitor .text-white { color: #0f172a !important; }
+/* Force identical heading/description colors for Pricing and Aktien-Monitor */
+/* Ensures computed color is the same regardless of utility classes or background */
+#pricing .text-white,
+#aktien-monitor .text-white,
+#pricing h2,
+#pricing h3,
+#pricing p,
+#pricing .text-4xl,
+#pricing .text-xl,
 #aktien-monitor h2,
 #aktien-monitor h3,
 #aktien-monitor p,
@@ -1024,6 +1030,7 @@ html body .abonenten-page .site-footer .copyright {
 #aktien-monitor .text-xl {
     color: #0f172a !important;
 }
+
 
 
 

@@ -911,6 +911,10 @@ main > section {
     padding-bottom: 5rem !important; /* 80px */
 }
 
+/* Engerer Übergang zwischen Aktien-Monitor und Abo-Modelle */
+#aktien-monitor { padding-bottom: 3rem !important; }
+#pricing { padding-top: 3rem !important; }
+
 /* Auf kleinen Bildschirmen etwas enger */
 @media (max-width: 767px) {
     main > section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }

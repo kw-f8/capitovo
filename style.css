@@ -860,6 +860,17 @@ details[open] .details-marker {
     justify-content:space-between;
     gap:12px;
 }
+/* Constrain footer content width to match main content rhythm (same as abonenten pages).
+   This prevents the footer from appearing too wide on the public start page. */
+.site-footer .footer-inner{
+    max-width: 72rem; /* matches .abonenten-page header/main */
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 1.25rem; /* 20px */
+    padding-bottom: 1.25rem;
+}
 .footer-links{ display:flex; gap:12px; align-items:center; }
 .footer-btn{
     display:inline-block;

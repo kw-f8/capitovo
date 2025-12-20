@@ -21,7 +21,7 @@
             --shadow-strong: 0 16px 48px rgba(15,23,42,0.12);
         }
         body { background: #ffffff; color: #0f172a; }
-        main { background: transparent; padding-top: 24px; }
+        main { background: transparent; padding-top: 18px; }
 
         /* Paywall overlay for non-subscribers */
         .paywall-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
@@ -42,10 +42,10 @@
         body.paywall-active header { filter: blur(4px); }
         body.paywall-active footer { filter: blur(4px); }
         
-        .earnings-layout { max-width: 100%; width: 100%; margin: 0; padding: 16px 0 0 0; box-sizing: border-box; }
+        .earnings-layout { max-width: 72rem; width: 100%; margin: 0 auto; padding: 0 20px; box-sizing: border-box; }
 
         /* Hero section */
-        .earnings-hero { background: transparent; border: none; border-radius: 0; padding: 0; margin-bottom: 1.5rem; box-shadow: none; position: relative; overflow: visible; }
+        .earnings-hero { background: transparent; border: none; border-radius: 0; padding: 12px 0 0 0; margin-bottom: 18px; box-shadow: none; position: relative; overflow: visible; }
         .earnings-hero::after { content: none; }
         .earnings-hero > * { position: relative; z-index: 1; }
         .earnings-hero h1 { margin: 0 0 4px 0; font-weight: 800; color: #0f172a; font-size: 1.875rem; letter-spacing: -0.01em; display:flex; align-items:center; gap:0.6rem; }

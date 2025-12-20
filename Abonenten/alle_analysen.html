@@ -42,12 +42,26 @@
             box-sizing: border-box;
         }
 
-        /* Priorisierte Regel für Header und Main-Content */
-        body.alle-analysen-page header .header-content,
-        body.alle-analysen-page main {
+        /* Filterbar-Container: kein zusätzliches Padding, damit Kanten mit Header/Main fluchten */
+        .filter-bar .alle-layout {
+            max-width: 100%;
+            padding: 0 !important;
+            margin: 0;
+        }
+
+        /* Priorisierte Regel für Header; Main erhält Breite über die innere .alle-layout */
+        body.alle-analysen-page header .header-content {
             max-width: 72rem;
             margin: 0 auto !important; /* Zentriert den Inhalt und überschreibt andere Regeln */
             padding: 0 24px !important;
+            box-sizing: border-box;
+        }
+
+        /* Main ohne horizontale Padding/Width, nur Top-Abstand; Breite via .alle-layout */
+        body.alle-analysen-page main {
+            max-width: none;
+            margin: 0;
+            padding: 18px 0 0 0 !important;
             box-sizing: border-box;
         }
 
@@ -199,7 +213,7 @@
     </div>
 </header>
 
-<main class="max-w-6xl mx-auto p-6">
+<main>
     <div class="alle-layout">
         <div class="alle-heading">
             <h1 class="lede">Alle Analysen</h1>

@@ -14,9 +14,10 @@
             .abonenten-page header { position: static !important; box-shadow: none !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
             .abonenten-page .header-content { align-items: center; }
             /* Members layout: single-column by default; main content becomes full-width now that side column was removed */
-            .member-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+            /* Reduced gap to make the layout feel denser */
+            .member-grid { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
             @media (min-width: 768px) { .member-grid { grid-template-columns: 1fr; } }
-            .profile-card { position: sticky; top: 90px; align-self: start; }
+            .profile-card { position: sticky; top: 72px; align-self: start; }
             /* keep the logo image consistent with Startseite */
             .header-logo { position: relative; height: 80px; width: auto; }
 
@@ -61,12 +62,13 @@
                 border: 1px solid #e5e7eb;
                 border-radius: 12px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-                padding: 1.5rem;
+                padding: 1rem;
             }
 
             .profile-card {
                 position: sticky;
-                top: 80px;
+                top: 72px;
+                padding: 1rem;
             }
 
             .profile-card .w-16 {
@@ -187,13 +189,12 @@
                 /* ensure the ticker's inner content aligns with cards that use p-6 (1.5rem) */
                 padding-left: 1.5rem;
                 padding-right: 1.5rem;
-                /* make the ticker etwas dünner: geringere vertikale Innenabstände */
-                padding-top: 0.4rem;
-                padding-bottom: 0.4rem;
-                /* reduce top gap so spacing equals the heading's bottom margin (20-30px target)
-                   and increase bottom gap to 40px (2.5rem) before the Analysen section */
-                margin-top: 0; /* heading already has ~24px bottom (mb-6) → within 20–30px */
-                margin-bottom: 2.5rem; /* 2.5rem = 40px */
+                     /* make the ticker etwas dünner: geringere vertikale Innenabstände */
+                     padding-top: 0.35rem;
+                     padding-bottom: 0.35rem;
+                     /* reduce vertical spacing to tighten layout */
+                     margin-top: 0;
+                     margin-bottom: 1.25rem;
                 min-height: 56px;
                 overflow: visible;
                 display: flex;
@@ -215,10 +216,10 @@
             .member-grid > .no-wrapper h2 { margin-bottom: 0 !important; }
 
             /* Fine-tune the grid gap for tighter card layout (smaller vertical gap) */
-            .member-analyses-grid { gap: 0.75rem !important; }
+            .member-analyses-grid { gap: 0.5rem !important; }
 
-            /* Increase spacing between the ticker bar and the analyses heading */
-            .tradingview-widget-container.ticker-as-card { margin-bottom: 4rem !important; }
+            /* Reduce spacing between the ticker bar and the analyses heading to tighten layout */
+            .tradingview-widget-container.ticker-as-card { margin-bottom: 1.25rem !important; }
 
             /* Styles for the Aktien‑Monitor (page‑lokal) */
             .stock-monitor-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); align-items: center; }

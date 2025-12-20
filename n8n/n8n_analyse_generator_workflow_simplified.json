@@ -1,5 +1,5 @@
 {
-  "name": "capitovo Analyse Generator – Simplified",
+  "name": "capitovo Analyse Generator - Simplified",
   "nodes": [
     {
       "parameters": {
@@ -17,7 +17,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const body = $input.item.json.body || $input.item.json;\n\nconst company = body.company || 'Tesla';\nconst ticker = body.ticker || 'TSLA';\nconst sector = body.sector || 'Zyklischer Konsum';\nconst date = body.date || new Date().toISOString().split('T')[0];\nconst baseDir = $env.BASE_DIR || '/workspaces/capitovo';\nconst slug = (body.filename || `${company}-${ticker}`)\n  .toLowerCase()\n  .replace(/[^a-z0-9]+/g, '-')\n  .replace(/(^-|-$)/g, '');\n\nreturn { json: { company, ticker, sector, date, baseDir, slug } };"
+        "jsCode": "const body = $input.item.json.body || $input.item.json;\nconst company = body.company || 'Tesla';\nconst ticker = body.ticker || 'TSLA';\nconst sector = body.sector || 'Zyklischer Konsum';\nconst date = body.date || new Date().toISOString().split('T')[0];\nconst baseDir = $env.BASE_DIR || '/workspaces/capitovo';\nconst slug = (body.filename || `${company}-${ticker}`)\n  .toLowerCase()\n  .replace(/[^a-z0-9]+/g, '-')\n  .replace(/(^-|-$)/g, '');\nreturn { json: { company, ticker, sector, date, baseDir, slug } };"
       },
       "id": "prepare-input",
       "name": "Prepare Input",
@@ -45,7 +45,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const mock = `## Marktbewertung und Aktienperformance\n- **Aktueller Kurs:** 123.45 USD\n- **Marktkapitalisierung:** 800 Mrd. USD\n\n## Bewertungsmultiples und Finanzkennzahlen\n- KGV: 25.0\n- KBV: 8.5\n\n## Analystenerwartungen\n- Durchschnittliches Kursziel: 135 USD\n- Konsens: Halten\n\n## Fazit\nEmpfehlung: **Halten**`;\nreturn { json: { content: mock } };"
+        "jsCode": "const mock = '## Marktbewertung und Aktienperformance\\n- **Aktueller Kurs:** 123.45 USD\\n- **Marktkapitalisierung:** 800 Mrd. USD\\n\\n## Bewertungsmultiples und Finanzkennzahlen\\n- KGV: 25.0\\n- KBV: 8.5\\n\\n## Analystenerwartungen\\n- Durchschnittliches Kursziel: 135 USD\\n- Konsens: Halten\\n\\n## Fazit\\nEmpfehlung: **Halten**';\nreturn { json: { content: mock } };"
       },
       "id": "mock-content",
       "name": "Mock Content",
@@ -60,7 +60,7 @@
         "options": {},
         "jsonParameters": true,
         "headerParametersJson": "{\"Content-Type\":\"application/json\"}",
-        "bodyParametersJson": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.3,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du schreibst einen prägnanten Equity-Research-Bericht auf Deutsch. Nutze Markdown mit Überschriften (##) und Bulletpoints. Keine Disclaimer einfügen.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Erstelle einen kompakten Research-Text zu {{ $json.company }} ({{ $json.ticker }}) im Sektor {{ $json.sector }}. Gliederung: Marktbewertung, Kennzahlen, Schätzungen, Investment-These, Risiken, Fazit (mit Empfehlung).\"\n    }\n  ]\n}"
+        "bodyParametersJson": "={{ JSON.stringify({ model: 'sonar-pro', temperature: 0.3, messages: [ { role: 'system', content: 'Du schreibst einen prägnanten Equity-Research-Bericht auf Deutsch. Nutze Markdown mit Überschriften (##) und Bulletpoints. Keine Disclaimer einfügen.' }, { role: 'user', content: 'Erstelle einen kompakten Research-Text zu ' + $json.company + ' (' + $json.ticker + ') im Sektor ' + $json.sector + '. Gliederung: Marktbewertung, Kennzahlen, Schätzungen, Investment-These, Risiken, Fazit (mit Empfehlung).' } ] }) }}"
       },
       "id": "perplexity",
       "name": "Perplexity Research",
@@ -76,7 +76,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const input = $input.item.json;\nconst content = input.content || (input.choices?.[0]?.message?.content) || '';\n\nfunction mdToHtml(md) {\n  return md\n    .replace(/^### (.*)$/gm, '<h3>$1</h3>')\n    .replace(/^## (.*)$/gm, '<h2>$1</h2>')\n    .replace(/^# (.*)$/gm, '<h1>$1</h1>')\n    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')\n    .replace(/^- (.*)$/gm, '<li>$1</li>')\n    .replace(/(<li>.*<\\/li>)/gs, '<ul>$1</ul>')\n    .replace(/\n\n/g, '</p><p>')\n    .replace(/\n/g, '<br>');\n}\n\nconst meta = $('Prepare Input').item.json;\nconst htmlContent = mdToHtml(content);\nconst summary = `${meta.company} Equity-Research-Bericht`;\n\nreturn {\n  json: {\n    meta,\n    content: htmlContent,\n    raw: content,\n    summary\n  }\n};"
+        "jsCode": "const input = $input.item.json;\nconst content = input.content || (input.choices?.[0]?.message?.content) || '';\nfunction mdToHtml(md) {\n  return md\n    .replace(/^### (.*)$/gm, '<h3>$1<\\/h3>')\n    .replace(/^## (.*)$/gm, '<h2>$1<\\/h2>')\n    .replace(/^# (.*)$/gm, '<h1>$1<\\/h1>')\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1<\\/strong>')\n    .replace(/^- (.*)$/gm, '<li>$1<\\/li>')\n    .replace(/(<li>.*<\\/li>)/gs, '<ul>$1<\\/ul>')\n    .replace(/\\n\\n/g, '<\\/p><p>')\n    .replace(/\\n/g, '<br>');\n}\nconst meta = $('Prepare Input').item.json;\nconst htmlContent = mdToHtml(content);\nconst summary = `${meta.company} Equity-Research-Bericht`;\nreturn { json: { meta, content: htmlContent, raw: content, summary } };"
       },
       "id": "build-content",
       "name": "Build Content",
@@ -86,7 +86,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const fs = require('fs');\nconst path = require('path');\nconst { meta, content, summary } = $input.item.json;\n\nconst html = `<!DOCTYPE html>\n<html lang=\\"de\\">\n<head>\n  <meta charset=\\"utf-8\\">\n  <meta name=\\"viewport\\" content=\\"width=device-width,initial-scale=1\\">\n  <title>capitovo — ${meta.company} Analyse</title>\n  <link href=\\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\\" rel=\\"stylesheet\\">\n  <link rel=\\"stylesheet\\" href=\\"../style.css\\">\n</head>\n<body class=\\"abonenten-page bg-white text-gray-900\\">\n  <header>\n    <div class=\\"header-content\\">\n      <div class=\\"logo\\">\n        <a href=\\"./abonenten.html\\">\n          <img src=\\"../assets/capitovo_logo_weiß.png\\" alt=\\"capitovo Logo\\" class=\\"header-logo\\">\n        </a>\n      </div>\n    </div>\n  </header>\n  <main class=\\"max-w-4xl mx-auto p-6\\">\n    <div class=\\"mb-4\\">\n      <a href=\\"./alle_analysen.html\\" class=\\"text-blue-600\\">← Zurück</a>\n    </div>\n    <article>\n      <p class=\\"text-xs uppercase text-gray-500 mb-2\\">${meta.sector} • ${meta.ticker}</p>\n      <h1 class=\\"text-3xl font-bold mb-4\\">${meta.company}: Equity-Research-Bericht</h1>\n      <p class=\\"text-sm text-gray-500 mb-6\\">capitovo Research • ${meta.date}</p>\n      <div class=\\"prose max-w-none\\">${content}</div>\n      <hr class=\\"my-8\\">\n      <p class=\\"text-sm text-gray-600\\"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar.</p>\n    </article>\n  </main>\n  <footer class=\\"border-t py-6 mt-12 text-center text-sm text-gray-500\\">\n    <div>&copy; ${new Date().getFullYear()} capitovo — Alle Rechte vorbehalten.</div>\n  </footer>\n  <script src=\\"../script.js\\"></script>\n</body>\n</html>`;\n\nconst htmlPath = path.join(meta.baseDir, 'Abonenten', `${meta.slug}.html`);\nfs.writeFileSync(htmlPath, html, 'utf8');\n\n// Update analysen.json\nconst jsonPath = path.join(meta.baseDir, 'data', 'analysen.json');\nlet analysen = [];\ntry { analysen = JSON.parse(fs.readFileSync(jsonPath, 'utf8')); } catch (e) { analysen = []; }\nconst entry = {\n  id: `${meta.ticker.toLowerCase()}-${meta.date}` ,\n  category: meta.sector,\n  title: `${meta.company}: Equity-Research-Bericht`,\n  summary: summary,\n  link: `Abonenten/${meta.slug}.html`,\n  image: `data/vorschaubilder/${meta.slug}.svg`,\n  date: meta.date,\n  author: 'capitovo Research',\n  tags: [meta.company, meta.ticker, meta.sector],\n  published: true\n};\nanalysen.unshift(entry);\nfs.writeFileSync(jsonPath, JSON.stringify(analysen, null, 2), 'utf8');\n\n// Generate simple SVG placeholder\nconst svg = `<svg width=\\"640\\" height=\\"360\\" viewBox=\\"0 0 640 360\\" xmlns=\\"http://www.w3.org/2000/svg\\">\n  <defs><linearGradient id=\\"bg\\" x1=\\"0%\\" y1=\\"0%\\" x2=\\"100%\\" y2=\\"100%\\"><stop offset=\\"0%\\" stop-color=\\"#0f172a\\" /><stop offset=\\"100%\\" stop-color=\\"#1e293b\\" /></linearGradient></defs>\n  <rect width=\\"640\\" height=\\"360\\" fill=\\"url(#bg)\\" rx=\\"24\\" />\n  <g transform=\\"translate(60 60)\\" fill=\\"#e2e8f0\\" font-family=\\"'Inter', sans-serif\\">\n    <text x=\\"0\\" y=\\"14\\" fill=\\"#94a3b8\\" font-size=\\"14\\" letter-spacing=\\"0.2em\\">${meta.ticker}</text>\n    <text x=\\"0\\" y=\\"58\\" font-size=\\"40\\" font-weight=\\"700\\">${meta.company}</text>\n    <text x=\\"0\\" y=\\"96\\" fill=\\"#93c5fd\\" font-size=\\"18\\">Equity Research • capitovo</text>\n  </g>\n</svg>`;\nconst svgPath = path.join(meta.baseDir, 'data', 'vorschaubilder', `${meta.slug}.svg`);\nfs.writeFileSync(svgPath, svg, 'utf8');\n\nreturn { json: { success: true, htmlPath, svgPath, entry } };"
+        "jsCode": "const fs = require('fs');\nconst path = require('path');\nconst { meta, content, summary } = $input.item.json;\nconst htmlParts = [];\nhtmlParts.push('<!DOCTYPE html>');\nhtmlParts.push('<html lang=\\\"de\\\">');\nhtmlParts.push('<head>');\nhtmlParts.push('  <meta charset=\\\"utf-8\\\">');\nhtmlParts.push('  <meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\">');\nhtmlParts.push('  <title>capitovo — ' + meta.company + ' Analyse</title>');\nhtmlParts.push('  <link href=\\\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\\\" rel=\\\"stylesheet\\\">');\nhtmlParts.push('  <link rel=\\\"stylesheet\\\" href=\\\"../style.css\\\">');\nhtmlParts.push('</head>');\nhtmlParts.push('<body class=\\\"abonenten-page bg-white text-gray-900\\\">');\nhtmlParts.push('  <header>');\nhtmlParts.push('    <div class=\\\"header-content\\\">');\nhtmlParts.push('      <div class=\\\"logo\\\">');\nhtmlParts.push('        <a href=\\\"./abonenten.html\\\">');\nhtmlParts.push('          <img src=\\\"../assets/capitovo_logo_weiß.png\\\" alt=\\\"capitovo Logo\\\" class=\\\"header-logo\\\">');\nhtmlParts.push('        </a>');\nhtmlParts.push('      </div>');\nhtmlParts.push('    </div>');\nhtmlParts.push('  </header>');\nhtmlParts.push('  <main class=\\\"max-w-4xl mx-auto p-6\\\">');\nhtmlParts.push('    <div class=\\\"mb-4\\\">');\nhtmlParts.push('      <a href=\\\"./alle_analysen.html\\\" class=\\\"text-blue-600\\\">← Zurück</a>');\nhtmlParts.push('    </div>');\nhtmlParts.push('    <article>');\nhtmlParts.push('      <p class=\\\"text-xs uppercase text-gray-500 mb-2\\\">' + meta.sector + ' • ' + meta.ticker + '</p>');\nhtmlParts.push('      <h1 class=\\\"text-3xl font-bold mb-4\\\">' + meta.company + ': Equity-Research-Bericht</h1>');\nhtmlParts.push('      <p class=\\\"text-sm text-gray-500 mb-6\\\">capitovo Research • ' + meta.date + '</p>');\nhtmlParts.push('      <div class=\\\"prose max-w-none\\\">' + content + '</div>');\nhtmlParts.push('      <hr class=\\\"my-8\\\">');\nhtmlParts.push('      <p class=\\\"text-sm text-gray-600\\\"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar.</p>');\nhtmlParts.push('    </article>');\nhtmlParts.push('  </main>');\nhtmlParts.push('  <footer class=\\\"border-t py-6 mt-12 text-center text-sm text-gray-500\\\">');\nhtmlParts.push('    <div>&copy; ' + new Date().getFullYear() + ' capitovo — Alle Rechte vorbehalten.</div>');\nhtmlParts.push('  </footer>');\nhtmlParts.push('  <script src=\\\"../script.js\\\"></script>');\nhtmlParts.push('</body>');\nhtmlParts.push('</html>');\nconst html = htmlParts.join('\\n');\nconst htmlPath = path.join(meta.baseDir, 'Abonenten', `${meta.slug}.html`);\nfs.writeFileSync(htmlPath, html, 'utf8');\nconst jsonPath = path.join(meta.baseDir, 'data', 'analysen.json');\nlet analysen = [];\ntry { analysen = JSON.parse(fs.readFileSync(jsonPath, 'utf8')); } catch (e) { analysen = []; }\nconst entry = {\n  id: `${meta.ticker.toLowerCase()}-${meta.date}` ,\n  category: meta.sector,\n  title: `${meta.company}: Equity-Research-Bericht`,\n  summary: summary,\n  link: `Abonenten/${meta.slug}.html`,\n  image: `data/vorschaubilder/${meta.slug}.svg`,\n  date: meta.date,\n  author: 'capitovo Research',\n  tags: [meta.company, meta.ticker, meta.sector],\n  published: true\n};\nanalysen.unshift(entry);\nfs.writeFileSync(jsonPath, JSON.stringify(analysen, null, 2), 'utf8');\nconst svg = '<svg width=\\\"640\\\" height=\\\"360\\\" viewBox=\\\"0 0 640 360\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\">' +\n  '<defs><linearGradient id=\\\"bg\\\" x1=\\\"0%\\\" y1=\\\"0%\\\" x2=\\\"100%\\\" y2=\\\"100%\\\"><stop offset=\\\"0%\\\" stop-color=\\\"#0f172a\\\" /><stop offset=\\\"100%\\\" stop-color=\\\"#1e293b\\\" /></linearGradient></defs>' +\n  '<rect width=\\\"640\\\" height=\\\"360\\\" fill=\\\"url(#bg)\\\" rx=\\\"24\\\" />' +\n  '<g transform=\\\"translate(60 60)\\\" fill=\\\"#e2e8f0\\\" font-family=\\\"Inter, sans-serif\\\">' +\n    '<text x=\\\"0\\\" y=\\\"14\\\" fill=\\\"#94a3b8\\\" font-size=\\\"14\\\" letter-spacing=\\\"0.2em\\\">' + meta.ticker + '</text>' +\n    '<text x=\\\"0\\\" y=\\\"58\\\" font-size=\\\"40\\\" font-weight=\\\"700\\\">' + meta.company + '</text>' +\n    '<text x=\\\"0\\\" y=\\\"96\\\" fill=\\\"#93c5fd\\\" font-size=\\\"18\\\">Equity Research • capitovo</text>' +\n  '</g>' +\n'</svg>';\nconst svgPath = path.join(meta.baseDir, 'data', 'vorschaubilder', `${meta.slug}.svg`);\nfs.writeFileSync(svgPath, svg, 'utf8');\nreturn { json: { success: true, htmlPath, svgPath, entry } };"
       },
       "id": "write-files",
       "name": "Write Files",
@@ -108,205 +108,91 @@
   ],
   "connections": {
     "Webhook Trigger": {
-      "main": [ [ { "node": "Prepare Input", "type": "main", "index": 0 } ] ]
+      "main": [
+        [
+          {
+            "node": "Prepare Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Prepare Input": {
-      "main": [ [ { "node": "Test Mode?", "type": "main", "index": 0 } ] ]
-    {
-      "name": "capitovo Analyse Generator – Simplified",
-      "nodes": [
-        {
-          "parameters": {
-            "httpMethod": "POST",
-            "path": "create-analysis-simple",
-            "responseMode": "lastNode",
-            "options": {}
-          },
-          "id": "webhook-trigger",
-          "name": "Webhook Trigger",
-          "type": "n8n-nodes-base.webhook",
-          "typeVersion": 1,
-          "position": [200, 300],
-          "webhookId": "capitovo-analysis-simple"
-        },
-        {
-          "parameters": {
-            "jsCode": "const body = $input.item.json.body || $input.item.json;\nconst company = body.company || 'Tesla';\nconst ticker = body.ticker || 'TSLA';\nconst sector = body.sector || 'Zyklischer Konsum';\nconst date = body.date || new Date().toISOString().split('T')[0];\nconst baseDir = $env.BASE_DIR || '/workspaces/capitovo';\nconst slug = (body.filename || `${company}-${ticker}`)\n  .toLowerCase()\n  .replace(/[^a-z0-9]+/g, '-')\n  .replace(/(^-|-$)/g, '');\nreturn { json: { company, ticker, sector, date, baseDir, slug } };"
-          },
-          "id": "prepare-input",
-          "name": "Prepare Input",
-          "type": "n8n-nodes-base.code",
-          "typeVersion": 2,
-          "position": [420, 300]
-        },
-        {
-          "parameters": {
-            "conditions": {
-              "string": [
-                {
-                  "value1": "={{ $env.TEST_MODE }}",
-                  "operation": "equals",
-                  "value2": "true"
-                }
-              ]
-            }
-          },
-          "id": "if-test",
-          "name": "Test Mode?",
-          "type": "n8n-nodes-base.if",
-          "typeVersion": 2,
-          "position": [640, 300]
-        },
-        {
-          "parameters": {
-            "jsCode": "const mock = `## Marktbewertung und Aktienperformance\n- **Aktueller Kurs:** 123.45 USD\n- **Marktkapitalisierung:** 800 Mrd. USD\n\n## Bewertungsmultiples und Finanzkennzahlen\n- KGV: 25.0\n- KBV: 8.5\n\n## Analystenerwartungen\n- Durchschnittliches Kursziel: 135 USD\n- Konsens: Halten\n\n## Fazit\nEmpfehlung: **Halten**`;\nreturn { json: { content: mock } };"
-          },
-          "id": "mock-content",
-          "name": "Mock Content",
-          "type": "n8n-nodes-base.code",
-          "typeVersion": 2,
-          "position": [860, 200]
-        },
-        {
-          "parameters": {
-            "authentication": "headerAuth",
-            "url": "https://api.perplexity.ai/chat/completions",
-            "options": {},
-            "jsonParameters": true,
-            "headerParametersJson": "{\"Content-Type\":\"application/json\"}",
-            "bodyParametersJson": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.3,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du schreibst einen prägnanten Equity-Research-Bericht auf Deutsch. Nutze Markdown mit Überschriften (##) und Bulletpoints. Keine Disclaimer einfügen.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Erstelle einen kompakten Research-Text zu {{ $json.company }} ({{ $json.ticker }}) im Sektor {{ $json.sector }}. Gliederung: Marktbewertung, Kennzahlen, Schätzungen, Investment-These, Risiken, Fazit (mit Empfehlung).\"\n    }\n  ]\n}"
-          },
-          "id": "perplexity",
-          "name": "Perplexity Research",
-          "type": "n8n-nodes-base.httpRequest",
-          "typeVersion": 4,
-          "position": [860, 400],
-          "credentials": {
-            "httpHeaderAuth": {
-              "id": "perplexity-api-key",
-              "name": "Perplexity API"
-            }
+      "main": [
+        [
+          {
+            "node": "Test Mode?",
+            "type": "main",
+            "index": 0
           }
-        },
-        {
-          "parameters": {
-            "jsCode": "const input = $input.item.json;\nconst content = input.content || (input.choices && input.choices[0] && input.choices[0].message && input.choices[0].message.content) || '';\nfunction mdToHtml(md) {\n  return md\n    .replace(/^### (.*)$/gm, '<h3>$1<\/h3>')\n    .replace(/^## (.*)$/gm, '<h2>$1<\/h2>')\n    .replace(/^# (.*)$/gm, '<h1>$1<\/h1>')\n    .replace(/\*\*(.+?)\*\*/g, '<strong>$1<\/strong>')\n    .replace(/^- (.*)$/gm, '<li>$1<\/li>')\n    .replace(/(<li>.*<\/li>)/gs, '<ul>$1<\/ul>')\n    .replace(/\n\n/g, '<\/p><p>')\n    .replace(/\n/g, '<br>');\n}\nconst meta = $('Prepare Input').item.json;\nconst htmlContent = mdToHtml(content);\nconst summary = `${meta.company} Equity-Research-Bericht`;\nreturn { json: { meta, content: htmlContent, raw: content, summary } };"
-          },
-          "id": "build-content",
-          "name": "Build Content",
-          "type": "n8n-nodes-base.code",
-          "typeVersion": 2,
-          "position": [1080, 300]
-        },
-        {
-          "parameters": {
-            "jsCode": "const fs = require('fs');\nconst path = require('path');\nconst { meta, content, summary } = $input.item.json;\nconst html = `<!DOCTYPE html>\n<html lang=\\\"de\\\">\n<head>\n  <meta charset=\\\"utf-8\\\">\n  <meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\">\n  <title>capitovo — ${meta.company} Analyse</title>\n  <link href=\\\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\\\" rel=\\\"stylesheet\\\">\n  <link rel=\\\"stylesheet\\\" href=\\\"../style.css\\\">\n</head>\n<body class=\\\"abonenten-page bg-white text-gray-900\\\">\n  <header>\n    <div class=\\\"header-content\\\">\n      <div class=\\\"logo\\\">\n        <a href=\\\"./abonenten.html\\\">\n          <img src=\\\"../assets/capitovo_logo_weiß.png\\\" alt=\\\"capitovo Logo\\\" class=\\\"header-logo\\\">\n        </a>\n      </div>\n    </div>\n  </header>\n  <main class=\\\"max-w-4xl mx-auto p-6\\\">\n    <div class=\\\"mb-4\\\">\n      <a href=\\\"./alle_analysen.html\\\" class=\\\"text-blue-600\\\">← Zurück</a>\n    </div>\n    <article>\n      <p class=\\\"text-xs uppercase text-gray-500 mb-2\\\">${meta.sector} • ${meta.ticker}</p>\n      <h1 class=\\\"text-3xl font-bold mb-4\\\">${meta.company}: Equity-Research-Bericht</h1>\n      <p class=\\\"text-sm text-gray-500 mb-6\\\">capitovo Research • ${meta.date}</p>\n      <div class=\\\"prose max-w-none\\\">${content}</div>\n      <hr class=\\\"my-8\\\">\n      <p class=\\\"text-sm text-gray-600\\\"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar.</p>\n    </article>\n  </main>\n  <footer class=\\\"border-t py-6 mt-12 text-center text-sm text-gray-500\\\">\n    <div>&copy; ${new Date().getFullYear()} capitovo — Alle Rechte vorbehalten.</div>\n  </footer>\n  <script src=\\\"../script.js\\\"></script>\n</body>\n</html>`;\nconst htmlPath = path.join(meta.baseDir, 'Abonenten', `${meta.slug}.html`);\nfs.writeFileSync(htmlPath, html, 'utf8');\nconst jsonPath = path.join(meta.baseDir, 'data', 'analysen.json');\nlet analysen = [];\ntry { analysen = JSON.parse(fs.readFileSync(jsonPath, 'utf8')); } catch (e) { analysen = []; }\nconst entry = {\n  id: `${meta.ticker.toLowerCase()}-${meta.date}` ,\n  category: meta.sector,\n  title: `${meta.company}: Equity-Research-Bericht`,\n  summary: summary,\n  link: `Abonenten/${meta.slug}.html`,\n  image: `data/vorschaubilder/${meta.slug}.svg`,\n  date: meta.date,\n  author: 'capitovo Research',\n  tags: [meta.company, meta.ticker, meta.sector],\n  published: true\n};\nanalysen.unshift(entry);\nfs.writeFileSync(jsonPath, JSON.stringify(analysen, null, 2), 'utf8');\nconst svg = `<svg width=\\\"640\\\" height=\\\"360\\\" viewBox=\\\"0 0 640 360\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\">\n  <defs><linearGradient id=\\\"bg\\\" x1=\\\"0%\\\" y1=\\\"0%\\\" x2=\\\"100%\\\" y2=\\\"100%\\\"><stop offset=\\\"0%\\\" stop-color=\\\"#0f172a\\\" /><stop offset=\\\"100%\\\" stop-color=\\\"#1e293b\\\" /></linearGradient></defs>\n  <rect width=\\\"640\\\" height=\\\"360\\\" fill=\\\"url(#bg)\\\" rx=\\\"24\\\" />\n  <g transform=\\\"translate(60 60)\\\" fill=\\\"#e2e8f0\\\" font-family=\\\"'Inter', sans-serif\\\">\n    <text x=\\\"0\\\" y=\\\"14\\\" fill=\\\"#94a3b8\\\" font-size=\\\"14\\\" letter-spacing=\\\"0.2em\\\">${meta.ticker}</text>\n    <text x=\\\"0\\\" y=\\\"58\\\" font-size=\\\"40\\\" font-weight=\\\"700\\\">${meta.company}</text>\n    <text x=\\\"0\\\" y=\\\"96\\\" fill=\\\"#93c5fd\\\" font-size=\\\"18\\\">Equity Research • capitovo</text>\n  </g>\n</svg>`;\nconst svgPath = path.join(meta.baseDir, 'data', 'vorschaubilder', `${meta.slug}.svg`);\nfs.writeFileSync(svgPath, svg, 'utf8');\nreturn { json: { success: true, htmlPath, svgPath, entry } };"
-          },
-          "id": "write-files",
-          "name": "Write Files",
-          "type": "n8n-nodes-base.code",
-          "typeVersion": 2,
-          "position": [1280, 300]
-        },
-        {
-          "parameters": {
-            "respondWith": "json",
-            "responseBody": "={{ $json }}"
-          },
-          "id": "respond",
-          "name": "Webhook Response",
-          "type": "n8n-nodes-base.respondToWebhook",
-          "typeVersion": 1,
-          "position": [1480, 300]
-        }
-      ],
-      "connections": {
-        "Webhook Trigger": {
-          "main": [
-            [
-              {
-                "node": "Prepare Input",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        },
-        "Prepare Input": {
-          "main": [
-            [
-              {
-                "node": "Test Mode?",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        },
-        "Test Mode?": {
-          "main": [
-            [
-              {
-                "node": "Mock Content",
-                "type": "main",
-                "index": 0
-              }
-            ],
-            [
-              {
-                "node": "Perplexity Research",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        },
-        "Mock Content": {
-          "main": [
-            [
-              {
-                "node": "Build Content",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        },
-        "Perplexity Research": {
-          "main": [
-            [
-              {
-                "node": "Build Content",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        },
-        "Build Content": {
-          "main": [
-            [
-              {
-                "node": "Write Files",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        },
-        "Write Files": {
-          "main": [
-            [
-              {
-                "node": "Webhook Response",
-                "type": "main",
-                "index": 0
-              }
-            ]
-          ]
-        }
-      },
-      "settings": {
-        "executionOrder": "v1"
-      }
+        ]
+      ]
+    },
+    "Test Mode?": {
+      "main": [
+        [
+          {
+            "node": "Mock Content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Perplexity Research",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Content": {
+      "main": [
+        [
+          {
+            "node": "Build Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity Research": {
+      "main": [
+        [
+          {
+            "node": "Build Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Content": {
+      "main": [
+        [
+          {
+            "node": "Write Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Files": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

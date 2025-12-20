@@ -787,23 +787,26 @@ function initSidebar() {
     // helper functions to open/close/toggle sidebar
     function openSidebar(){
         try{
-            // mark sidebar open and make it visible; keep styles defensive
+            // Rely on the CSS `.open` class to animate the transform.
+            // Avoid writing inline `transform`/`opacity` which can cancel transitions
+            // or cause a visual jump on first open after reload.
+            // Ensure sidebar is visible for assistive tech and prevent background scroll.
+            sidebarElement.style.display = sidebarElement.style.display || 'block';
             sidebarElement.classList.add('open');
-            sidebarElement.style.width = sidebarElement.style.width || '300px';
-            sidebarElement.style.transform = 'none';
-            sidebarElement.style.display = 'block';
-            sidebarElement.style.opacity = '1';
             sidebarElement.style.pointerEvents = 'auto';
-            sidebarElement.style.zIndex = '10050';
+            sidebarElement.style.zIndex = sidebarElement.style.zIndex || '10050';
             try{ menuToggle.setAttribute('aria-expanded','true'); }catch(e){}
+            sidebarElement.setAttribute('aria-hidden','false');
             document.body.style.overflow = 'hidden';
         } catch(err){ console.error('openSidebar error', err); }
     }
     function closeSidebar(){
         try{
-            // closing sidebar
+            // Remove the open class and restore page scrolling. Keep display value
+            // as-is to avoid relayout glitches; pointer-events are disabled so
+            // the hidden sidebar doesn't intercept clicks.
             sidebarElement.classList.remove('open');
-            try{ sidebarElement.style.transform = ''; sidebarElement.style.display = ''; sidebarElement.style.opacity = ''; sidebarElement.style.pointerEvents = ''; /* keep zIndex for stacking */ } catch(e){}
+            try{ sidebarElement.style.pointerEvents = 'none'; } catch(e){}
             sidebarElement.setAttribute('aria-hidden','true');
             try{ menuToggle.setAttribute('aria-expanded','false'); }catch(e){}
             document.body.style.overflow = '';

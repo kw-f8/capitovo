@@ -922,9 +922,9 @@ main > section {
     padding-bottom: 5rem !important; /* 80px */
 }
 
-/* Übergang zwischen Aktien-Monitor und Abo-Modelle: noch enger, symmetrischer Abstand */
-#aktien-monitor { padding-bottom: 2rem !important; }
-#pricing { padding-top: 2rem !important; }
+/* Übergang zwischen Aktien-Monitor und Abo-Modelle: Ziel ~170px Gesamtabstand */
+#aktien-monitor { padding-bottom: 4.5rem !important; } /* ~72px */
+#pricing { padding-top: 6rem !important; }       /* ~96px; Summe ~168px */
 
 /* Auf kleinen Bildschirmen etwas enger */
 @media (max-width: 767px) {

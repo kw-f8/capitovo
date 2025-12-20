@@ -217,7 +217,7 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
             
             ${showFavorites ? `
                 <button
-                    class="absolute top-3 right-3 inline-flex items-center justify-center w-8 h-8 p-0 text-gray-400 hover:text-yellow-400 transition-colors"
+                    class="absolute top-3 right-3 inline-flex items-center justify-center w-8 h-8 p-0 text-gray-400 hover:text-yellow-400 transition-colors z-10"
                     style="background:transparent;border:none"
                     aria-label="${favLabel}"
                     aria-pressed="${isFav ? 'true' : 'false'}"

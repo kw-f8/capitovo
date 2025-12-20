@@ -13,9 +13,15 @@
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
         /* Page layout */
-        :root { --page-white: #ffffff; --muted-white: #fbfbfc; }
-        body { background: var(--muted-white); }
-        main { background: transparent; padding-top: 18px; }
+        :root {
+            --page-white: #ffffff;
+            --muted-white: #0b1220;
+            --card-glass: rgba(255,255,255,0.06);
+            --card-border: rgba(255,255,255,0.08);
+            --shadow-strong: 0 18px 60px rgba(0,0,0,0.28);
+        }
+        body { background: radial-gradient(circle at 20% 20%, rgba(56,100,255,0.08), transparent 32%), radial-gradient(circle at 80% 0%, rgba(16,190,255,0.08), transparent 26%), #0b1220; color: #e5e7ef; }
+        main { background: transparent; padding-top: 24px; }
 
         /* Paywall overlay for non-subscribers */
         .paywall-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
@@ -36,68 +42,76 @@
         body.paywall-active header { filter: blur(4px); }
         body.paywall-active footer { filter: blur(4px); }
         
-        .earnings-layout { max-width: 1200px; margin: 0 auto; padding-left: 20px; padding-right: 20px; box-sizing: border-box; }
+        .earnings-layout { max-width: 72rem; margin: 0 auto; padding-left: 24px; padding-right: 24px; box-sizing: border-box; }
 
         /* Hero section */
-        .earnings-hero { background: var(--page-white); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 6px 20px rgba(2,6,23,0.06); }
-        .earnings-hero h1 { margin: 0 0 12px 0; font-weight: 700; color: #0f172a; font-size: clamp(1.6rem, 2.5vw, 2.2rem); line-height: 1.1; }
-        .earnings-hero .subtitle { color: #475569; font-size: 1rem; max-width: 70ch; margin-bottom: 1.5rem; }
+        .earnings-hero { background: linear-gradient(135deg, rgba(36,53,75,0.72), rgba(27,37,59,0.9)); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 2.25rem; margin-bottom: 1.75rem; box-shadow: var(--shadow-strong); position: relative; overflow: hidden; }
+        .earnings-hero::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at 18% 20%, rgba(94,234,212,0.08), transparent 35%), radial-gradient(circle at 80% 10%, rgba(59,130,246,0.14), transparent 32%); pointer-events:none; }
+        .earnings-hero > * { position: relative; z-index: 1; }
+        .earnings-hero h1 { margin: 0 0 10px 0; font-weight: 800; color: #f8fafc; font-size: clamp(1.8rem, 2.6vw, 2.5rem); letter-spacing: -0.02em; display:flex; align-items:center; gap:0.6rem; }
+        .earnings-hero .subtitle { color: #cdd6e6; font-size: 1rem; max-width: 72ch; margin-bottom: 1.25rem; line-height: 1.6; }
+        .hero-meta { display:flex; flex-wrap:wrap; gap:0.75rem; color:#cdd6e6; font-size:0.95rem; }
+        .pill { display:inline-flex; align-items:center; gap:0.4rem; padding: 0.4rem 0.85rem; border-radius: 999px; background: rgba(255,255,255,0.08); color:#e5e7ef; font-weight:700; letter-spacing:0.01em; }
         
         /* Filter bar */
-        .filter-bar { background: var(--page-white); border-radius: 10px; padding: 1rem; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(2,6,23,0.05); }
-        .filter-bar .filter-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
-        .filter-bar label { font-weight: 600; font-size: 0.9rem; color: #0f172a; white-space: nowrap; }
-        .filter-bar select { height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid rgba(15,23,42,0.08); background: white; font-size: 0.95rem; color: #0f172a; min-width: 180px; }
+        .filter-bar { background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); border-radius: 14px; padding: 1.1rem 1.25rem; margin-bottom: 1.5rem; box-shadow: 0 12px 40px rgba(0,0,0,0.18); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+        .filter-bar .filter-row { display: flex; flex-wrap: wrap; gap: 0.85rem; align-items: center; }
+        .filter-bar label { font-weight: 700; font-size: 0.9rem; color: #e5e7ef; white-space: nowrap; }
+        .filter-bar select { height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); font-size: 0.95rem; color: #f1f5f9; min-width: 180px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
+        .filter-legend { display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:0.75rem; color:#cbd5f5; font-size:0.88rem; }
+        .legend-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+        .ghost-btn { padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color:#f8fafc; font-weight:700; cursor:pointer; transition: all 0.18s; }
+        .ghost-btn:hover { border-color: rgba(59,130,246,0.6); box-shadow: 0 12px 30px rgba(59,130,246,0.24); }
         
         /* Calendar view toggle */
-        .view-toggle { display: flex; gap: 0.5rem; background: #f1f5f9; padding: 4px; border-radius: 8px; }
-        .view-toggle button { padding: 8px 16px; border-radius: 6px; border: none; background: transparent; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; color: #64748b; }
-        .view-toggle button.active { background: white; color: #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .view-toggle button:hover:not(.active) { color: #0f172a; }
+        .view-toggle { display: flex; gap: 0.4rem; background: rgba(255,255,255,0.06); padding: 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); }
+        .view-toggle button { padding: 8px 14px; border-radius: 8px; border: none; background: transparent; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: all 0.18s; color: #cbd5f5; letter-spacing: 0.01em; }
+        .view-toggle button.active { background: linear-gradient(135deg, #3b82f6, #2563eb); color: #f8fafc; box-shadow: 0 10px 30px rgba(59,130,246,0.28); }
+        .view-toggle button:hover:not(.active) { color: #f8fafc; }
 
         /* Calendar grid */
-        .calendar-container { background: var(--page-white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 6px 20px rgba(2,6,23,0.06); }
+        .calendar-container { background: rgba(255,255,255,0.04); border-radius: 14px; padding: 1.5rem; box-shadow: 0 16px 40px rgba(0,0,0,0.22); border:1px solid rgba(255,255,255,0.08); }
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
-        .calendar-header .day-name { text-align: center; font-weight: 700; color: #64748b; font-size: 0.85rem; padding: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .calendar-header .day-name { text-align: center; font-weight: 800; color: #cbd5f5; font-size: 0.85rem; padding: 0.5rem; text-transform: uppercase; letter-spacing: 0.6px; }
         
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
-        .calendar-day { background: white; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 120px; padding: 0.75rem; transition: all 0.2s; position: relative; }
-        .calendar-day:hover { border-color: #3b82f6; box-shadow: 0 4px 12px rgba(59,130,246,0.1); transform: translateY(-2px); }
-        .calendar-day.other-month { background: #f8fafc; opacity: 0.5; }
-        .calendar-day.today { border: 2px solid #3b82f6; background: #eff6ff; }
+        .calendar-day { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; min-height: 120px; padding: 0.75rem; transition: all 0.2s; position: relative; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+        .calendar-day:hover { border-color: #3b82f6; box-shadow: 0 10px 24px rgba(59,130,246,0.16); transform: translateY(-2px); }
+        .calendar-day.other-month { background: rgba(255,255,255,0.03); opacity: 0.45; }
+        .calendar-day.today { border: 1.8px solid #3b82f6; background: rgba(59,130,246,0.08); box-shadow: 0 12px 30px rgba(59,130,246,0.16); }
         
-        .day-number { font-weight: 700; color: #0f172a; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .day-number { font-weight: 800; color: #e5e7ef; font-size: 0.95rem; margin-bottom: 0.5rem; }
         .calendar-day.other-month .day-number { color: #94a3b8; }
         
         /* Earnings events in calendar */
-        .earnings-event { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .earnings-event:hover { transform: scale(1.02); box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
-        .earnings-event.pre-market { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .earnings-event.after-market { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .earnings-event { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; padding: 6px 8px; border-radius: 8px; margin-bottom: 5px; font-size: 0.78rem; cursor: pointer; transition: all 0.18s; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-shadow: 0 8px 20px rgba(59,130,246,0.3); }
+        .earnings-event:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(59,130,246,0.42); }
+        .earnings-event.pre-market { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 10px 26px rgba(16,185,129,0.35); }
+        .earnings-event.after-market { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 10px 26px rgba(245,158,11,0.35); }
         
         /* List view */
-        .earnings-list { background: var(--page-white); border-radius: 12px; box-shadow: 0 6px 20px rgba(2,6,23,0.06); overflow: hidden; }
-        .earnings-list-header { background: #f8fafc; padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; font-weight: 700; color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
-        .earnings-list-row { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f1f5f9; display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; align-items: center; transition: all 0.2s; }
-        .earnings-list-row:hover { background: #f8fafc; }
+        .earnings-list { background: rgba(255,255,255,0.04); border-radius: 14px; box-shadow: 0 18px 50px rgba(0,0,0,0.28); overflow: hidden; border:1px solid rgba(255,255,255,0.08); }
+        .earnings-list-header { background: rgba(255,255,255,0.04); padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.07); display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; font-weight: 800; color: #cbd5f5; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .earnings-list-row { padding: 1.15rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-columns: 150px 200px 1fr 120px 120px 100px; gap: 1rem; align-items: center; transition: all 0.2s; color:#e5e7ef; }
+        .earnings-list-row:hover { background: rgba(255,255,255,0.04); }
         .earnings-list-row:last-child { border-bottom: none; }
         
-        .earnings-date { font-weight: 600; color: #0f172a; }
+        .earnings-date { font-weight: 700; color: #f8fafc; }
         .company-info { display: flex; align-items: center; gap: 0.75rem; }
-        .company-logo { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; background: #f1f5f9; }
-        .company-name { font-weight: 600; color: #0f172a; }
-        .ticker { color: #64748b; font-size: 0.9rem; }
+        .company-logo { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); }
+        .company-name { font-weight: 700; color: #f8fafc; }
+        .ticker { color: #cbd5f5; font-size: 0.9rem; }
         
-        .estimate { font-weight: 600; color: #0f172a; }
-        .time-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; }
-        .time-badge.pre { background: #d1fae5; color: #065f46; }
-        .time-badge.market { background: #dbeafe; color: #1e40af; }
-        .time-badge.after { background: #fed7aa; color: #92400e; }
+        .estimate { font-weight: 700; color: #f8fafc; }
+        .time-badge { display: inline-block; padding: 5px 10px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+        .time-badge.pre { background: rgba(16,185,129,0.18); color: #6ee7b7; border:1px solid rgba(16,185,129,0.4); }
+        .time-badge.market { background: rgba(59,130,246,0.18); color: #93c5fd; border:1px solid rgba(59,130,246,0.38); }
+        .time-badge.after { background: rgba(245,158,11,0.2); color: #fcd34d; border:1px solid rgba(245,158,11,0.4); }
         
-        .importance-badge { padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .importance-badge.high { background: #fee2e2; color: #991b1b; }
-        .importance-badge.medium { background: #fef3c7; color: #92400e; }
-        .importance-badge.low { background: #e0e7ff; color: #3730a3; }
+        .importance-badge { padding: 5px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .importance-badge.high { background: rgba(248,113,113,0.16); color: #fecdd3; border:1px solid rgba(248,113,113,0.4); }
+        .importance-badge.medium { background: rgba(251,191,36,0.2); color: #fde68a; border:1px solid rgba(251,191,36,0.38); }
+        .importance-badge.low { background: rgba(129,140,248,0.2); color: #c7d2fe; border:1px solid rgba(129,140,248,0.38); }
 
         /* Responsive */
         @media (max-width: 1024px) {
@@ -117,13 +131,17 @@
 
         /* Stats cards */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-        .stat-card { background: var(--page-white); border-radius: 12px; padding: 1.5rem; box-shadow: 0 4px 16px rgba(2,6,23,0.05); border-left: 4px solid #3b82f6; }
-        .stat-card.green { border-left-color: #10b981; }
-        .stat-card.orange { border-left-color: #f59e0b; }
-        .stat-card.purple { border-left-color: #8b5cf6; }
-        .stat-label { color: #64748b; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
-        .stat-value { color: #0f172a; font-size: 2rem; font-weight: 700; }
-        .stat-subtext { color: #64748b; font-size: 0.85rem; margin-top: 0.25rem; }
+        .stat-card { position: relative; overflow: hidden; background: linear-gradient(140deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)); border-radius: 14px; padding: 1.4rem; box-shadow: 0 16px 40px rgba(0,0,0,0.22); border: 1px solid rgba(255,255,255,0.08); }
+        .stat-card::after { content:""; position:absolute; inset:-30% auto auto 60%; width:120px; height:120px; background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 60%); transform: rotate(-18deg); }
+        .stat-card.green::after { background: radial-gradient(circle, rgba(52,211,153,0.24), transparent 60%); }
+        .stat-card.orange::after { background: radial-gradient(circle, rgba(251,191,36,0.24), transparent 60%); }
+        .stat-card.purple::after { background: radial-gradient(circle, rgba(167,139,250,0.24), transparent 60%); }
+        .stat-card.green { border-left: 4px solid rgba(16,185,129,0.7); }
+        .stat-card.orange { border-left: 4px solid rgba(245,158,11,0.7); }
+        .stat-card.purple { border-left: 4px solid rgba(139,92,246,0.7); }
+        .stat-label { color: #cbd5f5; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+        .stat-value { color: #f8fafc; font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+        .stat-subtext { color: #cbd5f5; font-size: 0.85rem; margin-top: 0.25rem; }
         /* Multi-month / mini calendar styles */
         .multi-month-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
         .mini-calendar { background: white; border-radius: 8px; padding: 10px; box-shadow: 0 4px 12px rgba(2,6,23,0.04); }
@@ -267,8 +285,9 @@
         <div class="earnings-layout">
             <!-- Hero Section -->
             <div class="earnings-hero">
-                <h1 style="display: flex; align-items: center; gap: 0.5rem;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #0f172a;">
+                <div class="pill">Capitovo Insights</div>
+                <h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #9cc6ff;">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
                         <line x1="8" y1="2" x2="8" y2="6"></line>
@@ -276,7 +295,14 @@
                     </svg>
                     Wirtschaftskalender
                 </h1>
-                <p class="subtitle">Bleib auf dem Laufenden! Alle wichtigen Wirtschaftstermine, Quartalszahlen und Unternehmensmeldungen übersichtlich an einem Ort.</p>
+                <p class="subtitle">Alle Earnings, Makro-Termine und Zeitfenster (Pre / After Market) in einem fokussierten Dashboard – kuratiert für kapitovo Mitglieder.</p>
+                <div class="hero-meta">
+                    <span>Realtime-Filter nach Sektor & Wichtigkeit</span>
+                    <span>•</span>
+                    <span>List- & Kalender-View mit Multi-Monat</span>
+                    <span>•</span>
+                    <span>Pre- & After-Market farblich codiert</span>
+                </div>
                 
                 <!-- Stats Cards -->
                 <div class="stats-grid">
@@ -335,8 +361,17 @@
                     <div class="view-toggle">
                         <button id="view-calendar" class="active">Kalender</button>
                         <button id="view-list">Liste</button>
-                        <button id="toggle-year-view" title="Alle Monate anzeigen" style="padding:8px 12px; border-radius:6px; border:none; background:#e6eef9; font-weight:600; cursor:pointer;">Alle Monate anzeigen</button>
+                        <button id="toggle-year-view" title="Alle Monate anzeigen" class="ghost-btn">Alle Monate anzeigen</button>
                     </div>
+                </div>
+
+                <div class="filter-legend">
+                    <span><span class="legend-dot" style="background:#10b981"></span> Pre‑Market</span>
+                    <span><span class="legend-dot" style="background:#2563eb"></span> Regular</span>
+                    <span><span class="legend-dot" style="background:#f59e0b"></span> After‑Market</span>
+                    <span><span class="legend-dot" style="background:rgba(248,113,113,0.8)"></span> High</span>
+                    <span><span class="legend-dot" style="background:rgba(251,191,36,0.9)"></span> Medium</span>
+                    <span><span class="legend-dot" style="background:rgba(129,140,248,0.9)"></span> Low</span>
                 </div>
             </div>
 

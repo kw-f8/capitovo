@@ -1132,24 +1132,26 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function initLogoLinkBehavior(){
     try{
-        const isAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-        if(!isAbonenten) return;
+        const path = (window.location.pathname || '').toLowerCase();
+        const marker = '/abonenten/';
+        const idx = path.indexOf(marker);
+        if(idx === -1) return;
+
+        // Build an absolute path to the Abonenten startseite that also works from subfolders.
+        const base = window.location.pathname.slice(0, idx + marker.length);
+        const target = base + 'abonenten.html';
+
         const anchors = Array.from(document.querySelectorAll('.header-content .logo a, header .logo a'));
         if(!anchors.length) return;
         anchors.forEach(a=>{
             try{
-                // Prefer the local Abonenten start page path
-                a.setAttribute('href', './abonenten.html');
-                // Ensure same-tab navigation
+                a.setAttribute('href', target);
                 a.setAttribute('target', '_self');
-                // Remove noopener/noreferrer that might be present and unnecessary here
                 try{ a.removeAttribute('rel'); } catch(e){}
-                // Also add a defensive click handler to force same-tab navigation
                 a.addEventListener('click', function(ev){
-                    // allow modifier clicks (ctrl/cmd/middle) to behave normally
                     if (ev.ctrlKey || ev.metaKey || ev.shiftKey || ev.button === 1) return;
                     ev.preventDefault();
-                    window.location.assign('./abonenten.html');
+                    window.location.assign(target);
                 });
             }catch(e){}
         });

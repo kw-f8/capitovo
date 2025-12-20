@@ -217,15 +217,16 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
             
             ${showFavorites ? `
                 <button
-                    class="absolute top-3 right-3 inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/90 backdrop-blur border border-gray-200 shadow-sm text-gray-400 hover:text-yellow-500 transition"
+                    class="absolute top-3 right-3 inline-flex items-center justify-center w-8 h-8 p-0 text-gray-400 hover:text-yellow-400 transition-colors"
+                    style="background:transparent;border:none"
                     aria-label="${favLabel}"
                     aria-pressed="${isFav ? 'true' : 'false'}"
                     title="${favLabel}"
                     data-title="${safeTitle}"
                     onclick="toggleFavorite(event, this.dataset.title)"
                 >
-                    <svg class="w-5 h-5 ${favClasses}" viewBox="0 0 24 24" fill="${favFill}" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9" />
+                    <svg class="w-5 h-5 ${favClasses}" viewBox="0 0 24 24" fill="${favFill}" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                     </svg>
                 </button>
             ` : ''}

@@ -22,6 +22,15 @@ body {
 }
 
 .bg-primary-blue { background-color: var(--color-primary-blue) !important; }
+/* Utility fallbacks: define a few Tailwind-like utilities used in HTML
+    so colors and spacing are applied even if Tailwind isn't loaded. */
+.text-white { color: #ffffff !important; }
+.text-gray-300 { color: #d1d5db !important; }
+.text-gray-900 { color: #0f172a !important; }
+.text-xl { font-size: 1.125rem; }
+.text-4xl { font-size: 2.25rem; }
+.mb-4 { margin-bottom: 1rem !important; }
+.mb-16 { margin-bottom: 4rem !important; }
 /* Klasse für Links und CTAs (Behält !important, da Tailwind oft Standard-Farben setzt) */
 
 /* ---------------------------------------------------- */

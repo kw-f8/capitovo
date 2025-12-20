@@ -757,9 +757,11 @@ function initSidebar() {
         // Force the sidebar off-screen using the right-based transform that our CSS expects.
         // This is intentionally explicit to avoid stale inline styles or prior debug changes
         // that left the panel visible after navigation.
+        // Keep the element rendered (`display:block`) but positioned off-screen
+        // via transform so CSS transitions run reliably.
         sidebarElement.style.transform = 'translateX(100%)';
-        sidebarElement.style.display = 'none';
-        sidebarElement.style.opacity = '0';
+        sidebarElement.style.display = 'block';
+        sidebarElement.style.opacity = '1';
         sidebarElement.style.pointerEvents = 'none';
         // Ensure menu toggle reflects closed state
         try{ if (menuToggle) menuToggle.setAttribute('aria-expanded','false'); } catch(e){}

@@ -792,6 +792,8 @@ function initSidebar() {
             // or cause a visual jump on first open after reload.
             // Ensure sidebar is visible for assistive tech and prevent background scroll.
             sidebarElement.style.display = sidebarElement.style.display || 'block';
+            // Clear any inline transform (could block the CSS transition if present)
+            try{ sidebarElement.style.transform = ''; } catch(e){}
             sidebarElement.classList.add('open');
             sidebarElement.style.pointerEvents = 'auto';
             sidebarElement.style.zIndex = sidebarElement.style.zIndex || '10050';

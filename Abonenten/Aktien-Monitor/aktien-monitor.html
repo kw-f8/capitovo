@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Aktien‑Monitor — capitovo</title>
-        <title>capitovo — Aktien‑Monitor</title>
+    <title>capitovo — Aktien‑Monitor</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../style.css">
     <style>
@@ -12,10 +11,10 @@
         .abonenten-page header { position: static !important; box-shadow: none !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
         .abonenten-page .header-content { align-items: center; }
         .header-logo { position: relative; height: 80px; width: auto; }
+
         /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
         #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
         #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
-        /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
         /* Monitor list + filters (combined panel) */
@@ -36,9 +35,6 @@
             box-sizing: border-box;
         }
         .stock-filter-bar input[type="search"] { min-width: 220px; flex: 1 1 260px; }
-
-        /* Slightly increase spacing between intro paragraph and the stock section header */
-        .member-grid { margin-top: 1.75rem; }
 
         .stock-list { margin-top: 0; border: none; background: transparent; }
         .stock-row { display:flex; align-items:center; justify-content:space-between; gap: 12px; padding: 14px 14px; border-bottom: 1px solid rgba(15,23,42,0.06); text-decoration:none; }
@@ -62,50 +58,47 @@
 <body class="bg-white text-gray-900 abonenten-page">
 
     <header>
-        <div class="header-content flex items-center justify-between px-4 py-2">
+        <div class="header-content">
             <div class="logo">
                 <a href="../abonenten.html">
                     <img src="../../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
-                    <header>
-                        <div class="header-content">
-                            <div class="logo">
-                                <a href="../abonenten.html">
-                                    <img src="../../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
-                                </a>
-                            </div>
-                            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
-                        </div>
-                    </header>
-        </section>
+                </a>
+            </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+        </div>
+    </header>
 
+    <main>
         <section class="member-grid">
-            <div>
+            <div class="analyses-box">
                 <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-semibold">Ausgewählte Aktien</h2>
+                    <h1 class="text-xl font-semibold">Aktien‑Monitor</h1>
                 </div>
 
-                <div class="stock-panel">
+                <p class="text-gray-600 mb-6">Wähle eine Aktie aus oder nutze Suche, Branchenfilter und Sortierung.</p>
+
+                <div class="stock-panel" aria-label="Aktienliste">
                     <div class="stock-filter-bar">
                         <div class="stock-filter-row">
-                        <label for="stock-search" class="sr-only">Suche</label>
-                        <input id="stock-search" type="search" placeholder="Suche nach Unternehmen oder Kürzel" aria-label="Suche nach Unternehmen oder Kürzel">
+                            <label for="stock-search" class="sr-only">Suche</label>
+                            <input id="stock-search" type="search" placeholder="Suche nach Unternehmen oder Kürzel" aria-label="Suche nach Unternehmen oder Kürzel">
 
-                        <label for="stock-sector" class="sr-only">Branche</label>
-                        <select id="stock-sector" aria-label="Branche filtern">
-                            <option value="">Alle Branchen</option>
-                        </select>
+                            <label for="stock-sector" class="sr-only">Branche</label>
+                            <select id="stock-sector" aria-label="Branche filtern">
+                                <option value="">Alle Branchen</option>
+                            </select>
 
-                        <label for="stock-sort" class="sr-only">Sortierung</label>
-                        <select id="stock-sort" aria-label="Sortierung">
-                            <option value="" selected>Keine Sortierung</option>
-                            <option value="name-asc">Unternehmen A–Z</option>
-                            <option value="name-desc">Unternehmen Z–A</option>
-                            <option value="sector-asc">Branche A–Z</option>
-                        </select>
+                            <label for="stock-sort" class="sr-only">Sortierung</label>
+                            <select id="stock-sort" aria-label="Sortierung">
+                                <option value="" selected>Keine Sortierung</option>
+                                <option value="name-asc">Unternehmen A–Z</option>
+                                <option value="name-desc">Unternehmen Z–A</option>
+                                <option value="sector-asc">Branche A–Z</option>
+                            </select>
 
-                        <button id="stock-clear" type="button" aria-label="Suche zurücksetzen">Zurücksetzen</button>
+                            <button id="stock-clear" type="button" aria-label="Suche zurücksetzen">Zurücksetzen</button>
+                        </div>
                     </div>
-                </div>
 
                     <div id="stock-list" class="stock-list" aria-live="polite">
                         <div class="p-4 text-sm text-gray-500">Lade Aktien…</div>
@@ -129,7 +122,7 @@
     </footer>
 
     <!-- Sidebar (members) -->
-    <div class="sidebar fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50" id="sidebar" aria-hidden="true" aria-label="Seitenmenü" style="display:none;">
+    <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
         <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
         <nav class="sidebar-nav" aria-label="Hauptnavigation">
             <ul>
@@ -142,7 +135,6 @@
                         <span>Startseite</span>
                     </a>
                 </li>
-                <!-- upper logout removed to avoid duplicate; keep single logout at bottom -->
                 <li>
                     <div>
                         <a href="../konto.html" class="flex items-center space-x-3" aria-label="Mein Konto">
@@ -152,7 +144,6 @@
                             </svg>
                             <span>Mein Konto</span>
                         </a>
-                        <!-- Kontaktdaten-Link entfernt per Wunsch -->
                     </div>
                 </li>
                 <li>
@@ -181,8 +172,7 @@
                         <span>Wirtschaftskalender</span>
                     </a>
                 </li>
-                
-                <!-- Kontakt button at bottom -->
+
                 <li class="logout-bottom">
                     <a href="#" id="open-contact-modal" class="flex items-center space-x-3" aria-label="Kontakt aufnehmen">
                         <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -192,8 +182,7 @@
                         <span>Kontakt</span>
                     </a>
                 </li>
-                
-                <!-- Logout button moved to bottom via .logout-bottom -->
+
                 <li class="logout-bottom">
                     <a href="#" id="logout-link" class="logout-link" aria-label="Abmelden">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -213,13 +202,13 @@
     <script>
         (function () {
             const stocks = [
-                { name: 'Apple', ticker: 'AAPL', sector: 'Technologie', href: './aktien-monitor_apple.html', logo: '../../logos/apple_logo.svg' },
-                { name: 'Microsoft', ticker: 'MSFT', sector: 'Technologie', href: './aktie-msft.html', logo: '../../logos/microsoft_logo.svg' },
-                { name: 'Amazon', ticker: 'AMZN', sector: 'Konsum', href: './aktie-amzn.html', logo: '../../logos/amazon_logo.svg' },
-                { name: 'Alphabet', ticker: 'GOOGL', sector: 'Technologie', href: './aktie-googl.html', logo: '../../logos/alphabet_logo.svg' },
-                { name: 'Tesla', ticker: 'TSLA', sector: 'Automobil', href: './aktie-tsla.html', logo: '../../logos/tesla_logo.svg' },
-                { name: 'Meta Platforms', ticker: 'META', sector: 'Technologie', href: './aktie-meta.html', logo: '../../logos/meta_logo.svg' },
-                { name: 'NVIDIA', ticker: 'NVDA', sector: 'Technologie', href: './aktie-nvda.html', logo: '../../logos/nvidia_logo.svg' },
+                { name: 'Apple', ticker: 'AAPL', sector: 'Technologie', href: './aktien-monitor_apple.html', logo: '../Bilder/logos/apple_logo.svg' },
+                { name: 'Microsoft', ticker: 'MSFT', sector: 'Technologie', href: './aktie-msft.html', logo: '../Bilder/logos/microsoft_logo.svg' },
+                { name: 'Amazon', ticker: 'AMZN', sector: 'Konsum', href: './aktie-amzn.html', logo: '../Bilder/logos/amazon_logo.svg' },
+                { name: 'Alphabet', ticker: 'GOOGL', sector: 'Technologie', href: './aktie-googl.html', logo: '../Bilder/logos/alphabet_logo.svg' },
+                { name: 'Tesla', ticker: 'TSLA', sector: 'Automobil', href: './aktie-tsla.html', logo: '../Bilder/logos/tesla_logo.svg' },
+                { name: 'Meta Platforms', ticker: 'META', sector: 'Technologie', href: './aktie-meta.html', logo: '../Bilder/logos/meta_logo.svg' },
+                { name: 'NVIDIA', ticker: 'NVDA', sector: 'Technologie', href: './aktie-nvda.html', logo: '../Bilder/logos/nvidia_logo.svg' },
                 { name: 'JPMorgan', ticker: 'JPM', sector: 'Finanzen', href: './aktie-jpm.html' },
                 { name: 'Visa', ticker: 'V', sector: 'Finanzen', href: './aktie-v.html' },
                 { name: 'Netflix', ticker: 'NFLX', sector: 'Medien', href: './aktie-nflx.html' },

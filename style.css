@@ -60,11 +60,23 @@ main {
 .abonenten-page main {
     padding-top: 60px !important;
     padding-bottom: 24px;
+    margin-top: 0 !important;
 }
 
 /* Verhindert doppelten Abstand, falls das erste Element noch einen oberen Margin hat */
 .abonenten-page main > *:first-child {
     margin-top: 0 !important;
+}
+
+/* Falls die erste Überschrift selbst noch einen Margin hat, ebenfalls nullen */
+.abonenten-page main > *:first-child h1:first-child,
+.abonenten-page main > *:first-child h2:first-child {
+    margin-top: 0 !important;
+}
+
+/* Header auf Aboseiten immer statisch, damit kein zusätzlicher Sticky-Offset entsteht */
+.abonenten-page header {
+    position: static !important;
 }
 
 /* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */

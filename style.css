@@ -971,6 +971,18 @@ main > section {
 #aktien-monitor { padding-bottom: 2rem !important; }
 #pricing { padding-top: 2rem !important; }
 
+/* Increase visual spacing specifically for the Pricing header block so the highlighted card
+   above doesn't make this section feel cramped. This only affects the `#pricing` section. */
+#pricing h2 {
+    margin-bottom: 2.25rem !important; /* larger gap under heading */
+}
+#pricing h2 + p {
+    margin-top: 0 !important;
+    margin-bottom: 2.5rem !important; /* more breathing room before pricing cards */
+    line-height: 1.45;
+}
+#pricing .grid { gap: 2rem; }
+
 /* Auf kleinen Bildschirmen etwas enger */
 @media (max-width: 767px) {
     main > section { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }

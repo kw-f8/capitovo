@@ -147,10 +147,11 @@
                 padding-right: 1.5rem;
             }
 
-            /* Page-specific: reduce top spacing so content moves up under the static header */
-            .abonenten-page main { padding-top: 0 !important; }
-            /* Pull the first content block up a bit to remove remaining gap */
-            .abonenten-page main > *:first-child { margin-top: -44px !important; }
+            /* Page-specific: match top spacing to alle_analysen.html */
+            .abonenten-page main { padding-top: 60px !important; }
+            .abonenten-page main > *:first-child { margin-top: 0 !important; }
+            /* Ensure page headings don't add extra top margin */
+            .abonenten-page .lede, .abonenten-page h1 { margin-top: 0 !important; }
 
             /* Typing animation for the main heading */
             .typing-text { white-space: nowrap; display: inline-block; }

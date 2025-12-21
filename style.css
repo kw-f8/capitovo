@@ -802,37 +802,37 @@ details[open] .details-marker {
 /* Reduce vertical spacing between section headings, their lead/description and the following content
    Keep this narrow and specific to avoid affecting other small components. */
 section h2 {
-    margin-bottom: 1rem !important; /* ~16px */
+    margin-bottom: 1.5rem !important; /* ~24px */
 }
 section h2 + p,
 section h2 + .lead,
 section h2 + .hero-sub,
 section h2 + .monitor-desc {
     margin-top: 0 !important;
-    margin-bottom: 1.75rem !important; /* ~28px */
+    margin-bottom: 2.5rem !important; /* ~40px */
 }
 /* If an element follows the heading+paragraph, reduce its top margin so content sits closer */
 section h2 + p + *,
 section h2 + * + * {
-    margin-top: 1.25rem !important; /* ~20px */
+    margin-top: 1.75rem !important; /* ~28px */
 }
 
 /* More specific tightening for common content containers on the homepage */
 section .max-w-7xl > h2,
 section .max-w-6xl > h2,
 section .max-w-4xl > h2 {
-    margin-bottom: 1rem !important;
+    margin-bottom: 1.5rem !important;
 }
 section .max-w-7xl > h2 + p,
 section .max-w-6xl > h2 + p,
 section .max-w-4xl > h2 + p {
     margin-top: 0 !important;
-    margin-bottom: 1.5rem !important;
+    margin-bottom: 2.0rem !important;
 }
 section .max-w-7xl > h2 + p + *,
 section .max-w-6xl > h2 + p + *,
 section .max-w-4xl > h2 + p + * {
-    margin-top: 1.25rem !important;
+    margin-top: 1.75rem !important;
 }
 .member-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(2,6,23,0.12); }
 .member-card .media { position: relative; height: 220px; overflow: hidden; flex-shrink: 0; }

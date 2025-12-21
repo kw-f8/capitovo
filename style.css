@@ -56,6 +56,17 @@ main {
     box-sizing: border-box;
 }
 
+/* Einheitlicher Abstand unter dem Header für alle Abonnentenseiten */
+.abonenten-page main {
+    padding-top: 60px !important;
+    padding-bottom: 24px;
+}
+
+/* Verhindert doppelten Abstand, falls das erste Element noch einen oberen Margin hat */
+.abonenten-page main > *:first-child {
+    margin-top: 0 !important;
+}
+
 /* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
 #analysen {
     /* Negatives margin entfernt; sorgt sonst für Überlagerung mit Header */

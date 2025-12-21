@@ -6,7 +6,7 @@
 (function ensureCapitovoFavicon(){
     try{
         // bump this value whenever you change favicon assets
-        const version = '2025-12-21b';
+        const version = '2025-12-21c';
         const scriptEl = document.currentScript || document.querySelector('script[src*="script.js"]');
         const scriptUrl = scriptEl && scriptEl.src ? new URL(scriptEl.src, document.baseURI) : new URL(document.baseURI);
         const rootUrl = new URL('.', scriptUrl);

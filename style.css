@@ -782,10 +782,10 @@ details[open] .details-marker {
 }
 #member-analyses .grid > a .line-clamp-3 {
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    min-height: 3.9em; /* ca. 3 Zeilen bei text-sm */
+    min-height: 6.75em; /* ca. 5 Zeilen bei text-sm (1.35em * 5) */
 }
 #member-analyses .grid > a span.text-sm {
     margin-top: auto;

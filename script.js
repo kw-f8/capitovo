@@ -214,6 +214,11 @@ function openSubscriptionModal() {
 function createMemberAnalysisCard(a, idx, showFavorites = false){
     const title = a.title || 'Unbenannte Analyse';
     const summary = a.summary || '';
+    // Sanitize summary for preview: remove most numeric blobs to avoid zu viele spezifische Zahlen
+    const previewSummary = summary
+        .replace(/\b\d[\d.,%]*\b/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
     const base = isInAbonenten ? '../' : '';
     const rawImg = a.image || 'data/vorschaubilder_analysen/placeholder.png';
@@ -274,7 +279,7 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
             </h4>
             
             <p class="text-sm text-gray-600 mb-4 line-clamp-3">
-                ${summary}
+                ${previewSummary}
             </p>
             
             <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">

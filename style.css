@@ -1023,7 +1023,7 @@ main > section {
 /* Subscriber pages: do NOT apply the homepage section padding,
    otherwise the first heading gets pushed down too far. */
 .abonenten-page main > section:first-child {
-    padding-top: 0 !important;
+    padding-top: 1.5rem !important; /* 24px */
 }
 
 /* Übergang zwischen Aktien-Monitor und Abo-Modelle: etwas großzügigerer Abstand

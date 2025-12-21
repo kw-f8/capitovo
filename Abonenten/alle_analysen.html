@@ -48,21 +48,7 @@
             margin: 0;
         }
 
-        /* Priorisierte Regel für Header; Main erhält Breite über die innere .alle-layout */
-        body.alle-analysen-page header .header-content {
-            max-width: 72rem;
-            margin: 0 auto !important; /* Zentriert den Inhalt und überschreibt andere Regeln */
-            padding: 0 20px !important;
-            box-sizing: border-box;
-        }
-
-        /* Main ohne horizontale Padding/Width, nur Top-Abstand; Breite via .alle-layout */
-        body.alle-analysen-page main {
-            max-width: none;
-            margin: 0;
-            padding: 60px 0 0 0 !important;
-            box-sizing: border-box;
-        }
+        /* Header will use global styles from style.css; main width comes from .alle-layout */
 
         .alle-layout .member-grid {
             display: grid;

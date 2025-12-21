@@ -214,11 +214,13 @@ function openSubscriptionModal() {
 function createMemberAnalysisCard(a, idx, showFavorites = false){
     const title = a.title || 'Unbenannte Analyse';
     const summary = a.summary || '';
-    // Sanitize summary for preview: remove most numeric blobs to avoid zu viele spezifische Zahlen
-    const previewSummary = summary
-        .replace(/\b\d[\d.,%]*\b/g, '')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
+    // Sanitize summary for preview: remove Zahlen, Währungs- und Prozentzeichen
+    const previewSummary = (summary
+        .replace(/[€$%]/g, '')           // strip currency/percent symbols
+        .replace(/\b\d[\d.,/]*\b/g, '') // remove numeric blobs (incl. decimals, slashes)
+        .replace(/\s+/g, ' ')            // collapse spaces
+        .replace(/\s+([.,;:])/g, '$1')   // fix spaces before punctuation
+        .trim()) || summary.trim();       // fallback to original text if everything got stripped
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
     const base = isInAbonenten ? '../' : '';
     const rawImg = a.image || 'data/vorschaubilder_analysen/placeholder.png';

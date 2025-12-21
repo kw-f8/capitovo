@@ -1151,6 +1151,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 2. Initialisiere Sidebar und Navigation
     initSidebar();
+    // 2b. Ensure monitor CTA on homepage opens login modal instead of redirecting
+    try{
+        document.querySelectorAll('a.monitor-cta').forEach(function(el){
+            el.addEventListener('click', function(e){
+                // Treat current page as 'homepage' if it contains the main hero section
+                if (document.querySelector('.hero') || document.querySelector('.hero-inner')){
+                    e.preventDefault();
+                    try{ openLoginModal(); } catch(err){}
+                }
+            });
+        });
+    }catch(e){}
     try{
         const mt = document.getElementById('menu-toggle');
         // post-init: menu-toggle presence recorded

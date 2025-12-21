@@ -73,17 +73,7 @@
 
         <section class="hero bg-white py-16" aria-label="Hero Bereich">
             <div class="hero-inner">
-                <h2 class="text-4xl font-extrabold text-gray-900 mb-8">Marktführer von morgen erkennen</h2>
-                
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-                    <a href="#analysen" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-blue hover:bg-blue-700 md:text-lg transition duration-150">
-                        Analysen ansehen
-                    </a>
-                    <a href="#aktien-monitor" class="inline-flex items-center justify-center px-8 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 md:text-lg transition duration-150">
-                        Zum Aktien-Monitor
-                    </a>
-                </div>
-
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-16">Marktführer von morgen erkennen</h2>
                 <div class="hero-graphic" aria-hidden="true">
                 <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" class="hero-image">
                 
@@ -505,14 +495,7 @@
             <h2 class="text-4xl font-extrabold text-gray-900 mb-4" data-scroll="fade-up" data-scroll-delay="60">Top Analysen</h2>
             <p class="text-xl text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="80">Professionelle Aktienanalysen auf Basis fundamentaler Daten</p>
             
-            <div id="analysis-grid" class="grid md:grid-cols-3 gap-8 mb-12">
-                </div>
-                
-                <div class="text-center" data-scroll="fade-up" data-scroll-delay="100">
-                    <p class="text-gray-600 mb-4">Alle Analysen und Updates im Überblick im Aktien-Monitor</p>
-                    <a href="Abonenten/Aktien-Monitor/aktien-monitor.html" class="text-primary-blue font-medium hover:text-blue-700 transition-colors inline-flex items-center">
-                        Zum Aktien-Monitor <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </a>
+            <div id="analysis-grid" class="grid md:grid-cols-3 gap-8">
                 </div>
             </div>
         </section>
@@ -547,7 +530,7 @@
                         </div>
 
                         <div class="monitor-footer">
-                            <a class="monitor-cta" href="Abonenten/Aktien-Monitor/aktien-monitor.html">Aktien-Monitor ansehen</a>
+                            <a class="monitor-cta" href="Abonenten/Aktien-Monitor/aktien-monitor.html">Zum Aktien Monitor</a>
                         </div>
                     </div>
                 </div>
@@ -608,13 +591,11 @@
         
         <section id="pricing" class="bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <h2 class="text-4xl font-extrabold text-gray-900 mb-4" data-scroll="fade-up" data-scroll-delay="40">Unsere Modelle</h2>
-                <p class="text-xl text-gray-500 mb-4" data-scroll="fade-up" data-scroll-delay="60">Wählen Sie das passende Paket für Ihren Erfolg</p>
-                <p class="text-sm text-gray-400 mb-16 italic" data-scroll="fade-up" data-scroll-delay="70">Preise und Inhalte befinden sich aktuell in finaler Ausarbeitung.</p>
+                <h2 class="text-4xl font-extrabold text-white mb-4" data-scroll="fade-up" data-scroll-delay="40">Wählen Sie das passende Abo-Modell</h2>
+                <p class="text-xl text-gray-300 mb-16" data-scroll="fade-up" data-scroll-delay="100">Erhöhen Sie Ihren Marktvorsprung mit unseren exklusiven Analyse-Berichten.</p>
                 
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Basic -->
-                    <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-2xl" data-scroll="zoom-in">
+                <div class="grid md:grid-cols-3 gap-8 items-stretch">
+                    <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-2xl" data-scroll="zoom-in" data-scroll-delay="40">
                         <div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
                             <p class="text-gray-500 mb-6">Der Einstieg in tiefgehende Marktanalysen.</p>
@@ -641,22 +622,21 @@
                             </ul>
                         </div>
                         <a href="#open-login" data-plan="basic" class="plan-select-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150">
-                            Modell vormerken
+                            Jetzt Basic wählen
                         </a>
                     </div>
 
-                    <!-- Premium -->
-                    <div class="bg-white rounded-xl shadow-2xl p-8 flex flex-col justify-between transform scale-105 transition-all duration-500 border-2 border-blue-100" data-scroll="zoom-in" data-scroll-delay="80">
+                    <div class="bg-primary-blue rounded-xl shadow-2xl p-8 flex flex-col justify-between transform scale-105 transition-all duration-500" data-scroll="zoom-in" data-scroll-delay="80">
                         <div class="relative">
                             <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">
                                 Empfohlen
                             </span>
-                            <h3 class="text-2xl font-bold text-gray-900 mb-4">Premium</h3>
-                            <p class="text-gray-500 mb-6">Ihr entscheidender Vorteil am Markt, alle Analysen.</p>
-                            <div class="text-4xl font-extrabold text-gray-900 mb-8">
-                                € 189,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
+                            <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
+                            <p class="text-blue-200 mb-6">Ihr entscheidender Vorteil am Markt, alle Analysen.</p>
+                            <div class="text-4xl font-extrabold text-white mb-8">
+                                € 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span>
                             </div>
-                            <ul class="text-left space-y-3 mb-10 text-gray-700">
+                            <ul class="text-left space-y-3 mb-10 text-white">
                                 <li class="flex items-start">
                                     <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                     Alle Basic-Funktionen
@@ -679,12 +659,11 @@
                                 </li>
                             </ul>
                         </div>
-                        <a href="#open-login" data-plan="premium" class="plan-select-btn w-full block py-3 px-8 border border-primary-blue rounded-lg shadow-lg text-base font-medium text-white bg-primary-blue hover:bg-blue-700 transition duration-150">
-                            Modell vormerken
+                        <a href="#open-login" data-plan="premium" class="plan-select-btn w-full block py-3 px-8 border border-white rounded-lg shadow-lg text-base font-medium text-primary-blue bg-white hover:bg-blue-100 transition duration-150">
+                            Jetzt Premium abonnieren
                         </a>
                     </div>
                     
-                    <!-- Lifetime -->
                     <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col justify-between transition-all duration-300 hover:shadow-2xl" data-scroll="zoom-in" data-scroll-delay="120">
                         <div>
                             <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
@@ -712,36 +691,29 @@
                             </ul>
                         </div>
                         <a href="#open-login" data-plan="lifetime" class="plan-select-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150">
-                            Modell vormerken
+                            Lifetime sichern
                         </a>
                     </div>
                 </div>
             </div>
         </section>
-
+        
         <section id="vorteile" class="vorteile-grid bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-extrabold text-gray-900 mb-16" data-scroll="fade-up" data-scroll-delay="40">Warum capitovo?</h2>
-            <div class="grid-container mb-12">
+            <div class="grid-container">
                 <div class="vorteil-item" data-scroll="fade-up">
                     <h4>Datengetriebene Tiefe</h4>
-                    <p>Klare Bewertung statt Meinungen – Kennzahlen, Szenarien, Risiken.</p>
+                    <p>Unsere Modelle verarbeiten Millionen von Datenpunkten, um Ihnen klare und unvoreingenommene Kauf- und Halteempfehlungen zu geben.</p>
                 </div>
                 <div class="vorteil-item" data-scroll="fade-up" data-scroll-delay="80">
                     <h4>Exklusive Berichte</h4>
-                    <p>Vollständige Analysen mit Kurszielen und Katalysatoren.</p>
+                    <p>Zugang zu unseren vollständigen Berichten über Einzelaktien, veröffentlicht vor Marktöffnung, exklusiv für Abonnenten.</p>
                     </div>
                 <div class="vorteil-item" data-scroll="fade-up" data-scroll-delay="120">
                     <h4>Transparente Performance</h4>
-                    <p>Nachvollziehbare Historie statt selektiver Erfolge.</p>
+                    <p>Wir stehen zu unseren Analysen. Verfolgen Sie die Performance unserer vergangenen Empfehlungen in Echtzeit.</p>
                 </div>
-            </div>
-            
-            <div class="text-center" data-scroll="fade-up" data-scroll-delay="140">
-                <a href="#faq" class="text-primary-blue font-medium hover:text-blue-700 transition-colors inline-flex items-center">
-                    Unsere Methodik ansehen <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                </a>
-            </div>
             </div>
         </section>            
         
@@ -882,7 +854,7 @@
                         <div class="text-center">
                             <button type="submit" id="contact-submit" disabled
                                 class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-gray-400 cursor-not-allowed transition duration-150">
-                                Allgemeine Anfrage senden
+                                Nachricht senden
                             </button>
                         </div>
                     </form>

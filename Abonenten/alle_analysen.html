@@ -13,8 +13,7 @@
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
 
-        /* Make header identical to Abonnenten startseite (non-sticky, no shadow) */
-        .abonenten-page header { position: static !important; box-shadow: none !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
+        /* Keep header styling consistent with the homepage (do not force static) */
         .abonenten-page .header-content { align-items: center; }
 
         /* Page-local layout: align header and main with logo's left edge */
@@ -30,7 +29,7 @@
         .alle-layout {
             max-width: 72rem;
             margin: 0 auto; /* Zentriert den Inhalt */
-            padding: 0 20px;
+            padding: 0 24px; /* match global header padding */
             box-sizing: border-box;
         }
 

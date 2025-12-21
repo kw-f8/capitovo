@@ -5,7 +5,8 @@
 // exists on every page that loads `script.js`, and we add a version query to bust caches.
 (function ensureCapitovoFavicon(){
     try{
-        const version = '2025-12-21';
+        // bump this value whenever you change favicon assets
+        const version = '2025-12-21b';
         const scriptEl = document.currentScript || document.querySelector('script[src*="script.js"]');
         const scriptUrl = scriptEl && scriptEl.src ? new URL(scriptEl.src, document.baseURI) : new URL(document.baseURI);
         const rootUrl = new URL('.', scriptUrl);

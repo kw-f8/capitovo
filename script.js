@@ -84,6 +84,20 @@ const ScrollReveal = {
     add: () => {}
 };
 
+/** Resolve a relative prefix to the repo root for pages nested under folders like /Abonenten/...
+ * Example: '/capitovo/Abonenten/Aktien-Monitor/aktien-monitor_apple.html' -> '../' repeated 2 -> '../../'
+ */
+function relativePrefixToRoot(referenceDirName){
+    try{
+        const pathname = (window.location.pathname || '').split('?')[0].split('#')[0];
+        const parts = pathname.split('/').filter(Boolean);
+        const idx = parts.map(p=>p.toLowerCase()).indexOf(String(referenceDirName).toLowerCase());
+        if (idx === -1) return '';
+        const after = parts.length - idx - 1; // number of segments after the reference dir
+        return '../'.repeat(Math.max(0, after));
+    }catch(e){ return '';}    
+}
+
 // Kontaktverwaltung: Verwendung einer dedizierten Seite `Abonenten/kontaktdaten.html`.
 
 // === ANALYSEN RENDERING LOGIK ===
@@ -328,9 +342,10 @@ async function loadAndRenderMemberAnalyses(){
     const cacheBuster = `?t=${new Date().getTime()}`;
     try{
         // Resolve correct relative path depending on current page location.
-        // Pages inside `Abonenten/` need to fetch from `../data/analysen.json`.
+        // Support pages nested under subfolders of `Abonenten/` (e.g. `Abonenten/Aktien-Monitor/`).
         const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-        const dataPath = (isInAbonenten ? '../' : '') + 'data/analysen.json' + cacheBuster;
+        const prefix = relativePrefixToRoot('abonenten') || (isInAbonenten ? '../' : '');
+        const dataPath = prefix + 'data/analysen.json' + cacheBuster;
         const res = await fetch(dataPath);
         if (!res.ok) throw new Error('Fetch fehlgeschlagen');
         const data = await res.json();
@@ -424,7 +439,8 @@ async function initAllAnalysesPage(){
     if (!grid) return;
 
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-    const dataPath = (isInAbonenten ? '../' : '') + 'data/analysen.json';
+    const prefix = relativePrefixToRoot('abonenten') || (isInAbonenten ? '../' : '');
+    const dataPath = prefix + 'data/analysen.json';
 
     // Check URL params for initial filter
     const urlParams = new URLSearchParams(window.location.search);
@@ -1241,7 +1257,8 @@ async function renderAnalysisDetail(){
     const idRaw = params.get('id');
     const cacheBuster = `?t=${new Date().getTime()}`;
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-    const dataPath = (isInAbonenten ? '../' : '') + 'data/analysen.json' + cacheBuster;
+    const prefix = relativePrefixToRoot('abonenten') || (isInAbonenten ? '../' : '');
+    const dataPath = prefix + 'data/analysen.json' + cacheBuster;
 
     try{
         const res = await fetch(dataPath);
@@ -1260,7 +1277,7 @@ async function renderAnalysisDetail(){
         const author = analysis.author || '';
         const date = analysis.date || '';
         const imgRaw = analysis.image || 'data/vorschaubilder_analysen/placeholder.png';
-        const img = (/^(https?:)?\/\//i.test(imgRaw) || imgRaw.startsWith('/')) ? imgRaw : ((isInAbonenten ? '../' : '') + imgRaw);
+        const img = (/^(https?:)?\/\//i.test(imgRaw) || imgRaw.startsWith('/')) ? imgRaw : (prefix + imgRaw);
         const bodyHtml = analysis.content ? analysis.content : `<p class="text-gray-700">${(analysis.summary || '')}</p>`;
 
         // Extract Stock Name from Title

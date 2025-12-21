@@ -359,16 +359,14 @@
     </header>
 
     <main class="max-w-6xl mx-auto p-6">
-        <section class="mb-0" style="margin-bottom:0;">
+        <section id="welcome-section" class="mb-0" style="margin-bottom: 0 !important; padding-bottom: 0 !important;">
             <!-- Überschrift wird vom globalen Script wie auf der Startseite getippt -->
-            <h1 id="typing-heading" class="text-3xl font-extrabold mb-2" style="min-height: 1.2em; margin-bottom:0;">Willkommen im Mitgliederbereich</h1>
+            <h1 id="typing-heading" class="text-3xl font-extrabold mb-0" style="min-height: 1.2em; margin-bottom: 0 !important; line-height: 1.2;">Willkommen im Mitgliederbereich</h1>
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
         
-        <!-- Aktien‑Monitor (wird nach den Analysen angezeigt) -->
-
-                                <!-- TradingView Widget BEGIN -->
-                                                                <div class="tradingview-widget-container ticker-as-card">
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container ticker-as-card" style="margin-top: 10px !important; margin-bottom: 20px !important; padding: 0.5rem !important;">
                                                                         <div class="tradingview-widget-container__widget"></div>
                                                                         <script>
                                                                         (function(){

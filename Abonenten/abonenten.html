@@ -223,8 +223,11 @@
                 .tradingview-widget-container.ticker-as-card { margin-top: 0.25rem !important; margin-bottom: 0.5rem !important; }
 
                 /* Further tighten space specifically above the ticker by reducing the
-                    heading's bottom margin on this members page. Keeps typing height. */
-                .abonenten-page #typing-heading { margin-bottom: 0.25rem !important; }
+                    heading's bottom margin and the first section's bottom margin on this members page. */
+                .abonenten-page #typing-heading { margin-bottom: 0 !important; }
+                /* Override the Tailwind `mb-6` on the first section to remove large gap
+                    between the heading section and the ticker widget below. */
+                .abonenten-page main section:first-of-type { margin-bottom: 0.4rem !important; }
 
             /* Styles for the Aktien‑Monitor (page‑lokal) */
             .stock-monitor-grid { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); align-items: center; }

@@ -761,6 +761,36 @@ details[open] .details-marker {
   padding: 1rem;
 }
 
+/* Member-Karten (Abonnenten-Startseite): gleiche Höhen und konsistente Textkürzung */
+#member-analyses .grid > a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(15,23,42,0.06);
+    border-radius: 12px;
+    box-shadow: 0 10px 26px rgba(2,6,23,0.10);
+}
+#member-analyses .grid > a .media {
+    flex: 0 0 200px;
+    height: 200px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+#member-analyses .grid > a h4 {
+    min-height: 2.6rem; /* etwa 2 Zeilen auf text-lg */
+}
+#member-analyses .grid > a .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 3.9em; /* ca. 3 Zeilen bei text-sm */
+}
+#member-analyses .grid > a span.text-sm {
+    margin-top: auto;
+}
+
 /* ...existing code... */
 #pricing{
   background: #ffffff;

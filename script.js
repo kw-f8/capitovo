@@ -148,9 +148,12 @@ function createAnalysisArticle(analysis, idx){
                 ${analysis.summary}
             </p>
             
-            <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
-                Jetzt lesen →
-            </span>
+            <div class="mt-auto">
+                <p class="text-xs text-gray-500 mb-2">Aktualisiert: Dez. 2025 · Fundamentalanalyse</p>
+                <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
+                    Analyse ansehen →
+                </span>
+            </div>
             
         </a>
     `;
@@ -284,9 +287,12 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
                 ${previewSummary}
             </p>
             
-            <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
-                Jetzt lesen →
-            </span>
+            <div class="mt-auto">
+                <p class="text-xs text-gray-500 mb-2">Aktualisiert: Dez. 2025 · Fundamentalanalyse</p>
+                <span class="text-sm font-medium text-primary-blue hover:text-blue-600 transition duration-150 flex items-center">
+                    Analyse ansehen →
+                </span>
+            </div>
         </a>
     `;
 }

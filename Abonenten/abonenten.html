@@ -10,8 +10,8 @@
     <body class="bg-white text-gray-900 abonenten-page">
 
         <style>
-            /* Page-local overrides: make header sticky like on alle_analysen so padding-top works the same */
-            .abonenten-page header { position: sticky !important; top: 0 !important; z-index: 50 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
+            /* Page-local overrides: keep header non-sticky on Mitgliederseite */
+            .abonenten-page header { position: static !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
             .abonenten-page .header-content { align-items: center; }
             /* Members layout: single-column by default; main content becomes full-width now that side column was removed */
             /* Reduced gap to make the layout feel denser */
@@ -151,6 +151,10 @@
             .abonenten-page main > *:first-child { margin-top: 0 !important; }
             /* Ensure page headings don't add extra top margin */
             .abonenten-page .lede, .abonenten-page h1 { margin-top: 0 !important; }
+
+                /* IMPORTANT: override global `style.css` rule `main > section { padding-top: 5rem }`
+                    which creates the big gap on abonenten.html (first element is a section). */
+                .abonenten-page #welcome-section { padding-top: 0 !important; }
 
             /* Typing animation for the main heading */
             .typing-text { white-space: nowrap; display: inline-block; }

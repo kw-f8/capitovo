@@ -1,5 +1,56 @@
 // script.js
 
+// === FAVICON (GLOBAL) ===
+// Safari & Co. can cache favicons aggressively. We ensure a small, standard favicon set
+// exists on every page that loads `script.js`, and we add a version query to bust caches.
+(function ensureCapitovoFavicon(){
+    try{
+        const version = '2025-12-21';
+        const scriptEl = document.currentScript || document.querySelector('script[src*="script.js"]');
+        const scriptUrl = scriptEl && scriptEl.src ? new URL(scriptEl.src, document.baseURI) : new URL(document.baseURI);
+        const rootUrl = new URL('.', scriptUrl);
+
+        const icon16 = new URL('assets/favicon-16.png', rootUrl);
+        icon16.searchParams.set('v', version);
+        const icon32 = new URL('assets/favicon-32.png', rootUrl);
+        icon32.searchParams.set('v', version);
+        const appleTouch = new URL('assets/apple-touch-icon.png', rootUrl);
+        appleTouch.searchParams.set('v', version);
+
+        // Remove existing favicon declarations so we don't end up with conflicting icons.
+        document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]')
+            .forEach(el => el.parentNode && el.parentNode.removeChild(el));
+
+        const head = document.head || document.getElementsByTagName('head')[0];
+        if (!head) return;
+
+        const link32 = document.createElement('link');
+        link32.rel = 'icon';
+        link32.type = 'image/png';
+        link32.sizes = '32x32';
+        link32.href = icon32.toString();
+        head.appendChild(link32);
+
+        const link16 = document.createElement('link');
+        link16.rel = 'icon';
+        link16.type = 'image/png';
+        link16.sizes = '16x16';
+        link16.href = icon16.toString();
+        head.appendChild(link16);
+
+        const shortcut = document.createElement('link');
+        shortcut.rel = 'shortcut icon';
+        shortcut.href = icon32.toString();
+        head.appendChild(shortcut);
+
+        const apple = document.createElement('link');
+        apple.rel = 'apple-touch-icon';
+        apple.sizes = '180x180';
+        apple.href = appleTouch.toString();
+        head.appendChild(apple);
+    }catch(e){ /* ignore */ }
+})();
+
 // === HILFSFUNKTIONEN FÜR MODAL & SIDEBAR STEUERUNG ===
 
 /** Öffnet das Login-Modal und schließt die Sidebar, falls geöffnet. */

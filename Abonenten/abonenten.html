@@ -10,18 +10,19 @@
     <body class="bg-white text-gray-900 abonenten-page">
 
         <style>
-            /* Page-local overrides: Header NICHT sticky auf Mitgliederseite (original behavior) */
-            /* Keep header non-sticky here but restore the subtle shadow to match the main site */
-            .abonenten-page header { position: static !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
+            /* Page-local overrides: make header sticky like on alle_analysen so padding-top works the same */
+            .abonenten-page header { position: sticky !important; top: 0 !important; z-index: 50 !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important; border-bottom: 1px solid #e0e0e0 !important; background-color: #ffffff; }
             .abonenten-page .header-content { align-items: center; }
-            /* keep the logo image consistent with Startseite */
-            .header-logo { position: relative; height: 80px; width: auto; }
+            /* Reduce header height on Mitgliederbereich to pull content up */
+            .abonenten-page header { padding-top: 8px !important; padding-bottom: 8px !important; }
+            .abonenten-page .header-logo { height: 56px !important; }
             /* Members layout: single-column by default; main content becomes full-width now that side column was removed */
             /* Reduced gap to make the layout feel denser */
             .member-grid { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
             @media (min-width: 768px) { .member-grid { grid-template-columns: 1fr; } }
             .profile-card { position: sticky; top: 72px; align-self: start; }
-            
+            /* keep the logo image consistent with Startseite */
+            .header-logo { position: relative; height: 80px; width: auto; }
 
             /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
             #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
@@ -148,13 +149,11 @@
                 padding-right: 1.5rem;
             }
 
-            /* Page-specific: keep main flush under header */
+            /* Page-specific: remove the header-to-heading gap completely */
             .abonenten-page main { padding-top: 0 !important; }
             .abonenten-page main > *:first-child { margin-top: 0 !important; }
             /* Ensure page headings don't add extra top margin */
             .abonenten-page .lede, .abonenten-page h1 { margin-top: 0 !important; }
-            /* Reduce perceived gap WITHOUT changing header: pull first section upward */
-            .abonenten-page #welcome-section { margin-top: -24px !important; }
 
             /* Typing animation for the main heading */
             .typing-text { white-space: nowrap; display: inline-block; }

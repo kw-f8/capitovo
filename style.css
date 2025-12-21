@@ -816,6 +816,24 @@ section h2 + p + *,
 section h2 + * + * {
     margin-top: 0.5rem !important;
 }
+
+/* More specific tightening for common content containers on the homepage */
+section .max-w-7xl > h2,
+section .max-w-6xl > h2,
+section .max-w-4xl > h2 {
+    margin-bottom: 0.5rem !important;
+}
+section .max-w-7xl > h2 + p,
+section .max-w-6xl > h2 + p,
+section .max-w-4xl > h2 + p {
+    margin-top: 0 !important;
+    margin-bottom: 0.6rem !important;
+}
+section .max-w-7xl > h2 + p + *,
+section .max-w-6xl > h2 + p + *,
+section .max-w-4xl > h2 + p + * {
+    margin-top: 0.5rem !important;
+}
 .member-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(2,6,23,0.12); }
 .member-card .media { position: relative; height: 220px; overflow: hidden; flex-shrink: 0; }
 .member-card .media img { width: 100%; height: 100%; object-fit: cover; display: block; }

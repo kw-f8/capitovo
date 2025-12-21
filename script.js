@@ -365,13 +365,36 @@ async function loadAndRenderMemberAnalyses(){
     const cacheBuster = `?t=${new Date().getTime()}`;
     try{
         // Resolve correct relative path depending on current page location.
-        // Support pages nested under subfolders of `Abonenten/` (e.g. `Abonenten/Aktien-Monitor/`).
-        const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+        // Try multiple fallbacks so nested pages (and pages hosted under a repo base path)
+        // reliably find `data/analysen.json`.
+        const tried = [];
+        const candidates = [];
+        // If repoBasePathBefore can derive a repo base (e.g. '/capitovo'), prefer absolute repo-root path
+        const repoBase = repoBasePathBefore('abonenten');
+        if (repoBase) candidates.push(repoBase + '/data/analysen.json');
+        // Then try the calculated relative prefix (handles simple nested folders)
         const prefix = prefixToRepoRoot();
-        const dataPath = prefix + 'data/analysen.json' + cacheBuster;
-        const res = await fetch(dataPath);
-        if (!res.ok) throw new Error('Fetch fehlgeschlagen');
-        const data = await res.json();
+        candidates.push(prefix + 'data/analysen.json');
+        // Also try common alternatives as fallbacks
+        candidates.push('data/analysen.json');
+        candidates.push('../data/analysen.json');
+        candidates.push('./data/analysen.json');
+
+        let res = null;
+        let data = null;
+        for (let p of candidates) {
+            try {
+                tried.push(p + cacheBuster);
+                const r = await fetch(p + cacheBuster);
+                if (r && r.ok) { res = r; break; }
+            } catch (e) {
+                // swallow and try next
+            }
+        }
+        if (!res) {
+            throw new Error('Fetch fehlgeschlagen: keine Kandidaten erreichbar: ' + tried.join(', '));
+        }
+        data = await res.json();
         
         // Sort by date descending (newest first)
         data.sort((a,b) => {
@@ -462,8 +485,15 @@ async function initAllAnalysesPage(){
     if (!grid) return;
 
     const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
+    // Build candidate paths to reliably locate data/analysen.json when pages are nested
+    const repoBase = repoBasePathBefore('abonenten');
+    const candidates = [];
+    if (repoBase) candidates.push(repoBase + '/data/analysen.json');
     const prefix = prefixToRepoRoot();
-    const dataPath = prefix + 'data/analysen.json';
+    candidates.push(prefix + 'data/analysen.json');
+    candidates.push('data/analysen.json');
+    candidates.push('../data/analysen.json');
+    candidates.push('./data/analysen.json');
 
     // Check URL params for initial filter
     const urlParams = new URLSearchParams(window.location.search);
@@ -481,8 +511,14 @@ async function initAllAnalysesPage(){
 
     let data = [];
     try{
-        const res = await fetch(dataPath + `?t=${Date.now()}`);
-        if (!res.ok) throw new Error('fetch failed');
+        let res = null;
+        for (let p of candidates) {
+            try {
+                res = await fetch(p + `?t=${Date.now()}`);
+                if (res && res.ok) break;
+            } catch(e) { res = null; }
+        }
+        if (!res || !res.ok) throw new Error('fetch failed for candidates: ' + candidates.join(', '));
         data = await res.json();
     }catch(e){ console.error(e); grid.innerHTML = '<p class="text-red-500">Analysen konnten nicht geladen werden.</p>'; return; }
 

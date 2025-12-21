@@ -220,7 +220,7 @@
             .member-analyses-grid { gap: 0.5rem !important; }
 
                 /* Reduce spacing between the ticker bar and the analyses heading to tighten layout */
-                .tradingview-widget-container.ticker-as-card { margin-top: 0.25rem !important; margin-bottom: 0.25rem !important; }
+                .tradingview-widget-container.ticker-as-card { margin-top: 0 !important; margin-bottom: 0.25rem !important; }
 
                 /* Ziel: Gesamtabstand zwischen Überschrift und Aktienband auf ~eine Zeile reduzieren. */
                 .abonenten-page #typing-heading { margin-bottom: 0 !important; }
@@ -359,9 +359,9 @@
     </header>
 
     <main class="max-w-6xl mx-auto p-6">
-        <section class="mb-6">
+        <section class="mb-0" style="margin-bottom:0;">
             <!-- Überschrift wird vom globalen Script wie auf der Startseite getippt -->
-            <h1 id="typing-heading" class="text-3xl font-extrabold mb-2" style="min-height: 1.2em;">Willkommen im Mitgliederbereich</h1>
+            <h1 id="typing-heading" class="text-3xl font-extrabold mb-2" style="min-height: 1.2em; margin-bottom:0;">Willkommen im Mitgliederbereich</h1>
             <p id="welcome-desc" class="text-gray-600 sr-only">Hier finden Sie Ihre exklusiven Analysen, Downloads und Ihr Abonnement‑Management.</p>
         </section>
         

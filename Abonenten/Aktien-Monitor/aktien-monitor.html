@@ -10,6 +10,10 @@
         /* Header soll wie auf der Startseite aussehen (keine page-lokalen Overrides auf sticky/shadow). */
         .header-logo { position: relative; height: 80px; width: auto; }
 
+        /* Match abonenten.html: only move content, keep header unchanged */
+        .abonenten-page main { padding-top: 60px !important; }
+        .abonenten-page main > section:first-child { padding-top: 0 !important; }
+
         /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
         #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
         #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }

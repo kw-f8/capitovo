@@ -179,7 +179,8 @@
 
         /* Align header and main content to the same left column (logo left edge) */
         /* Use same container sizing as global .header-content from style.css (72rem / 24px) to match logo */
-        header .header-content, main { max-width: 72rem; margin: 0 auto; padding: 0 24px; box-sizing: border-box; }
+        header .header-content, main { max-width: 72rem; margin: 0 auto; padding-left: 24px; padding-right: 24px; box-sizing: border-box; }
+        main { padding-top: 60px !important; }
         /* Sidebar nav adjustments to match Mitgliederbereich style (identical to abonenten.html) */
         .sidebar-nav ul { list-style: none; padding: 0; margin-top: 50px; }
         .sidebar-nav ul li { margin-bottom: 5px; display: block; }

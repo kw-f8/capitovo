@@ -18,8 +18,8 @@
 
         /* Minimal page-specific styles copied from analyse_vorlage */
         main { background: transparent; padding-top: 60px !important; }
-        /* Align content with the outer edges of logo + sidebar button (header-content/main inner width = 72rem - 48px = 1104px) */
-        .analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; }
+        /* Keep content perfectly flush with main/header inner edges (logo + sidebar button) */
+        .analysis-article { width: 100%; max-width: none; margin: 0; padding: 0; overflow-x: hidden; }
         .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }
         .analysis-meta { color: #6b7280; margin-bottom: 1rem; }
         .analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }

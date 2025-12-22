@@ -1310,7 +1310,72 @@ document.addEventListener('DOMContentLoaded', () => {
     try { if (document.getElementById('analysis-detail')) renderAnalysisDetail(); } catch(e){}
     // 8. Ensure header logo on Abonenten pages links back to the Abonenten start page
     try { initLogoLinkBehavior(); } catch(e) { /* ignore */ }
+
+    // 9. Ensure Rechtliches links do NOT open a new tab (same-tab navigation)
+    try { initLegalLinksSameTab(); } catch(e) { /* ignore */ }
 });
+
+/** Ensure internal Rechtliches links (Impressum/Datenschutz/Haftung/AGB) open in the same tab.
+ * Some pages historically used `target="_blank"` for these links.
+ * This normalizer also covers pages with hardcoded footers (no components).
+ */
+function initLegalLinksSameTab(){
+    const legalFiles = ['impressum.html','datenschutz.html','haftung.html','agb.html'];
+
+    function isInternalLegalHref(rawHref){
+        if (!rawHref) return false;
+        const href = String(rawHref).trim();
+        if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+        let url;
+        try{ url = new URL(href, document.baseURI); }catch(e){ return false; }
+        try{
+            // For file://, both origins are 'null' which should match.
+            if (url.origin !== window.location.origin) return false;
+        }catch(e){ /* ignore */ }
+        const path = (url.pathname || '').toLowerCase();
+        if (!path.includes('/rechtliches/')) return false;
+        return legalFiles.some(f => path.endsWith('/rechtliches/' + f));
+    }
+
+    function normalizeOnce(){
+        const anchors = Array.from(document.querySelectorAll('a[href]'));
+        anchors.forEach(a => {
+            try{
+                const href = a.getAttribute('href');
+                if (!isInternalLegalHref(href)) return;
+
+                // Remove new-tab behavior for internal legal pages.
+                if ((a.getAttribute('target') || '').toLowerCase() === '_blank') {
+                    a.removeAttribute('target');
+                }
+                // rel noopener/noreferrer isn't needed without target=_blank (and can be confusing)
+                const rel = (a.getAttribute('rel') || '').toLowerCase();
+                if (rel.includes('noopener') || rel.includes('noreferrer')) {
+                    a.removeAttribute('rel');
+                }
+            }catch(e){ /* ignore */ }
+        });
+    }
+
+    // Run now, then after components may have been injected.
+    normalizeOnce();
+    setTimeout(normalizeOnce, 200);
+    setTimeout(normalizeOnce, 1200);
+
+    // Watch for dynamically inserted footers/links (component loader).
+    try{
+        if (!window.MutationObserver || !document.body) return;
+        let t = null;
+        const obs = new MutationObserver(function(){
+            if (t) clearTimeout(t);
+            t = setTimeout(function(){
+                t = null;
+                normalizeOnce();
+            }, 80);
+        });
+        obs.observe(document.body, { childList: true, subtree: true });
+    }catch(e){ /* ignore */ }
+}
 
 /** Ensure header/logo anchor navigates back to the Abonenten start page in the same tab.
  * This prevents accidental new-tab navigation caused by absolute URLs or prior markup.

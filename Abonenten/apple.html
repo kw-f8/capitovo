@@ -11,9 +11,15 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
     <style>
+        /* Match header/menu-toggle styling used on other Abonenten pages */
+        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
         /* Minimal page-specific styles copied from analyse_vorlage */
         main { background: transparent; padding-top: 60px !important; }
-        .analysis-article { max-width: 1096px; width: 100%; margin: 0 auto; padding: 0; }
+        /* Align content with the outer edges of logo + sidebar button (header-content/main inner width = 72rem - 48px = 1104px) */
+        .analysis-article { max-width: 1104px; width: 100%; margin: 0 auto; padding: 0; }
         .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }
         .analysis-meta { color: #6b7280; margin-bottom: 1rem; }
         .analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }

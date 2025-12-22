@@ -13,12 +13,13 @@
 </head>
 <body>
     <header>
-        <div class="header-content" style="max-width:72rem;margin:0 auto;padding-left:1.5rem;padding-right:1.5rem;display:flex;align-items:center;justify-content:flex-start;gap:1rem;">
+        <div class="header-content">
             <div class="logo">
                 <a href="../index.html">
-                    <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo" style="height:64px;width:auto;">
+                    <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
                 </a>
             </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
         </div>
     </header>
 
@@ -47,14 +48,16 @@
         
     </main>
 
-    <footer style="padding:24px 0;text-align:center;color:#64748b;border-top:1px solid rgba(0,0,0,0.04);margin-top:48px;">
-        <div style="max-width:900px;margin:0 auto;padding:0 20px;">
-            <div style="display:flex;gap:12px;justify-content:center;align-items:center;margin-bottom:8px;">
-                <a href="impressum.html" class="footer-btn">Impressum</a>
-                <a href="datenschutz.html" class="footer-btn">Datenschutz</a>
-                <a href="haftung.html" class="footer-btn">Haftungsausschluss</a>
+    <footer id="abo" class="site-footer" data-scroll="fade-up" data-scroll-delay="40">
+        <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+
+            <div class="footer-links flex items-center gap-3">
+                <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+                <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
             </div>
-            &copy; 2024 capitovo
         </div>
     </footer>
 

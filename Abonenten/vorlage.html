@@ -23,39 +23,50 @@
     .logo-link {
       position: relative;
       display: inline-block;
-      border-radius: 10px;
-      overflow: hidden;
+      padding-bottom: 8px;
       transform: translateZ(0);
-      transition: transform 180ms ease, filter 220ms ease;
-      will-change: transform, filter;
+      transition: transform 180ms ease;
+      will-change: transform;
+    }
+    .logo-link::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 2px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, var(--color-accent-blue, #0091d6) 50%, rgba(0,0,0,0) 100%);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 220ms ease;
+      pointer-events: none;
     }
     .logo-link::after {
       content: "";
       position: absolute;
-      inset: -30% -60%;
-      background: linear-gradient(
-        120deg,
-        rgba(0,145,214,0) 35%,
-        rgba(0,145,214,0.55) 50%,
-        rgba(0,145,214,0) 65%
-      );
-      transform: translateX(-40%);
+      left: 0;
+      width: 18%;
+      bottom: 2px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0,0,0,0) 0%, var(--color-accent-blue, #0091d6) 50%, rgba(0,0,0,0) 100%);
+      transform: translateX(-140%);
       opacity: 0;
-      transition: transform 520ms ease, opacity 220ms ease;
+      transition: transform 520ms ease, opacity 200ms ease;
       pointer-events: none;
-      mix-blend-mode: screen;
     }
     .logo-link:hover {
-      transform: translateY(-1px) scale(1.02);
-      filter: drop-shadow(0 10px 24px rgba(0,145,214,0.22));
+      transform: translateY(-1px);
     }
-    .logo-link:hover::after {
-      opacity: 1;
-      transform: translateX(40%);
+    .logo-link:hover::before { transform: scaleX(1); }
+    .logo-link:hover::after { opacity: 1; transform: translateX(620%); }
+    .logo-link:hover .header-logo {
+      filter: drop-shadow(0 10px 24px rgba(0,145,214,0.18));
     }
     .logo-link:focus-visible {
       outline: none;
-      box-shadow: 0 0 0 4px rgba(0,145,214,0.18);
+      box-shadow: 0 0 0 4px rgba(0,145,214,0.14);
     }
     @media (prefers-reduced-motion: reduce) {
       .logo-link,
@@ -69,6 +80,7 @@
         opacity: 0;
         transform: none;
       }
+      .logo-link:hover::before { transform: none; }
     }
 
     /* Page specific: keep article unboxed and readable */

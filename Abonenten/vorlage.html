@@ -35,6 +35,16 @@
       border-bottom: 2px solid #e2e8f0;
       padding-bottom: 0.5rem;
     }
+    .toc-link {
+      display: inline-block;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.25;
+      text-decoration: none;
+    }
+    .toc-link:hover { text-decoration: underline; }
+    .toc-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
     .card-table { width:100%; border-collapse:collapse; margin-top:10px; }
     .card-table th, .card-table td { padding:8px 6px; text-align:left; }
     .votum-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 1.5rem; margin: 2rem 0; border-radius: 8px; }
@@ -80,16 +90,13 @@
         <img src="../assets/studiodisplay_mockup.svg" alt="Vorlage Vorschaubild" style="width:100%; aspect-ratio:16/9; object-fit:contain; background:#f3f4f6; display:block; border-radius:8px;">
 
         <nav aria-label="Inhaltsverzeichnis" style="margin-top: 14px;">
-          <div class="bg-white border border-gray-200 rounded-md" style="padding: 12px 14px;">
-            <div class="text-sm font-semibold text-gray-900" style="margin-bottom: 8px;">Inhaltsverzeichnis</div>
-            <ol class="text-sm text-gray-700" style="list-style: none; padding: 0; margin: 0; display: grid; gap: 6px;">
-              <li><a class="text-accent-blue hover:underline" href="#marktperformance">1) Marktperformance &amp; Bewertung</a></li>
-              <li><a class="text-accent-blue hover:underline" href="#finanzielle-grundlagen">2) Finanzielle Grundlagen</a></li>
-              <li><a class="text-accent-blue hover:underline" href="#strategie">3) Strategische Ausrichtung</a></li>
-              <li><a class="text-accent-blue hover:underline" href="#analysten">4) Analystenerwartungen &amp; Institutionelles Interesse</a></li>
-              <li><a class="text-accent-blue hover:underline" href="#votum">5) Bewertungskontext &amp; Votum</a></li>
-            </ol>
-          </div>
+          <ol class="toc-list">
+            <li><a class="toc-link" href="#marktperformance">1) Marktperformance &amp; Bewertung</a></li>
+            <li><a class="toc-link" href="#finanzielle-grundlagen">2) Finanzielle Grundlagen</a></li>
+            <li><a class="toc-link" href="#strategie">3) Strategische Ausrichtung</a></li>
+            <li><a class="toc-link" href="#analysten">4) Analystenerwartungen &amp; Institutionelles Interesse</a></li>
+            <li><a class="toc-link" href="#votum">5) Bewertungskontext &amp; Votum</a></li>
+          </ol>
         </nav>
       </div>
       <div style="flex:1; min-width:300px;">

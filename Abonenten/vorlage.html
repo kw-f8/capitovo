@@ -19,6 +19,58 @@
     /* Ensure header is static, not sticky */
     header { position: static !important; }
 
+    /* Logo hover animation (subtle, on-brand) */
+    .logo-link {
+      position: relative;
+      display: inline-block;
+      border-radius: 10px;
+      overflow: hidden;
+      transform: translateZ(0);
+      transition: transform 180ms ease, filter 220ms ease;
+      will-change: transform, filter;
+    }
+    .logo-link::after {
+      content: "";
+      position: absolute;
+      inset: -30% -60%;
+      background: linear-gradient(
+        120deg,
+        rgba(0,145,214,0) 35%,
+        rgba(0,145,214,0.55) 50%,
+        rgba(0,145,214,0) 65%
+      );
+      transform: translateX(-40%);
+      opacity: 0;
+      transition: transform 520ms ease, opacity 220ms ease;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .logo-link:hover {
+      transform: translateY(-1px) scale(1.02);
+      filter: drop-shadow(0 10px 24px rgba(0,145,214,0.22));
+    }
+    .logo-link:hover::after {
+      opacity: 1;
+      transform: translateX(40%);
+    }
+    .logo-link:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(0,145,214,0.18);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .logo-link,
+      .logo-link::after {
+        transition: none;
+      }
+      .logo-link:hover {
+        transform: none;
+      }
+      .logo-link:hover::after {
+        opacity: 0;
+        transform: none;
+      }
+    }
+
     /* Page specific: keep article unboxed and readable */
     main { background: transparent; padding-top: 60px !important; }
     /* Align content with the outer edges of logo + sidebar button */
@@ -165,7 +217,7 @@
 <header>
   <div class="header-content">
     <div class="logo">
-      <a href="./abonenten.html">
+      <a href="./abonenten.html" class="logo-link">
         <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
       </a>
     </div>

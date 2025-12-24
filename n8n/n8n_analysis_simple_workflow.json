@@ -39,7 +39,7 @@
         "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" } ] },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ \"model\": \"sonar-pro\", \"temperature\": 0.35, \"max_tokens\": 3200, \"messages\": [ {\"role\": \"system\", \"content\": \"Du bist ein Equity-Research-Autor. Schreibe im Stil der Ferrari-Analyse eine wöchentliche Investment-Analyse mit 5 Sektionen (Marktperformance & Bewertung; Finanzielle Grundlagen; Strategische Ausrichtung; Analystenerwartungen & Institutionelles Interesse; Bewertungskontext & Votum). Nutze Tabellen für Kennzahlen, Deutsch, klarer Ton, am Ende Kurzfazit und Disclaimer.\"}, {\"role\": \"user\", \"content\": \"Erstelle eine vollständige Analyse für: Unternehmen {{ $json.company }}, Ticker {{ $json.ticker }}, Sektor {{ $json.sector }}\"} ] }}"
+        "jsonBody": "{\n  \"model\": \"sonar\",\n  \"temperature\": 0.35,\n  \"max_tokens\": 2000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Equity-Research-Autor. Schreibe im Stil der Ferrari-Analyse eine wöchentliche Investment-Analyse mit 5 Sektionen (Marktperformance & Bewertung; Finanzielle Grundlagen; Strategische Ausrichtung; Analystenerwartungen & Institutionelles Interesse; Bewertungskontext & Votum). Nutze Tabellen für Kennzahlen, Deutsch, klarer Ton, am Ende Kurzfazit und Disclaimer.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Erstelle eine vollständige Analyse für: Unternehmen {{ $json.company }}, Ticker {{ $json.ticker }}, Sektor {{ $json.sector }}\"\n    }\n  ]\n}"
       },
       "id": "perplexity-draft",
       "name": "🤖 Perplexity Draft",
@@ -69,7 +69,7 @@
         "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" } ] },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ \"model\": \"sonar-pro\", \"temperature\": 0.15, \"max_tokens\": 1600, \"messages\": [ {\"role\": \"system\", \"content\": \"Prüfe den folgenden Text auf Qualität (Struktur, Zahlenplausibilität, Stil). Antworte als JSON: {\\\"quality_score\\\":1-10, \\\"issues\\\":string, \\\"improved_content\\\":string}. Liefere improved_content nur, wenn quality_score < 7.\"}, {\"role\": \"user\", \"content\": \"Text: {{ $json.draft }}\"} ] }}"
+        "jsonBody": "{\n  \"model\": \"sonar\",\n  \"temperature\": 0.15,\n  \"max_tokens\": 1000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Prüfe den folgenden Text auf Qualität (Struktur, Zahlenplausibilität, Stil). Antworte als JSON: {\\\"quality_score\\\":1-10, \\\"issues\\\":string, \\\"improved_content\\\":string}. Liefere improved_content nur, wenn quality_score < 7.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Text: {{ $json.draft }}\"\n    }\n  ]\n}"
       },
       "id": "qa",
       "name": "🔍 QA",

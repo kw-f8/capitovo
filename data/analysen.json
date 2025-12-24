@@ -1,5 +1,17 @@
 [
   {
+    "id": "vorlage-analyse-template-2025-12-24",
+    "category": "VORLAGE",
+    "title": "Vorlage — Analyse (Template)",
+    "summary": "Vorlagen-Seite für neue Analysen: Layout, Typografie, Tabellen und Votum-Box als Basis zum Vorbereiten.",
+    "link": "Abonenten/vorlage.html",
+    "image": "assets/studiodisplay_mockup.svg",
+    "date": "2025-12-24",
+    "author": "capitovo",
+    "tags": ["Vorlage", "Template", "Analyse", "Layout"],
+    "published": false
+  },
+  {
     "id": "apple-investment-analyse-121125",
     "category": "TECHNOLOGIE",
     "title": "Apple Inc.: Investment‑Analyse (Dezember 2025)",

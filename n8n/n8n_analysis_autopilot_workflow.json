@@ -1,0 +1,416 @@
+{
+  "name": "capitovo Analyse Autopilot (Ferrari-Stil)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * 1-5"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "⏰ Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "notes": "Läuft Mo-Fr um 07:00 Uhr. Cron anpassen für andere Zeiten."
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-analysis",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "🔗 Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 480],
+      "webhookId": "capitovo-analysis-autopilot",
+      "notes": "Alternativ: Manuell per POST-Request triggern mit {company, ticker, sector, heroImage}"
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "id": "merge-triggers",
+      "name": "🔀 Merge Triggers",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [450, 380]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "company",
+              "name": "company",
+              "value": "={{ $json.body?.company || $json.company || 'Apple Inc.' }}",
+              "type": "string"
+            },
+            {
+              "id": "ticker",
+              "name": "ticker",
+              "value": "={{ $json.body?.ticker || $json.ticker || 'AAPL' }}",
+              "type": "string"
+            },
+            {
+              "id": "sector",
+              "name": "sector",
+              "value": "={{ $json.body?.sector || $json.sector || 'TECHNOLOGIE' }}",
+              "type": "string"
+            },
+            {
+              "id": "heroImage",
+              "name": "heroImage",
+              "value": "={{ $json.body?.heroImage || $json.heroImage || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-input",
+      "name": "📝 Analyse-Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [650, 380],
+      "notes": "Hier Standardwerte für company/ticker/sector/heroImage anpassen"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.4,\n  \"max_tokens\": 4000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein professioneller Equity-Research-Autor für capitovo. Schreibe Investment-Analysen im Ferrari-Stil mit:\\n\\n1. **Einleitung** (2-3 Sätze Zusammenfassung der aktuellen Lage)\\n2. **Aktuelle Marktperformance und Bewertung** (KGV, Margen, EPS mit Tabelle)\\n3. **Finanzielle Grundlagen und Operativer Status** (Marktkapitalisierung, Cashflow, Beta)\\n4. **Strategische Ausrichtung** (Zukunftsstrategie, Chancen, Risiken)\\n5. **Analystenerwartungen und Institutionelles Interesse** (Kursziele, institutionelle Käufe)\\n6. **Bewertungskontext und Investitionsempfehlung** (Votum: KAUFEN/HALTEN/VERKAUFEN mit Begründung)\\n\\nNutze:\\n- Markdown mit ## für Hauptüberschriften\\n- Tabellen für Kennzahlen (| Kennzahl | Wert | Vergleich |)\\n- Konkrete Zahlen und Fakten\\n- Deutschsprachig, professioneller Ton\\n- Am Ende: Disclaimer und Quellen\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Erstelle eine vollständige wöchentliche Investment-Analyse für:\\n\\n**Unternehmen:** {{ $json.company }}\\n**Ticker:** {{ $json.ticker }}\\n**Sektor:** {{ $json.sector }}\\n\\nRecherchiere aktuelle Marktdaten, Analystenmeinungen und News. Liefere eine fundierte, datenbasierte Analyse.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "perplexity-draft",
+      "name": "🤖 Perplexity: Analyse erstellen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 380],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-credentials",
+          "name": "Perplexity API Key"
+        }
+      },
+      "notes": "Perplexity Pro erstellt den ersten Entwurf der Analyse"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrahiere den Analyse-Text aus der Perplexity-Response\nconst response = $input.item.json;\nconst draft = response.choices?.[0]?.message?.content || '';\n\nif (!draft) {\n  throw new Error('Keine Analyse von Perplexity erhalten');\n}\n\n// Hole Input-Daten\nconst inputData = $('📝 Analyse-Input').item.json;\nconst company = inputData.company;\nconst ticker = inputData.ticker;\nconst sector = inputData.sector;\nconst heroImage = inputData.heroImage;\n\n// Generiere Dateinamen (slug)\nfunction slugify(text) {\n  return text\n    .toLowerCase()\n    .replace(/[äöüß]/g, c => ({ä:'ae',ö:'oe',ü:'ue',ß:'ss'}[c]))\n    .replace(/[^a-z0-9]+/g, '-')\n    .replace(/^-+|-+$/g, '')\n    .slice(0, 60) || 'analyse';\n}\n\nconst date = new Date().toISOString().split('T')[0];\nconst filename = slugify(company);\n\n// Extrahiere ersten Absatz als Intro\nconst introMatch = draft.match(/^([^\\n]+)/);\nconst intro = introMatch ? introMatch[1].replace(/^#+\\s*/, '').trim() : '';\n\nreturn {\n  json: {\n    company,\n    ticker,\n    sector,\n    heroImage,\n    date,\n    filename,\n    intro,\n    draft\n  }\n};"
+      },
+      "id": "normalize-draft",
+      "name": "📋 Entwurf normalisieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 380],
+      "notes": "Extrahiert Analyse-Text, generiert Dateinamen und Metadaten"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.15,\n  \"max_tokens\": 2000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein unabhängiger Qualitätsprüfer für Finanzanalysen. Prüfe den Text auf:\\n1. Vollständigkeit (alle 5 Sektionen vorhanden?)\\n2. Faktengenauigkeit (plausible Zahlen?)\\n3. Struktur (Tabellen, Überschriften korrekt?)\\n4. Stil (professionell, klar?)\\n5. Votum (klare Empfehlung mit Begründung?)\\n\\nAntworte IMMER als valides JSON:\\n{\\n  \\\"quality_score\\\": 1-10,\\n  \\\"issues\\\": \\\"Liste der Probleme oder 'Keine'\\\",\\n  \\\"suggestions\\\": \\\"Verbesserungsvorschläge\\\",\\n  \\\"improved_content\\\": \\\"Falls Score < 7: Verbesserter vollständiger Text. Falls Score >= 7: leerer String\\\"\\n}\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Prüfe diese Investment-Analyse und bewerte sie:\\n\\n{{ $json.draft }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "quality-check",
+      "name": "🔍 Qualitätsprüfung",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1250, 380],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-credentials",
+          "name": "Perplexity API Key"
+        }
+      },
+      "notes": "Unabhängige Prüfung der Analyse auf Qualität, Struktur und Fakten"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse die QA-Response von Perplexity\nconst response = $input.item.json;\nconst qaContent = response.choices?.[0]?.message?.content || '{}';\nconst originalData = $('📋 Entwurf normalisieren').item.json;\n\nlet qualityScore = 5;\nlet issues = 'Keine Bewertung erhalten';\nlet suggestions = '';\nlet improvedContent = '';\n\ntry {\n  // Versuche JSON aus der Response zu extrahieren\n  let jsonStr = qaContent;\n  \n  // Falls JSON in Markdown-Codeblock, extrahieren\n  const jsonMatch = qaContent.match(/```json?\\s*([\\s\\S]*?)```/);\n  if (jsonMatch) {\n    jsonStr = jsonMatch[1];\n  }\n  \n  const parsed = JSON.parse(jsonStr.trim());\n  qualityScore = parsed.quality_score ?? qualityScore;\n  issues = parsed.issues || 'Keine';\n  suggestions = parsed.suggestions || '';\n  improvedContent = parsed.improved_content || '';\n} catch (e) {\n  console.log('QA JSON Parse Error:', e.message);\n  issues = 'QA-Parsing fehlgeschlagen - Original wird verwendet';\n}\n\n// Entscheide welchen Content wir verwenden\nconst finalContent = (qualityScore < 7 && improvedContent && improvedContent.length > 500)\n  ? improvedContent\n  : originalData.draft;\n\nreturn {\n  json: {\n    ...originalData,\n    qualityScore,\n    issues,\n    suggestions,\n    finalContent,\n    wasImproved: finalContent !== originalData.draft\n  }\n};"
+      },
+      "id": "parse-quality",
+      "name": "📊 QA-Ergebnis verarbeiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 380],
+      "notes": "Parst QA-Ergebnis und wählt Original oder verbesserte Version"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "quality-ok",
+              "leftValue": "={{ $json.qualityScore }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "quality-gate",
+      "name": "✅ Qualität OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1650, 380],
+      "notes": "Score >= 5: Weiter zur HTML-Generierung. Score < 5: Abbruch mit Warnung"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generiere das finale HTML im Ferrari-Stil\nconst data = $input.item.json;\n\n// Markdown zu HTML konvertieren (einfache Version)\nfunction mdToHtml(md) {\n  return md\n    // Überschriften\n    .replace(/^### (.+)$/gm, '<h3>$1</h3>')\n    .replace(/^## (.+)$/gm, '<h2 class=\"analysis-h2\">$1</h2>')\n    .replace(/^# (.+)$/gm, '<h1>$1</h1>')\n    // Bold/Italic\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n    // Tabellen (einfach)\n    .replace(/\\|(.+)\\|/g, (match) => {\n      const cells = match.split('|').filter(c => c.trim());\n      const isHeader = match.includes('---');\n      if (isHeader) return '';\n      const tag = 'td';\n      return '<tr>' + cells.map(c => `<${tag} style=\"padding:8px;border-bottom:1px solid #e5e7eb;\">${c.trim()}</${tag}>`).join('') + '</tr>';\n    })\n    // Listen\n    .replace(/^- (.+)$/gm, '<li>$1</li>')\n    .replace(/(<li>.*<\\/li>\\n?)+/g, '<ul class=\"list-disc pl-6 my-4\">$&</ul>')\n    // Absätze\n    .replace(/\\n\\n/g, '</p><p class=\"mb-4\">')\n    .replace(/\\n/g, '<br>');\n}\n\nconst contentHtml = mdToHtml(data.finalContent);\nconst heroSrc = data.heroImage || `data/vorschaubilder_analysen/${data.filename}.png`;\n\nconst html = `<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"../assets/favicon-32.png\">\n  <title>capitovo — ${data.company} Investment-Analyse</title>\n  <link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"../style.css\">\n  <style>\n    .analysis-h2 { font-size:1.5rem; font-weight:700; margin:2rem 0 1rem; color:#0f172a; border-bottom:2px solid #e2e8f0; padding-bottom:0.5rem; }\n    .votum-box { background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%); border-left:4px solid #0284c7; padding:1.5rem; margin:2rem 0; border-radius:8px; }\n    .analysis-table { width:100%; border-collapse:collapse; margin:1.5rem 0; }\n    .analysis-table th, .analysis-table td { padding:10px 8px; text-align:left; border-bottom:1px solid #e5e7eb; }\n    .analysis-table th { font-weight:600; background:#f8fafc; }\n  </style>\n</head>\n<body class=\"abonenten-page bg-white text-gray-900\">\n\n<header>\n  <div class=\"header-content\">\n    <div class=\"logo\">\n      <a href=\"abonenten.html\">\n        <img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\n      </a>\n    </div>\n  </div>\n</header>\n\n<main style=\"padding-top:60px!important;\">\n  <article class=\"analysis-article\" style=\"max-width:900px;margin:0 auto;padding:0 20px;\">\n    \n    <div class=\"mb-4\"><a href=\"alle_analysen.html\" class=\"text-blue-600 text-sm\">← Zurück zu allen Analysen</a></div>\n    \n    <div class=\"mb-4\">\n      <p class=\"text-xs font-semibold uppercase mb-2\" style=\"color:#64748b;\">\n        ${data.sector} <span class=\"text-gray-400 mx-1\">•</span> ${data.company} (${data.ticker})\n      </p>\n      <h1 class=\"text-3xl font-extrabold text-gray-900 mb-3\">${data.company}: Wöchentliche Investment-Analyse</h1>\n      <div class=\"text-sm text-gray-500\">\n        <span class=\"mr-2\">capitovo Research</span>\n        <span>• ${data.date}</span>\n        ${data.wasImproved ? '<span class=\"ml-2 text-green-600\">✓ Qualitätsgeprüft</span>' : ''}\n      </div>\n    </div>\n\n    <div class=\"hero-intro-wrapper\" style=\"display:flex;gap:24px;margin:24px 0 32px;align-items:center;flex-wrap:wrap;\">\n      <div style=\"flex:1;min-width:300px;\">\n        <img src=\"../${heroSrc}\" alt=\"${data.company} Analyse\" \n             style=\"width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;\"\n             onerror=\"this.style.display='none'\">\n      </div>\n      <div style=\"flex:1;min-width:300px;\">\n        <p class=\"text-lg\" style=\"color:#374151;\">${data.intro || 'Investment-Analyse für ' + data.company}</p>\n      </div>\n    </div>\n\n    <div class=\"prose max-w-none\">\n      <p class=\"mb-4\">${contentHtml}</p>\n    </div>\n\n    <hr style=\"margin:3rem 0;border:none;border-top:1px solid #e2e8f0;\">\n    \n    <p style=\"font-size:0.9rem;color:#64748b;\">\n      <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. \n      Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben ohne Gewähr. \n      Investitionsentscheidungen sollten auf Basis eigener Recherche getroffen werden.\n    </p>\n\n  </article>\n</main>\n\n<footer class=\"site-footer border-t py-6 mt-12\">\n  <div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\">\n    <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>\n    <div class=\"footer-links\">\n      <a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Impressum</a>\n      <a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Datenschutz</a>\n      <a href=\"../Rechtliches/haftung.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Haftungsausschluss</a>\n      <a href=\"../Rechtliches/agb.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">AGB</a>\n    </div>\n  </div>\n</footer>\n\n<script src=\"../script.js\"></script>\n</body>\n</html>`;\n\nreturn {\n  json: {\n    html,\n    filename: data.filename,\n    company: data.company,\n    ticker: data.ticker,\n    sector: data.sector,\n    date: data.date,\n    qualityScore: data.qualityScore\n  }\n};"
+      },
+      "id": "generate-html",
+      "name": "🌐 HTML generieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1850, 300],
+      "notes": "Konvertiert Markdown zu HTML im Ferrari-Stil"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Speichere HTML-Datei\nconst data = $input.item.json;\nconst fs = require('fs');\n\n// Pfad zur Datei\nconst filepath = `/workspaces/capitovo/Abonenten/${data.filename}.html`;\n\ntry {\n  fs.writeFileSync(filepath, data.html, 'utf8');\n  console.log('HTML gespeichert:', filepath);\n} catch (e) {\n  throw new Error('Fehler beim Speichern: ' + e.message);\n}\n\nreturn {\n  json: {\n    filepath,\n    filename: data.filename,\n    company: data.company,\n    ticker: data.ticker,\n    sector: data.sector,\n    date: data.date,\n    qualityScore: data.qualityScore\n  }\n};"
+      },
+      "id": "write-html",
+      "name": "💾 HTML speichern",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2050, 300],
+      "notes": "Speichert die HTML-Datei im Abonenten-Ordner"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generiere SVG-Vorschaubild\nconst data = $input.item.json;\nconst fs = require('fs');\n\nconst svg = `<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">\n      <stop offset=\"0%\" stop-color=\"#0f172a\"/>\n      <stop offset=\"100%\" stop-color=\"#1e293b\"/>\n    </linearGradient>\n  </defs>\n  <rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"16\"/>\n  <g transform=\"translate(40 50)\">\n    <text x=\"0\" y=\"20\" fill=\"#94a3b8\" font-family=\"system-ui, sans-serif\" font-size=\"14\" letter-spacing=\"0.15em\">${data.ticker}</text>\n    <text x=\"0\" y=\"70\" fill=\"#f1f5f9\" font-family=\"system-ui, sans-serif\" font-size=\"36\" font-weight=\"700\">${data.company}</text>\n    <text x=\"0\" y=\"105\" fill=\"#60a5fa\" font-family=\"system-ui, sans-serif\" font-size=\"16\">Equity Research</text>\n    <text x=\"0\" y=\"140\" fill=\"#64748b\" font-family=\"system-ui, sans-serif\" font-size=\"14\">${data.sector}</text>\n    <text x=\"0\" y=\"280\" fill=\"#475569\" font-family=\"system-ui, sans-serif\" font-size=\"12\">capitovo • ${data.date}</text>\n  </g>\n</svg>`;\n\nconst svgPath = `/workspaces/capitovo/data/vorschaubilder/${data.filename}.svg`;\n\ntry {\n  fs.writeFileSync(svgPath, svg, 'utf8');\n  console.log('SVG gespeichert:', svgPath);\n} catch (e) {\n  console.log('SVG-Fehler (nicht kritisch):', e.message);\n}\n\nreturn {\n  json: {\n    ...data,\n    svgPath: `data/vorschaubilder/${data.filename}.svg`\n  }\n};"
+      },
+      "id": "generate-svg",
+      "name": "🖼️ Vorschaubild erstellen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2250, 300],
+      "notes": "Erstellt ein SVG-Vorschaubild für die Analyse-Karte"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Update analysen.json mit neuem Eintrag\nconst data = $input.item.json;\nconst fs = require('fs');\n\nconst analysenPath = '/workspaces/capitovo/data/analysen.json';\n\n// Lade bestehende Analysen\nlet analysen = [];\ntry {\n  const content = fs.readFileSync(analysenPath, 'utf8');\n  analysen = JSON.parse(content);\n} catch (e) {\n  console.log('analysen.json nicht gefunden, erstelle neu');\n  analysen = [];\n}\n\n// Neuer Eintrag\nconst newEntry = {\n  id: `${data.ticker.toLowerCase()}-${data.date}`,\n  category: data.sector,\n  title: `${data.company}: Equity-Research-Bericht`,\n  summary: `Aktuelle Investment-Analyse für ${data.company} (${data.ticker}) mit Bewertung, Kennzahlen und Analystenmeinungen.`,\n  link: `Abonenten/${data.filename}.html`,\n  image: data.svgPath,\n  date: data.date,\n  author: 'capitovo Research',\n  tags: [data.company, data.ticker, data.sector, 'Equity Research'],\n  published: true,\n  qualityScore: data.qualityScore\n};\n\n// Prüfe auf Duplikate (gleiche ID)\nconst existingIndex = analysen.findIndex(a => a.id === newEntry.id);\nif (existingIndex >= 0) {\n  analysen[existingIndex] = newEntry; // Update\n} else {\n  analysen.unshift(newEntry); // Am Anfang einfügen\n}\n\n// Speichern\nfs.writeFileSync(analysenPath, JSON.stringify(analysen, null, 2), 'utf8');\nconsole.log('analysen.json aktualisiert');\n\nreturn {\n  json: {\n    success: true,\n    entry: newEntry,\n    totalAnalyses: analysen.length\n  }\n};"
+      },
+      "id": "update-json",
+      "name": "📚 analysen.json aktualisieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2450, 300],
+      "notes": "Fügt die neue Analyse zur Liste hinzu"
+    },
+    {
+      "parameters": {
+        "channel": "#capitovo-analysen",
+        "text": "=✅ *Neue Analyse erstellt*\n\n📊 *{{ $json.entry.title }}*\n🏢 Sektor: {{ $json.entry.category }}\n📅 Datum: {{ $json.entry.date }}\n⭐ Qualität: {{ $json.entry.qualityScore }}/10\n\n🔗 Link: `{{ $json.entry.link }}`\n\n_Automatisch generiert von capitovo Analyse Autopilot_",
+        "otherOptions": {}
+      },
+      "id": "slack-success",
+      "name": "📢 Slack: Erfolg",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [2650, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-credentials",
+          "name": "Slack Webhook"
+        }
+      },
+      "notes": "Benachrichtigung bei erfolgreicher Erstellung"
+    },
+    {
+      "parameters": {
+        "channel": "#capitovo-alerts",
+        "text": "=⚠️ *Analyse-Qualität zu niedrig*\n\n📊 Unternehmen: {{ $('📝 Analyse-Input').item.json.company }}\n❌ Qualitätsscore: {{ $json.qualityScore }}/10\n📝 Probleme: {{ $json.issues }}\n\n_Manuelle Prüfung erforderlich_",
+        "otherOptions": {}
+      },
+      "id": "slack-warning",
+      "name": "⚠️ Slack: Warnung",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1850, 480],
+      "credentials": {
+        "slackApi": {
+          "id": "slack-credentials",
+          "name": "Slack Webhook"
+        }
+      },
+      "notes": "Warnung wenn Qualität unter Schwellenwert"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "📤 Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [2850, 300],
+      "notes": "Antwortet auf Webhook-Requests mit dem Ergebnis"
+    }
+  ],
+  "connections": {
+    "⏰ Schedule Trigger": {
+      "main": [
+        [
+          { "node": "🔀 Merge Triggers", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "🔗 Webhook Trigger": {
+      "main": [
+        [
+          { "node": "🔀 Merge Triggers", "type": "main", "index": 1 }
+        ]
+      ]
+    },
+    "🔀 Merge Triggers": {
+      "main": [
+        [
+          { "node": "📝 Analyse-Input", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "📝 Analyse-Input": {
+      "main": [
+        [
+          { "node": "🤖 Perplexity: Analyse erstellen", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "🤖 Perplexity: Analyse erstellen": {
+      "main": [
+        [
+          { "node": "📋 Entwurf normalisieren", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "📋 Entwurf normalisieren": {
+      "main": [
+        [
+          { "node": "🔍 Qualitätsprüfung", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "🔍 Qualitätsprüfung": {
+      "main": [
+        [
+          { "node": "📊 QA-Ergebnis verarbeiten", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "📊 QA-Ergebnis verarbeiten": {
+      "main": [
+        [
+          { "node": "✅ Qualität OK?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "✅ Qualität OK?": {
+      "main": [
+        [
+          { "node": "🌐 HTML generieren", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "⚠️ Slack: Warnung", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "🌐 HTML generieren": {
+      "main": [
+        [
+          { "node": "💾 HTML speichern", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "💾 HTML speichern": {
+      "main": [
+        [
+          { "node": "🖼️ Vorschaubild erstellen", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "🖼️ Vorschaubild erstellen": {
+      "main": [
+        [
+          { "node": "📚 analysen.json aktualisieren", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "📚 analysen.json aktualisieren": {
+      "main": [
+        [
+          { "node": "📢 Slack: Erfolg", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "📢 Slack: Erfolg": {
+      "main": [
+        [
+          { "node": "📤 Webhook Response", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "staticData": null,
+  "tags": [
+    { "id": "analysis", "name": "analysis" },
+    { "id": "perplexity", "name": "perplexity" },
+    { "id": "automation", "name": "automation" }
+  ],
+  "triggerCount": 2,
+  "versionId": "2.0"
+}

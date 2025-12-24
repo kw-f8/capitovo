@@ -10,69 +10,6 @@
     <title>capitovo — [TITEL EINFÜGEN]</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <style>
-        /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
-        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
-        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
-        /* Provide a subtle visible focus for keyboard users */
-        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
-
-        /* Ensure header is static, not sticky */
-        header { position: static !important; }
-
-        /* Page specific: keep article unboxed and readable */
-        main { background: transparent; padding-top: 60px !important; }
-        .analysis-article { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }
-        .analysis-meta { color: #6b7280; margin-bottom: 1rem; }
-        .analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }
-        .analysis-section { margin-top:1rem; }
-        .analysis-section h2 { 
-            font-size: 1.5rem; 
-            font-weight: 700;
-            margin: 2rem 0 1rem 0; 
-            color: #0f172a;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0.5rem;
-        }
-        .analysis-section h3 { margin-top:0.8rem; margin-bottom:0.4rem; }
-        .refs { font-size:0.9rem; color:#475569; margin-top:1.25rem; }
-        
-        /* Optional: Custom boxes for highlighting important content */
-        .votum-box {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border-left: 4px solid #0284c7;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 8px;
-        }
-        .votum-box h3 {
-            margin-top: 0;
-            color: #0c4a6e;
-        }
-        .risk-box {
-            background: #fef2f2;
-            border-left: 4px solid #dc2626;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 8px;
-        }
-        .risk-box h3 {
-            margin-top: 0;
-            color: #991b1b;
-        }
-        .opportunity-box {
-            background: #f0fdf4;
-            border-left: 4px solid #16a34a;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 8px;
-        }
-        .opportunity-box h3 {
-            margin-top: 0;
-            color: #166534;
-        }
-    </style>
 </head>
 <body class="abonenten-page bg-white text-gray-900">
 
@@ -88,32 +25,29 @@
 
 <main>
     <article class="analysis-article" id="[ID-EINFÜGEN]-analysis">
-        <!-- Zurück-Button -->
-        <div class="mb-4">
-            <a href="alle_analysen.html" class="text-accent-blue text-sm">← Zurück</a>
+        <div class="analysis-topbar">
+            <a href="alle_analysen.html" class="analysis-back">← Zurück</a>
         </div>
-        
-        <!-- Header: Kategorie, Titel, Meta -->
-        <div class="mb-2">
-            <p class="text-xs font-semibold uppercase mb-2" style="color: #64748b;">
-                [KATEGORIE IN GROSSBUCHSTABEN] <span class="text-gray-400 mx-1">•</span> [UNTERNEHMENSNAME]
-            </p>
-            <h1 class="text-3xl font-extrabold text-gray-900 mb-1">[Titel der Analyse]</h1>
-            <div class="text-sm" style="color: #64748b;">
+
+        <header class="analysis-header">
+            <p class="analysis-kicker">[KATEGORIE IN GROSSBUCHSTABEN] <span class="text-gray-400 mx-1">•</span> [UNTERNEHMENSNAME]</p>
+            <h1 class="analysis-title">[Titel der Analyse]</h1>
+            <p class="analysis-meta">
                 <span>• [DATUM im Format DD.MM.YYYY]</span>
-            </div>
-        </div>
+                <span>• Ticker: [TICKER]</span>
+                <span>• WKN: [WKN]</span>
+                <span>• ISIN: [ISIN]</span>
+            </p>
+        </header>
 
-        <!-- Hero Image & Intro (Side by Side on Desktop) -->
-        <div class="hero-intro-wrapper" style="display: flex; gap: 24px; margin: 24px 0 32px 0; align-items: center; flex-wrap: wrap;">
-            <!-- Hero Image (Left) -->
-            <div class="analysis-hero" style="flex: 1; min-width: 300px;">
-                <img src="../data/vorschaubilder_analysen/[BILDNAME].png" alt="[ALT-TEXT]" style="width:100%; aspect-ratio: 16/9; object-fit:cover; display:block; border-radius:8px;">
-            </div>
-
-            <!-- Intro Paragraph (Right) -->
-            <div style="flex: 1; min-width: 300px;">
-                <p class="analysis-intro" style="margin: 0;">[Einleitender Absatz, der die wichtigsten Punkte der Analyse zusammenfasst und das Interesse des Lesers weckt. Sollte 2-4 Sätze umfassen.]</p>
+        <div class="analysis-hero">
+            <div class="analysis-hero-grid">
+                <div class="analysis-hero-media">
+                    <img class="analysis-hero-image" src="../data/vorschaubilder_analysen/[BILDNAME].png" alt="[ALT-TEXT]">
+                </div>
+                <div class="analysis-hero-copy">
+                    <p class="analysis-intro">[Einleitender Absatz, der die wichtigsten Punkte der Analyse zusammenfasst und das Interesse des Lesers weckt. Sollte 2-4 Sätze umfassen.]</p>
+                </div>
             </div>
         </div>
 
@@ -125,17 +59,17 @@
             <p>[Zweiter Absatz, falls nötig...]</p>
             
             <!-- Optional: Tabellen für Finanzdaten -->
-            <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+            <table class="analysis-table">
                 <thead>
-                    <tr style="text-align:left; border-bottom:1px solid rgba(15,23,42,0.06);">
-                        <th style="padding:8px 4px;">Kennzahl</th>
-                        <th style="padding:8px 4px;">Wert</th>
+                    <tr>
+                        <th scope="col">Kennzahl</th>
+                        <th scope="col">Wert</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.04);">
-                        <td style="padding:6px 4px;">Beispiel</td>
-                        <td style="padding:6px 4px;">100 Mrd. USD</td>
+                    <tr>
+                        <td>Beispiel</td>
+                        <td>100 Mrd. USD</td>
                     </tr>
                 </tbody>
             </table>
@@ -177,17 +111,12 @@
         <section class="analysis-section">
             <h2>[Schlussfolgerungen]</h2>
             <p>[Abschließende Bewertung und Zusammenfassung...]</p>
+        </section>
 
-            <!-- Disclaimer & Quellen -->
-            <hr style="margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;">
-
-            <p style="font-size: 0.9rem; color: #64748b;">
-                <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.
-            </p>
-
-            <p style="font-size: 0.9rem; color: #64748b;">
-                <strong>Quellen:</strong> [Liste der verwendeten Quellen, z.B. Quartalsberichte, Analystenschätzungen, Finanzdatenbanken]
-            </p>
+        <section class="analysis-section" aria-labelledby="disclaimer">
+            <h2 id="disclaimer">Disclaimer</h2>
+            <p class="analysis-disclaimer"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.</p>
+            <p class="analysis-disclaimer"><strong>Quellen:</strong> [Liste der verwendeten Quellen, z.B. Quartalsberichte, Analystenschätzungen, Finanzdatenbanken]</p>
         </section>
             </article>
         </div>

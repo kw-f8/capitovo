@@ -10,28 +10,6 @@
     <title>capitovo — Apple Inc. Investment‑Analyse (Dezember 2025)</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
-    <style>
-        /* Match header/menu-toggle styling used on other Abonenten pages */
-        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
-        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
-        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
-
-        /* Minimal page-specific styles copied from analyse_vorlage */
-        main { background: transparent; padding-top: 60px !important; }
-        /* Align content with the outer edges of logo + sidebar button (header-content/main inner width = 72rem - 48px = 1104px) */
-        .analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; }
-        .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }
-        .analysis-meta { color: #6b7280; margin-bottom: 1rem; }
-        .analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }
-        .analysis-section { margin-top:1rem; }
-        .analysis-section h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem 0; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
-        .card-table { width:100%; border-collapse:collapse; margin-top:10px; }
-        .card-table th, .card-table td { padding:8px 6px; text-align:left; }
-        .votum-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 1.5rem; margin: 2rem 0; border-radius: 8px; }
-
-        /* Keep long source URLs from overflowing to the right */
-        .refs, .refs a, .refs li { overflow-wrap: anywhere; word-break: break-word; }
-    </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
 
@@ -46,63 +24,65 @@
     </div>
 </header>
 
-<main style="padding-top: 60px !important;">
-    <article class="analysis-article" id="apple-analysis" style="margin-top: 0 !important;">
-        <div class="mb-4" style="margin-top: 0 !important;">
-            <a href="alle_analysen.html" class="text-accent-blue text-sm">← Zurück</a>
+<main>
+    <article class="analysis-article" id="apple-analysis">
+        <div class="analysis-topbar">
+            <a href="alle_analysen.html" class="analysis-back">← Zurück</a>
         </div>
 
-        <div class="mb-2">
-            <p class="text-xs font-semibold uppercase mb-2" style="color: #64748b;">Unternehmensanalyse <span class="text-gray-400 mx-1">•</span> Apple Inc. (AAPL)</p>
-            <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Apple Inc.: Investment‑Analyse (Dezember 2025)</h1>
-            <div class="text-sm analysis-meta" style="color: #64748b;">
+        <header class="analysis-header">
+            <p class="analysis-kicker">Unternehmensanalyse <span class="text-gray-400 mx-1">•</span> Apple Inc. (AAPL)</p>
+            <h1 class="analysis-title">Apple Inc.: Investment‑Analyse (Dezember 2025)</h1>
+            <p class="analysis-meta">
                 <span>• 11.12.2025</span>
-                <span class="ml-3">• Ticker: AAPL</span>
-                <span class="ml-3">• WKN: 865985</span>
-                <span class="ml-3">• ISIN: US0378331005</span>
+                <span>• Ticker: AAPL</span>
+                <span>• WKN: 865985</span>
+                <span>• ISIN: US0378331005</span>
+            </p>
+        </header>
+
+        <div class="analysis-hero">
+            <div class="analysis-hero-grid">
+                <div class="analysis-hero-media">
+                    <img class="analysis-hero-image" src="../data/vorschaubilder_analysen/apple_111225.png" alt="Apple Analyse">
+                </div>
+                <div class="analysis-hero-copy">
+                    <p class="analysis-intro">Die Apple‑Aktie bleibt ein führender Blue‑Chip mit stabiler Ertragskraft und signifikanten Wachstumstreibern aus Services, Wearables und neuen Produktkategorien. Unsere Analyse fasst aktuelle Kennzahlen, fundamentale Prognosen und zentrale Risiken zusammen.</p>
+                </div>
             </div>
         </div>
 
-        <div class="hero-intro-wrapper" style="display:flex; gap:24px; margin:24px 0 32px 0; align-items:center; flex-wrap:wrap;">
-            <div class="analysis-hero" style="flex:1; min-width:300px;">
-                <img src="../data/vorschaubilder_analysen/apple_111225.png" alt="Apple Analyse" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-radius:8px;">
-            </div>
-            <div style="flex:1; min-width:300px;">
-                <p class="analysis-intro">Die Apple‑Aktie bleibt ein führender Blue‑Chip mit stabiler Ertragskraft und signifikanten Wachstumstreibern aus Services, Wearables und neuen Produktkategorien. Unsere Analyse fasst aktuelle Kennzahlen, fundamentale Prognosen und zentrale Risiken zusammen.</p>
-            </div>
-        </div>
-
-        <section class="analysis-section">
-            <h2>Aktuelle Kennzahlen</h2>
-            <table class="card-table">
+        <section class="analysis-section" aria-labelledby="kennzahlen">
+            <h2 id="kennzahlen">Aktuelle Kennzahlen</h2>
+            <table class="analysis-table">
                 <thead>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.06);">
-                        <th>Kennzahl</th>
-                        <th>Wert</th>
+                    <tr>
+                        <th scope="col">Kennzahl</th>
+                        <th scope="col">Wert</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.04);">
+                    <tr>
                         <td>Kurs (Stand Dezember 2025)</td>
                         <td>ca. 277,71 USD</td>
                     </tr>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.04);">
+                    <tr>
                         <td>52‑Wochen‑Hoch</td>
                         <td>288,62 USD</td>
                     </tr>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.04);">
+                    <tr>
                         <td>52‑Wochen‑Tief</td>
                         <td>169,21 USD</td>
                     </tr>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.04);">
+                    <tr>
                         <td>Marktkapitalisierung</td>
                         <td>über 4,1 Bio. USD</td>
                     </tr>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.04);">
+                    <tr>
                         <td>KGV</td>
                         <td>ca. 37</td>
                     </tr>
-                    <tr style="border-bottom:1px solid rgba(15,23,42,0.04);">
+                    <tr>
                         <td>EPS</td>
                         <td>ca. 7,47 USD</td>
                     </tr>
@@ -134,9 +114,9 @@
             <p>Apple bleibt ein qualitativ hochwertiger Blue‑Chip mit starker Ertragskraft und gewissen Wachstumsperspektiven durch Services und neue Produkte. Das Bewertungsniveau (KGV ~37) ist moderat bis gehoben; langfristige Upside‑Potenziale bestehen bei anhaltendem Umsatz‑und Margenwachstum.</p>
         </section>
 
-        <section class="analysis-section">
-            <h2>Quellen</h2>
-            <div class="refs">
+        <section class="analysis-section" aria-labelledby="quellen">
+            <h2 id="quellen">Quellen</h2>
+            <div class="analysis-refs">
                 <ol>
                     <li><a href="https://boersen.manager-magazin.de/aktien/apple/US0378331005/" target="_blank" rel="noopener">Manager Magazin — Apple Übersicht</a></li>
                     <li><a href="https://www.ftd.de/boerse/aktien/apple-aktie-prognose-2026/" target="_blank" rel="noopener">FTD — Apple Prognose</a></li>
@@ -149,9 +129,9 @@
             </div>
         </section>
 
-        <section class="analysis-section">
-            <hr style="margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;">
-            <p style="font-size:0.9rem; color:#64748b;"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.</p>
+        <section class="analysis-section" aria-labelledby="disclaimer">
+            <h2 id="disclaimer">Disclaimer</h2>
+            <p class="analysis-disclaimer"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.</p>
         </section>
     </article>
 </main>

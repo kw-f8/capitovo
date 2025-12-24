@@ -78,13 +78,26 @@
     <div class="hero-intro-wrapper" style="display:flex; gap:24px; margin:24px 0 32px 0; align-items:flex-start; flex-wrap:wrap;">
       <div class="analysis-hero" style="flex:1; min-width:300px;">
         <img src="../assets/studiodisplay_mockup.svg" alt="Vorlage Vorschaubild" style="width:100%; aspect-ratio:16/9; object-fit:contain; background:#f3f4f6; display:block; border-radius:8px;">
+
+        <nav aria-label="Inhaltsverzeichnis" style="margin-top: 14px;">
+          <div class="bg-white border border-gray-200 rounded-md" style="padding: 12px 14px;">
+            <div class="text-sm font-semibold text-gray-900" style="margin-bottom: 8px;">Inhaltsverzeichnis</div>
+            <ol class="text-sm text-gray-700" style="list-style: none; padding: 0; margin: 0; display: grid; gap: 6px;">
+              <li><a class="text-accent-blue hover:underline" href="#marktperformance">1) Marktperformance &amp; Bewertung</a></li>
+              <li><a class="text-accent-blue hover:underline" href="#finanzielle-grundlagen">2) Finanzielle Grundlagen</a></li>
+              <li><a class="text-accent-blue hover:underline" href="#strategie">3) Strategische Ausrichtung</a></li>
+              <li><a class="text-accent-blue hover:underline" href="#analysten">4) Analystenerwartungen &amp; Institutionelles Interesse</a></li>
+              <li><a class="text-accent-blue hover:underline" href="#votum">5) Bewertungskontext &amp; Votum</a></li>
+            </ol>
+          </div>
+        </nav>
       </div>
       <div style="flex:1; min-width:300px;">
         <p class="analysis-intro" style="margin-top:0;">Diese Seite ist eine sichtbare Vorlage im Layout-Stil der bestehenden Analysen. Hier können wir gemeinsam Textstruktur, Tabellen, Tonalität und den finalen Aufbau vorbereiten, bevor wir neue Analysen automatisiert veröffentlichen.</p>
       </div>
     </div>
 
-    <section class="analysis-section">
+    <section class="analysis-section" id="marktperformance">
       <h2>1) Marktperformance &amp; Bewertung</h2>
       <p>Kurzer Überblick über Kursentwicklung, Momentum, relative Stärke und aktuelle Bewertung. (Platzhalterwerte unten dienen nur zur Layout-Prüfung.)</p>
       <table class="card-table">
@@ -103,7 +116,7 @@
       </table>
     </section>
 
-    <section class="analysis-section">
+    <section class="analysis-section" id="finanzielle-grundlagen">
       <h2>2) Finanzielle Grundlagen</h2>
       <p>Wichtigste finanzielle Treiber: Umsatz, Margen, Cashflow, Bilanzqualität und Kapitalallokation.</p>
       <ul style="margin-left: 18px; list-style: disc;">
@@ -113,17 +126,17 @@
       </ul>
     </section>
 
-    <section class="analysis-section">
+    <section class="analysis-section" id="strategie">
       <h2>3) Strategische Ausrichtung</h2>
       <p>Was sind die strategischen Prioritäten? Welche Produkte/Segmente treiben Wachstum? Wo liegen Risiken (Wettbewerb, Regulierung, Zyklik)?</p>
     </section>
 
-    <section class="analysis-section">
+    <section class="analysis-section" id="analysten">
       <h2>4) Analystenerwartungen &amp; Institutionelles Interesse</h2>
       <p>Wie ist der Konsens (Kursziele, Ratings, Gewinnschätzungen)? Gibt es jüngste Up-/Downgrades oder relevante institutionelle Bewegungen?</p>
     </section>
 
-    <section class="analysis-section">
+    <section class="analysis-section" id="votum">
       <h2>5) Bewertungskontext &amp; Votum</h2>
       <p>Einordnung der Bewertung im Kontext von Wachstum/Qualität/Risiko + klares Votum (mit Bedingungen).</p>
       <div class="votum-box">

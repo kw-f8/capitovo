@@ -27,6 +27,11 @@
       transform: translateZ(0);
       transition: transform 180ms ease;
       will-change: transform;
+      cursor: pointer;
+    }
+    .logo-link .header-logo {
+      transition: transform 220ms ease, filter 260ms ease;
+      will-change: transform, filter;
     }
     .logo-link::before {
       content: "";
@@ -62,7 +67,13 @@
     .logo-link:hover::before { transform: scaleX(1); }
     .logo-link:hover::after { opacity: 1; transform: translateX(620%); }
     .logo-link:hover .header-logo {
-      filter: drop-shadow(0 10px 24px rgba(0,145,214,0.18));
+      filter: drop-shadow(0 12px 28px rgba(0,145,214,0.28));
+      animation: logo-pop 520ms cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+    @keyframes logo-pop {
+      0%   { transform: translateY(0) scale(1); }
+      55%  { transform: translateY(-2px) scale(1.05); }
+      100% { transform: translateY(0) scale(1.02); }
     }
     .logo-link:focus-visible {
       outline: none;

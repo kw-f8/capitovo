@@ -1,0 +1,140 @@
+{
+  "name": "capitovo Analyse Quicktest (ohne Webhook)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "🧪 Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 280],
+      "notes": "Einfach auf 'Execute workflow' klicken, kein Webhook nötig."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            { "id": "company", "name": "company", "type": "string", "value": "Ferrari N.V." },
+            { "id": "ticker", "name": "ticker", "type": "string", "value": "RACE" },
+            { "id": "sector", "name": "sector", "type": "string", "value": "ZYKLISCHER KONSUM" },
+            { "id": "heroImage", "name": "heroImage", "type": "string", "value": "data/vorschaubilder_analysen/ferari.png" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-input",
+      "name": "📝 Analyse-Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [450, 280],
+      "notes": "Passe hier company/ticker/sector an für Tests."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.35,\n  \"max_tokens\": 3200,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Equity-Research-Autor. Schreibe im Stil der Ferrari-Analyse eine wöchentliche Investment-Analyse mit 5 Sektionen (Marktperformance & Bewertung; Finanzielle Grundlagen; Strategische Ausrichtung; Analystenerwartungen & Institutionelles Interesse; Bewertungskontext & Votum). Nutze Tabellen für Kennzahlen, Deutsch, klarer Ton, am Ende Kurzfazit und Disclaimer.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Erstelle eine vollständige Analyse für:\\nUnternehmen: {{ $json.company }}\\nTicker: {{ $json.ticker }}\\nSektor: {{ $json.sector }}\"\n    }\n  ]\n}"
+      },
+      "id": "perplexity-draft",
+      "name": "🤖 Perplexity Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [650, 280],
+      "credentials": { "httpHeaderAuth": { "id": "perplexity-credentials", "name": "Perplexity API Key" } },
+      "notes": "Erzeugt den Analyse-Entwurf."
+    },
+    {
+      "parameters": {
+        "jsCode": "const res = $input.item.json;\nconst draft = res.choices?.[0]?.message?.content || '';\nif (!draft) throw new Error('Kein Draft erhalten');\n\nconst input = $('📝 Analyse-Input').item.json;\nconst date = new Date().toISOString().split('T')[0];\n\nfunction slugify(t){return t.toLowerCase().replace(/[äöüß]/g,c=>({ä:'ae',ö:'oe',ü:'ue',ß:'ss'}[c])).replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'analyse';}\nconst filename = slugify(input.company);\n\nreturn { json: { ...input, date, filename, draft } };"
+      },
+      "id": "normalize",
+      "name": "🧩 Normalisieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 280]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [ { "name": "Content-Type", "value": "application/json" } ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.15,\n  \"max_tokens\": 1600,\n  \"messages\": [\n    {\"role\": \"system\", \"content\": \"Prüfe den folgenden Text auf Qualität (Struktur, Zahlenplausibilität, Stil). Antworte als JSON: {\\\"quality_score\\\":1-10, \\\"issues\\\":string, \\\"improved_content\\\":string}. Liefere improved_content nur, wenn quality_score < 7.\"},\n    {\"role\": \"user\", \"content\": \"Text:\\n\\n{{ $json.draft }}\"}\n  ]\n}"
+      },
+      "id": "qa",
+      "name": "🔍 QA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1050, 280],
+      "credentials": { "httpHeaderAuth": { "id": "perplexity-credentials", "name": "Perplexity API Key" } },
+      "notes": "Qualitätsprüfung via Perplexity."
+    },
+    {
+      "parameters": {
+        "jsCode": "const qa = $input.item.json;\nconst content = qa.choices?.[0]?.message?.content || '{}';\nconst base = $('🧩 Normalisieren').item.json;\nlet score = 5, issues = 'unbekannt', improved = '';\n\ntry {\n  // Versuche JSON aus Codeblock oder direkt zu extrahieren\n  let jsonStr = content;\n  const codeBlockMatch = content.match(/```json?([\\s\\S]*?)```/);\n  if (codeBlockMatch) {\n    jsonStr = codeBlockMatch[1];\n  }\n  \n  // Versuche JSON zu parsen\n  const parsed = JSON.parse(jsonStr.trim());\n  score = parsed.quality_score ?? score;\n  issues = parsed.issues || 'Keine';\n  improved = parsed.improved_content || '';\n} catch (e) {\n  // Fallback: Versuche Score aus Text zu extrahieren\n  const scoreMatch = content.match(/quality_score[\"\']?\\s*[:=]\\s*(\\d+)/i);\n  if (scoreMatch) score = parseInt(scoreMatch[1]);\n  issues = 'QA-JSON nicht parsebar (Fallback aktiv)';\n}\n\nconst finalContent = (score < 7 && improved && improved.length > 100) ? improved : base.draft;\n\nreturn {\n  json: {\n    ...base,\n    qualityScore: score,\n    issues,\n    content: finalContent,\n    qaRaw: content.substring(0, 500)\n  }\n};"
+      },
+      "id": "qa-parse",
+      "name": "📊 QA auswerten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 280]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "typeValidation": "strict" },
+          "conditions": [ { "id": "ok", "leftValue": "={{ $json.qualityScore }}", "rightValue": 5, "operator": { "type": "number", "operation": "gte" } } ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "gate",
+      "name": "✅ Score >= 5?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1450, 280]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Einfaches Ergebnisobjekt zurückgeben\nconst d = $input.item.json;\nreturn { json: {\n  status: 'ok',\n  qualityScore: d.qualityScore,\n  issues: d.issues,\n  company: d.company,\n  ticker: d.ticker,\n  sector: d.sector,\n  date: d.date,\n  filename: d.filename,\n  content: d.content\n}};"
+      },
+      "id": "result-ok",
+      "name": "📤 Ergebnis (OK)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.item.json;\nreturn { json: { status: 'fail', reason: 'Quality too low', qualityScore: d.qualityScore, issues: d.issues } };"
+      },
+      "id": "result-fail",
+      "name": "⛔ Ergebnis (Fail)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1650, 340]
+    }
+  ],
+  "connections": {
+    "🧪 Manual Trigger": { "main": [ [ { "node": "📝 Analyse-Input", "type": "main", "index": 0 } ] ] },
+    "📝 Analyse-Input": { "main": [ [ { "node": "🤖 Perplexity Draft", "type": "main", "index": 0 } ] ] },
+    "🤖 Perplexity Draft": { "main": [ [ { "node": "🧩 Normalisieren", "type": "main", "index": 0 } ] ] },
+    "🧩 Normalisieren": { "main": [ [ { "node": "🔍 QA", "type": "main", "index": 0 } ] ] },
+    "🔍 QA": { "main": [ [ { "node": "📊 QA auswerten", "type": "main", "index": 0 } ] ] },
+    "📊 QA auswerten": { "main": [ [ { "node": "✅ Score >= 5?", "type": "main", "index": 0 } ] ] },
+    "✅ Score >= 5?": { "main": [ [ { "node": "📤 Ergebnis (OK)", "type": "main", "index": 0 } ], [ { "node": "⛔ Ergebnis (Fail)", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [ { "id": "test", "name": "test" }, { "id": "perplexity", "name": "perplexity" } ]
+}

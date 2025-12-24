@@ -27,6 +27,36 @@
     .analysis-meta { color: #6b7280; margin-bottom: 1rem; }
     .analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }
     .analysis-section { margin-top:1rem; }
+    .hero-media {
+      width: 100%;
+      height: 360px;
+      object-fit: contain;
+      background: #f3f4f6;
+      display: block;
+      border-radius: 8px;
+    }
+    .hero-summary {
+      height: 360px;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-summary-text {
+      margin: 0;
+      line-height: 1.55;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 14;
+    }
+    @media (max-width: 900px) {
+      .hero-media { height: auto; aspect-ratio: 16/9; }
+      .hero-summary { height: auto; }
+      .hero-summary-text {
+        overflow: visible;
+        display: block;
+        -webkit-line-clamp: unset;
+      }
+    }
     .analysis-section h2 {
       font-size: 1.5rem;
       font-weight: 700;
@@ -95,7 +125,7 @@
 
     <div class="hero-intro-wrapper" style="display:flex; gap:24px; margin:24px 0 32px 0; align-items:flex-start; flex-wrap:wrap;">
       <div class="analysis-hero" style="flex:1; min-width:300px;">
-        <img src="../assets/studiodisplay_mockup.svg" alt="Vorlage Vorschaubild" style="width:100%; aspect-ratio:16/9; object-fit:contain; background:#f3f4f6; display:block; border-radius:8px;">
+        <img src="../assets/studiodisplay_mockup.svg" alt="Vorlage Vorschaubild" class="hero-media">
 
         <nav aria-label="Inhaltsverzeichnis" style="margin: 32px 0;">
           <div class="toc-title">Überblick</div>
@@ -108,8 +138,12 @@
           </ol>
         </nav>
       </div>
-      <div style="flex:1; min-width:300px;">
-        <p class="analysis-intro" style="margin-top:0;">Diese Seite ist eine sichtbare Vorlage im Layout-Stil der bestehenden Analysen. Hier können wir gemeinsam Textstruktur, Tabellen, Tonalität und den finalen Aufbau vorbereiten, bevor wir neue Analysen automatisiert veröffentlichen.</p>
+      <div style="flex:1; min-width:300px;" class="hero-summary">
+        <p class="analysis-intro hero-summary-text">Zusammenfassung (Mustertext): Die Aktie befindet sich im Spannungsfeld aus solider operativer Qualität und einer Bewertung, die bereits viel Optimismus einpreist. Kurzfristig dominieren Sentiment, Momentum und Erwartungsmanagement rund um die nächsten Quartalszahlen; mittelfristig stehen Margenstabilität, Cashflow-Qualität und die Fähigkeit zur disziplinierten Kapitalallokation im Vordergrund. Im Bewertungsblock achten wir insbesondere auf die Relation aus Wachstum, Rendite auf das eingesetzte Kapital und Zyklik, um Übertreibungen früh zu erkennen.
+
+In den finanziellen Grundlagen fokussieren wir uns auf die Treiber hinter Umsatz, Brutto-/Operativmarge und Free-Cashflow (inkl. Working-Capital), sowie auf Bilanzrisiken und Liquidität. Strategisch ist entscheidend, ob die Produkt-/Segment-Mix-Verbesserung weiter trägt, ob Preissetzungsmacht erhalten bleibt und wie stark Wettbewerb oder Regulierung den Handlungsspielraum begrenzen. Beim institutionellen Interesse betrachten wir Konsensschätzungen, Revisionen, Kursziele und mögliche Katalysatoren; Abweichungen zwischen Guidance und Markterwartung sind hier oft der wichtigste Taktgeber.
+
+Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn Margen und Cashflow die Erwartungen nachhaltig bestätigen; downside, falls Wachstum nachlässt oder die Bewertung komprimiert. Das Votum ist daher „Neutral/Beobachten“ bis ein klarer Trigger (z. B. attraktive Einstiegsbewertung oder sichtbare Gewinnrevisionen nach oben) entsteht.</p>
       </div>
     </div>
 

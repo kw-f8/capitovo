@@ -35,6 +35,15 @@
       "notes": "Alternativ: Manuell per POST-Request triggern mit {company, ticker, sector, heroImage}"
     },
     {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "🧪 Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 180],
+      "notes": "Zum lokalen Testen ohne Webhook/Cron; klick einfach Execute."
+    },
+    {
       "parameters": {
         "mode": "chooseBranch"
       },
@@ -299,6 +308,13 @@
   ],
   "connections": {
     "⏰ Schedule Trigger": {
+      "main": [
+        [
+          { "node": "🔀 Merge Triggers", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "🧪 Manual Trigger": {
       "main": [
         [
           { "node": "🔀 Merge Triggers", "type": "main", "index": 0 }

@@ -106,10 +106,10 @@
     },
     {
       "parameters": {
-        "jsCode": "// Einfaches Ergebnisobjekt zurückgeben\nconst d = $input.item.json;\nreturn { json: {\n  status: 'ok',\n  qualityScore: d.qualityScore,\n  issues: d.issues,\n  company: d.company,\n  ticker: d.ticker,\n  sector: d.sector,\n  date: d.date,\n  filename: d.filename,\n  content: d.content\n}};"
+        "jsCode": "const d = $input.item.json;\n\n// Formatiere die fertige Analyse als kopierbaren Text\nconst output = `\n=====================================\nFERTIGE ANALYSE - KOPIERBEREIT\n=====================================\n\nUnternehmen: ${d.company}\nTicker: ${d.ticker}\nSektor: ${d.sector}\nDatum: ${d.date}\nQuality Score: ${d.qualityScore}/10\nIssues: ${d.issues}\n\n-------------------------------------\nINHALT:\n-------------------------------------\n\n${d.content}\n\n-------------------------------------\nDATEIEN:\n-------------------------------------\nFilename: ${d.filename}.html\nHero Image: ${d.heroImage}\n\n=====================================\n`;\n\nreturn { json: {\n  status: 'ok',\n  qualityScore: d.qualityScore,\n  issues: d.issues,\n  company: d.company,\n  ticker: d.ticker,\n  sector: d.sector,\n  date: d.date,\n  filename: d.filename,\n  content: d.content,\n  formattedOutput: output\n}};"
       },
       "id": "result-ok",
-      "name": "📤 Ergebnis (OK)",
+      "name": "📤 Fertige Analyse",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [1650, 220]

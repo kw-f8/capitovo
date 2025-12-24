@@ -95,8 +95,20 @@
       color: #0f172a;
       line-height: 1.25;
       text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 10px;
+      transition: transform 160ms ease, background-color 160ms ease;
+      will-change: transform;
     }
-    .toc-link:hover { text-decoration: underline; }
+    .toc-link:hover {
+      background-color: rgba(15,23,42,0.06);
+      transform: translateX(4px);
+      text-decoration: none;
+    }
+    .toc-link:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+    }
     .toc-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
     .card-table { width:100%; border-collapse:collapse; margin-top:10px; }
     .card-table th, .card-table td { padding:8px 6px; text-align:left; }

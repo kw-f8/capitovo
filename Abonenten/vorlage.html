@@ -97,6 +97,7 @@
       text-decoration: none;
       position: relative;
       padding: 2px 0;
+      overflow: hidden;
       transform: translateZ(0);
       transition: transform 180ms ease, color 180ms ease;
       will-change: transform;
@@ -109,7 +110,7 @@
       bottom: -6px;
       height: 2px;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(59,130,246,0) 0%, rgba(59,130,246,0.55) 50%, rgba(59,130,246,0) 100%);
+      background: linear-gradient(90deg, rgba(0,145,214,0) 0%, rgba(0,145,214,0.55) 50%, rgba(0,145,214,0) 100%);
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 220ms ease;
@@ -118,24 +119,24 @@
     .toc-link::before {
       content: "";
       position: absolute;
-      left: -30%;
-      width: 30%;
+      left: 0;
+      width: 22%;
       bottom: -6px;
       height: 2px;
       border-radius: 999px;
-      background: linear-gradient(90deg, rgba(59,130,246,0) 0%, rgba(59,130,246,0.85) 50%, rgba(59,130,246,0) 100%);
-      transform: translateX(-160%);
+      background: linear-gradient(90deg, rgba(0,145,214,0) 0%, rgba(0,145,214,0.92) 50%, rgba(0,145,214,0) 100%);
+      transform: translateX(-140%);
       opacity: 0;
       transition: transform 520ms ease, opacity 200ms ease;
       pointer-events: none;
     }
     .toc-link:hover {
       transform: translateX(3px);
-      color: #0c4a6e;
+      color: var(--color-accent-blue-dark);
       text-decoration: none;
     }
     .toc-link:hover::after { transform: scaleX(1); }
-    .toc-link:hover::before { opacity: 1; transform: translateX(520%); }
+    .toc-link:hover::before { opacity: 1; transform: translateX(620%); }
     .toc-link:focus-visible {
       outline: none;
       box-shadow: 0 0 0 4px rgba(59,130,246,0.12);

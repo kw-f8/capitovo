@@ -158,7 +158,7 @@
           <p class="text-xs font-semibold uppercase" style="color: #64748b;">VORLAGE <span class="text-gray-400 mx-1">•</span> Analyse Template</p>
           <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Vorlage — Analyse (zum Vorbereiten)</h1>
         </div>
-        <a href="alle_analysen.html" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md px-3 py-2 hover:bg-gray-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200">← Zurück</a>
+        <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md px-3 py-2 hover:bg-gray-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200">← Zurück</a>
       </div>
       <div class="text-sm analysis-meta" style="color: #64748b;">
         <span>24.12.2025</span>
@@ -345,6 +345,28 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
 </div>
 
 <script src="../script.js?v=6"></script>
+<script>
+  // Dynamischer Zurück-Button basierend auf Referrer
+  (function() {
+    const backBtn = document.getElementById('back-button');
+    if (!backBtn) return;
+    
+    const referrer = document.referrer;
+    
+    // Prüfe ob von abonenten.html oder alle_analysen.html gekommen
+    if (referrer.includes('/Abonenten/abonenten.html')) {
+      backBtn.href = './abonenten.html';
+    } else if (referrer.includes('/Abonenten/alle_analysen.html')) {
+      backBtn.href = './alle_analysen.html';
+    } else if (referrer.includes('/Abonenten/')) {
+      // Fallback: irgendeine andere Abonenten-Seite
+      backBtn.href = './alle_analysen.html';
+    } else {
+      // Default: alle_analysen
+      backBtn.href = './alle_analysen.html';
+    }
+  })();
+</script>
 
 </body>
 </html>

@@ -97,13 +97,25 @@
       text-decoration: none;
       position: relative;
       padding: 0;
-      background: linear-gradient(to right, var(--color-accent-blue) 0%, var(--color-accent-blue) 50%, #334155 50%, #334155 100%);
-      background-size: 200% 100%;
+      background: linear-gradient(
+        110deg,
+        var(--color-accent-blue) 0%,
+        var(--color-accent-blue) 20%,
+        #0ea5e9 25%,
+        var(--color-accent-blue) 30%,
+        #334155 35%,
+        #334155 65%,
+        var(--color-accent-blue) 70%,
+        #0ea5e9 75%,
+        var(--color-accent-blue) 80%,
+        var(--color-accent-blue) 100%
+      );
+      background-size: 250% 100%;
       background-position: 100% 0;
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      transition: background-position 450ms cubic-bezier(0.4, 0, 0.2, 1), transform 250ms ease;
+      transition: background-position 550ms cubic-bezier(0.65, 0, 0.35, 1), transform 250ms ease;
     }
     .toc-link:hover {
       background-position: 0 0;

@@ -344,25 +344,21 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
   </nav>
 </div>
 
+
 <script src="../script.js?v=6"></script>
 <script>
   // Dynamischer Zurück-Button basierend auf Referrer
   (function() {
     const backBtn = document.getElementById('back-button');
     if (!backBtn) return;
-    
     const referrer = document.referrer;
-    
-    // Prüfe ob von abonenten.html oder alle_analysen.html gekommen
     if (referrer.includes('/Abonenten/abonenten.html')) {
       backBtn.href = './abonenten.html';
     } else if (referrer.includes('/Abonenten/alle_analysen.html')) {
       backBtn.href = './alle_analysen.html';
     } else if (referrer.includes('/Abonenten/')) {
-      // Fallback: irgendeine andere Abonenten-Seite
       backBtn.href = './alle_analysen.html';
     } else {
-      // Default: alle_analysen
       backBtn.href = './alle_analysen.html';
     }
   })();
@@ -376,6 +372,27 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
       el.textContent = company && company.trim() ? company : 'Unternehmen';
     }
   })();
+
+  // Inhaltsverzeichnis-Animation sofort starten
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.toc-link').forEach(function(link) {
+      link.addEventListener('mouseenter', function() {
+        link.style.transition = 'none';
+        link.style.backgroundPosition = '0 0';
+        link.style.transform = 'translateX(4px)';
+        // Force reflow to apply transition again for next hover
+        void link.offsetWidth;
+        link.style.transition = '';
+      });
+      link.addEventListener('mouseleave', function() {
+        link.style.transition = 'none';
+        link.style.backgroundPosition = '100% 0';
+        link.style.transform = '';
+        void link.offsetWidth;
+        link.style.transition = '';
+      });
+    });
+  });
 </script>
 
 </body>

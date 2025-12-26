@@ -373,26 +373,9 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
     }
   })();
 
-  // Inhaltsverzeichnis-Animation sofort starten
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.toc-link').forEach(function(link) {
-      link.addEventListener('mouseenter', function() {
-        link.style.transition = 'none';
-        link.style.backgroundPosition = '0 0';
-        link.style.transform = 'translateX(4px)';
-        // Force reflow to apply transition again for next hover
-        void link.offsetWidth;
-        link.style.transition = '';
-      });
-      link.addEventListener('mouseleave', function() {
-        link.style.transition = 'none';
-        link.style.backgroundPosition = '100% 0';
-        link.style.transform = '';
-        void link.offsetWidth;
-        link.style.transition = '';
-      });
-    });
-  });
+
+  // Keine Manipulation der Animation per JS, damit das CSS wie vorgesehen arbeitet.
+  // Falls ein Delay im CSS vorhanden ist, kann es dort entfernt werden.
 </script>
 
 </body>

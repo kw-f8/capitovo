@@ -168,16 +168,23 @@
         </div>
         <div class="flex items-center gap-2">
           <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-2 border-[color:var(--color-accent-blue)] rounded-md px-3 py-2 hover:bg-gray-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow">← Zurück</a>
-          <button
-            id="favorite-button"
-            class="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50 hover:text-yellow-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow"
-            style="padding:0"
-            aria-label="Zu Favoriten hinzufügen"
-            aria-pressed="false"
-            title="Zu Favoriten hinzufügen"
-            data-title=""
-            onclick="toggleFavorite(event, this.dataset.title)"
-          >
+          <div style="position:relative;display:inline-block;">
+            <button
+              id="favorite-button"
+              class="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-md text-gray-500 hover:text-yellow-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow"
+              style="padding:0"
+              aria-label="Zu Favoriten hinzufügen"
+              aria-pressed="false"
+              title="Zu Favoriten hinzufügen"
+              data-title=""
+              onclick="toggleFavorite(event, this.dataset.title)"
+            >
+              <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+              </svg>
+            </button>
+            <div id="fav-tooltip" style="display:none;position:absolute;left:50%;top:-36px;transform:translateX(-50%);background:#fff;color:#0091d6;font-size:0.95rem;padding:4px 10px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,0.07);white-space:nowrap;z-index:20;pointer-events:none;">Zu Favoriten hinzugefügt!</div>
+          </div>
             <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
             </svg>
@@ -400,6 +407,7 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
   // Favoriten-Button initialisieren (wie auf "Alle Analysen" via localStorage: capitovo_favorites)
   (function() {
     const btn = document.getElementById('favorite-button');
+    const tooltip = document.getElementById('fav-tooltip');
     if (!btn) return;
 
     const h1 = document.querySelector('#vorlage-analysis h1');
@@ -423,6 +431,19 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
       icon.classList.toggle('text-yellow-400', isFav);
       icon.classList.toggle('text-gray-400', !isFav);
     }
+
+    // Tooltip-Logik: Zeige Hinweis kurz an, wenn hinzugefügt
+    btn.addEventListener('click', function(e) {
+      setTimeout(function() {
+        let favs = [];
+        try { favs = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favs = []; }
+        const nowFav = favs.includes(favTitle);
+        if (tooltip && nowFav) {
+          tooltip.style.display = 'block';
+          setTimeout(function() { tooltip.style.display = 'none'; }, 1200);
+        }
+      }, 10);
+    });
   })();
 
 

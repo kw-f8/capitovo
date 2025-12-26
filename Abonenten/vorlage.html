@@ -128,11 +128,10 @@
       .toc-link:hover { transform: none; background-position: 0 0; }
     }
     .toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
-    nav[aria-label="Inhaltsverzeichnis"] { 
-      width: fit-content; 
-      border-top: 2px solid #e2e8f0; 
-      border-bottom: 2px solid #e2e8f0; 
-      padding: 18px 0; 
+      nav[aria-label="Inhaltsverzeichnis"] {
+        width: fit-content;
+        padding: 6px 0 0 0;
+        border: none;
     }
     .card-table { width:100%; border-collapse:collapse; margin-top:10px; }
     .card-table th, .card-table td { padding:8px 6px; text-align:left; }
@@ -206,14 +205,15 @@
         <img src="../assets/studiodisplay_mockup.svg" alt="Vorlage Vorschaubild" class="hero-media">
       </div>
       <nav aria-label="Inhaltsverzeichnis" style="flex:1; min-width:260px; margin:0 0 0 12px; align-self:stretch; display:flex; flex-direction:column; justify-content:center;">
-        <ol class="toc-list">
-          <li><a class="toc-link" href="#marktperformance">Marktperformance &amp; Bewertung</a></li>
-          <li><a class="toc-link" href="#finanzielle-grundlagen">Finanzielle Grundlagen</a></li>
-          <li><a class="toc-link" href="#strategie">Strategische Ausrichtung</a></li>
-          <li><a class="toc-link" href="#analysten">Analystenerwartungen &amp; Institutionelles Interesse</a></li>
-          <li><a class="toc-link" href="#votum">Bewertungskontext &amp; Votum</a></li>
-        </ol>
-      </nav>
+          <h2 style="font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0;">Überblick</h2>
+          <ol class="toc-list" style="margin-top:0;">
+            <li><a class="toc-link" href="#marktperformance">Marktperformance &amp; Bewertung</a></li>
+            <li><a class="toc-link" href="#finanzielle-grundlagen">Finanzielle Grundlagen</a></li>
+            <li><a class="toc-link" href="#strategie">Strategische Ausrichtung</a></li>
+            <li><a class="toc-link" href="#analysten">Analystenerwartungen &amp; Institutionelles Interesse</a></li>
+            <li><a class="toc-link" href="#votum">Bewertungskontext &amp; Votum</a></li>
+          </ol>
+        </nav>
     </div>
 
     <p class="analysis-intro" style="margin: 32px 0 32px 0; font-size:1.08rem; line-height:1.7; max-width:100%; text-align:justify;">

@@ -137,6 +137,12 @@
     .votum-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 1.5rem; margin: 2rem 0; border-radius: 8px; }
     .votum-box h3 { margin-top: 0; color: #0c4a6e; }
     .refs, .refs a, .refs li { overflow-wrap: anywhere; word-break: break-word; }
+
+    /* Zurück-Button: dezenter Leuchteffekt in capitovo-blau */
+    .back-btn-glow { box-shadow: none; transition: box-shadow 0.22s cubic-bezier(0.65,0,0.35,1), background-color 0.18s; }
+    .back-btn-glow:hover, .back-btn-glow:focus-visible {
+      box-shadow: 0 0 0 3px rgba(0,145,214,0.18), 0 0 8px 2px rgba(0,145,214,0.13);
+    }
   </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
@@ -160,7 +166,24 @@
           <p class="text-xs font-semibold" style="color: #64748b;">Analyse <span class="text-gray-400 mx-1">•</span> <span id="analysis-company">Unternehmen</span></p>
           <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Vorlage — Analyse (zum Vorbereiten)</h1>
         </div>
-        <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-2 border-[color:var(--color-accent-blue)] rounded-md px-3 py-2 hover:bg-gray-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow">← Zurück</a>
+        <div class="flex items-center gap-2">
+          <button
+            id="favorite-button"
+            class="inline-flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-md text-gray-500 hover:bg-gray-50 hover:text-yellow-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+            style="padding:0"
+            aria-label="Zu Favoriten hinzufügen"
+            aria-pressed="false"
+            title="Zu Favoriten hinzufügen"
+            data-title=""
+            onclick="toggleFavorite(event, this.dataset.title)"
+          >
+            <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+          </button>
+
+          <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-2 border-[color:var(--color-accent-blue)] rounded-md px-3 py-2 hover:bg-gray-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow">← Zurück</a>
+        </div>
       </div>
       <div class="text-sm analysis-meta" style="color: #64748b;">
         <span>24.12.2025</span>
@@ -352,14 +375,6 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
   // Dynamischer Zurück-Button basierend auf Referrer
   (function() {
     const backBtn = document.getElementById('back-button');
-        .back-btn-glow {
-          box-shadow: none;
-          transition: box-shadow 0.22s cubic-bezier(0.65,0,0.35,1), background 0.18s;
-        }
-        .back-btn-glow:hover, .back-btn-glow:focus-visible {
-          box-shadow: 0 0 0 3px rgba(0,145,214,0.18), 0 0 8px 2px rgba(0,145,214,0.13);
-          /* capitovo-blau: #0091d6, dezent und weich */
-        }
     if (!backBtn) return;
     const referrer = document.referrer;
     if (referrer.includes('/Abonenten/abonenten.html')) {
@@ -380,6 +395,34 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
     const el = document.getElementById('analysis-company');
     if (el) {
       el.textContent = company && company.trim() ? company : 'Unternehmen';
+    }
+  })();
+
+  // Favoriten-Button initialisieren (wie auf "Alle Analysen" via localStorage: capitovo_favorites)
+  (function() {
+    const btn = document.getElementById('favorite-button');
+    if (!btn) return;
+
+    const h1 = document.querySelector('#vorlage-analysis h1');
+    const companyEl = document.getElementById('analysis-company');
+    const baseTitle = (h1 && h1.textContent ? h1.textContent : 'Analyse').trim();
+    const company = (companyEl && companyEl.textContent ? companyEl.textContent : '').trim();
+    const favTitle = company ? (baseTitle + ' — ' + company) : baseTitle;
+    btn.dataset.title = favTitle;
+
+    let favorites = [];
+    try { favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favorites = []; }
+    const isFav = favorites.includes(favTitle);
+
+    btn.setAttribute('aria-pressed', isFav ? 'true' : 'false');
+    btn.setAttribute('aria-label', isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen');
+    btn.title = isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen';
+
+    const icon = btn.querySelector('svg');
+    if (icon) {
+      icon.setAttribute('fill', isFav ? 'currentColor' : 'none');
+      icon.classList.toggle('text-yellow-400', isFav);
+      icon.classList.toggle('text-gray-400', !isFav);
     }
   })();
 

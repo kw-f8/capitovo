@@ -61,6 +61,7 @@
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 14;
+      line-clamp: 14;
     }
     @media (max-width: 900px) {
       .hero-media { height: auto; aspect-ratio: 16/9; }
@@ -69,6 +70,7 @@
         overflow: visible;
         display: block;
         -webkit-line-clamp: unset;
+        line-clamp: unset;
         hyphens: auto;
       }
     }
@@ -401,22 +403,28 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
     }
   })();
 
-  // Favoriten-Button initialisieren (wie auf "Alle Analysen" via localStorage: capitovo_favorites)
-  (function() {
+  // Favoriten-Button initialisieren: Key wie in analysen.json (per Link-Match)
+  (async function() {
     const btn = document.getElementById('favorite-button');
     const tooltip = document.getElementById('fav-tooltip');
     if (!btn) return;
 
-    const h1 = document.querySelector('#vorlage-analysis h1');
-    const companyEl = document.getElementById('analysis-company');
-    const baseTitle = (h1 && h1.textContent ? h1.textContent : 'Analyse').trim();
-    const company = (companyEl && companyEl.textContent ? companyEl.textContent : '').trim();
-    const favTitle = company ? (baseTitle + ' — ' + company) : baseTitle;
-    btn.dataset.title = favTitle;
+    // Hole die Analysen-Liste
+    let analyses = [];
+    try {
+      const res = await fetch('../../data/analysen.json');
+      analyses = await res.json();
+    } catch(e) {}
+
+    // Finde die Analyse, die auf diese Vorlage-Seite verweist
+    const thisPath = 'Abonenten/vorlage.html';
+    const match = analyses.find(a => (a.link||'').replace(/^\.?\/?/, '') === thisPath);
+    const favKey = match ? (match.title || thisPath) : thisPath;
+    btn.dataset.title = favKey;
 
     let favorites = [];
     try { favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favorites = []; }
-    const isFav = favorites.includes(favTitle);
+    const isFav = favorites.includes(favKey);
 
     btn.setAttribute('aria-pressed', isFav ? 'true' : 'false');
     btn.setAttribute('aria-label', isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen');
@@ -434,7 +442,7 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
       setTimeout(function() {
         let favs = [];
         try { favs = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favs = []; }
-        const nowFav = favs.includes(favTitle);
+        const nowFav = favs.includes(favKey);
         if (tooltip && nowFav) {
           tooltip.style.display = 'block';
           setTimeout(function() { tooltip.style.display = 'none'; }, 1200);

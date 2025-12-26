@@ -97,10 +97,16 @@
       text-decoration: none;
       position: relative;
       padding: 0;
-      transition: color 350ms cubic-bezier(0.4, 0, 0.2, 1), transform 250ms ease;
+      background: linear-gradient(to right, var(--color-accent-blue) 0%, var(--color-accent-blue) 50%, #334155 50%, #334155 100%);
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: background-position 450ms cubic-bezier(0.4, 0, 0.2, 1), transform 250ms ease;
     }
     .toc-link:hover {
-      color: var(--color-accent-blue);
+      background-position: 0 0;
       transform: translateX(4px);
     }
     .toc-link:focus-visible {
@@ -109,8 +115,8 @@
       border-radius: 2px;
     }
     @media (prefers-reduced-motion: reduce) {
-      .toc-link { transition: none; }
-      .toc-link:hover { transform: none; }
+      .toc-link { transition: none; background-position: 100% 0; }
+      .toc-link:hover { transform: none; background-position: 0 0; }
     }
     .toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
     .card-table { width:100%; border-collapse:collapse; margin-top:10px; }

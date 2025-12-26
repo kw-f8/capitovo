@@ -52,6 +52,68 @@
     }catch(e){ /* ignore */ }
 })();
 
+// === FAVORITEN: MIGRATION TITEL -> ID (EINMALIG) ===
+// Ältere Versionen speicherten Favoriten als Titel. Ab jetzt nutzen wir die stabile Analyse-ID.
+(async function migrateFavoritesTitleToId(){
+    let favoritesRaw = [];
+    try { favoritesRaw = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favoritesRaw = []; }
+    if (!Array.isArray(favoritesRaw) || favoritesRaw.length === 0) return;
+
+    // Nur migrieren, wenn überhaupt Nicht-ID Werte drin sind (heuristisch: kein '-' oder sehr kurz).
+    const mightContainTitles = favoritesRaw.some(v => typeof v === 'string' && v && (!v.includes('-') || v.length < 12));
+    if (!mightContainTitles) return;
+
+    const basePath = (location && location.pathname ? location.pathname.toLowerCase() : '');
+    const candidates = [];
+    if (basePath.includes('/abonenten/aktien-monitor/')) {
+        candidates.push('../../data/analysen.json');
+        candidates.push('../data/analysen.json');
+        candidates.push('/capitovo/data/analysen.json');
+    } else if (basePath.includes('/abonenten/')) {
+        candidates.push('../data/analysen.json');
+        candidates.push('../../data/analysen.json');
+        candidates.push('/capitovo/data/analysen.json');
+    } else {
+        candidates.push('data/analysen.json');
+        candidates.push('../data/analysen.json');
+        candidates.push('/capitovo/data/analysen.json');
+    }
+
+    let analyses = null;
+    for (const url of candidates) {
+        try {
+            const res = await fetch(url, { cache: 'no-store' });
+            if (!res.ok) continue;
+            analyses = await res.json();
+            if (Array.isArray(analyses) && analyses.length) break;
+        } catch(e) {}
+    }
+    if (!Array.isArray(analyses) || analyses.length === 0) return;
+
+    const titleToId = new Map();
+    const validIds = new Set();
+    analyses.forEach(a => {
+        if (a && typeof a.id === 'string' && a.id) validIds.add(a.id);
+        if (a && typeof a.title === 'string' && a.title && typeof a.id === 'string' && a.id) titleToId.set(a.title, a.id);
+    });
+
+    const migrated = [];
+    for (const fav of favoritesRaw) {
+        if (typeof fav !== 'string' || !fav) continue;
+        if (validIds.has(fav)) { migrated.push(fav); continue; }
+        const mapped = titleToId.get(fav);
+        migrated.push(mapped || fav);
+    }
+
+    // dedupe
+    const deduped = Array.from(new Set(migrated));
+    const changed = deduped.length !== favoritesRaw.length || deduped.some((v, i) => v !== favoritesRaw[i]);
+    if (changed) {
+        try { localStorage.setItem('capitovo_favorites', JSON.stringify(deduped)); } catch(e) {}
+        document.dispatchEvent(new CustomEvent('favorites-updated'));
+    }
+})();
+
 // === HILFSFUNKTIONEN FÜR MODAL & SIDEBAR STEUERUNG ===
 
 /** Öffnet das Login-Modal und schließt die Sidebar, falls geöffnet. */
@@ -1489,14 +1551,15 @@ async function renderAnalysisDetail(){
         }
         if (stockName.length > 25) stockName = '';
 
-        // Favorites Logic for Detail View
+        // Favorites Logic for Detail View (ID-basiert)
         const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
-        const isFav = favorites.includes(title);
+        const favId = analysis.id || title;
+        const isFav = favorites.includes(favId);
         const starFill = isFav ? 'currentColor' : 'none';
         const starColor = isFav ? 'text-yellow-400' : 'text-gray-400';
 
         const favButton = `
-            <button onclick="toggleFavorite(event, '${title.replace(/'/g, "\\'")}')" 
+            <button onclick="toggleFavorite(event, '${String(favId).replace(/'/g, "\\'")}')" 
                     class="p-2 transition-colors hover:scale-110"
                     title="${isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen'}">
                 <svg class="w-6 h-6 ${starColor} drop-shadow-md" fill="${starFill}" stroke="currentColor" viewBox="0 0 24 24">

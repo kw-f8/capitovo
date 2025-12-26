@@ -375,7 +375,7 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
 </div>
 
 
-<script src="../script.js?v=6"></script>
+<script src="../script.js?v=9"></script>
 <script>
   // Dynamischer Zurück-Button basierend auf Referrer
   (function() {
@@ -412,7 +412,7 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
     // Hole die Analysen-Liste
     let analyses = [];
     try {
-      const res = await fetch('../../data/analysen.json');
+      const res = await fetch('../data/analysen.json');
       analyses = await res.json();
     } catch(e) {}
 

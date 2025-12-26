@@ -155,7 +155,7 @@
     <div class="mb-2">
       <div class="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <p class="text-xs font-semibold uppercase" style="color: #64748b;">VORLAGE <span class="text-gray-400 mx-1">•</span> Analyse Template</p>
+          <p class="text-xs font-semibold uppercase" style="color: #64748b;">Analyse <span class="text-gray-400 mx-1">•</span> <span id="analysis-company">Unternehmen</span></p>
           <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Vorlage — Analyse (zum Vorbereiten)</h1>
         </div>
         <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md px-3 py-2 hover:bg-gray-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200">← Zurück</a>
@@ -364,6 +364,16 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
     } else {
       // Default: alle_analysen
       backBtn.href = './alle_analysen.html';
+    }
+  })();
+
+  // Unternehmensname dynamisch setzen
+  (function() {
+    const params = new URLSearchParams(window.location.search);
+    const company = params.get('company');
+    const el = document.getElementById('analysis-company');
+    if (el) {
+      el.textContent = company && company.trim() ? company : 'Unternehmen';
     }
   })();
 </script>

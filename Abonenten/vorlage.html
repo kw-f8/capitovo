@@ -403,7 +403,7 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
     }
   })();
 
-  // Favoriten-Button initialisieren: Key wie in analysen.json (per Link-Match)
+  // Favoriten-Button initialisieren: Key ist die ID aus analysen.json (per Link-Match)
   (async function() {
     const btn = document.getElementById('favorite-button');
     const tooltip = document.getElementById('fav-tooltip');
@@ -419,7 +419,7 @@ Unterm Strich bleibt das Chance/Risiko-Profil aktuell ausgewogen: upside, wenn M
     // Finde die Analyse, die auf diese Vorlage-Seite verweist
     const thisPath = 'Abonenten/vorlage.html';
     const match = analyses.find(a => (a.link||'').replace(/^\.?\/?/, '') === thisPath);
-    const favKey = match ? (match.title || thisPath) : thisPath;
+    const favKey = match ? (match.id || thisPath) : thisPath;
     btn.dataset.title = favKey;
 
     let favorites = [];

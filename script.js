@@ -268,6 +268,7 @@ function openSubscriptionModal() {
 /** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */
 function createMemberAnalysisCard(a, idx, showFavorites = false){
     const title = a.title || 'Unbenannte Analyse';
+    const favId = a.id || title;
     const summary = a.summary || '';
     // Sanitize summary for preview: remove Zahlen, Währungs- und Prozentzeichen
     const previewSummary = (summary
@@ -296,8 +297,8 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
     // Favoriten-Status lesen
     let favorites = [];
     try { favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favorites = []; }
-    const isFav = favorites.includes(title);
-    const safeTitle = title.replace(/"/g, '&quot;');
+    const isFav = favorites.includes(favId);
+    const safeId = favId.replace(/"/g, '&quot;');
     const favClasses = isFav ? 'text-yellow-400' : 'text-gray-400';
     const favFill = isFav ? 'currentColor' : 'none';
     const favLabel = isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen';
@@ -313,7 +314,7 @@ function createMemberAnalysisCard(a, idx, showFavorites = false){
                     aria-label="${favLabel}"
                     aria-pressed="${isFav ? 'true' : 'false'}"
                     title="${favLabel}"
-                    data-title="${safeTitle}"
+                    data-title="${safeId}"
                     onclick="toggleFavorite(event, this.dataset.title)"
                 >
                     <svg class="w-5 h-5 ${favClasses}" viewBox="0 0 24 24" fill="${favFill}" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -356,13 +357,11 @@ function toggleFavorite(event, title) {
     
     let favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
     const index = favorites.indexOf(title);
-    
     if (index === -1) {
         favorites.push(title);
     } else {
         favorites.splice(index, 1);
     }
-    
     localStorage.setItem('capitovo_favorites', JSON.stringify(favorites));
     
     // Update UI icon immediately
@@ -609,7 +608,7 @@ async function initAllAnalysesPage(){
         // filter favorites
         if (onlyFavs) {
             const favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]');
-            items = items.filter(i => favorites.includes(i.title));
+            items = items.filter(i => favorites.includes(i.id));
         }
 
         // filter sector

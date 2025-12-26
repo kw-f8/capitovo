@@ -16,6 +16,12 @@
         #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
         /* Provide a subtle visible focus for keyboard users */
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
+        /* Zurück-Button: wie Favoriten-Button (kein Abdunkeln, nur dezenter Glow) */
+        .back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }
+        .back-btn-glow:hover, .back-btn-glow:focus-visible {
+            box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
+        }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
@@ -38,7 +44,7 @@
                 <h1 class="text-3xl font-extrabold text-gray-900" style="margin-top: 0 !important;">Kontaktdaten bearbeiten</h1>
                 <p class="text-gray-500 mt-1">Aktualisiere hier deine Kontaktdaten und Zahlungsinformationen.</p>
             </div>
-            <a href="./abonenten.html" id="back-link" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+            <a href="./abonenten.html" id="back-link" class="inline-flex items-center px-4 py-2 border border-2 border-[color:var(--color-accent-blue)] text-sm font-medium rounded-md text-gray-700 bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 Zurück
             </a>
@@ -161,7 +167,7 @@
         </div>
     </footer>
 
-    <script src="../script.js?v=5"></script>
+    <script src="../script.js?v=9"></script>
 
     <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
         <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>

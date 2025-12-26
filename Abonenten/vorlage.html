@@ -124,6 +124,12 @@
       .toc-link:hover { transform: none; background-position: 0 0; }
     }
     .toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    nav[aria-label="Inhaltsverzeichnis"] { 
+      width: fit-content; 
+      border-top: 2px solid #e2e8f0; 
+      border-bottom: 2px solid #e2e8f0; 
+      padding: 18px 0; 
+    }
     .card-table { width:100%; border-collapse:collapse; margin-top:10px; }
     .card-table th, .card-table td { padding:8px 6px; text-align:left; }
     .votum-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 1.5rem; margin: 2rem 0; border-radius: 8px; }
@@ -169,7 +175,7 @@
       <div class="analysis-hero" style="flex:1; min-width:300px;">
         <img src="../assets/studiodisplay_mockup.svg" alt="Vorlage Vorschaubild" class="hero-media">
 
-        <nav aria-label="Inhaltsverzeichnis" style="margin: 32px 0;">
+        <nav aria-label="Inhaltsverzeichnis" style="margin: 48px 0 32px 0;">
           <ol class="toc-list">
             <li><a class="toc-link" href="#marktperformance">Marktperformance &amp; Bewertung</a></li>
             <li><a class="toc-link" href="#finanzielle-grundlagen">Finanzielle Grundlagen</a></li>

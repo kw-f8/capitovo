@@ -21,6 +21,10 @@
         #resend-code { color: #111827; font-weight: 600; }
         #resend-code:hover { color: var(--color-accent-blue); }
         #resend-code:disabled { color: #9ca3af !important; cursor: not-allowed; }
+
+        /* Verification modal: confirm button should grey out while disabled */
+        #verify-submit:disabled { background-color: #9ca3af !important; cursor: not-allowed; }
+        #verify-submit:disabled:hover { background-color: #9ca3af !important; }
     </style>
 </head>
 <body style="background-color: #fff;" class="flex flex-col min-h-screen">
@@ -164,7 +168,7 @@
                     </div>
 
                     <div>
-                        <button type="submit"
+                        <button id="verify-submit" type="submit"
                                 class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition duration-150">
                             Konto bestätigen
                         </button>
@@ -302,10 +306,10 @@
                     resetVerificationState();
                     lockResendOnNextOpen = true;
 
-                    // Rate limit: nach 2x Schließen -> 2 Minuten sperren
+                    // Rate limit: nach 2x Schließen -> 6 Minuten sperren
                     verificationCloseCount += 1;
                     if (verificationCloseCount >= 2) {
-                        verificationLockUntil = Date.now() + (2 * 60 * 1000);
+                        verificationLockUntil = Date.now() + (6 * 60 * 1000);
                         verificationCloseCount = 0;
                     }
                 });

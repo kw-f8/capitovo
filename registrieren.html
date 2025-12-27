@@ -298,10 +298,6 @@
             const closeVerificationBtn = document.getElementById('close-verification');
             if(closeVerificationBtn) {
                 closeVerificationBtn.addEventListener('click', function() {
-                    // Reset state (invalidate code + stop countdown) when the modal is closed
-                    if (typeof resetVerificationState === 'function') {
-                        resetVerificationState();
-                    }
                     document.getElementById('verification-modal').classList.add('hidden');
                 });
             }
@@ -313,28 +309,6 @@
             const verificationForm = document.getElementById('verification-form');
             const resendBtn = document.getElementById('resend-code');
             const codeInput = document.getElementById('verification-code');
-
-            function resetVerificationState() {
-                // Invalidate the last sent code immediately
-                currentVerificationCode = null;
-
-                // Stop any running cooldown interval
-                if (resendTimeout) {
-                    clearInterval(resendTimeout);
-                    resendTimeout = null;
-                }
-                resendCountdown = 0;
-
-                // Reset UI
-                if (resendBtn) {
-                    resendBtn.disabled = false;
-                    resendBtn.textContent = 'Code erneut senden';
-                }
-                if (codeInput) {
-                    codeInput.value = '';
-                    codeInput.placeholder = 'Bestätigungscode';
-                }
-            }
 
             // Dummy: Code generieren (in echt: vom Server)
             function generateCode() {
@@ -351,11 +325,6 @@
 
             // Sperrt den Resend-Button für 60 Sekunden
             function startResendCooldown() {
-                // Ensure only one cooldown timer runs
-                if (resendTimeout) {
-                    clearInterval(resendTimeout);
-                    resendTimeout = null;
-                }
                 resendCountdown = 60;
                 if (resendBtn) {
                     resendBtn.disabled = true;
@@ -370,7 +339,6 @@
                             resendBtn.textContent = 'Code erneut senden';
                             resendBtn.disabled = false;
                             clearInterval(resendTimeout);
-                            resendTimeout = null;
                         }
                     }
                 }, 1000);
@@ -383,12 +351,12 @@
                     mutations.forEach(function(mutation) {
                         if (mutation.attributeName === 'class') {
                             if (!verificationModal.classList.contains('hidden')) {
-                                // Always start fresh when the modal opens
-                                resetVerificationState();
                                 sendVerificationCode();
-                            } else {
-                                // If the modal is hidden (closed), invalidate code and reset timer
-                                resetVerificationState();
+                                if (resendBtn) {
+                                    resendBtn.disabled = false;
+                                    resendBtn.textContent = 'Code erneut senden';
+                                }
+                                if (codeInput) codeInput.value = '';
                             }
                         }
                     });

@@ -299,6 +299,8 @@
             if(closeVerificationBtn) {
                 closeVerificationBtn.addEventListener('click', function() {
                     document.getElementById('verification-modal').classList.add('hidden');
+                    resetVerificationState();
+                    lockResendOnNextOpen = true;
                 });
             }
 
@@ -306,9 +308,11 @@
             let currentVerificationCode = null;
             let resendTimeout = null;
             let resendCountdown = 0;
+            let lockResendOnNextOpen = false;
             const verificationForm = document.getElementById('verification-form');
             const resendBtn = document.getElementById('resend-code');
             const codeInput = document.getElementById('verification-code');
+            const defaultCodePlaceholder = codeInput ? codeInput.getAttribute('placeholder') : 'Bestätigungscode';
 
             // Dummy: Code generieren (in echt: vom Server)
             function generateCode() {
@@ -325,6 +329,10 @@
 
             // Sperrt den Resend-Button für 60 Sekunden
             function startResendCooldown() {
+                if (resendTimeout) {
+                    clearInterval(resendTimeout);
+                    resendTimeout = null;
+                }
                 resendCountdown = 60;
                 if (resendBtn) {
                     resendBtn.disabled = true;
@@ -339,9 +347,32 @@
                             resendBtn.textContent = 'Code erneut senden';
                             resendBtn.disabled = false;
                             clearInterval(resendTimeout);
+                            resendTimeout = null;
                         }
                     }
                 }, 1000);
+            }
+
+            function resetVerificationState() {
+                // Code ungültig machen
+                currentVerificationCode = null;
+
+                // Timer stoppen
+                if (resendTimeout) {
+                    clearInterval(resendTimeout);
+                    resendTimeout = null;
+                }
+                resendCountdown = 0;
+
+                // UI zurücksetzen
+                if (resendBtn) {
+                    resendBtn.disabled = false;
+                    resendBtn.textContent = 'Code erneut senden';
+                }
+                if (codeInput) {
+                    codeInput.value = '';
+                    codeInput.setAttribute('placeholder', defaultCodePlaceholder);
+                }
             }
 
             // Beim Öffnen des Modals: Code generieren und senden
@@ -352,11 +383,21 @@
                         if (mutation.attributeName === 'class') {
                             if (!verificationModal.classList.contains('hidden')) {
                                 sendVerificationCode();
-                                if (resendBtn) {
-                                    resendBtn.disabled = false;
-                                    resendBtn.textContent = 'Code erneut senden';
+                                if (codeInput) {
+                                    codeInput.value = '';
+                                    codeInput.setAttribute('placeholder', defaultCodePlaceholder);
                                 }
-                                if (codeInput) codeInput.value = '';
+
+                                // Wenn das Modal zuvor geschlossen wurde: Button direkt 60s sperren (wie "geklickt")
+                                if (lockResendOnNextOpen) {
+                                    startResendCooldown();
+                                    lockResendOnNextOpen = false;
+                                } else {
+                                    if (resendBtn) {
+                                        resendBtn.disabled = false;
+                                        resendBtn.textContent = 'Code erneut senden';
+                                    }
+                                }
                             }
                         }
                     });

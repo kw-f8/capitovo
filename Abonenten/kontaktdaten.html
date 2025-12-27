@@ -22,14 +22,15 @@
         .back-btn-glow:hover, .back-btn-glow:focus-visible {
             box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
         }
-        /* Page-specific: move only the contact form card upward (heading stays in place) */
-        .member-grid > .bg-white { margin-top: -18px; }
+        /* Page-specific: match aktien-monitor spacing and bring contact card closer */
+        .abonenten-page main > section:first-child { padding-top: 0 !important; margin-bottom: 0.5rem !important; }
+        .member-grid { margin-top: 0 !important; }
+        /* Pull the white card up slightly (tweak this value if you want it closer) */
+        .member-grid > .bg-white { margin-top: -8px; }
         @media (max-width: 640px) {
-            /* On small screens keep default spacing so layout doesn't overlap */
+            /* On small screens keep default spacing so layout doesn't not overlap */
             .member-grid > .bg-white { margin-top: 0; }
         }
-        /* Ensure first section doesn't get extra top padding (match aktien-monitor) */
-        .abonenten-page main > section:first-child { padding-top: 0 !important; }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">

@@ -146,7 +146,7 @@
                 </button>
                 
                 <h2 class="text-2xl font-semibold text-gray-900 mb-2 text-center">E-Mail bestätigen</h2>
-                <p class="text-sm text-gray-600 text-center mb-6">
+                <p id="verification-hint" class="text-sm text-gray-600 text-center mb-6">
                     Wir haben einen Code an Ihre E-Mail-Adresse gesendet. Bitte geben Sie ihn unten ein.
                 </p>
                 
@@ -301,6 +301,13 @@
                     document.getElementById('verification-modal').classList.add('hidden');
                     resetVerificationState();
                     lockResendOnNextOpen = true;
+
+                    // Rate limit: nach 2x Schließen -> 2 Minuten sperren
+                    verificationCloseCount += 1;
+                    if (verificationCloseCount >= 2) {
+                        verificationLockUntil = Date.now() + (2 * 60 * 1000);
+                        verificationCloseCount = 0;
+                    }
                 });
             }
 
@@ -309,10 +316,76 @@
             let resendTimeout = null;
             let resendCountdown = 0;
             let lockResendOnNextOpen = false;
+            let verificationLockUntil = 0;
+            let verificationCloseCount = 0;
+            let verificationLockTimer = null;
             const verificationForm = document.getElementById('verification-form');
             const resendBtn = document.getElementById('resend-code');
             const codeInput = document.getElementById('verification-code');
             const defaultCodePlaceholder = codeInput ? codeInput.getAttribute('placeholder') : 'Bestätigungscode';
+            const verifySubmitBtn = verificationForm ? verificationForm.querySelector('button[type="submit"]') : null;
+            const verificationHint = document.getElementById('verification-hint');
+            const defaultVerificationHintText = verificationHint ? verificationHint.textContent.trim() : '';
+
+            function isVerificationLocked() {
+                return Date.now() < verificationLockUntil;
+            }
+
+            function setVerificationHint(text, isError) {
+                if (!verificationHint) return;
+                verificationHint.textContent = text;
+                verificationHint.classList.toggle('text-red-600', !!isError);
+                verificationHint.classList.toggle('text-gray-600', !isError);
+            }
+
+            function setVerificationControlsDisabled(disabled) {
+                if (codeInput) codeInput.disabled = disabled;
+                if (verifySubmitBtn) verifySubmitBtn.disabled = disabled;
+                if (resendBtn) resendBtn.disabled = disabled ? true : resendBtn.disabled;
+            }
+
+            function clearVerificationLockTimer() {
+                if (verificationLockTimer) {
+                    clearInterval(verificationLockTimer);
+                    verificationLockTimer = null;
+                }
+            }
+
+            function applyVerificationLockState() {
+                // stop resend countdowns while locked
+                if (resendTimeout) {
+                    clearInterval(resendTimeout);
+                    resendTimeout = null;
+                }
+                resendCountdown = 0;
+
+                const update = () => {
+                    const remainingMs = Math.max(0, verificationLockUntil - Date.now());
+                    const remainingSec = Math.ceil(remainingMs / 1000);
+                    const mm = String(Math.floor(remainingSec / 60)).padStart(1, '0');
+                    const ss = String(remainingSec % 60).padStart(2, '0');
+                    setVerificationHint(`Zu viele Versuche. Bitte warten Sie ${mm}:${ss} und versuchen Sie es erneut`, true);
+                    if (remainingSec <= 0) {
+                        clearVerificationLockTimer();
+                        // UI wird beim nächsten Öffnen wieder normal gesetzt
+                        setVerificationHint(defaultVerificationHintText, false);
+                        if (resendBtn) {
+                            resendBtn.disabled = false;
+                            resendBtn.textContent = 'Code erneut senden';
+                        }
+                        setVerificationControlsDisabled(false);
+                    }
+                };
+
+                setVerificationControlsDisabled(true);
+                if (resendBtn) {
+                    resendBtn.disabled = true;
+                    resendBtn.textContent = 'Code erneut senden';
+                }
+                update();
+                clearVerificationLockTimer();
+                verificationLockTimer = setInterval(update, 1000);
+            }
 
             // Dummy: Code generieren (in echt: vom Server)
             function generateCode() {
@@ -357,6 +430,8 @@
                 // Code ungültig machen
                 currentVerificationCode = null;
 
+                clearVerificationLockTimer();
+
                 // Timer stoppen
                 if (resendTimeout) {
                     clearInterval(resendTimeout);
@@ -372,6 +447,13 @@
                 if (codeInput) {
                     codeInput.value = '';
                     codeInput.setAttribute('placeholder', defaultCodePlaceholder);
+                    codeInput.disabled = false;
+                }
+                if (verifySubmitBtn) {
+                    verifySubmitBtn.disabled = false;
+                }
+                if (verificationHint && defaultVerificationHintText) {
+                    setVerificationHint(defaultVerificationHintText, false);
                 }
             }
 
@@ -382,6 +464,15 @@
                     mutations.forEach(function(mutation) {
                         if (mutation.attributeName === 'class') {
                             if (!verificationModal.classList.contains('hidden')) {
+                                // Wenn gesperrt: keine Codes senden, nur Meldung + deaktivieren
+                                if (isVerificationLocked()) {
+                                    applyVerificationLockState();
+                                    return;
+                                }
+
+                                // normaler Start
+                                setVerificationControlsDisabled(false);
+                                setVerificationHint(defaultVerificationHintText, false);
                                 sendVerificationCode();
                                 if (codeInput) {
                                     codeInput.value = '';
@@ -408,6 +499,10 @@
             // Resend-Button-Logik
             if (resendBtn) {
                 resendBtn.addEventListener('click', function() {
+                    if (isVerificationLocked()) {
+                        applyVerificationLockState();
+                        return;
+                    }
                     sendVerificationCode();
                     startResendCooldown();
                 });
@@ -417,6 +512,10 @@
             if(verificationForm) {
                 verificationForm.addEventListener('submit', function(e) {
                     e.preventDefault();
+                    if (isVerificationLocked()) {
+                        applyVerificationLockState();
+                        return;
+                    }
                     // In echt: Code an Backend schicken und prüfen
                     // Hier: Nur Vergleich mit currentVerificationCode
                     if (codeInput && codeInput.value === currentVerificationCode) {

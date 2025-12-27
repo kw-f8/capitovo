@@ -72,27 +72,33 @@
                         </label>
                     </div>
                     <div class="relative">
-                        <input id="password" name="password" type="password" autocomplete="new-password" required 
-                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                           <input id="password" name="password" type="password" autocomplete="new-password" required 
+                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm pr-10" 
                                placeholder="Passwort">
-                        <label for="password" 
+                           <label for="password" 
                                class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
-                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
-                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                   peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                   peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
                             Passwort
-                        </label>
+                           </label>
+                           <button type="button" id="toggle-password" tabindex="-1" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-accent-blue focus:outline-none" aria-label="Passwort anzeigen">
+                            <svg id="icon-password" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                           </button>
                     </div>
                     <div class="relative">
-                        <input id="password-confirm" name="password-confirm" type="password" autocomplete="new-password" required 
-                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
+                           <input id="password-confirm" name="password-confirm" type="password" autocomplete="new-password" required 
+                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm pr-10" 
                                placeholder="Passwort bestätigen">
-                        <label for="password-confirm" 
+                           <label for="password-confirm" 
                                class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
-                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
-                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                   peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                   peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
                             Passwort bestätigen
-                        </label>
-                        <p id="password-match-error" class="hidden text-red-500 text-xs mt-1 ml-1">Die Passwörter stimmen nicht überein.</p>
+                           </label>
+                           <button type="button" id="toggle-password-confirm" tabindex="-1" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-accent-blue focus:outline-none" aria-label="Passwort anzeigen">
+                            <svg id="icon-password-confirm" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                           </button>
+                           <p id="password-match-error" class="hidden text-red-500 text-xs mt-1 ml-1">Die Passwörter stimmen nicht überein.</p>
                     </div>
                 </div>
 
@@ -168,6 +174,27 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Passwort anzeigen/ausblenden Funktion
+            function setupPasswordToggle(inputId, toggleId, iconId) {
+                const input = document.getElementById(inputId);
+                const toggle = document.getElementById(toggleId);
+                const icon = document.getElementById(iconId);
+                if (!input || !toggle) return;
+                toggle.addEventListener('click', function() {
+                    const isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    // Icon ändern (optional: durchgestrichenes Auge)
+                    if (icon) {
+                        if (isPassword) {
+                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.956 9.956 0 012.042-3.292m1.528-1.528A9.956 9.956 0 0112 5c4.478 0 8.268 2.943 9.542 7a9.965 9.965 0 01-4.293 5.411M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3l18 18" />';
+                        } else {
+                            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+                        }
+                    }
+                });
+            }
+            setupPasswordToggle('password', 'toggle-password', 'icon-password');
+            setupPasswordToggle('password-confirm', 'toggle-password-confirm', 'icon-password-confirm');
             const form = document.getElementById('registration-form');
             const password = document.getElementById('password');
             const confirm = document.getElementById('password-confirm');

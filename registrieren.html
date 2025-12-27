@@ -296,9 +296,10 @@
 
                 // Handle Registration Submit
                 form.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Prevent actual submission
+                    e.preventDefault(); // Verhindert HTTP-Request!
                     // Show Verification Modal
                     document.getElementById('verification-modal').classList.remove('hidden');
+                    return false;
                 });
             }
 

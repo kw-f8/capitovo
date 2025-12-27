@@ -1,0 +1,332 @@
+{
+  "name": "Analysenerstellung - Simple Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "820687c0-6274-4664-85d4-e50b46863ec4",
+      "name": "🧪 Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1408,
+        64
+      ],
+      "notes": "Einfach auf 'Execute workflow' klicken, kein Webhook nötig."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "company",
+              "name": "company",
+              "type": "string",
+              "value": "Ferrari N.V."
+            },
+            {
+              "id": "ticker",
+              "name": "ticker",
+              "type": "string",
+              "value": "RACE"
+            },
+            {
+              "id": "sector",
+              "name": "sector",
+              "type": "string",
+              "value": "ZYKLISCHER KONSUM"
+            },
+            {
+              "id": "heroImage",
+              "name": "heroImage",
+              "type": "string",
+              "value": "data/vorschaubilder_analysen/ferari.png"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "61076b75-46d0-4471-90c5-423b0f5fac3a",
+      "name": "📝 Analyse-Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -1200,
+        64
+      ],
+      "notes": "Passe hier company/ticker/sector an für Tests."
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "perplexityApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"sonar\",\n  \"temperature\": 0.35,\n  \"max_tokens\": 2000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Equity-Research-Autor. Schreibe eine wöchentliche Investment-Analyse im Stil professioneller Equity-Research-Berichte. Nutze Tabellen für Kennzahlen, schreibe auf Deutsch mit klarem, präzisem Ton.\\n\\n**ANALYSEKONTEXT (VERBINDLICH)**\\nDiese Analyse ist Teil einer regelmäßig erscheinenden Berichtsserie. Wiederkehrende, langfristig stabile Basisinformationen nur dann ausführlich darstellen, wenn sie sich materiell verändert haben oder für das aktuelle Marktumfeld neu relevant sind.\\n\\nFokus auf:\\n- Neue Entwicklungen\\n- Abweichungen gegenüber früheren Perioden\\n- Veränderte Risiken, Chancen oder Bewertungen\\n\\nFalls keine signifikanten Änderungen vorliegen, ist dies explizit zu benennen.\\n\\n**STRUKTUR DER ANALYSE**\\n\\n1. **Metadaten**: Vollständig und maschinenlesbar (Company, Ticker, Sektor, Datum)\\n\\n2. **Kurzüberblick (Executive Summary)**:\\n   - Aktuelle Entwicklungen seit der letzten Analyse\\n   - Einordnung der derzeitigen Marktsituation\\n   - Wesentliche Veränderungen bei Chancen und Risiken (stichpunktartig)\\n   - Keine Wiederholung bekannter Unternehmensgrundlagen\\n   - Keine eigene Bewertung, kein eigenes Kursziel\\n\\n3. **Geschäftsmodell & Marktposition**:\\n   Nur ausführlich erläutern, wenn:\\n   - Strukturelle Änderungen vorliegen\\n   - Neue Geschäftsbereiche relevant werden\\n   - Sich die Wettbewerbssituation spürbar verändert hat\\n   Andernfalls: Kurzverweis auf bestehendes Modell, Fokus auf Veränderungen.\\n\\n4. **Fundamentale Kennzahlen**:\\n   Schwerpunkt auf Veränderungen gegenüber Vorperioden, Abweichungen von Trends und auffälligen Entwicklungen. Stabile Kennzahlen ohne nennenswerte Veränderung kurz einordnen, nicht detailliert wiederholen.\\n\\n5. **Bewertung**:\\n   Besonderes Augenmerk auf Bewertungsverschiebungen, ausgelöst durch:\\n   - Kursbewegungen\\n   - Gewinnrevisionen\\n   - Veränderte Marktbedingungen\\n\\n6. **Wachstumstreiber & Risiken**:\\n   Nach Aktualität priorisieren. Bereits bekannte Faktoren nur dann erneut ausführen, wenn sich deren Relevanz verändert hat.\\n\\n7. **Einordnung für Anleger**:\\n   Kontextabhängig zur aktuellen Marktlage, nicht als dauerhafte Klassifizierung.\\n\\n**ANALYSTEN-KURSZIELE**\\nExterne Analysten-Kursziele ausschließlich zitierend erwähnen, wenn:\\n- Das Kursziel aus namentlich genannter, seriöser Quelle stammt\\n- Die zugrunde liegende Argumentation kurz erläutert wird\\n- Das Szenario konsistent mit der eigenen Analyse ist\\nWidersprüchliche oder extrem abweichende Kursziele nicht verwenden.\\n\\n**ABSCHLUSS**\\n- Kurzfazit\\n- Disclaimer (Keine Anlageberatung, eigenständige Prüfung erforderlich)\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Erstelle eine vollständige Analyse für: Unternehmen {{ $json.company }}, Ticker {{ $json.ticker }}, Sektor {{ $json.sector }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "a7166aa7-4eb2-4a60-86b5-b7818152e773",
+      "name": "🤖 Perplexity Draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -1008,
+        64
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dm5vgTUJUPgIVq9x",
+          "name": "Header Auth account"
+        },
+        "perplexityApi": {
+          "id": "Zq4IFTAGurh3vkp3",
+          "name": "Perplexity account"
+        }
+      },
+      "notes": "Erzeugt den Analyse-Entwurf."
+    },
+    {
+      "parameters": {
+        "jsCode": "const res = $input.item.json;\nconst draft = res.choices?.[0]?.message?.content || '';\nif (!draft) throw new Error('Kein Draft erhalten');\n\nconst input = $('📝 Analyse-Input').item.json;\nconst date = new Date().toISOString().split('T')[0];\n\nfunction slugify(t){return t.toLowerCase().replace(/[äöüß]/g,c=>({ä:'ae',ö:'oe',ü:'ue',ß:'ss'}[c])).replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'analyse';}\nconst filename = slugify(input.company);\n\nreturn { json: { ...input, date, filename, draft } };"
+      },
+      "id": "3ecba91f-3506-40ff-be1c-98a74961855c",
+      "name": "🧩 Normalisieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -800,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "perplexityApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"sonar\",\n  \"temperature\": 0.15,\n  \"max_tokens\": 1000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Prüfe den folgenden Text auf Qualität (Struktur, Zahlenplausibilität, Stil). Antworte als JSON: {\\\"quality_score\\\":1-10, \\\"issues\\\":string, \\\"improved_content\\\":string}. Liefere improved_content nur, wenn quality_score < 7.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Text: {{ $json.draft }}\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "id": "17f638bf-db0b-4f5f-91b3-e4f4439f7921",
+      "name": "🔍 QA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        -608,
+        64
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "dm5vgTUJUPgIVq9x",
+          "name": "Header Auth account"
+        },
+        "perplexityApi": {
+          "id": "Zq4IFTAGurh3vkp3",
+          "name": "Perplexity account"
+        }
+      },
+      "notes": "Qualitätsprüfung via Perplexity."
+    },
+    {
+      "parameters": {
+        "jsCode": "// Hole QA-Antwort\nconst qa = $input.item.json;\nconst content = qa.choices?.[0]?.message?.content || '{}';\n\n// Hole Daten vom vorherigen Normalisieren-Node über $node\nconst prevData = $node['🧩 Normalisieren'].json;\nconst baseDraft = prevData.draft;\nconst company = prevData.company;\nconst ticker = prevData.ticker;\nconst sector = prevData.sector;\nconst date = prevData.date;\nconst filename = prevData.filename;\nconst heroImage = prevData.heroImage;\n\nlet score = 5, issues = 'unbekannt', improved = '';\n\n// Parse QA response\ntry {\n  let jsonStr = content;\n  const codeBlockMatch = content.match(/```json?([\\s\\S]*?)```/);\n  if (codeBlockMatch) {\n    jsonStr = codeBlockMatch[1];\n  }\n  const parsed = JSON.parse(jsonStr.trim());\n  score = parsed.quality_score ?? score;\n  issues = parsed.issues || 'Keine';\n  improved = parsed.improved_content || '';\n} catch (e) {\n  const scoreMatch = content.match(/quality_score[\\\"']?\\s*[:=]\\s*(\\d+)/i);\n  if (scoreMatch) score = parseInt(scoreMatch[1]);\n  issues = 'QA-JSON nicht parsebar';\n}\n\nconst finalContent = (score < 7 && improved && improved.length > 100) ? improved : baseDraft;\n\nreturn {\n  json: {\n    company,\n    ticker,\n    sector,\n    date,\n    filename,\n    heroImage,\n    qualityScore: score,\n    issues,\n    content: finalContent,\n    qaRaw: content.substring(0, 500)\n  }\n};"
+      },
+      "id": "67d66864-59ff-4381-a9c5-4aaba22dd33a",
+      "name": "📊 QA auswerten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "ok",
+              "leftValue": "={{ $json.qualityScore }}",
+              "rightValue": 5,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "0ceb9b5d-3c76-44fd-b3d2-c5f4d333e89f",
+      "name": "✅ Score >= 5?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        64
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.item.json;\nreturn { json: { status: 'fail', reason: 'Quality too low', qualityScore: d.qualityScore, issues: d.issues } };"
+      },
+      "id": "1097b9ee-7114-4eba-a2c7-20ceaa2e465b",
+      "name": "⛔ Ergebnis (Fail)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.item.json;\n\n// Formatiere die fertige Analyse als kopierbaren Text\nconst output = `\n=====================================\nFERTIGE ANALYSE - KOPIERBEREIT\n=====================================\n\nUnternehmen: ${d.company}\nTicker: ${d.ticker}\nSektor: ${d.sector}\nDatum: ${d.date}\nQuality Score: ${d.qualityScore}/10\nIssues: ${d.issues}\n\n-------------------------------------\nINHALT:\n-------------------------------------\n\n${d.content}\n\n-------------------------------------\nDATEIEN:\n-------------------------------------\nFilename: ${d.filename}.html\nHero Image: ${d.heroImage}\n\n=====================================\n`;\n\nreturn { json: {\n  status: 'ok',\n  qualityScore: d.qualityScore,\n  issues: d.issues,\n  company: d.company,\n  ticker: d.ticker,\n  sector: d.sector,\n  date: d.date,\n  filename: d.filename,\n  content: d.content,\n  formattedOutput: output\n}};"
+      },
+      "id": "2e402747-d492-43d6-8167-9782fab745eb",
+      "name": "📤 Fertige Analyse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        80,
+        -144
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "🧪 Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "📝 Analyse-Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📝 Analyse-Input": {
+      "main": [
+        [
+          {
+            "node": "🤖 Perplexity Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🤖 Perplexity Draft": {
+      "main": [
+        [
+          {
+            "node": "🧩 Normalisieren",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧩 Normalisieren": {
+      "main": [
+        [
+          {
+            "node": "🔍 QA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 QA": {
+      "main": [
+        [
+          {
+            "node": "📊 QA auswerten",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 QA auswerten": {
+      "main": [
+        [
+          {
+            "node": "✅ Score >= 5?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✅ Score >= 5?": {
+      "main": [
+        [
+          {
+            "node": "📤 Fertige Analyse",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "⛔ Ergebnis (Fail)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📤 Fertige Analyse": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "91a7398c-5d87-4253-b469-4ed4cab71d9e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4e6dd7bd1638bd2724994ec7815d8c03087481a498a8122e7ad8e8a16988a92b"
+  },
+  "id": "jDbMz9A05WiKb8t4",
+  "tags": [
+    {
+      "updatedAt": "2025-12-27T13:08:15.535Z",
+      "createdAt": "2025-12-27T13:08:15.535Z",
+      "id": "uOHqDzYBQsUIXFcP",
+      "name": "funktionsfähig"
+    }
+  ]
+}

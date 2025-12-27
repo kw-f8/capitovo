@@ -291,13 +291,88 @@
                 });
             }
 
-            // Handle Verification Form Submit (Dummy)
+            // --- Code Verification & Resend Logic ---
+            let currentVerificationCode = null;
+            let resendTimeout = null;
+            let resendCountdown = 0;
             const verificationForm = document.getElementById('verification-form');
+            const resendBtn = verificationForm ? verificationForm.querySelector('button[type="button"]') : null;
+            const codeInput = document.getElementById('verification-code');
+
+            // Dummy: Code generieren (in echt: vom Server)
+            function generateCode() {
+                // 6-stelliger Code
+                return Math.floor(100000 + Math.random() * 900000).toString();
+            }
+
+            // Dummy: Code per Mail senden (hier nur in Variable speichern)
+            function sendVerificationCode() {
+                currentVerificationCode = generateCode();
+                // In echt: Code an Backend senden, das Mail verschickt
+                // console.log('Neuer Code:', currentVerificationCode);
+            }
+
+            // Sperrt den Resend-Button für 60 Sekunden
+            function startResendCooldown() {
+                resendCountdown = 60;
+                if (resendBtn) {
+                    resendBtn.disabled = true;
+                    resendBtn.textContent = `Code erneut senden (${resendCountdown}s)`;
+                }
+                resendTimeout = setInterval(() => {
+                    resendCountdown--;
+                    if (resendBtn) {
+                        if (resendCountdown > 0) {
+                            resendBtn.textContent = `Code erneut senden (${resendCountdown}s)`;
+                        } else {
+                            resendBtn.textContent = 'Code erneut senden';
+                            resendBtn.disabled = false;
+                            clearInterval(resendTimeout);
+                        }
+                    }
+                }, 1000);
+            }
+
+            // Beim Öffnen des Modals: Code generieren und senden
+            const verificationModal = document.getElementById('verification-modal');
+            if (verificationModal) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.attributeName === 'class') {
+                            if (!verificationModal.classList.contains('hidden')) {
+                                sendVerificationCode();
+                                if (resendBtn) {
+                                    resendBtn.disabled = false;
+                                    resendBtn.textContent = 'Code erneut senden';
+                                }
+                                if (codeInput) codeInput.value = '';
+                            }
+                        }
+                    });
+                });
+                observer.observe(verificationModal, { attributes: true });
+            }
+
+            // Resend-Button-Logik
+            if (resendBtn) {
+                resendBtn.addEventListener('click', function() {
+                    sendVerificationCode();
+                    startResendCooldown();
+                });
+            }
+
+            // Formular-Submit: Dummy-Validierung
             if(verificationForm) {
                 verificationForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    // Redirect to homepage with login modal open
-                    window.location.href = 'index.html#open-login';
+                    // In echt: Code an Backend schicken und prüfen
+                    // Hier: Nur Vergleich mit currentVerificationCode
+                    if (codeInput && codeInput.value === currentVerificationCode) {
+                        window.location.href = 'index.html#open-login';
+                    } else {
+                        codeInput.value = '';
+                        codeInput.placeholder = 'Falscher Code!';
+                    }
                 });
             }
         });

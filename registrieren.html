@@ -166,7 +166,7 @@
                     </div>
                     
                     <div class="text-center text-sm">
-                        <button type="button" class="text-accent-blue hover:text-blue-600 font-medium">Code erneut senden</button>
+                        <button type="button" id="resend-code-btn" class="font-medium text-accent-blue hover:text-accent-blue font-bold transition-colors duration-150">Code erneut senden</button>
                     </div>
                 </form>
             </div>
@@ -187,6 +187,19 @@
     </footer>
 
     <script>
+                    // Button-Styles für 'Code erneut senden'
+                    if (resendBtn) {
+                        resendBtn.addEventListener('mouseenter', function() {
+                            if (!resendBtn.disabled) {
+                                resendBtn.style.color = 'var(--color-accent-blue)';
+                            }
+                        });
+                        resendBtn.addEventListener('mouseleave', function() {
+                            if (!resendBtn.disabled) {
+                                resendBtn.style.color = '';
+                            }
+                        });
+                    }
         document.addEventListener('DOMContentLoaded', function() {
             // Passwort anzeigen/ausblenden Funktion
             // Gemeinsames Ein-/Ausblenden für beide Passwortfelder
@@ -324,6 +337,8 @@
                 if (resendBtn) {
                     resendBtn.disabled = true;
                     resendBtn.textContent = `Code erneut senden (${resendCountdown}s)`;
+                    resendBtn.classList.add('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
+                    resendBtn.style.color = '';
                 }
                 resendTimeout = setInterval(() => {
                     resendCountdown--;
@@ -333,6 +348,7 @@
                         } else {
                             resendBtn.textContent = 'Code erneut senden';
                             resendBtn.disabled = false;
+                            resendBtn.classList.remove('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
                             clearInterval(resendTimeout);
                         }
                     }

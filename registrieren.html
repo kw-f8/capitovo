@@ -306,11 +306,15 @@
                     resetVerificationState();
                     lockResendOnNextOpen = true;
 
-                    // Rate limit: nach 2x Schließen -> 6 Minuten sperren
-                    verificationCloseCount += 1;
-                    if (verificationCloseCount >= 2) {
-                        verificationLockUntil = Date.now() + (6 * 60 * 1000);
-                        verificationCloseCount = 0;
+                    // Rate limit: nach 2x Schließen -> Sperre setzen (Timer läuft im Hintergrund weiter)
+                    // Während einer aktiven Sperre NICHT neu starten/verlängern.
+                    if (!isVerificationLocked()) {
+                        verificationCloseCount += 1;
+                        if (verificationCloseCount >= 2) {
+                            verificationLockUntil = Date.now() + VERIFICATION_LOCK_DURATION_MS;
+                            verificationCloseCount = 0;
+                            requireManualCodeRequest = true;
+                        }
                     }
                 });
             }
@@ -323,6 +327,8 @@
             let verificationLockUntil = 0;
             let verificationCloseCount = 0;
             let verificationLockTimer = null;
+            let requireManualCodeRequest = false;
+            const VERIFICATION_LOCK_DURATION_MS = 60 * 1000; // 1 Minute zum Testen
             const verificationForm = document.getElementById('verification-form');
             const resendBtn = document.getElementById('resend-code');
             const codeInput = document.getElementById('verification-code');
@@ -356,6 +362,8 @@
             }
 
             function applyVerificationLockState() {
+                requireManualCodeRequest = true;
+
                 // stop resend countdowns while locked
                 if (resendTimeout) {
                     clearInterval(resendTimeout);
@@ -371,13 +379,22 @@
                     setVerificationHint(`Zu viele Versuche. Bitte warten Sie ${mm}:${ss} und versuchen Sie es erneut`, true);
                     if (remainingSec <= 0) {
                         clearVerificationLockTimer();
-                        // UI wird beim nächsten Öffnen wieder normal gesetzt
+                        // Lock ist vorbei: kein automatischer Code-Versand.
+                        // Nutzer muss einen neuen Code über "Code erneut senden" anfordern.
+                        currentVerificationCode = null;
                         setVerificationHint(defaultVerificationHintText, false);
+                        if (codeInput) {
+                            codeInput.disabled = false;
+                            codeInput.value = '';
+                            codeInput.setAttribute('placeholder', 'Bitte neuen Code über „Code erneut senden“ anfordern');
+                        }
                         if (resendBtn) {
                             resendBtn.disabled = false;
                             resendBtn.textContent = 'Code erneut senden';
                         }
-                        setVerificationControlsDisabled(false);
+                        if (verifySubmitBtn) {
+                            verifySubmitBtn.disabled = true;
+                        }
                     }
                 };
 
@@ -477,20 +494,39 @@
                                 // normaler Start
                                 setVerificationControlsDisabled(false);
                                 setVerificationHint(defaultVerificationHintText, false);
-                                sendVerificationCode();
-                                if (codeInput) {
-                                    codeInput.value = '';
-                                    codeInput.setAttribute('placeholder', defaultCodePlaceholder);
-                                }
 
-                                // Wenn das Modal zuvor geschlossen wurde: Button direkt 60s sperren (wie "geklickt")
-                                if (lockResendOnNextOpen) {
-                                    startResendCooldown();
-                                    lockResendOnNextOpen = false;
-                                } else {
+                                // Falls vorher gesperrt war: kein automatischer Code, Nutzer muss neu anfordern.
+                                if (requireManualCodeRequest) {
+                                    currentVerificationCode = null;
+                                    if (codeInput) {
+                                        codeInput.value = '';
+                                        codeInput.setAttribute('placeholder', 'Bitte neuen Code über „Code erneut senden“ anfordern');
+                                    }
+                                    if (verifySubmitBtn) {
+                                        verifySubmitBtn.disabled = true;
+                                    }
                                     if (resendBtn) {
                                         resendBtn.disabled = false;
                                         resendBtn.textContent = 'Code erneut senden';
+                                    }
+                                    // kein 60s-Autolock in diesem Zustand
+                                    lockResendOnNextOpen = false;
+                                } else {
+                                    sendVerificationCode();
+                                    if (codeInput) {
+                                        codeInput.value = '';
+                                        codeInput.setAttribute('placeholder', defaultCodePlaceholder);
+                                    }
+
+                                    // Wenn das Modal zuvor geschlossen wurde: Button direkt 60s sperren (wie "geklickt")
+                                    if (lockResendOnNextOpen) {
+                                        startResendCooldown();
+                                        lockResendOnNextOpen = false;
+                                    } else {
+                                        if (resendBtn) {
+                                            resendBtn.disabled = false;
+                                            resendBtn.textContent = 'Code erneut senden';
+                                        }
                                     }
                                 }
                             }
@@ -508,6 +544,9 @@
                         return;
                     }
                     sendVerificationCode();
+                    requireManualCodeRequest = false;
+                    if (codeInput) codeInput.setAttribute('placeholder', defaultCodePlaceholder);
+                    if (verifySubmitBtn) verifySubmitBtn.disabled = false;
                     startResendCooldown();
                 });
             }
@@ -518,6 +557,14 @@
                     e.preventDefault();
                     if (isVerificationLocked()) {
                         applyVerificationLockState();
+                        return;
+                    }
+                    if (!currentVerificationCode) {
+                        if (codeInput) {
+                            codeInput.value = '';
+                            codeInput.setAttribute('placeholder', 'Bitte zuerst einen neuen Code über „Code erneut senden“ anfordern');
+                        }
+                        if (verifySubmitBtn) verifySubmitBtn.disabled = true;
                         return;
                     }
                     // In echt: Code an Backend schicken und prüfen

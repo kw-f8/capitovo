@@ -26,8 +26,8 @@
         #verify-submit:disabled { background-color: #9ca3af !important; cursor: not-allowed; }
         #verify-submit:disabled:hover { background-color: #9ca3af !important; }
 
-        /* Keep hint area height stable even when empty */
-        #verification-hint { min-height: 3rem; }
+        /* Keep hint area height stable and allow line breaks */
+        #verification-hint { min-height: 3rem; white-space: pre-line; }
     </style>
 </head>
 <body style="background-color: #fff;" class="flex flex-col min-h-screen">
@@ -379,13 +379,13 @@
                     const remainingSec = Math.ceil(remainingMs / 1000);
                     const mm = String(Math.floor(remainingSec / 60)).padStart(1, '0');
                     const ss = String(remainingSec % 60).padStart(2, '0');
-                    setVerificationHint(`Zu viele Versuche. Bitte warten Sie ${mm}:${ss} und versuchen Sie es erneut`, true);
+                    setVerificationHint(`Zu viele Versuche\nBitte warten Sie ${mm}:${ss} und versuchen Sie es erneut`, true);
                     if (remainingSec <= 0) {
                         clearVerificationLockTimer();
                         // Lock ist vorbei: kein automatischer Code-Versand.
                         // Nutzer muss einen neuen Code über "Code erneut senden" anfordern.
                         currentVerificationCode = null;
-                        setVerificationHint('\u00A0', false);
+                        setVerificationHint('Bitte Code unten über „Code erneut senden“ anfordern', false);
                         if (codeInput) {
                             codeInput.disabled = false;
                             codeInput.value = '';
@@ -501,7 +501,7 @@
                                 // Falls vorher gesperrt war: kein automatischer Code, Nutzer muss neu anfordern.
                                 if (requireManualCodeRequest) {
                                     currentVerificationCode = null;
-                                    setVerificationHint('\u00A0', false);
+                                    setVerificationHint('Bitte Code unten über „Code erneut senden“ anfordern', false);
                                     if (codeInput) {
                                         codeInput.value = '';
                                         codeInput.setAttribute('placeholder', 'Bitte neuen Code über „Code erneut senden“ anfordern');

@@ -25,6 +25,9 @@
         /* Verification modal: confirm button should grey out while disabled */
         #verify-submit:disabled { background-color: #9ca3af !important; cursor: not-allowed; }
         #verify-submit:disabled:hover { background-color: #9ca3af !important; }
+
+        /* Keep hint area height stable even when empty */
+        #verification-hint { min-height: 3rem; }
     </style>
 </head>
 <body style="background-color: #fff;" class="flex flex-col min-h-screen">
@@ -382,7 +385,7 @@
                         // Lock ist vorbei: kein automatischer Code-Versand.
                         // Nutzer muss einen neuen Code über "Code erneut senden" anfordern.
                         currentVerificationCode = null;
-                        setVerificationHint(defaultVerificationHintText, false);
+                        setVerificationHint('\u00A0', false);
                         if (codeInput) {
                             codeInput.disabled = false;
                             codeInput.value = '';
@@ -498,6 +501,7 @@
                                 // Falls vorher gesperrt war: kein automatischer Code, Nutzer muss neu anfordern.
                                 if (requireManualCodeRequest) {
                                     currentVerificationCode = null;
+                                    setVerificationHint('\u00A0', false);
                                     if (codeInput) {
                                         codeInput.value = '';
                                         codeInput.setAttribute('placeholder', 'Bitte neuen Code über „Code erneut senden“ anfordern');

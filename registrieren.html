@@ -47,7 +47,7 @@
                     Oder <a href="https://kw-f8.github.io/capitovo/index.html#open-login" class="font-medium text-accent-blue hover:text-accent-blue font-bold" style="color: var(--color-accent-blue);">melden Sie sich an</a>, wenn Sie bereits ein Konto haben
                 </p>
             </div>
-            <form id="registration-form" class="mt-8 space-y-6" method="POST">
+            <form id="registration-form" class="mt-8 space-y-6" action="#" method="POST">
                 <div class="space-y-5">
                     <div class="relative">
                         <input id="firstname" name="firstname" type="text" autocomplete="given-name" required 
@@ -166,7 +166,7 @@
                     </div>
                     
                     <div class="text-center text-sm">
-                        <button type="button" id="resend-code-btn" class="font-medium text-accent-blue hover:text-accent-blue font-bold transition-colors duration-150">Code erneut senden</button>
+                        <button type="button" class="text-accent-blue hover:text-blue-600 font-medium">Code erneut senden</button>
                     </div>
                 </form>
             </div>
@@ -187,19 +187,6 @@
     </footer>
 
     <script>
-                    // Button-Styles für 'Code erneut senden'
-                    if (resendBtn) {
-                        resendBtn.addEventListener('mouseenter', function() {
-                            if (!resendBtn.disabled) {
-                                resendBtn.style.color = 'var(--color-accent-blue)';
-                            }
-                        });
-                        resendBtn.addEventListener('mouseleave', function() {
-                            if (!resendBtn.disabled) {
-                                resendBtn.style.color = '';
-                            }
-                        });
-                    }
         document.addEventListener('DOMContentLoaded', function() {
             // Passwort anzeigen/ausblenden Funktion
             // Gemeinsames Ein-/Ausblenden für beide Passwortfelder
@@ -296,10 +283,9 @@
 
                 // Handle Registration Submit
                 form.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Verhindert HTTP-Request!
+                    e.preventDefault(); // Prevent actual submission
                     // Show Verification Modal
                     document.getElementById('verification-modal').classList.remove('hidden');
-                    return false;
                 });
             }
 
@@ -338,8 +324,6 @@
                 if (resendBtn) {
                     resendBtn.disabled = true;
                     resendBtn.textContent = `Code erneut senden (${resendCountdown}s)`;
-                    resendBtn.classList.add('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
-                    resendBtn.style.color = '';
                 }
                 resendTimeout = setInterval(() => {
                     resendCountdown--;
@@ -349,7 +333,6 @@
                         } else {
                             resendBtn.textContent = 'Code erneut senden';
                             resendBtn.disabled = false;
-                            resendBtn.classList.remove('bg-gray-300', 'text-gray-400', 'cursor-not-allowed');
                             clearInterval(resendTimeout);
                         }
                     }

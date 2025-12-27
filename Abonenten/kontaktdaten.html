@@ -22,8 +22,12 @@
         .back-btn-glow:hover, .back-btn-glow:focus-visible {
             box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
         }
-        /* Page-specific override: reduce top spacing so contact box is closer to header */
-        .abonenten-page main { padding-top: 8px !important; }
+        /* Page-specific: move only the contact form card upward (heading stays in place) */
+        .member-grid > .bg-white { margin-top: -18px; }
+        @media (max-width: 640px) {
+            /* On small screens keep default spacing so layout doesn't overlap */
+            .member-grid > .bg-white { margin-top: 0; }
+        }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">

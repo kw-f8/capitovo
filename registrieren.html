@@ -27,7 +27,14 @@
         #verify-submit:disabled:hover { background-color: #9ca3af !important; }
 
         /* Keep hint area height stable and allow line breaks */
-        #verification-hint { min-height: 3rem; white-space: pre-line; }
+        #verification-hint {
+            min-height: 3rem;
+            white-space: pre-line;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body style="background-color: #fff;" class="flex flex-col min-h-screen">

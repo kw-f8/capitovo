@@ -84,10 +84,15 @@
 
             <!-- Right Column: Subscription & Support (Span 1) -->
             <div class="space-y-6">
-                <section class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden relative" id="subscription-card">
-                    <div class="p-6">
-                        <h2 class="text-sm font-bold text-gray-400 tracking-wider mb-4">Ihr Abonnement</h2>
+                <section class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full relative" id="subscription-card">
+                    <div class="p-6 border-b border-gray-100 bg-white">
+                        <h2 class="text-lg font-bold text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            Ihr Abonnement
+                        </h2>
                         
+                    </div>
+                    <div class="p-6">
                         <div class="mb-6">
                             <span class="block text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-1" id="page-acc-status">
@@ -111,23 +116,25 @@
                     </div>
                 </section>
 
-                <section class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <section class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-full">
+                    <div class="p-6 border-b border-gray-100 bg-white">
+                        <h2 class="text-lg font-bold text-gray-900 flex items-center">
+                            <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            Hilfe & Support
+                        </h2>
+                    </div>
                     <div class="p-6">
-                        <h2 class="text-sm font-bold text-gray-400 tracking-wider mb-4">Hilfe & Support</h2>
-                        
-                        <div>
-                            <h3 class="text-base font-bold text-gray-900">Haben Sie Fragen?</h3>
-                            <p class="mt-1 text-sm text-gray-500">Unser Support-Team ist für Sie da. Schreiben Sie uns einfach eine E-Mail.</p>
-                            <div class="mt-4">
-                                <a href="#" id="open-contact-modal" aria-label="Support kontaktieren"
-                                   class="inline-flex w-full items-center justify-center gap-2 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-primary-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16c.55 0 1 .45 1 1v10c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V7c0-.55.45-1 1-1z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 7l-9 6-9-6" />
-                                    </svg>
-                                    <span>Kontakt aufnehmen</span>
-                                </a>
-                            </div>
+                        <h3 class="text-base font-bold text-gray-900">Haben Sie Fragen?</h3>
+                        <p class="mt-1 text-sm text-gray-500">Unser Support-Team ist für Sie da. Schreiben Sie uns einfach eine E-Mail.</p>
+                        <div class="mt-4">
+                            <a href="#" id="open-contact-modal" aria-label="Support kontaktieren"
+                               class="inline-flex w-full items-center justify-center gap-2 px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-primary-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16c.55 0 1 .45 1 1v10c0 .55-.45 1-1 1H4c-.55 0-1-.45-1-1V7c0-.55.45-1 1-1z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 7l-9 6-9-6" />
+                                </svg>
+                                <span>Kontakt aufnehmen</span>
+                            </a>
                         </div>
                     </div>
                 </section>

@@ -73,10 +73,7 @@
                                     
                                 </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-medium text-gray-400">Mitglied seit</label>
-                                <div class="mt-1 text-gray-900 font-medium" id="page-acc-member-since">29.11.2025</div>
-                            </div>
+                            
                         </div>
                     </div>
                 </section>
@@ -238,19 +235,22 @@
                 const payEditBtn = document.getElementById('page-acc-payment-edit');
 
                 if (payEl) {
-                    if (contact.payment && sess.subscription && sess.subscription !== 'none') {
+                    if (contact.payment) {
                         const p = contact.payment;
                         if (p.method === 'card' && p.card_last4) payEl.textContent = `Karte •••• ${p.card_last4}`;
                         else if (p.method === 'sepa' && p.iban_last4) payEl.textContent = `IBAN •••• ${p.iban_last4}`;
                         else if (p.method === 'paypal' && p.paypal_email) payEl.textContent = `PayPal: ${p.paypal_email}`;
                         else payEl.textContent = 'Standard-Zahlungsmethode';
-                        
-                        // Show billing date (use same date as in subscription card)
-                        billingDateEl.textContent = `Nächste Abbuchung am ${nextPaymentStr}`;
+                        // Show billing date only if subscription exists
+                        if (sess.subscription && sess.subscription !== 'none') {
+                            if (billingDateEl) billingDateEl.textContent = `Nächste Abbuchung am ${nextPaymentStr}`;
+                        } else {
+                            if (billingDateEl) billingDateEl.textContent = '';
+                        }
                         if(payEditBtn) payEditBtn.classList.remove('hidden');
                     } else {
                         payEl.textContent = 'Keine Zahlungsmethode hinterlegt';
-                        billingDateEl.textContent = '';
+                        if (billingDateEl) billingDateEl.textContent = '';
                         if(payEditBtn) payEditBtn.classList.add('hidden');
                     }
                 }

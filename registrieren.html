@@ -572,6 +572,8 @@
             if(verificationForm) {
                 verificationForm.addEventListener('submit', function(e) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
                     if (isVerificationLocked()) {
                         applyVerificationLockState();
                         return;
@@ -611,6 +613,7 @@
                         verificationSuccessTimeout = setTimeout(() => {
                             window.location.href = 'index.html#open-login';
                         }, 4000);
+                        return;
                     } else {
                         codeInput.value = '';
                         codeInput.placeholder = 'Falscher Code!';

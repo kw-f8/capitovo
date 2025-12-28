@@ -1022,53 +1022,48 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const contactForm = document.getElementById('contact-form');
-            if (!contactForm) return;
+            if (contactForm) {
+                const submitBtn = document.getElementById('contact-submit');
+                const inputs = contactForm.querySelectorAll('input, select, textarea');
+                const captchaInput = document.getElementById('contact-captcha');
 
-            const submitBtn = document.getElementById('contact-submit');
-            const inputs = contactForm.querySelectorAll('input, select, textarea');
-            const captchaInput = document.getElementById('contact-captcha');
-
-            function validateContactForm() {
-                let isValid = true;
-                
-                // Check if all required fields are filled
-                inputs.forEach(input => {
-                    if (input.hasAttribute('required') && !input.value.trim()) {
+                function validateContactForm() {
+                    let isValid = true;
+                    // Check if all required fields are filled
+                    inputs.forEach(input => {
+                        if (input.hasAttribute('required') && !input.value.trim()) {
+                            isValid = false;
+                        }
+                    });
+                    // Check Captcha specifically
+                    if (captchaInput && captchaInput.value.trim() !== '5') {
                         isValid = false;
                     }
+                    if (isValid) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                        submitBtn.classList.add('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-blue-500');
+                    } else {
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        submitBtn.classList.remove('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-blue-500');
+                    }
+                }
+                inputs.forEach(input => {
+                    input.addEventListener('input', validateContactForm);
+                    input.addEventListener('change', validateContactForm);
                 });
-
-                // Check Captcha specifically
-                if (captchaInput && captchaInput.value.trim() !== '5') {
-                    isValid = false;
-                }
-
-                if (isValid) {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                    submitBtn.classList.add('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-blue-500');
-                } else {
-                    submitBtn.disabled = true;
-                    submitBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
-                    submitBtn.classList.remove('bg-primary-blue', 'hover:bg-blue-700', 'focus:outline-none', 'focus:ring-2', 'focus:ring-offset-2', 'focus:ring-blue-500');
-                }
+                // Initial check
+                validateContactForm();
+                contactForm.addEventListener('submit', function(e) {
+                    if (captchaInput && captchaInput.value !== '5') {
+                        e.preventDefault();
+                        alert('Bitte beantworten Sie die Sicherheitsfrage korrekt (3 + 2 = 5).');
+                        captchaInput.focus();
+                    }
+                });
             }
-
-            inputs.forEach(input => {
-                input.addEventListener('input', validateContactForm);
-                input.addEventListener('change', validateContactForm);
-            });
-
-            // Initial check
-            validateContactForm();
-
-            contactForm.addEventListener('submit', function(e) {
-                if (captchaInput && captchaInput.value !== '5') {
-                    e.preventDefault();
-                    alert('Bitte beantworten Sie die Sicherheitsfrage korrekt (3 + 2 = 5).');
-                    captchaInput.focus();
-                }
-            });
+            // Keine Rückgabe/Abbruch mehr, damit die Initialisierung von script.js immer läuft
         });
     </script>
 </body>

@@ -1018,7 +1018,7 @@ section .max-w-4xl > h2 + p + * {
 
 /* Slight visual nudge: move edit link slightly upwards to align with heading baseline */
 .account-edit {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
 }
 
 /* Override für häufig genutzte Tailwind-Blauklassen im HTML */

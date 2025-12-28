@@ -14,11 +14,18 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleBtn.addEventListener('click', function() {
             var isPw = pwInput.type === 'password';
             pwInput.type = isPw ? 'text' : 'password';
-            // SVG wie Registrierung: offen/geschlossen
-            if (isPw) {
-                icon.innerHTML = '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke-width="2"/>';
-            } else {
-                icon.innerHTML = '<path d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.77 21.77 0 014.22-5.94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 1l22 22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+            // Verwende exakt dieselben SVG-Elemente wie in registrieren.html
+            if (icon) {
+                if (isPw) {
+                    // nach dem Klick: sichtbar -> durchgestrichenes Auge
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>' +
+                                     '<circle cx="12" cy="12" r="3" stroke-width="2"/>' +
+                                     '<line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2"/>';
+                } else {
+                    // nach dem Klick: versteckt -> normales Auge
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>' +
+                                     '<circle cx="12" cy="12" r="3" stroke-width="2"/>';
+                }
             }
         });
     }

@@ -177,6 +177,35 @@ function openLoginModal() {
     }
 }
 
+/** Öffnet das Passwort-vergessen-Modal (gleicher Screen wie Login-Modal). */
+function openForgotPasswordModal() {
+    const forgotModal = document.getElementById('forgot-password-modal');
+    const loginModal = document.getElementById('login-modal');
+    if (!forgotModal) return;
+
+    // Login-Modal schließen, falls offen
+    if (loginModal && !loginModal.classList.contains('hidden')) {
+        loginModal.classList.add('hidden');
+    }
+
+    // alte Hinweise zurücksetzen
+    try {
+        const hint = document.getElementById('forgot-password-hint');
+        if (hint) { hint.style.display = 'none'; hint.textContent = ''; }
+    } catch(e) {}
+
+    forgotModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+/** Schließt das Passwort-vergessen-Modal. */
+function closeForgotPasswordModal() {
+    const forgotModal = document.getElementById('forgot-password-modal');
+    if (!forgotModal) return;
+    forgotModal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
 /** Sidebar: Subscribe form handler */
 function initSidebarSubscribeHandler(){
     const form = document.getElementById('sidebar-subscribe-form');
@@ -1131,6 +1160,7 @@ function initSidebar() {
 /** Initialisiert die Modal-Steuerung mit Event Delegation (Login + Kontakt). */
 function initModalControl() {
     const loginModalElement = document.getElementById('login-modal');
+    const forgotPasswordModalElement = document.getElementById('forgot-password-modal');
     const contactModalElement = document.getElementById('contact-modal');
 
     // only enable contact-related handlers when the modal exists on the page
@@ -1142,6 +1172,9 @@ function initModalControl() {
     document.body.addEventListener('click', (e) => {
         const linkLogin = e.target.closest('a[href="#open-login"]');
         if (linkLogin) { e.preventDefault(); openLoginModal(); return; }
+
+        const linkForgot = e.target.closest('a[href="#open-forgot-password"]');
+        if (linkForgot) { e.preventDefault(); openForgotPasswordModal(); return; }
         // Kontakt-Links are not intercepted here anymore. They should be full links
         // to a Kontaktseite (e.g. `Abonenten/kontaktdaten.html`).
     });
@@ -1150,6 +1183,13 @@ function initModalControl() {
     if (loginModalElement) {
         loginModalElement.addEventListener('click', (e) => {
             if (e.target === loginModalElement) closeLoginModal();
+        });
+    }
+
+    // Backdrop click to close forgot-password modal
+    if (forgotPasswordModalElement) {
+        forgotPasswordModalElement.addEventListener('click', (e) => {
+            if (e.target === forgotPasswordModalElement) closeForgotPasswordModal();
         });
     }
 
@@ -1164,8 +1204,42 @@ function initModalControl() {
     document.addEventListener('keydown', (e) => {
         if (e.key !== 'Escape') return;
         if (loginModalElement && !loginModalElement.classList.contains('hidden')) closeLoginModal();
+        if (forgotPasswordModalElement && !forgotPasswordModalElement.classList.contains('hidden')) closeForgotPasswordModal();
         if (hasContactControls && contactModalElement && !contactModalElement.classList.contains('hidden')) closeContactModal();
     });
+}
+
+/** Initialisiert die Passwort-vergessen Maske (Code anfordern). */
+function initForgotPassword() {
+    const modal = document.getElementById('forgot-password-modal');
+    if (!modal) return;
+
+    const closeBtn = document.getElementById('forgot-password-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            closeForgotPasswordModal();
+        });
+    }
+
+    const form = document.getElementById('forgot-password-form');
+    const emailInput = document.getElementById('forgot-email');
+    const hint = document.getElementById('forgot-password-hint');
+
+    if (form) {
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            const email = (emailInput && emailInput.value ? emailInput.value : '').trim();
+            const ok = !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            if (hint) {
+                hint.style.display = 'block';
+                hint.textContent = ok
+                    ? 'Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie in Kürze einen Code.'
+                    : 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
+                hint.style.color = ok ? '#475569' : '#ef4444';
+            }
+        });
+    }
 }
 
 /** Initialisiert Kontaktformular-Handling: speichern/abbrechen */
@@ -1366,6 +1440,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 3. Initialisiere Modal-Steuerung
     initModalControl();
+
+    // 3b. Passwort-vergessen Modal
+    initForgotPassword();
 
     // Check for hash to open login modal automatically
     if (window.location.hash === '#open-login') {

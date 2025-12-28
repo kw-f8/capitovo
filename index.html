@@ -1021,7 +1021,7 @@
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <a href="#" class="text-sm font-medium text-gray-600 hover:text-accent-blue" style="transition:color 0.15s;">Passwort vergessen?</a>
+                        <a href="#open-forgot-password" class="text-sm font-medium text-gray-600 hover:text-accent-blue" style="transition:color 0.15s;">Passwort vergessen?</a>
                     </div>
 
                     <div>
@@ -1038,6 +1038,50 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- Passwort vergessen Modal (gleicher Look wie Login Modal) -->
+    <div id="forgot-password-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
+
+        <div class="w-full max-w-sm">
+            <div class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 relative">
+                <button id="forgot-password-close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" aria-label="Schließen">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <h2 class="text-2xl font-semibold text-gray-900 mb-2 text-center">Passwort vergessen</h2>
+                <p class="text-sm text-gray-600 text-center mb-6">Geben Sie Ihre E-Mail-Adresse ein, um einen Code anzufordern.</p>
+
+                <form id="forgot-password-form" class="space-y-6" action="#" method="POST">
+                    <div class="relative">
+                        <input id="forgot-email" name="email" type="email" autocomplete="email" required
+                               class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                               placeholder="E-Mail Adresse">
+                        <label for="forgot-email"
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            E-Mail Adresse
+                        </label>
+                    </div>
+
+                    <div class="mt-2 w-full flex justify-center">
+                        <!-- Cloudflare Turnstile Platzhalter (wie registrieren) -->
+                        <div id="forgot-turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
+                            Sicherheitsabfrage (Cloudflare Turnstile)
+                        </div>
+                    </div>
+
+                    <div>
+                        <button id="forgot-request-code" type="submit"
+                                class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-blue transition duration-150">
+                            Code anfordern
+                        </button>
+                        <p id="forgot-password-hint" class="text-xs text-gray-600 mt-3 text-center" style="display:none;"></p>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     

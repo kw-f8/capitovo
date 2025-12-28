@@ -59,7 +59,13 @@
             @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
 
             /* Hover-Scale-Effekt für den Login-Link 'Jetzt registrieren' */
-            .capitovo-register-link { display: inline-block; transition: transform 0.18s cubic-bezier(.4,0,.2,1); }
+            .capitovo-register-link {
+                display: inline-block;
+                vertical-align: middle;
+                transform-origin: 50% 50%;
+                will-change: transform;
+                transition: transform 0.18s cubic-bezier(.4,0,.2,1);
+            }
             .capitovo-register-link:hover { transform: scale(1.08); }
     </style>
 </head>

@@ -570,6 +570,13 @@
                         applyVerificationLockState();
                         return;
                     }
+                    // Solange die echte E-Mail-Verifikation noch nicht aktiv ist:
+                    // festen Test-Code zulassen (z.B. 1234)
+                    const enteredCode = codeInput ? String(codeInput.value || '').trim() : '';
+                    if (enteredCode === '1234') {
+                        window.location.href = 'index.html#open-login';
+                        return;
+                    }
                     if (!currentVerificationCode) {
                         if (codeInput) {
                             codeInput.value = '';
@@ -580,7 +587,7 @@
                     }
                     // In echt: Code an Backend schicken und prüfen
                     // Hier: Nur Vergleich mit currentVerificationCode
-                    if (codeInput && codeInput.value === currentVerificationCode) {
+                    if (enteredCode && enteredCode === currentVerificationCode) {
                         window.location.href = 'index.html#open-login';
                     } else {
                         codeInput.value = '';

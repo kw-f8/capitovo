@@ -67,6 +67,33 @@
                 transition: transform 0.18s cubic-bezier(.4,0,.2,1);
             }
             .capitovo-register-link:hover { transform: scale(1.08); }
+
+            /* Mobile Optimierung (nur kleine Screens, Desktop bleibt unverändert) */
+            @media (max-width: 640px) {
+                header { padding: 12px 0; }
+                .header-content { padding-left: 16px; padding-right: 16px; }
+                .header-logo { height: 56px; }
+
+                /* Hero: weniger vertikaler Platz */
+                .hero { padding: 2rem 0.75rem 1.25rem !important; min-height: auto; }
+                .hero h2 { margin-bottom: 1.25rem !important; }
+
+                /* Section-Intro: kleinere Abstände/Typo */
+                main > section h2.text-4xl { font-size: 1.9rem !important; line-height: 1.15; }
+                main > section p.text-xl { font-size: 1.05rem !important; }
+                main .mb-16 { margin-bottom: 2rem !important; }
+
+                /* Aktien-Monitor: kein Überlappen/Clipping */
+                #aktien-monitor .monitor-card { padding: 1rem; }
+                #aktien-monitor .monitor-right { margin-top: 0; }
+                #aktien-monitor .monitor-footer { margin-top: 0; justify-content: center; }
+                #aktien-monitor .monitor-desc br { display: none; }
+                #aktien-monitor .monitor-mockup-img { transform: translateY(0) !important; }
+
+                /* Pricing/FAQ: Karten etwas kompakter */
+                #pricing .p-8 { padding: 1.25rem !important; }
+                #faq .p-6 { padding: 1.25rem !important; }
+            }
     </style>
 </head>
 <body>

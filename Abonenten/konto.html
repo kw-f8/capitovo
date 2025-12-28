@@ -85,9 +85,9 @@
                     <div class="p-6">
                         <h2 class="text-sm font-bold text-gray-400 tracking-wider mb-4">Ihr Abonnement</h2>
                         
-                        <div class="mb-6">
-                            <span class="block text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mt-1" id="page-acc-status">
+                        <div class="mb-6 flex items-center gap-3">
+                            <span class="text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800" id="page-acc-status">
                                 <span class="w-2 h-2 bg-gray-500 rounded-full mr-1.5"></span>
                                 Inaktiv
                             </span>
@@ -267,7 +267,7 @@
                     planEl.textContent = planName;
                     
                     // Update Status Badge
-                    statusEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1";
+                    statusEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800";
                     statusEl.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>Aktiv';
 
                     // Update Details

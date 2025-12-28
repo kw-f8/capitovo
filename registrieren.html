@@ -338,6 +338,7 @@
             let verificationCloseCount = 0;
             let verificationLockTimer = null;
             let requireManualCodeRequest = false;
+            let verificationSuccessTimeout = null;
             const VERIFICATION_LOCK_DURATION_MS = 60 * 1000; // 1 Minute zum Testen
             const verificationForm = document.getElementById('verification-form');
             const resendBtn = document.getElementById('resend-code');
@@ -461,6 +462,11 @@
                 // Code ungültig machen
                 currentVerificationCode = null;
 
+                if (verificationSuccessTimeout) {
+                    clearTimeout(verificationSuccessTimeout);
+                    verificationSuccessTimeout = null;
+                }
+
                 clearVerificationLockTimer();
 
                 // Timer stoppen
@@ -574,7 +580,15 @@
                     // festen Test-Code zulassen (z.B. 1234)
                     const enteredCode = codeInput ? String(codeInput.value || '').trim() : '';
                     if (enteredCode === '1234') {
-                        window.location.href = 'index.html#open-login';
+                        if (verificationSuccessTimeout) {
+                            clearTimeout(verificationSuccessTimeout);
+                            verificationSuccessTimeout = null;
+                        }
+                        setVerificationHint('Code erfolgreich bestätigt. Weiterleitung zum Login …', false);
+                        setVerificationControlsDisabled(true);
+                        verificationSuccessTimeout = setTimeout(() => {
+                            window.location.href = 'index.html#open-login';
+                        }, 4000);
                         return;
                     }
                     if (!currentVerificationCode) {
@@ -588,7 +602,15 @@
                     // In echt: Code an Backend schicken und prüfen
                     // Hier: Nur Vergleich mit currentVerificationCode
                     if (enteredCode && enteredCode === currentVerificationCode) {
-                        window.location.href = 'index.html#open-login';
+                        if (verificationSuccessTimeout) {
+                            clearTimeout(verificationSuccessTimeout);
+                            verificationSuccessTimeout = null;
+                        }
+                        setVerificationHint('Code erfolgreich bestätigt. Weiterleitung zum Login …', false);
+                        setVerificationControlsDisabled(true);
+                        verificationSuccessTimeout = setTimeout(() => {
+                            window.location.href = 'index.html#open-login';
+                        }, 4000);
                     } else {
                         codeInput.value = '';
                         codeInput.placeholder = 'Falscher Code!';

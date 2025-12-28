@@ -1005,6 +1005,17 @@ section .max-w-4xl > h2 + p + * {
     border-radius: 8px;
 }
 
+/* Account edit link: default black, hover capitovo-blue */
+.account-edit {
+    color: #1a1a1a; /* black by default */
+    transition: color 0.12s ease;
+    text-decoration: none;
+}
+.account-edit:hover,
+.account-edit:focus {
+    color: var(--color-accent-blue) !important;
+}
+
 /* Override für häufig genutzte Tailwind-Blauklassen im HTML */
 .text-blue-200 { color: var(--color-accent-blue) !important; }
 .text-primary-blue { color: var(--color-accent-blue) !important; }

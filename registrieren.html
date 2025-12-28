@@ -586,10 +586,10 @@
                             clearTimeout(verificationSuccessTimeout);
                             verificationSuccessTimeout = null;
                         }
-                        setVerificationHint('Code erfolgreich bestätigt. Weiterleitung zum Login …', false);
+                        setVerificationHint('Code erfolgreich bestätigt', false);
                         setVerificationControlsDisabled(true);
                         verificationSuccessTimeout = setTimeout(() => {
-                            window.location.href = 'index.html#open-login';
+                            window.location.replace('index.html#open-login');
                         }, 4000);
                         return;
                     }
@@ -608,10 +608,10 @@
                             clearTimeout(verificationSuccessTimeout);
                             verificationSuccessTimeout = null;
                         }
-                        setVerificationHint('Code erfolgreich bestätigt. Weiterleitung zum Login …', false);
+                        setVerificationHint('Code erfolgreich bestätigt', false);
                         setVerificationControlsDisabled(true);
                         verificationSuccessTimeout = setTimeout(() => {
-                            window.location.href = 'index.html#open-login';
+                            window.location.replace('index.html#open-login');
                         }, 4000);
                         return;
                     } else {

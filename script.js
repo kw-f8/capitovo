@@ -1339,6 +1339,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.location.hash === '#open-login') {
         setTimeout(() => {
             openLoginModal();
+            // Entferne den Hash aus der URL, damit ein Reload nicht erneut das Modal öffnet
+            history.replaceState(null, '', window.location.pathname + window.location.search);
         }, 100);
     }
     

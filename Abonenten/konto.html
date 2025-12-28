@@ -210,27 +210,15 @@
                 if (contact.zip || contact.city) {
                     addressParts.push((contact.zip || '') + ' ' + (contact.city || ''));
                 }
-
-                // Immer 'Deutschland' anhängen (Land ist immer Deutschland)
-                if (contact.country) {
-                    // falls country vorhanden ist, bevorzugen wir dennoch 'Deutschland' laut Vorgabe
-                    if (String(contact.country).toLowerCase() !== 'deutschland') {
-                        addressParts.push('Deutschland');
-                    } else {
-                        addressParts.push(contact.country);
-                    }
-                } else {
-                    addressParts.push('Deutschland');
-                }
+                
+                if (contact.country) addressParts.push(contact.country);
                 
                 let contactLine = addressParts.join('<br>');
                 
                 // Fallback to old single string if new fields aren't there
                 if (!contactLine && contact.address) contactLine = contact.address;
                 
-                // Email unter der Adresse anzeigen (zusätzlich zur separaten E-Mail-Zelle)
-                const emailUnder = sess.email || contact.email || '–';
-                document.getElementById('page-acc-contact').innerHTML = contactLine ? (contactLine + '<br><div class="mt-2 text-sm text-gray-700">' + emailUnder + '</div>') : 'Keine Adresse hinterlegt';
+                document.getElementById('page-acc-contact').innerHTML = contactLine || 'Keine Adresse hinterlegt';
 
                 // Calculate next payment date (used in both sections)
                 let nextPaymentStr = '';

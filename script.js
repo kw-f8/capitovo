@@ -4,13 +4,22 @@ document.addEventListener('DOMContentLoaded', function() {
     var toggleBtn = document.getElementById('toggle-password-login');
     var icon = document.getElementById('icon-password-login');
     if (pwInput && toggleBtn && icon) {
+        // Icon erst anzeigen, wenn etwas eingegeben wurde
+        pwInput.addEventListener('input', function() {
+            toggleBtn.style.display = pwInput.value ? '' : 'none';
+        });
+        // Initial prüfen (z.B. Autofill)
+        toggleBtn.style.display = pwInput.value ? '' : 'none';
+
         toggleBtn.addEventListener('click', function() {
             var isPw = pwInput.type === 'password';
             pwInput.type = isPw ? 'text' : 'password';
-            // Icon bleibt gleich, kann aber für "versteckt" angepasst werden
-            icon.innerHTML = isPw
-                ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3" stroke-width="2"/>'
-                : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.77 21.77 0 014.22-5.94m3.1-2.1A10.94 10.94 0 0112 5c7 0 11 7 11 7a21.77 21.77 0 01-4.22 5.94m-3.1 2.1l-6.83-6.83"/>';
+            // Icon wechseln: offen/geschlossen
+            if (isPw) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3" stroke-width="2"/>';
+            } else {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7a21.77 21.77 0 014.22-5.94"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1l22 22"/>';
+            }
         });
     }
 });

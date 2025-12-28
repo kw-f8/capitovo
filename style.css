@@ -1016,6 +1016,11 @@ section .max-w-4xl > h2 + p + * {
     color: var(--color-accent-blue) !important;
 }
 
+/* Slight visual nudge: move edit link slightly upwards to align with heading baseline */
+.account-edit {
+    transform: translateY(-2px);
+}
+
 /* Override für häufig genutzte Tailwind-Blauklassen im HTML */
 .text-blue-200 { color: var(--color-accent-blue) !important; }
 .text-primary-blue { color: var(--color-accent-blue) !important; }

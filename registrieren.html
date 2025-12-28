@@ -385,7 +385,7 @@
                         // Lock ist vorbei: kein automatischer Code-Versand.
                         // Nutzer muss einen neuen Code über "Code erneut senden" anfordern.
                         currentVerificationCode = null;
-                        setVerificationHint('Bitte Code unten über „Code erneut senden“ anfordern', false);
+                        setVerificationHint('Bitte fordern Sie einen neuen Code an', false);
                         if (codeInput) {
                             codeInput.disabled = false;
                             codeInput.value = '';
@@ -501,7 +501,7 @@
                                 // Falls vorher gesperrt war: kein automatischer Code, Nutzer muss neu anfordern.
                                 if (requireManualCodeRequest) {
                                     currentVerificationCode = null;
-                                    setVerificationHint('Bitte Code unten über „Code erneut senden“ anfordern', false);
+                                    setVerificationHint('Bitte fordern Sie einen neuen Code an', false);
                                     if (codeInput) {
                                         codeInput.value = '';
                                         codeInput.setAttribute('placeholder', 'Bitte neuen Code über „Code erneut senden“ anfordern');

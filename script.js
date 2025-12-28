@@ -343,11 +343,15 @@ function openSubscriptionModal() {
         
         modal = document.createElement('div');
         modal.id = 'subscription-modal';
-        // Use backdrop-blur-xl-custom for consistent look with login modal
-        // Ensure z-index is very high to cover everything including sidebar if needed
-        // Add pointer-events-auto to ensure it captures all clicks/hovers
-        modal.className = 'hidden fixed inset-0 backdrop-blur-xl-custom bg-black bg-opacity-75 flex items-center justify-center p-4 pointer-events-auto';
-        modal.style.zIndex = '10050';
+                if (ok) {
+                    // Kein Erfolgstext gewünscht
+                    hint.style.display = 'none';
+                    hint.textContent = '';
+                } else {
+                    hint.style.display = 'block';
+                    hint.textContent = 'Bitte geben Sie eine gültige E-Mail-Adresse ein.';
+                    hint.style.color = '#ef4444';
+                }
         
         modal.innerHTML = `
             <div class="bg-white rounded-xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-100 border border-gray-200 relative" style="z-index: 10051;">

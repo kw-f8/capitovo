@@ -2,6 +2,11 @@
 a[href="#"].hover\:text-accent-blue:hover, a.text-accent-blue:hover {
     color: var(--color-accent-blue) !important;
 }
+
+/* Passwort vergessen Link im Login-Modal (href geändert auf #open-forgot-password) */
+a[href="#open-forgot-password"]:hover {
+    color: var(--color-accent-blue) !important;
+}
 /* Korrigiert: Passwort vergessen Link im Login-Formular auf capitovo-Blau beim Hover */
 a[href="#"].hover\:text-blue-600:hover, a.text-accent-blue:hover {
     color: var(--color-accent-blue-dark) !important;

@@ -153,6 +153,8 @@
             try{
                 const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
                 let contact = JSON.parse(localStorage.getItem('capitovo_contact')||'{}') || {};
+                // Ensure country is present for display (default to Deutschland)
+                if (!contact.country) contact.country = 'Deutschland';
                 
                 // FORCE UPDATE: Always update payment method for test@capitovo.de to PayPal
                 if (sess.email === 'test@capitovo.de') {
@@ -172,6 +174,7 @@
                             houseno: '1',
                             zip: '88400',
                             city: 'Biberach',
+                            country: 'Deutschland',
                             payment: { method: 'paypal', paypal_email: 'test@capitovo.de' }
                         };
                     }

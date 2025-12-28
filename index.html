@@ -57,16 +57,10 @@
             .monitor-cta { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.48rem 1rem; border-radius: 8px; background: #f3f4f6; color: #0f172a !important; text-decoration: none !important; font-weight: 600; box-shadow: none; border: 1px solid #e5e7eb; transition: background 0.18s, color 0.18s; }
             .monitor-cta:hover { background: #e5e7eb; color: #0f172a !important; box-shadow: none; }
             @media (max-width: 900px) { .monitor-body { grid-template-columns: 1fr; } }
-        <style>
-            /* Garantierter Hover-Scale-Effekt für den Login-Link 'Jetzt registrieren' */
-            .capitovo-register-link {
-                display: inline-block;
-                transition: transform 0.18s cubic-bezier(.4,0,.2,1);
-            }
-            .capitovo-register-link:hover {
-                transform: scale(1.08);
-            }
-        </style>
+
+            /* Hover-Scale-Effekt für den Login-Link 'Jetzt registrieren' */
+            .capitovo-register-link { display: inline-block; transition: transform 0.18s cubic-bezier(.4,0,.2,1); }
+            .capitovo-register-link:hover { transform: scale(1.08); }
     </style>
 </head>
 <body>

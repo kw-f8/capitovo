@@ -26,6 +26,7 @@
                     <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
                 </a>
             </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
         </div>
     </header>
 
@@ -89,7 +90,7 @@
                 <section class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden" id="subscription-card">
                     <div class="p-5">
                         <h2 class="text-sm font-bold text-gray-400 tracking-wider mb-4">Ihr Abonnement</h2>
-                        <div class="mb-1 flex items-center gap-3">
+                        <div class="mb-4 flex items-center gap-3">
                             <span class="text-2xl font-extrabold text-gray-900" id="page-acc-plan">Kein Abo</span>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800" id="page-acc-status">
                                 <span class="w-2 h-2 bg-gray-500 rounded-full mr-1.5"></span>
@@ -97,7 +98,7 @@
                             </span>
                         </div>
 
-                        <div class="space-y-3 border-t border-gray-100 pt-1 mb-4" id="page-acc-details">
+                        <div class="space-y-3 border-t border-gray-100 pt-4 mb-4" id="page-acc-details">
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Preis</span>
                                 <span class="font-medium text-gray-900">–</span>
@@ -137,17 +138,18 @@
         </div>
     </main>
 
-    <footer class="site-footer border-t py-6 mt-12">
-        <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
-            <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
-            <div class="footer-links">
-                <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
-                <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
-                <a href="../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
-                <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+        <footer id="abo" class="site-footer" data-scroll="fade-up" data-scroll-delay="40">
+            <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+
+                <div class="footer-links flex items-center gap-3">
+                    <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                    <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                    <a href="../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+                    <a href="../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+                </div>
             </div>
-        </div>
-    </footer>
+        </footer>
 
     <script>
         // Populate account info from localStorage

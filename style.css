@@ -400,6 +400,11 @@ main.with-sidebar {
     text-decoration: none !important;
 }
 
+/* Variante ohne „nach links ziehen“ bei linksbündigen Links:
+   Skaliert wie im Login, kompensiert aber die halbe Skalierungsbreite nach rechts.
+   Bei scale(1.08) ist das (1.08 - 1) / 2 = 0.04 => 4%. */
+.capitovo-register-link-stable:hover { transform: translateX(4%) scale(1.08); }
+
 /* Minimalistisches Ticker-Band: weniger Kästen, keine Ränder */
 .ticker-band { 
     background: transparent; 

@@ -387,17 +387,18 @@ main.with-sidebar {
 
 /* Hover-Scale-Effekt wie auf der Startseite für kleine Inline-CTAs */
 .capitovo-register-link {
-    display: inline-block !important;
+    display: inline-block;
     vertical-align: middle;
-    /* Match login modal: center-origin so the element scales uniformly */
-    transform-origin: 50% 50% !important;
-    -webkit-transform-origin: 50% 50% !important;
+    transform-origin: 50% 50%;
     will-change: transform;
-    backface-visibility: hidden;
     transition: transform 0.18s cubic-bezier(.4,0,.2,1);
 }
 .capitovo-register-link:hover { transform: scale(1.08); }
-.capitovo-register-link { text-decoration: none !important; }
+.capitovo-register-link,
+.capitovo-register-link:hover,
+.capitovo-register-link:focus {
+    text-decoration: none !important;
+}
 
 /* Minimalistisches Ticker-Band: weniger Kästen, keine Ränder */
 .ticker-band { 

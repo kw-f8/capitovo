@@ -389,9 +389,9 @@ main.with-sidebar {
 .capitovo-register-link {
     display: inline-block !important;
     vertical-align: middle;
-    /* Prefer left-origin in card contexts to avoid visual left-shift on hover */
-    transform-origin: left center !important;
-    -webkit-transform-origin: left center !important;
+    /* Match login modal: center-origin so the element scales uniformly */
+    transform-origin: 50% 50% !important;
+    -webkit-transform-origin: 50% 50% !important;
     will-change: transform;
     backface-visibility: hidden;
     transition: transform 0.18s cubic-bezier(.4,0,.2,1);

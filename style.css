@@ -393,7 +393,8 @@ main.with-sidebar {
     will-change: transform;
     transition: transform 0.18s cubic-bezier(.4,0,.2,1);
 }
-.capitovo-register-link:hover { transform: scale(1.08); }
+.capitovo-register-link { text-decoration: none; }
+.capitovo-register-link:hover { transform: scale(1.08); text-decoration: none; }
 
 /* Minimalistisches Ticker-Band: weniger Kästen, keine Ränder */
 .ticker-band { 

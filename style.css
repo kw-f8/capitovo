@@ -1070,6 +1070,15 @@ section .max-w-4xl > h2 + p + * {
     color: var(--color-accent-blue) !important;
 }
 
+/* Remove default focus outline/box for account-action links to avoid boxed highlight */
+.account-edit:focus,
+.account-edit:focus-visible,
+.back-btn-glow:focus,
+.back-btn-glow:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 /* No positional nudge: keep edit link naturally aligned */
 .account-edit {
     transform: none;

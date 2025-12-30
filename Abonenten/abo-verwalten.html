@@ -123,14 +123,14 @@
                         <div class="mt-8 border-t pt-6">
                             <h3 class="text-lg font-semibold">Abo kündigen</h3>
                             <p class="text-sm text-gray-600 mt-2">Wenn Sie Ihr Abo kündigen möchten, klicken Sie auf "Kündigung bestätigen". Ihr Zugang bleibt bis zum Ende des bereits bezahlten Zeitraums aktiv.</p>
-                            <div class="mt-4">
-                                <button id="confirm-cancel" class="px-4 py-2 bg-red-600 text-white rounded-md">Kündigung bestätigen</button>
+                                <div class="mt-4">
+                                <button id="confirm-cancel" class="px-4 py-2 bg-red-600 text-white rounded-md">Kündigen</button>
                                 <button id="cancel-abort" class="ml-3 px-4 py-2 border border-gray-300 rounded-md">Abbrechen</button>
                             </div>
                         </div>
                     </div>
 
-                    <p class="text-xs text-gray-500 mt-6">Hinweis: Diese Demo speichert die Auswahl im Browser (`localStorage`). Andere Seiten lesen dieselben Daten und zeigen die aktualisierten Abo-Informationen an.</p>
+                    <!-- Hinweis removed per request -->
                 </div>
             </div>
         </div>
@@ -300,15 +300,34 @@
                 });
             }
 
-            document.getElementById('confirm-cancel').addEventListener('click', function(){
-                const s = stored || {};
-                s.subscription = null;
-                s.canceled = true;
-                s.nextPayment = '-';
-                localStorage.setItem(sessionKey, JSON.stringify(s));
-                alert('Ihr Abonnement wurde gekündigt.');
-                window.location.href = './konto.html';
-            });
+            const confirmCancelBtn = document.getElementById('confirm-cancel');
+            if (confirmCancelBtn) {
+                confirmCancelBtn.addEventListener('click', function(){
+                    // Open the same confirm-free modal so user sees the same flow
+                    const modal = document.getElementById('confirm-free-modal');
+                    if(modal){
+                        // remove any old error hints
+                        const existingError = modal.querySelector('#confirm-free-error');
+                        if (existingError) existingError.remove();
+                        // Close sidebar like login modal does
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar) {
+                            sidebar.classList.remove('open');
+                            sidebar.style.transform = '';
+                            sidebar.style.display = '';
+                            sidebar.style.opacity = '';
+                            sidebar.style.pointerEvents = '';
+                            sidebar.setAttribute('aria-hidden', 'true');
+                        }
+                        const menuToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle');
+                        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+                        modal.classList.remove('hidden');
+                        const primaryBtn = modal.querySelector('#confirm-free-accept');
+                        if (primaryBtn && typeof primaryBtn.focus === 'function') primaryBtn.focus();
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            }
 
             document.getElementById('cancel-abort').addEventListener('click', function(){
                 // reset UI to stored value

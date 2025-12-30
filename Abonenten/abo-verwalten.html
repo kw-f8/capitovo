@@ -143,16 +143,16 @@
     </footer>
 
     <!-- Confirm Free Modal (moved here to mirror login modal placement) -->
-    <div id="confirm-free-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
-        <div class="w-full max-w-lg">
-            <div class="bg-white p-6 md:p-8 rounded-lg shadow-xl border border-gray-200">
+    <div id="confirm-free-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 2000;">
+        <div class="w-full max-w-2xl">
+            <div class="bg-white p-6 md:p-8 rounded-lg shadow-xl border border-gray-200 overflow-hidden">
                 <h4 class="text-lg font-bold mb-2">Abonnement kündigen</h4>
                 <p class="text-sm text-gray-700 mb-3">Sie nutzen derzeit ein Premium Abonnement.</p>
                 <p class="text-sm text-gray-700 mb-3">Wenn Sie kündigen, bleibt Ihr Premium Zugang bis zum Ende des bereits bezahlten Abrechnungszeitraums aktiv.</p>
                 <p class="text-sm text-gray-700 mb-3">Danach wird Ihr Konto automatisch auf das Free Abonnement umgestellt.</p>
                 <p class="text-sm text-gray-700 mb-4">Es fallen keine weiteren Kosten an.</p>
-                <div class="flex justify-end">
-                    <button type="button" id="confirm-free-cancel" class="mr-3 px-4 py-2 border rounded-md whitespace-nowrap">Abbrechen</button>
+                <div class="flex justify-end flex-nowrap items-center space-x-3">
+                    <button type="button" id="confirm-free-cancel" class="px-4 py-2 border rounded-md whitespace-nowrap">Abbrechen</button>
                     <button type="button" id="confirm-free-accept" class="px-4 py-2 bg-red-600 text-white rounded-md whitespace-nowrap">Kündigen und zum Free Abonnement wechseln</button>
                 </div>
             </div>

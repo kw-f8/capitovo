@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — Abo verwalten</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="bg-white text-gray-900">
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="./abonenten.html">
+                    <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+        </div>
+    </header>
+
+    <main class="max-w-[1200px] mx-auto px-6 py-12">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100">
+                <h1 class="text-2xl font-bold">Abo verwalten</h1>
+                <p class="text-sm text-gray-500 mt-1">Passen Sie Ihr Abonnement an — Änderungen werden sofort übernommen.</p>
+            </div>
+
+            <div class="p-6">
+                <div class="prose max-w-none">
+                    <h2 class="text-lg font-semibold">Abo verwalten</h2>
+                    <p class="text-sm text-gray-700">Wählen Sie aus den verfügbaren Abonnement-Modellen. Änderungen werden in Ihrem Browser gespeichert und sind sofort auf allen Seiten sichtbar.</p>
+
+                    <div class="mt-6 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <label class="border rounded-lg p-4 cursor-pointer">
+                                <input type="radio" name="plan" value="none" class="mr-2" checked>
+                                <strong>Kein Abo</strong>
+                                <div class="text-xs text-gray-500">Kostenloser Zugang</div>
+                            </label>
+                            <label class="border rounded-lg p-4 cursor-pointer">
+                                <input type="radio" name="plan" value="premium" class="mr-2">
+                                <strong>Premium</strong>
+                                <div class="text-xs text-gray-500">€ 99,- / Monat</div>
+                            </label>
+                            <label class="border rounded-lg p-4 cursor-pointer">
+                                <input type="radio" name="plan" value="lifetime" class="mr-2">
+                                <strong>Lifetime</strong>
+                                <div class="text-xs text-gray-500">Einmalig € 4999,-</div>
+                            </label>
+                        </div>
+
+                        <div>
+                            <button id="save-plan" class="px-4 py-2 bg-primary-blue text-white rounded-md">Änderungen speichern</button>
+                            <a href="./konto.html" class="ml-3 px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">Abbrechen</a>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-gray-500 mt-6">Hinweis: Diese Demo speichert die Auswahl im Browser (`localStorage`). Andere Seiten lesen dieselben Daten und zeigen die aktualisierten Abo-Informationen an.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer py-8">
+        <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+        </div>
+    </footer>
+
+    <script>
+        (function(){
+            try{
+                const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
+                const planInputs = document.querySelectorAll('input[name="plan"]');
+                // Set current selection
+                planInputs.forEach(i=>{ if((sess.subscription||'none') === i.value) i.checked = true; });
+
+                document.getElementById('save-plan').addEventListener('click', function(){
+                    const selected = document.querySelector('input[name="plan"]:checked');
+                    const s = sess || {};
+                    s.subscription = selected ? (selected.value === 'none' ? null : selected.value) : null;
+                    // Update nextPayment example field
+                    if(s.subscription === 'premium') s.nextPayment = '01.01.2026';
+                    else if(s.subscription === 'lifetime') s.nextPayment = 'Einmalig';
+                    else s.nextPayment = '-';
+                    localStorage.setItem('capitovo_session', JSON.stringify(s));
+                    alert('Ihr Abonnement wurde aktualisiert. Änderungen sind jetzt aktiv.');
+                    window.location.href = './konto.html';
+                });
+            }catch(e){ console.error(e); }
+        })();
+    </script>
+</body>
+</html>

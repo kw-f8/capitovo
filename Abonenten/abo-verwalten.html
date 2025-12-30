@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>capitovo — Abo verwalten</title>
+    <title>capitovo — Abonnement verwalten</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -22,13 +22,13 @@
     <main class="max-w-[1200px] mx-auto px-6 py-12">
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
             <div class="p-6 border-b border-gray-100">
-                <h1 class="text-2xl font-bold">Abo verwalten</h1>
+                <h1 class="text-2xl font-bold">Abonnement verwalten</h1>
                 <p class="text-sm text-gray-500 mt-1">Passen Sie Ihr Abonnement an — Änderungen werden sofort übernommen.</p>
             </div>
 
             <div class="p-6">
                 <div class="prose max-w-none">
-                    <h2 class="text-lg font-semibold">Abo verwalten</h2>
+                    <h2 class="text-lg font-semibold">Abonnement verwalten</h2>
                     <p class="text-sm text-gray-700">Wählen Sie aus den verfügbaren Abonnement-Modellen. Änderungen werden in Ihrem Browser gespeichert und sind sofort auf allen Seiten sichtbar.</p>
 
                     <div class="mt-6 space-y-6">
@@ -121,8 +121,8 @@
                             <!-- Confirm Free Modal (moved to end of body to avoid layout/transform issues) -->
                         <!-- Kündigen Abschnitt -->
                         <div class="mt-8 border-t pt-6">
-                            <h3 class="text-lg font-semibold">Abo kündigen</h3>
-                            <p class="text-sm text-gray-600 mt-2">Wenn Sie Ihr Abo kündigen möchten, klicken Sie auf "Kündigung bestätigen". Ihr Zugang bleibt bis zum Ende des bereits bezahlten Zeitraums aktiv.</p>
+                            <h3 class="text-lg font-semibold">Abonnement kündigen</h3>
+                            <p class="text-sm text-gray-600 mt-2">Wenn Sie Ihr Abonnement kündigen möchten, klicken Sie auf "Kündigen". Ihr Zugang bleibt bis zum Ende des bereits bezahlten Zeitraums aktiv.</p>
                                 <div class="mt-4">
                                 <button id="confirm-cancel" class="px-4 py-2 bg-red-600 text-white rounded-md">Kündigen</button>
                                 <button id="cancel-abort" class="ml-3 px-4 py-2 border border-gray-300 rounded-md">Abbrechen</button>
@@ -146,14 +146,14 @@
     <div id="confirm-free-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
         <div class="w-full max-w-lg">
             <div class="bg-white p-6 md:p-8 rounded-lg shadow-xl border border-gray-200">
-                <h4 class="text-lg font-bold mb-2">Abonement kündigen</h4>
+                <h4 class="text-lg font-bold mb-2">Abonnement kündigen</h4>
                 <p class="text-sm text-gray-700 mb-3">Sie nutzen derzeit ein Premium Abonnement.</p>
                 <p class="text-sm text-gray-700 mb-3">Wenn Sie kündigen, bleibt Ihr Premium Zugang bis zum Ende des bereits bezahlten Abrechnungszeitraums aktiv.</p>
                 <p class="text-sm text-gray-700 mb-3">Danach wird Ihr Konto automatisch auf das Free Abonnement umgestellt.</p>
                 <p class="text-sm text-gray-700 mb-4">Es fallen keine weiteren Kosten an.</p>
                 <div class="flex justify-end">
                     <button id="confirm-free-cancel" class="mr-3 px-4 py-2 border rounded-md whitespace-nowrap">Abbrechen</button>
-                    <button id="confirm-free-accept" class="px-4 py-2 bg-red-600 text-white rounded-md whitespace-nowrap">Kündigen und zum Free Abo wechseln</button>
+                    <button id="confirm-free-accept" class="px-4 py-2 bg-red-600 text-white rounded-md whitespace-nowrap">Kündigen und zum Free Abonnement wechseln</button>
                 </div>
             </div>
         </div>

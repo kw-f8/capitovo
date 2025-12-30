@@ -364,7 +364,7 @@ Kategorien:
 "6️⃣ Berücksichtige folgende FAQs:
    - Tesla-Analyse: Roadmap Q1 2026
    - Login-Probleme: Passwort zurücksetzen über [Link]
-   - Abo kündigen: Email an billing@capitovo.de"
+  - Abonnement kündigen: Email an billing@capitovo.de"
 ```
 
 ### "Too many emails, agent slow"

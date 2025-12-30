@@ -391,9 +391,9 @@ main.with-sidebar {
     vertical-align: middle;
     transform-origin: 50% 50%;
     will-change: transform;
-    transition: transform 0.18s cubic-bezier(.4,0,.2,1);
+    transition: transform 0.14s ease;
 }
-.capitovo-register-link:hover { transform: scale(1.08); }
+.capitovo-register-link:hover { transform: scale(1.02); }
 .capitovo-register-link,
 .capitovo-register-link:hover,
 .capitovo-register-link:focus {
@@ -403,7 +403,7 @@ main.with-sidebar {
 /* Variante ohne „nach links ziehen“ bei linksbündigen Links:
    Skaliert wie im Login, kompensiert aber die halbe Skalierungsbreite nach rechts.
    Bei scale(1.08) ist das (1.08 - 1) / 2 = 0.04 => 4%. */
-.capitovo-register-link-stable:hover { transform: scale(1.08); }
+.capitovo-register-link-stable:hover { transform: scale(1.02); }
 
 /* Minimalistisches Ticker-Band: weniger Kästen, keine Ränder */
 .ticker-band { 

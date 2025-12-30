@@ -10,6 +10,16 @@ a[href="#"].hover\:text-accent-blue:hover, a.text-accent-blue:hover {
     box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
 }
 
+/* Prevent darkening on hover for elements using the subtle glow.
+     Override Tailwind `hover:bg-gray-50` for these buttons so they keep
+     a consistent white background and only show the glow. */
+.back-btn-glow:hover {
+    background-color: #ffffff !important;
+}
+.back-btn-glow:active {
+    background-color: #ffffff !important;
+}
+
 /* Passwort vergessen Link im Login-Modal (href geändert auf #open-forgot-password) */
 a[href="#open-forgot-password"]:hover {
     color: var(--color-accent-blue) !important;

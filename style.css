@@ -3,23 +3,6 @@ a[href="#"].hover\:text-accent-blue:hover, a.text-accent-blue:hover {
     color: var(--color-accent-blue) !important;
 }
 
-
-/* Reusable glow used for subtle hover on action buttons (same as in Vorlage) */
-.back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }
-.back-btn-glow:hover, .back-btn-glow:focus-visible {
-    box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
-}
-
-/* Prevent darkening on hover for elements using the subtle glow.
-     Override Tailwind `hover:bg-gray-50` for these buttons so they keep
-     a consistent white background and only show the glow. */
-.back-btn-glow:hover {
-    background-color: #ffffff !important;
-}
-.back-btn-glow:active {
-    background-color: #ffffff !important;
-}
-
 /* Passwort vergessen Link im Login-Modal (href geändert auf #open-forgot-password) */
 a[href="#open-forgot-password"]:hover {
     color: var(--color-accent-blue) !important;
@@ -686,23 +669,6 @@ details[open] .details-marker {
     z-index: 1001; 
 }
 
-/* Ensure forgot-password modal has no visible white box on account pages */
-#forgot-password-modal .w-full,
-#forgot-password-modal .w-full > .relative,
-#forgot-password-modal > .w-full > .relative {
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-}
-
-/* Make inputs slightly darker text but keep transparent background inside modal */
-#forgot-password-modal input,
-#forgot-password-modal label {
-    background: transparent !important;
-}
-
 
 /* ==================================================== */
 /* RESPONSIVE DESIGN (Media Queries) */
@@ -1068,15 +1034,6 @@ section .max-w-4xl > h2 + p + * {
 .account-edit:hover,
 .account-edit:focus {
     color: var(--color-accent-blue) !important;
-}
-
-/* Remove default focus outline/box for account-action links to avoid boxed highlight */
-.account-edit:focus,
-.account-edit:focus-visible,
-.back-btn-glow:focus,
-.back-btn-glow:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
 }
 
 /* No positional nudge: keep edit link naturally aligned */

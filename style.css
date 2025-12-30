@@ -3,6 +3,13 @@ a[href="#"].hover\:text-accent-blue:hover, a.text-accent-blue:hover {
     color: var(--color-accent-blue) !important;
 }
 
+
+/* Reusable glow used for subtle hover on action buttons (same as in Vorlage) */
+.back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }
+.back-btn-glow:hover, .back-btn-glow:focus-visible {
+    box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
+}
+
 /* Passwort vergessen Link im Login-Modal (href geändert auf #open-forgot-password) */
 a[href="#open-forgot-password"]:hover {
     color: var(--color-accent-blue) !important;

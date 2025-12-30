@@ -686,6 +686,23 @@ details[open] .details-marker {
     z-index: 1001; 
 }
 
+/* Ensure forgot-password modal has no visible white box on account pages */
+#forgot-password-modal .w-full,
+#forgot-password-modal .w-full > .relative,
+#forgot-password-modal > .w-full > .relative {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+}
+
+/* Make inputs slightly darker text but keep transparent background inside modal */
+#forgot-password-modal input,
+#forgot-password-modal label {
+    background: transparent !important;
+}
+
 
 /* ==================================================== */
 /* RESPONSIVE DESIGN (Media Queries) */

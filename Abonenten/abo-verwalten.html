@@ -115,10 +115,7 @@
                             <div id="summary-next-billing" class="mt-2 text-sm text-gray-600 text-right">Nächste Abrechnung: -</div>
                         </div>
 
-                        <div class="flex items-center mt-4">
-                            <button id="save-plan" class="px-4 py-2 bg-primary-blue text-white rounded-md back-btn-glow">Änderungen speichern</button>
-                            <a href="./konto.html" class="ml-3 px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">Abbrechen</a>
-                        </div>
+                        <!-- Top save/cancel buttons removed per request -->
 
                         <!-- Confirm Free Modal -->
                             <!-- Confirm Free Modal (moved to end of body to avoid layout/transform issues) -->
@@ -290,15 +287,18 @@
                 }
             }
 
-            document.getElementById('save-plan').addEventListener('click', function(){
-                const s = stored || {};
-                s.subscription = currentPlan || null;
-                if(s.subscription === 'premium') s.nextPayment = '01.01.2026';
-                else s.nextPayment = '-';
-                localStorage.setItem(sessionKey, JSON.stringify(s));
-                alert('Ihr Abonnement wurde aktualisiert. Änderungen sind jetzt aktiv.');
-                window.location.href = './konto.html';
-            });
+            const savePlanBtn = document.getElementById('save-plan');
+            if (savePlanBtn) {
+                savePlanBtn.addEventListener('click', function(){
+                    const s = stored || {};
+                    s.subscription = currentPlan || null;
+                    if(s.subscription === 'premium') s.nextPayment = '01.01.2026';
+                    else s.nextPayment = '-';
+                    localStorage.setItem(sessionKey, JSON.stringify(s));
+                    alert('Ihr Abonnement wurde aktualisiert. Änderungen sind jetzt aktiv.');
+                    window.location.href = './konto.html';
+                });
+            }
 
             document.getElementById('confirm-cancel').addEventListener('click', function(){
                 const s = stored || {};

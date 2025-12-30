@@ -111,6 +111,7 @@
                                 <span>Gesamt</span>
                                 <span id="summary-total">€ 0,-</span>
                             </div>
+                            <div id="summary-next-billing" class="mt-2 text-sm text-gray-600 text-right">Nächste Abrechnung: -</div>
                             <div class="mt-2 text-xs text-gray-500 text-right">inkl. MwSt.</div>
                         </div>
 
@@ -202,6 +203,7 @@
 
                 // update totals
                 const p = plans[planKey];
+                const nextBillingEl = document.getElementById('summary-next-billing');
                 if(p){
                     subtotalEl.textContent = p.price;
                     totalEl.textContent = p.price + ' / Monat';
@@ -209,13 +211,33 @@
                     subtotalEl.textContent = '€ 0,-';
                     totalEl.textContent = '€ 0,-';
                 }
+                if(nextBillingEl){
+                    const nb = (stored && stored.nextPayment) ? stored.nextPayment : '-';
+                    nextBillingEl.textContent = 'Nächste Abrechnung: ' + nb;
+                }
             }
 
             window.selectPlan = function(planKey){
                 // If selecting Free while session shows Premium, prompt confirmation
                 if(planKey === 'free' && stored.subscription === 'premium' && stored.subscription !== null && currentPlan !== 'free'){
                     const modal = document.getElementById('confirm-free-modal');
-                    if(modal) modal.classList.remove('hidden');
+                    if(modal) {
+                        // Close sidebar like login modal does
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar) {
+                            sidebar.classList.remove('open');
+                            sidebar.style.transform = '';
+                            sidebar.style.display = '';
+                            sidebar.style.opacity = '';
+                            sidebar.style.pointerEvents = '';
+                            sidebar.setAttribute('aria-hidden', 'true');
+                        }
+                        const menuToggle = document.getElementById('menu-toggle') || document.querySelector('.menu-toggle');
+                        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+
+                        modal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden'; // prevent background scrolling (like login modal)
+                    }
                     return;
                 }
 
@@ -308,6 +330,7 @@
             if(modalCancel){
                 modalCancel.addEventListener('click', function(){
                     if(modalEl) modalEl.classList.add('hidden');
+                    document.body.style.overflow = '';
                 });
             }
             if(modalAccept){
@@ -318,6 +341,7 @@
                     s.nextPayment = '-';
                     localStorage.setItem(sessionKey, JSON.stringify(s));
                     if(modalEl) modalEl.classList.add('hidden');
+                    document.body.style.overflow = '';
                     // apply selection visually
                     selectPlan('free');
                     alert('Ihr Abonnement wurde gekündigt und auf Free gesetzt.');

@@ -44,13 +44,13 @@
                 <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
                     <h3 class="text-lg font-bold text-gray-900 mb-6">Wählen Sie Ihr Abonnement</h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-8">
-                        <!-- Basic -->
-                        <div id="card-basic" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('basic')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-8">
+                        <!-- Free -->
+                        <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('free')">
                             <div>
-                                <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4">Free</h3>
                                 <div class="text-4xl font-extrabold text-gray-900 mb-4">
-                                    € 99,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
+                                    € 0,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
                                 </div>
                                 
                                 <div class="plan-details w-full">
@@ -85,7 +85,7 @@
                                 </span>
                                 <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
                                 <div class="text-4xl font-extrabold text-white mb-4">
-                                    € 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span>
+                                    € 14,99 <span class="text-xl font-normal text-blue-200">/ Monat</span>
                                 </div>
 
                                 <div class="plan-details w-full">
@@ -116,40 +116,7 @@
                             <button class="select-plan-btn w-full block py-3 px-8 border border-white rounded-lg shadow-lg text-base font-medium text-primary-blue bg-white hover:bg-blue-100 transition duration-150 mt-4">Wählen</button>
                         </div>
                         
-                        <!-- Lifetime -->
-                        <div id="card-lifetime" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden" onclick="selectPlan('lifetime')">
-                            <div class="absolute top-0 right-0 bg-gradient-to-l from-yellow-400 to-yellow-200 text-gray-900 text-xs font-bold px-3 py-1 rounded-bl-lg shadow-sm">
-                                BEST VALUE
-                            </div>
-                            <div>
-                                <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
-                                <div class="text-4xl font-extrabold text-gray-900 mb-4">
-                                    € 4999,- <span class="text-xl font-normal text-gray-500">/ Einmalig</span>
-                                </div>
-
-                                <div class="plan-details w-full">
-                                    <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
-                                        <li class="flex items-start">
-                                            <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                            Alle Premium-Funktionen
-                                        </li>
-                                        <li class="flex items-start">
-                                            <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                            Lebenslanger Zugang (inkl. Updates)
-                                        </li>
-                                        <li class="flex items-start">
-                                            <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                            Priorisierter E-Mail-Support
-                                        </li>
-                                        <li class="flex items-start">
-                                            <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                            Kein monatliches Abo mehr nötig
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <button class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
-                        </div>
+                        <!-- (No Lifetime) -->
                     </div>
 
                     <div class="border-t border-gray-200 pt-4">
@@ -460,9 +427,8 @@
             let currentPlan = null; // Start with nothing selected
             
             const plans = {
-                'basic': { price: '€ 99,-' },
-                'premium': { price: '€ 189,-' },
-                'lifetime': { price: '€ 4999,-' }
+                'free': { price: '€ 0,-' },
+                'premium': { price: '€ 14,99' }
             };
 
             const totalEl = document.getElementById('summary-total');
@@ -475,7 +441,7 @@
                 currentPlan = planKey;
                 
                 // Update UI Cards
-                ['basic', 'premium', 'lifetime'].forEach(key => {
+                ['free', 'premium'].forEach(key => {
                     const card = document.getElementById(`card-${key}`);
                     const btn = card.querySelector('.select-plan-btn');
                     
@@ -483,6 +449,7 @@
                         // Selected
                         card.classList.remove('border-transparent', 'opacity-60', 'scale-95');
                         card.classList.add('scale-105', 'z-20', 'shadow-2xl');
+                        // ensure no blur effect
                         card.style.filter = 'none';
 
                         if (key === 'premium') {
@@ -496,9 +463,9 @@
                         btn.classList.add('bg-gray-900', 'text-white', 'border-transparent', 'cursor-default', 'shadow-inner');
                     } else {
                         // Not selected
-                        card.classList.add('border-transparent', 'opacity-60', 'scale-95');
+                        card.classList.add('border-transparent', 'opacity-90', 'scale-95');
                         card.classList.remove('border-blue-500', 'border-yellow-400', 'scale-105', 'z-10', 'z-20', 'shadow-2xl');
-                        card.style.filter = 'blur(1.5px) brightness(0.95)';
+                        card.style.filter = 'none';
 
                         btn.textContent = 'Wählen';
                         
@@ -522,7 +489,7 @@
                 if (summaryBox) {
                     summaryBox.classList.remove('hidden');
                     document.getElementById('summary-plan-name').textContent = planKey.charAt(0).toUpperCase() + planKey.slice(1);
-                    document.getElementById('summary-plan-price').textContent = p.price + (planKey === 'lifetime' ? ' / Einmalig' : ' / Monat');
+                    document.getElementById('summary-plan-price').textContent = p.price + (planKey === 'premium' ? ' / Monat' : ' / Monat');
                 }
                 
                 // Update URL without reload

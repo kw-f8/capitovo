@@ -276,9 +276,9 @@
                     statusEl.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>Aktiv';
 
                     // Update Details
-                    let price = '€ 99,- / Monat';
-                    if (sess.subscription === 'premium') price = '€ 189,- / Monat';
-                    if (sess.subscription === 'lifetime') price = '€ 4999,- / Einmalig';
+                    let price = '–';
+                    if (sess.subscription === 'premium') price = '€ 14,99 / Monat';
+                    if (sess.subscription === 'free') price = '€ 0,- / Monat';
                     
                     // Format date
                     const startDateObj = sess.ts ? new Date(sess.ts) : new Date();

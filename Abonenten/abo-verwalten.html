@@ -119,6 +119,18 @@
                             <a href="./konto.html" class="ml-3 px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">Abbrechen</a>
                         </div>
 
+                        <!-- Confirm Free Modal -->
+                        <div id="confirm-free-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                            <div class="bg-white rounded-lg max-w-md w-full p-6">
+                                <h4 class="text-lg font-bold mb-2">Abo wechseln</h4>
+                                <p class="text-sm text-gray-700 mb-4">Sie verwenden derzeit ein Premium-Testkonto. Um auf das Free-Abo zurückzukehren, müssen Sie Ihr Premium-Abo kündigen. Wenn Sie fortfahren, wird Ihr Konto sofort auf das Free-Abo gesetzt und der Zugriff auf Premium-Funktionen endet.</p>
+                                <div class="flex justify-end">
+                                    <button id="confirm-free-cancel" class="mr-3 px-4 py-2 border rounded-md">Abbrechen</button>
+                                    <button id="confirm-free-accept" class="px-4 py-2 bg-red-600 text-white rounded-md">Kündigung bestätigen und auf Free wechseln</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Kündigen Abschnitt -->
                         <div class="mt-8 border-t pt-6">
                             <h3 class="text-lg font-semibold">Abo kündigen</h3>
@@ -197,6 +209,13 @@
             }
 
             window.selectPlan = function(planKey){
+                // If selecting Free while session shows Premium, prompt confirmation
+                if(planKey === 'free' && stored.subscription === 'premium' && stored.subscription !== null && currentPlan !== 'free'){
+                    const modal = document.getElementById('confirm-free-modal');
+                    if(modal) modal.classList.remove('hidden');
+                    return;
+                }
+
                 currentPlan = planKey;
                 updateUIForSelection(planKey);
                 // update URL param (optional)
@@ -208,7 +227,7 @@
                 // Update premium badge when selection changes
                 if(premiumBadge){
                     if(currentPlan === 'premium'){
-                        premiumBadge.textContent = 'Ihr Abo';
+                        premiumBadge.textContent = 'capitov blaiu';
                         premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
                         premiumBadge.classList.add('bg-green-400','text-white');
                     } else {
@@ -226,7 +245,7 @@
             // If stored session indicates premium (or test account), mark badge as current
             if(premiumBadge){
                 if(stored.subscription === 'premium'){
-                    premiumBadge.textContent = 'Ihr Abo';
+                    premiumBadge.textContent = 'capitov blaiu';
                     premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
                     premiumBadge.classList.add('bg-green-400','text-white');
                 } else {
@@ -278,6 +297,29 @@
                     }
                 }
             });
+
+            // Modal handlers for confirming switch from Premium -> Free
+            const modalCancel = document.getElementById('confirm-free-cancel');
+            const modalAccept = document.getElementById('confirm-free-accept');
+            const modalEl = document.getElementById('confirm-free-modal');
+            if(modalCancel){
+                modalCancel.addEventListener('click', function(){
+                    if(modalEl) modalEl.classList.add('hidden');
+                });
+            }
+            if(modalAccept){
+                modalAccept.addEventListener('click', function(){
+                    // set stored subscription to free and persist
+                    const s = stored || {};
+                    s.subscription = 'free';
+                    s.nextPayment = '-';
+                    localStorage.setItem(sessionKey, JSON.stringify(s));
+                    if(modalEl) modalEl.classList.add('hidden');
+                    // apply selection visually
+                    selectPlan('free');
+                    alert('Ihr Abonnement wurde gekündigt und auf Free gesetzt.');
+                });
+            }
         });
     </script>
 </body>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>capitovo — Abo kündigen</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="bg-white text-gray-900">
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="./abonenten.html">
+                    <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
+        </div>
+    </header>
+
+    <main class="max-w-[1200px] mx-auto px-6 py-12">
+        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="p-6 border-b border-gray-100">
+                <h1 class="text-2xl font-bold">Abo kündigen</h1>
+                <p class="text-sm text-gray-500 mt-1">Hier können Sie Ihr Abonnement kündigen. Bitte lesen Sie die Hinweise und bestätigen Sie die Kündigung.</p>
+            </div>
+
+            <div class="p-6">
+                <div class="prose max-w-none">
+                    <h2 class="text-lg font-semibold">Schritte zur Kündigung</h2>
+                    <ol class="list-decimal ml-5 mt-2 text-sm text-gray-700">
+                        <li>Überprüfen Sie Ihre aktuellen Abonnementdetails.</li>
+                        <li>Wenn Sie fortfahren möchten, klicken Sie auf „Kündigung bestätigen“.</li>
+                        <li>Sie erhalten eine Bestätigungs-E-Mail mit weiteren Informationen.</li>
+                    </ol>
+
+                    <div class="mt-6">
+                        <div class="text-sm text-gray-600 mb-3">Aktuelles Abo: <span id="cancel-current-plan" class="font-medium">–</span></div>
+                        <div class="text-sm text-gray-600 mb-4">Nächste Abbuchung: <span id="cancel-next-payment" class="font-medium">–</span></div>
+                        <button id="confirm-cancel" class="px-4 py-2 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition-colors">Kündigung bestätigen</button>
+                        <a href="./konto.html" class="ml-3 px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">Abbrechen</a>
+                    </div>
+
+                    <p class="text-xs text-gray-500 mt-6">Hinweis: Nach der Kündigung bleibt Ihr Zugang bis zum Ende des bereits bezahlten Zeitraums aktiv.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer py-8">
+        <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Populate current plan info from localStorage if available
+        (function(){
+            try{
+                const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
+                const planEl = document.getElementById('cancel-current-plan');
+                const nextEl = document.getElementById('cancel-next-payment');
+                if(planEl) planEl.textContent = sess.subscription ? sess.subscription : 'Kein Abo';
+                if(nextEl) nextEl.textContent = sess.nextPayment || '-';
+
+                const btn = document.getElementById('confirm-cancel');
+                if(btn){
+                    btn.addEventListener('click', function(){
+                        // Simple local demo: mark subscription cancelled and redirect back to konto
+                        const s = sess || {};
+                        s.subscription = null;
+                        localStorage.setItem('capitovo_session', JSON.stringify(s));
+                        alert('Ihr Abo wurde gekündigt.');
+                        window.location.href = './konto.html';
+                    });
+                }
+            }catch(e){ console.error(e); }
+        })();
+    </script>
+</body>
+</html>

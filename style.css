@@ -1036,9 +1036,9 @@ section .max-w-4xl > h2 + p + * {
     color: var(--color-accent-blue) !important;
 }
 
-/* Slight visual nudge: move edit link slightly upwards to align with heading baseline */
+/* No positional nudge: keep edit link naturally aligned */
 .account-edit {
-    transform: translateY(-4px);
+    transform: none;
 }
 
 /* Override für häufig genutzte Tailwind-Blauklassen im HTML */

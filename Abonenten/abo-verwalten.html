@@ -66,7 +66,7 @@
                             <!-- Premium -->
                             <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-2xl border-4 border-transparent p-8 flex flex-col justify-between transform scale-105 z-10 cursor-pointer" onclick="selectPlan('premium')">
                                 <div class="relative">
-                                    <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
+                                    <span id="premium-badge" class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
                                     <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
                                     <div class="text-4xl font-extrabold text-white mb-4">€ 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span></div>
 
@@ -186,6 +186,8 @@
             const totalEl = document.getElementById('summary-total');
             const subtotalEl = document.getElementById('summary-subtotal');
 
+            const premiumBadge = document.getElementById('premium-badge');
+
             function updateUIForSelection(planKey){
                 ['basic','premium','lifetime'].forEach(key => {
                     const card = document.getElementById(`card-${key}`);
@@ -194,7 +196,6 @@
                     if(key === planKey){
                         card.classList.remove('border-transparent','opacity-60','scale-95');
                         card.classList.add('scale-105','z-20','shadow-2xl');
-                        card.style.filter = 'none';
 
                         if(key === 'premium') card.classList.add('border-yellow-400');
                         else card.classList.add('border-blue-500');
@@ -203,9 +204,8 @@
                         btn.classList.remove('bg-white','text-gray-900','text-primary-blue','border-gray-300','border-white','hover:bg-gray-100','hover:bg-blue-100');
                         btn.classList.add('bg-gray-900','text-white','border-transparent','cursor-default','shadow-inner');
                     } else {
-                        card.classList.add('border-transparent','opacity-60','scale-95');
+                        card.classList.add('border-transparent','opacity-90','scale-95');
                         card.classList.remove('border-blue-500','border-yellow-400','scale-105','z-10','z-20','shadow-2xl');
-                        card.style.filter = 'blur(1.5px) brightness(0.95)';
 
                         btn.textContent = 'Wählen';
                         btn.classList.remove('bg-gray-900','text-white','border-transparent','cursor-default','shadow-inner');
@@ -235,11 +235,35 @@
                     url.searchParams.set('plan', planKey);
                     window.history.replaceState({}, '', url);
                 }catch(e){}
+                // Update premium badge when selection changes
+                if(premiumBadge){
+                    if(currentPlan === 'premium'){
+                        premiumBadge.textContent = 'Ihr Abo';
+                        premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
+                        premiumBadge.classList.add('bg-green-400','text-white');
+                    } else {
+                        premiumBadge.textContent = 'Empfohlen';
+                        premiumBadge.classList.remove('bg-green-400','text-white');
+                        premiumBadge.classList.add('bg-yellow-400','text-gray-900');
+                    }
+                }
             };
 
             // initialize UI from stored session
             if(currentPlan && plans[currentPlan]){
                 updateUIForSelection(currentPlan);
+            }
+            // If stored session indicates premium (or test account), mark badge as current
+            if(premiumBadge){
+                if(stored.subscription === 'premium'){
+                    premiumBadge.textContent = 'Ihr Abo';
+                    premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
+                    premiumBadge.classList.add('bg-green-400','text-white');
+                } else {
+                    premiumBadge.textContent = 'Empfohlen';
+                    premiumBadge.classList.remove('bg-green-400','text-white');
+                    premiumBadge.classList.add('bg-yellow-400','text-gray-900');
+                }
             }
 
             document.getElementById('save-plan').addEventListener('click', function(){
@@ -271,15 +295,19 @@
                 else {
                     // clear visual selection
                     ['basic','premium','lifetime'].forEach(k=>{
-                        const c = document.getElementById(`card-${k}`);
-                        const b = c.querySelector('.select-plan-btn');
-                        c.classList.remove('scale-105','z-20','shadow-2xl');
-                        c.classList.remove('border-blue-500','border-yellow-400');
-                        c.style.filter = '';
-                        b.textContent = 'Wählen';
-                    });
+                            const c = document.getElementById(`card-${k}`);
+                            const b = c.querySelector('.select-plan-btn');
+                            c.classList.remove('scale-105','z-20','shadow-2xl');
+                            c.classList.remove('border-blue-500','border-yellow-400');
+                            b.textContent = 'Wählen';
+                        });
                     subtotalEl.textContent = '€ 0,-';
                     totalEl.textContent = '€ 0,-';
+                    if(premiumBadge){
+                        premiumBadge.textContent = 'Empfohlen';
+                        premiumBadge.classList.remove('bg-green-400','text-white');
+                        premiumBadge.classList.add('bg-yellow-400','text-gray-900');
+                    }
                 }
             });
         });

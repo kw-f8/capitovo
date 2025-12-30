@@ -31,28 +31,46 @@
                     <h2 class="text-lg font-semibold">Abo verwalten</h2>
                     <p class="text-sm text-gray-700">Wählen Sie aus den verfügbaren Abonnement-Modellen. Änderungen werden in Ihrem Browser gespeichert und sind sofort auf allen Seiten sichtbar.</p>
 
-                    <div class="mt-6 space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <label class="border rounded-lg p-4 cursor-pointer">
-                                <input type="radio" name="plan" value="none" class="mr-2" checked>
-                                <strong>Kein Abo</strong>
-                                <div class="text-xs text-gray-500">Kostenloser Zugang</div>
-                            </label>
-                            <label class="border rounded-lg p-4 cursor-pointer">
-                                <input type="radio" name="plan" value="premium" class="mr-2">
-                                <strong>Premium</strong>
-                                <div class="text-xs text-gray-500">€ 99,- / Monat</div>
-                            </label>
-                            <label class="border rounded-lg p-4 cursor-pointer">
-                                <input type="radio" name="plan" value="lifetime" class="mr-2">
-                                <strong>Lifetime</strong>
-                                <div class="text-xs text-gray-500">Einmalig € 4999,-</div>
-                            </label>
+                    <div class="mt-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                            <div id="card-none" class="plan-card bg-white rounded-xl shadow p-6 border-2 border-transparent cursor-pointer" onclick="selectPlan('none')">
+                                <h3 class="text-lg font-bold mb-2">Kein Abo</h3>
+                                <div class="text-sm text-gray-600 mb-4">Kostenloser Zugang</div>
+                                <div class="text-sm text-gray-700">Basis-Inhalte, eingeschränkter Zugriff</div>
+                            </div>
+
+                            <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-lg p-6 border-4 border-transparent transform scale-100 cursor-pointer" onclick="selectPlan('premium')">
+                                <span class="inline-block bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full mb-3">Empfohlen</span>
+                                <h3 class="text-2xl font-bold text-white mb-2">Premium</h3>
+                                <div class="text-2xl font-extrabold text-white mb-4">€ 189,- <span class="text-sm text-blue-200">/ Monat</span></div>
+                                <ul class="text-white text-sm space-y-2">
+                                    <li>Alle Basic-Funktionen</li>
+                                    <li>Mehr Analysen & Webinare</li>
+                                    <li>14-tägige Geld-zurück-Garantie</li>
+                                </ul>
+                            </div>
+
+                            <div id="card-lifetime" class="plan-card bg-white rounded-xl shadow p-6 border-2 border-transparent cursor-pointer" onclick="selectPlan('lifetime')">
+                                <div class="absolute right-4 top-4 bg-yellow-300 text-gray-900 text-xs font-bold px-2 py-1 rounded-bl">BEST VALUE</div>
+                                <h3 class="text-lg font-bold mb-2">Lifetime</h3>
+                                <div class="text-2xl font-extrabold text-gray-900 mb-4">€ 4999,- <span class="text-sm text-gray-500">/ Einmalig</span></div>
+                                <div class="text-sm text-gray-700">Lebenslanger Zugang, priorisierter Support</div>
+                            </div>
                         </div>
 
-                        <div>
-                            <button id="save-plan" class="px-4 py-2 bg-primary-blue text-white rounded-md">Änderungen speichern</button>
+                        <div class="flex items-center">
+                            <button id="save-plan" class="px-4 py-2 bg-primary-blue text-white rounded-md back-btn-glow">Änderungen speichern</button>
                             <a href="./konto.html" class="ml-3 px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">Abbrechen</a>
+                        </div>
+
+                        <!-- Kündigen Abschnitt -->
+                        <div class="mt-8 border-t pt-6">
+                            <h3 class="text-lg font-semibold">Abo kündigen</h3>
+                            <p class="text-sm text-gray-600 mt-2">Wenn Sie Ihr Abo kündigen möchten, klicken Sie auf "Kündigung bestätigen". Ihr Zugang bleibt bis zum Ende des bereits bezahlten Zeitraums aktiv.</p>
+                            <div class="mt-4">
+                                <button id="confirm-cancel" class="px-4 py-2 bg-red-600 text-white rounded-md">Kündigung bestätigen</button>
+                                <button id="cancel-abort" class="ml-3 px-4 py-2 border border-gray-300 rounded-md">Abbrechen</button>
+                            </div>
                         </div>
                     </div>
 
@@ -70,25 +88,64 @@
 
     <script>
         (function(){
-            try{
-                const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
-                const planInputs = document.querySelectorAll('input[name="plan"]');
-                // Set current selection
-                planInputs.forEach(i=>{ if((sess.subscription||'none') === i.value) i.checked = true; });
+            const sessionKey = 'capitovo_session';
+            let current = JSON.parse(localStorage.getItem(sessionKey) || 'null') || {};
+            let selectedPlan = current.subscription || 'none';
 
-                document.getElementById('save-plan').addEventListener('click', function(){
-                    const selected = document.querySelector('input[name="plan"]:checked');
-                    const s = sess || {};
-                    s.subscription = selected ? (selected.value === 'none' ? null : selected.value) : null;
-                    // Update nextPayment example field
-                    if(s.subscription === 'premium') s.nextPayment = '01.01.2026';
-                    else if(s.subscription === 'lifetime') s.nextPayment = 'Einmalig';
-                    else s.nextPayment = '-';
-                    localStorage.setItem('capitovo_session', JSON.stringify(s));
-                    alert('Ihr Abonnement wurde aktualisiert. Änderungen sind jetzt aktiv.');
-                    window.location.href = './konto.html';
+            const cards = {
+                none: document.getElementById('card-none'),
+                premium: document.getElementById('card-premium'),
+                lifetime: document.getElementById('card-lifetime')
+            };
+
+            function renderSelection(){
+                Object.keys(cards).forEach(key => {
+                    const el = cards[key];
+                    if(!el) return;
+                    if(key === selectedPlan){
+                        el.classList.add('ring-4');
+                        el.classList.remove('opacity-70');
+                        // make premium visually emphasized
+                        if(key === 'premium') el.classList.add('shadow-2xl');
+                    } else {
+                        el.classList.remove('ring-4');
+                        el.classList.add('opacity-90');
+                        if(key === 'premium') el.classList.remove('shadow-2xl');
+                    }
                 });
-            }catch(e){ console.error(e); }
+            }
+
+            window.selectPlan = function(plan){ selectedPlan = plan; renderSelection(); };
+
+            // init
+            renderSelection();
+
+            document.getElementById('save-plan').addEventListener('click', function(){
+                const s = current || {};
+                s.subscription = (selectedPlan === 'none') ? null : selectedPlan;
+                if(s.subscription === 'premium') s.nextPayment = '01.01.2026';
+                else if(s.subscription === 'lifetime') s.nextPayment = 'Einmalig';
+                else s.nextPayment = '-';
+                localStorage.setItem(sessionKey, JSON.stringify(s));
+                alert('Ihr Abonnement wurde aktualisiert. Änderungen sind jetzt aktiv.');
+                window.location.href = './konto.html';
+            });
+
+            document.getElementById('confirm-cancel').addEventListener('click', function(){
+                const s = current || {};
+                s.subscription = null;
+                s.canceled = true;
+                s.nextPayment = '-';
+                localStorage.setItem(sessionKey, JSON.stringify(s));
+                alert('Ihr Abonnement wurde gekündigt.');
+                window.location.href = './konto.html';
+            });
+
+            document.getElementById('cancel-abort').addEventListener('click', function(){
+                // simply reset selection to the stored value
+                selectedPlan = current.subscription || 'none';
+                renderSelection();
+            });
         })();
     </script>
 </body>

@@ -121,8 +121,9 @@
                         </div>
 
                         <!-- Confirm Free Modal -->
-                        <div id="confirm-free-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                            <div class="bg-white rounded-lg max-w-md w-full p-6">
+                        <div id="confirm-free-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
+                            <div class="w-full max-w-sm">
+                                <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
                                 <h4 class="text-lg font-bold mb-2">Abonement kündigen</h4>
                                 <p class="text-sm text-gray-700 mb-3">Sie nutzen derzeit ein Premium Abonnement.</p>
                                 <p class="text-sm text-gray-700 mb-3">Wenn Sie kündigen, bleibt Ihr Premium Zugang bis zum Ende des bereits bezahlten Abrechnungszeitraums aktiv.</p>
@@ -222,6 +223,9 @@
                 if(planKey === 'free' && stored.subscription === 'premium' && stored.subscription !== null && currentPlan !== 'free'){
                     const modal = document.getElementById('confirm-free-modal');
                     if(modal) {
+                        // remove any old error hints inside modal (match login modal behavior)
+                        const existingError = modal.querySelector('#confirm-free-error');
+                        if (existingError) existingError.remove();
                         // Close sidebar like login modal does
                         const sidebar = document.getElementById('sidebar');
                         if (sidebar) {
@@ -236,6 +240,9 @@
                         if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
 
                         modal.classList.remove('hidden');
+                        // focus primary action for keyboard users
+                        const primaryBtn = modal.querySelector('#confirm-free-accept');
+                        if (primaryBtn && typeof primaryBtn.focus === 'function') primaryBtn.focus();
                         document.body.style.overflow = 'hidden'; // prevent background scrolling (like login modal)
                     }
                     return;

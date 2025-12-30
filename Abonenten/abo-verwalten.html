@@ -32,33 +32,118 @@
                     <p class="text-sm text-gray-700">Wählen Sie aus den verfügbaren Abonnement-Modellen. Änderungen werden in Ihrem Browser gespeichert und sind sofort auf allen Seiten sichtbar.</p>
 
                     <div class="mt-6 space-y-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
-                            <div id="card-none" class="plan-card bg-white rounded-xl shadow p-6 border-2 border-transparent cursor-pointer" onclick="selectPlan('none')">
-                                <h3 class="text-lg font-bold mb-2">Kein Abo</h3>
-                                <div class="text-sm text-gray-600 mb-4">Kostenloser Zugang</div>
-                                <div class="text-sm text-gray-700">Basis-Inhalte, eingeschränkter Zugriff</div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch mb-6">
+                            <!-- Basic -->
+                            <div id="card-basic" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('basic')">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+                                    <div class="text-4xl font-extrabold text-gray-900 mb-4">€ 99,- <span class="text-xl font-normal text-gray-500">/ Monat</span></div>
+
+                                    <div class="plan-details w-full">
+                                        <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Wöchentliche Markt-Bulletins
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                2 exklusive Aktienanalysen / Monat
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                Zugang zum Performance-Dashboard
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                Exklusive Webinare & Q&A
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
                             </div>
 
-                            <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-lg p-6 border-4 border-transparent transform scale-100 cursor-pointer" onclick="selectPlan('premium')">
-                                <span class="inline-block bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full mb-3">Empfohlen</span>
-                                <h3 class="text-2xl font-bold text-white mb-2">Premium</h3>
-                                <div class="text-2xl font-extrabold text-white mb-4">€ 189,- <span class="text-sm text-blue-200">/ Monat</span></div>
-                                <ul class="text-white text-sm space-y-2">
-                                    <li>Alle Basic-Funktionen</li>
-                                    <li>Mehr Analysen & Webinare</li>
-                                    <li>14-tägige Geld-zurück-Garantie</li>
-                                </ul>
+                            <!-- Premium -->
+                            <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-2xl border-4 border-transparent p-8 flex flex-col justify-between transform scale-105 z-10 cursor-pointer" onclick="selectPlan('premium')">
+                                <div class="relative">
+                                    <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
+                                    <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
+                                    <div class="text-4xl font-extrabold text-white mb-4">€ 189,- <span class="text-xl font-normal text-blue-200">/ Monat</span></div>
+
+                                    <div class="plan-details w-full">
+                                        <ul class="text-left space-y-3 mb-10 text-white w-full">
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Alle Basic-Funktionen
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                <strong>Alle</strong> exklusiven Aktienanalysen (4+ / Monat)
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Zugang zum Performance-Dashboard
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Exklusive Webinare & Q&A
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                14-tägige Geld-zurück-Garantie
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button class="select-plan-btn w-full block py-3 px-8 border border-white rounded-lg shadow-lg text-base font-medium text-primary-blue bg-white hover:bg-blue-100 transition duration-150 mt-4">Wählen</button>
                             </div>
 
-                            <div id="card-lifetime" class="plan-card bg-white rounded-xl shadow p-6 border-2 border-transparent cursor-pointer" onclick="selectPlan('lifetime')">
-                                <div class="absolute right-4 top-4 bg-yellow-300 text-gray-900 text-xs font-bold px-2 py-1 rounded-bl">BEST VALUE</div>
-                                <h3 class="text-lg font-bold mb-2">Lifetime</h3>
-                                <div class="text-2xl font-extrabold text-gray-900 mb-4">€ 4999,- <span class="text-sm text-gray-500">/ Einmalig</span></div>
-                                <div class="text-sm text-gray-700">Lebenslanger Zugang, priorisierter Support</div>
+                            <!-- Lifetime -->
+                            <div id="card-lifetime" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden" onclick="selectPlan('lifetime')">
+                                <div class="absolute top-0 right-0 bg-gradient-to-l from-yellow-400 to-yellow-200 text-gray-900 text-xs font-bold px-3 py-1 rounded-bl-lg shadow-sm">BEST VALUE</div>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Lifetime</h3>
+                                    <div class="text-4xl font-extrabold text-gray-900 mb-4">€ 4999,- <span class="text-xl font-normal text-gray-500">/ Einmalig</span></div>
+
+                                    <div class="plan-details w-full">
+                                        <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Alle Premium-Funktionen
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Lebenslanger Zugang (inkl. Updates)
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Priorisierter E-Mail-Support
+                                            </li>
+                                            <li class="flex items-start">
+                                                <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Kein monatliches Abo mehr nötig
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <button class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
                             </div>
                         </div>
 
-                        <div class="flex items-center">
+                        <div class="border-t border-gray-200 pt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-gray-600">Zwischensumme</span>
+                                <span id="summary-subtotal" class="font-medium">€ 0,-</span>
+                            </div>
+
+                            <div class="flex justify-between items-center text-xl font-extrabold text-gray-900 mt-4">
+                                <span>Gesamt</span>
+                                <span id="summary-total">€ 0,-</span>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500 text-right">inkl. MwSt.</div>
+                        </div>
+
+                        <div class="flex items-center mt-4">
                             <button id="save-plan" class="px-4 py-2 bg-primary-blue text-white rounded-md back-btn-glow">Änderungen speichern</button>
                             <a href="./konto.html" class="ml-3 px-4 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50">Abbrechen</a>
                         </div>
@@ -87,44 +172,82 @@
     </footer>
 
     <script>
-        (function(){
+        document.addEventListener('DOMContentLoaded', () => {
             const sessionKey = 'capitovo_session';
-            let current = JSON.parse(localStorage.getItem(sessionKey) || 'null') || {};
-            let selectedPlan = current.subscription || 'none';
+            const stored = JSON.parse(localStorage.getItem(sessionKey) || 'null') || {};
+            let currentPlan = stored.subscription || null;
 
-            const cards = {
-                none: document.getElementById('card-none'),
-                premium: document.getElementById('card-premium'),
-                lifetime: document.getElementById('card-lifetime')
+            const plans = {
+                basic: { price: '€ 99,-' },
+                premium: { price: '€ 189,-' },
+                lifetime: { price: '€ 4999,-' }
             };
 
-            function renderSelection(){
-                Object.keys(cards).forEach(key => {
-                    const el = cards[key];
-                    if(!el) return;
-                    if(key === selectedPlan){
-                        el.classList.add('ring-4');
-                        el.classList.remove('opacity-70');
-                        // make premium visually emphasized
-                        if(key === 'premium') el.classList.add('shadow-2xl');
+            const totalEl = document.getElementById('summary-total');
+            const subtotalEl = document.getElementById('summary-subtotal');
+
+            function updateUIForSelection(planKey){
+                ['basic','premium','lifetime'].forEach(key => {
+                    const card = document.getElementById(`card-${key}`);
+                    const btn = card.querySelector('.select-plan-btn');
+
+                    if(key === planKey){
+                        card.classList.remove('border-transparent','opacity-60','scale-95');
+                        card.classList.add('scale-105','z-20','shadow-2xl');
+                        card.style.filter = 'none';
+
+                        if(key === 'premium') card.classList.add('border-yellow-400');
+                        else card.classList.add('border-blue-500');
+
+                        btn.textContent = 'Ausgewählt';
+                        btn.classList.remove('bg-white','text-gray-900','text-primary-blue','border-gray-300','border-white','hover:bg-gray-100','hover:bg-blue-100');
+                        btn.classList.add('bg-gray-900','text-white','border-transparent','cursor-default','shadow-inner');
                     } else {
-                        el.classList.remove('ring-4');
-                        el.classList.add('opacity-90');
-                        if(key === 'premium') el.classList.remove('shadow-2xl');
+                        card.classList.add('border-transparent','opacity-60','scale-95');
+                        card.classList.remove('border-blue-500','border-yellow-400','scale-105','z-10','z-20','shadow-2xl');
+                        card.style.filter = 'blur(1.5px) brightness(0.95)';
+
+                        btn.textContent = 'Wählen';
+                        btn.classList.remove('bg-gray-900','text-white','border-transparent','cursor-default','shadow-inner');
+
+                        if(key === 'premium') btn.classList.add('bg-white','text-primary-blue','border-white','hover:bg-blue-100');
+                        else btn.classList.add('bg-white','text-gray-900','border-gray-300','hover:bg-gray-100');
                     }
                 });
+
+                // update totals
+                const p = plans[planKey];
+                if(p){
+                    subtotalEl.textContent = p.price;
+                    totalEl.textContent = p.price + (planKey === 'lifetime' ? ' / Einmalig' : ' / Monat');
+                } else {
+                    subtotalEl.textContent = '€ 0,-';
+                    totalEl.textContent = '€ 0,-';
+                }
             }
 
-            window.selectPlan = function(plan){ selectedPlan = plan; renderSelection(); };
+            window.selectPlan = function(planKey){
+                currentPlan = planKey;
+                updateUIForSelection(planKey);
+                // update URL param (optional)
+                try{
+                    const url = new URL(window.location);
+                    url.searchParams.set('plan', planKey);
+                    window.history.replaceState({}, '', url);
+                }catch(e){}
+            };
 
-            // init
-            renderSelection();
+            // initialize UI from stored session
+            if(currentPlan && plans[currentPlan]){
+                updateUIForSelection(currentPlan);
+            }
 
             document.getElementById('save-plan').addEventListener('click', function(){
-                const s = current || {};
-                s.subscription = (selectedPlan === 'none') ? null : selectedPlan;
+                const s = stored || {};
+                s.subscription = currentPlan || null;
                 if(s.subscription === 'premium') s.nextPayment = '01.01.2026';
                 else if(s.subscription === 'lifetime') s.nextPayment = 'Einmalig';
+                else if(s.subscription === 'basic') s.nextPayment = '01.01.2026';
                 else s.nextPayment = '-';
                 localStorage.setItem(sessionKey, JSON.stringify(s));
                 alert('Ihr Abonnement wurde aktualisiert. Änderungen sind jetzt aktiv.');
@@ -132,7 +255,7 @@
             });
 
             document.getElementById('confirm-cancel').addEventListener('click', function(){
-                const s = current || {};
+                const s = stored || {};
                 s.subscription = null;
                 s.canceled = true;
                 s.nextPayment = '-';
@@ -142,11 +265,24 @@
             });
 
             document.getElementById('cancel-abort').addEventListener('click', function(){
-                // simply reset selection to the stored value
-                selectedPlan = current.subscription || 'none';
-                renderSelection();
+                // reset UI to stored value
+                currentPlan = stored.subscription || null;
+                if(currentPlan) updateUIForSelection(currentPlan);
+                else {
+                    // clear visual selection
+                    ['basic','premium','lifetime'].forEach(k=>{
+                        const c = document.getElementById(`card-${k}`);
+                        const b = c.querySelector('.select-plan-btn');
+                        c.classList.remove('scale-105','z-20','shadow-2xl');
+                        c.classList.remove('border-blue-500','border-yellow-400');
+                        c.style.filter = '';
+                        b.textContent = 'Wählen';
+                    });
+                    subtotalEl.textContent = '€ 0,-';
+                    totalEl.textContent = '€ 0,-';
+                }
             });
-        })();
+        });
     </script>
 </body>
 </html>

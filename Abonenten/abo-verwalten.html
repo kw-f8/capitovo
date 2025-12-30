@@ -124,8 +124,8 @@
                             <h3 class="text-lg font-semibold">Abonnement kündigen</h3>
                             <p class="text-sm text-gray-600 mt-2">Wenn Sie Ihr Abonnement kündigen möchten, klicken Sie auf "Kündigen". Ihr Zugang bleibt bis zum Ende des bereits bezahlten Zeitraums aktiv.</p>
                                 <div class="mt-4">
-                                <button id="confirm-cancel" class="px-4 py-2 bg-red-600 text-white rounded-md">Kündigen</button>
-                                <button id="cancel-abort" class="ml-3 px-4 py-2 border border-gray-300 rounded-md">Abbrechen</button>
+                                    <button type="button" id="confirm-cancel" class="px-4 py-2 bg-red-600 text-white rounded-md">Kündigen</button>
+                                    <button type="button" id="cancel-abort" class="ml-3 px-4 py-2 border border-gray-300 rounded-md">Abbrechen</button>
                             </div>
                         </div>
                     </div>
@@ -152,8 +152,8 @@
                 <p class="text-sm text-gray-700 mb-3">Danach wird Ihr Konto automatisch auf das Free Abonnement umgestellt.</p>
                 <p class="text-sm text-gray-700 mb-4">Es fallen keine weiteren Kosten an.</p>
                 <div class="flex justify-end">
-                    <button id="confirm-free-cancel" class="mr-3 px-4 py-2 border rounded-md whitespace-nowrap">Abbrechen</button>
-                    <button id="confirm-free-accept" class="px-4 py-2 bg-red-600 text-white rounded-md whitespace-nowrap">Kündigen und zum Free Abonnement wechseln</button>
+                    <button type="button" id="confirm-free-cancel" class="mr-3 px-4 py-2 border rounded-md whitespace-nowrap">Abbrechen</button>
+                    <button type="button" id="confirm-free-accept" class="px-4 py-2 bg-red-600 text-white rounded-md whitespace-nowrap">Kündigen und zum Free Abonnement wechseln</button>
                 </div>
             </div>
         </div>
@@ -357,23 +357,25 @@
             const modalAccept = document.getElementById('confirm-free-accept');
             const modalEl = document.getElementById('confirm-free-modal');
             if(modalCancel){
-                modalCancel.addEventListener('click', function(){
+                modalCancel.addEventListener('click', function(e){
+                    if (e && typeof e.preventDefault === 'function') { e.preventDefault(); e.stopPropagation(); }
                     if(modalEl) modalEl.classList.add('hidden');
                     document.body.style.overflow = '';
                 });
             }
             if(modalAccept){
-                modalAccept.addEventListener('click', function(){
+                modalAccept.addEventListener('click', function(e){
+                    if (e && typeof e.preventDefault === 'function') { e.preventDefault(); e.stopPropagation(); }
                     // set stored subscription to free and persist
                     const s = stored || {};
                     s.subscription = 'free';
                     s.nextPayment = '-';
-                    localStorage.setItem(sessionKey, JSON.stringify(s));
+                    try{ localStorage.setItem(sessionKey, JSON.stringify(s)); }catch(err){}
                     if(modalEl) modalEl.classList.add('hidden');
                     document.body.style.overflow = '';
                     // apply selection visually
-                    selectPlan('free');
-                    alert('Ihr Abonnement wurde gekündigt und auf Free gesetzt.');
+                    try{ selectPlan('free'); }catch(err){}
+                    try{ alert('Ihr Abonnement wurde gekündigt und auf Free gesetzt.'); }catch(e){}
                 });
             }
         });

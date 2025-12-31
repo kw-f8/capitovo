@@ -31,10 +31,12 @@
         }
         /* Override global abonenten-page main padding */
         .abonenten-page main { padding-top: 30px !important; }
-        /* Page-local override: tighten top spacing for kontaktdaten - use body selector for higher specificity */
-        body.abonenten-page main.kontaktdaten-main { padding-top: 0px !important; }
-        /* Force member-grid section to have no extra top margin */
+        /* Force member-grid section to sit closer to intro - remove all extra spacing */
         .kontaktdaten-main .member-grid { margin-top: 0 !important; padding-top: 0 !important; }
+        .kontaktdaten-main .member-grid > .bg-white { margin-top: 0 !important; }
+        .kontaktdaten-main section.member-grid { margin-top: 0 !important; }
+        /* The intro section margin-bottom controls the gap - set to exactly 60px */
+        .kontaktdaten-main > section:first-child { margin-bottom: 60px !important; }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
@@ -51,7 +53,7 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6 kontaktdaten-main" style="padding-top: 0px !important; padding-bottom: 1.25rem;">
+    <main class="max-w-6xl mx-auto px-6 kontaktdaten-main" style="padding-bottom: 1.25rem;">
         <section class="flex items-start justify-between" style="margin-top: 0 !important; margin-bottom: 60px !important;">
             <div>
                 <h1 class="text-3xl font-extrabold text-gray-900" style="margin-top: 0 !important; margin-bottom: 0 !important;">Kontaktdaten bearbeiten</h1>

@@ -35,7 +35,8 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-6">
                             <!-- Free -->
                             <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer h-full" onclick="selectPlan('free')">
-                                <div>
+                                <div class="relative">
+                                    <span id="selected-badge-free" class="absolute -top-10 left-4 bg-green-500 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden">Ausgewähltes Abonnement</span>
                                     <h3 class="text-2xl font-bold text-gray-900 mb-4">Free</h3>
                                     <div class="text-4xl font-extrabold text-gray-900 mb-4">€ 0,- <span class="text-xl font-normal text-gray-500">/ Monat</span></div>
 
@@ -67,6 +68,7 @@
                             <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-2xl border-4 border-transparent p-8 flex flex-col justify-between transform scale-105 z-10 cursor-pointer h-full" onclick="selectPlan('premium')">
                                 <div class="relative">
                                     <span id="premium-badge" class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
+                                    <span id="selected-badge-premium" class="absolute -top-10 left-4 bg-green-500 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden">Ausgewähltes Abonnement</span>
                                     <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
                                     <div class="text-4xl font-extrabold text-white mb-4">€ 14,99 <span class="text-xl font-normal text-blue-200">/ Monat</span></div>
 
@@ -174,6 +176,8 @@
             const subtotalEl = document.getElementById('summary-subtotal');
 
             const premiumBadge = document.getElementById('premium-badge');
+            const selectedBadgeFree = document.getElementById('selected-badge-free');
+            const selectedBadgePremium = document.getElementById('selected-badge-premium');
             const urlParams = new URLSearchParams(window.location.search);
             const forcedPlan = urlParams.get('plan');
 
@@ -218,6 +222,10 @@
                     const nb = (stored && stored.nextPayment) ? stored.nextPayment : '-';
                     nextBillingEl.textContent = 'Nächste Abrechnung: ' + nb;
                 }
+
+                // show selected badges
+                if(selectedBadgeFree) selectedBadgeFree.style.display = (planKey === 'free') ? 'inline-block' : 'none';
+                if(selectedBadgePremium) selectedBadgePremium.style.display = (planKey === 'premium') ? 'inline-block' : 'none';
             }
 
             window.selectPlan = function(planKey){
@@ -286,9 +294,15 @@
                 }
             };
 
-            // initialize UI from stored session
-            if(currentPlan && plans[currentPlan]){
-                updateUIForSelection(currentPlan);
+            // if URL forces a plan, show it as selected
+            if(forcedPlan && plans[forcedPlan]){
+                currentPlan = forcedPlan;
+                updateUIForSelection(forcedPlan);
+            } else {
+                // initialize UI from stored session
+                if(currentPlan && plans[currentPlan]){
+                    updateUIForSelection(currentPlan);
+                }
             }
             // If stored session indicates premium (or test account), mark badge as current
             if(premiumBadge){

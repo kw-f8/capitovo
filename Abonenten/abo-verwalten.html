@@ -21,9 +21,9 @@
 
     <main class="max-w-[1200px] mx-auto px-6 py-12">
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            <div class="p-6">
+                <div class="p-6">
                 <h1 class="text-2xl font-bold">Abonnement verwalten</h1>
-                <p class="text-sm text-gray-500 mt-1">Passen Sie Ihr Abonnement an — Änderungen werden sofort übernommen.</p>
+                <p id="header-subtext" class="text-sm text-gray-500 mt-1">Passen Sie Ihr Abonnement an — Änderungen werden sofort übernommen.</p>
             </div>
 
             <div class="p-6">
@@ -165,6 +165,15 @@
             const sessionKey = 'capitovo_session';
             const stored = JSON.parse(localStorage.getItem(sessionKey) || 'null') || {};
             let currentPlan = stored.subscription || null;
+            // update header subtext based on subscription
+            const headerSubtextEl = document.getElementById('header-subtext');
+            if(headerSubtextEl){
+                if(stored && stored.subscription === 'premium'){
+                    headerSubtextEl.innerHTML = 'Ändern Sie Ihr Abonnement jederzeit. Anpassungen gelten ab dem nächsten Abrechnungszeitraum.';
+                } else {
+                    headerSubtextEl.innerHTML = 'Der kostenlose Zugang bietet Ihnen einen ersten Eindruck der Funktionen.<br>Mit einem kostenpflichtigen Abonnement erhalten Sie den vollständigen Zugriff auf alle Inhalte und Funktionen.';
+                }
+            }
 
             const plans = {
                 free: { price: '€ 0,-' },

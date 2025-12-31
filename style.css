@@ -25,6 +25,11 @@ body {
     line-height: 1.65;
 }
 
+/* Prevent subtle layout shifts during scroll (e.g., scrollbar appearing/disappearing)
+   and avoid rubber-band overscroll bounce on subscriber pages. */
+html { scrollbar-gutter: stable; }
+body.abonenten-page { overscroll-behavior-y: none; }
+
 /* Tailwind Custom-Farben Definitionen für style.css */
 :root {
     /* Dunkles Blau (Hintergrund, Sidebar, Premium Box) */

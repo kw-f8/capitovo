@@ -174,6 +174,8 @@
             const subtotalEl = document.getElementById('summary-subtotal');
 
             const premiumBadge = document.getElementById('premium-badge');
+            const urlParams = new URLSearchParams(window.location.search);
+            const forcedPlan = urlParams.get('plan');
 
             function updateUIForSelection(planKey){
                 ['free','premium'].forEach(key => {
@@ -266,16 +268,20 @@
                     url.searchParams.set('plan', planKey);
                     window.history.replaceState({}, '', url);
                 }catch(e){}
-                // Update premium badge when selection changes
+                // update premium badge when selection changes (unless URL forces premium view)
                 if(premiumBadge){
-                    if(currentPlan === 'premium'){
-                        premiumBadge.textContent = 'capitov blaiu';
-                        premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
-                        premiumBadge.classList.add('bg-green-400','text-white');
+                    if(forcedPlan === 'premium'){
+                        premiumBadge.style.display = 'none';
                     } else {
-                        premiumBadge.textContent = 'Empfohlen';
-                        premiumBadge.classList.remove('bg-green-400','text-white');
-                        premiumBadge.classList.add('bg-yellow-400','text-gray-900');
+                        if(currentPlan === 'premium'){
+                            premiumBadge.textContent = 'capitov blaiu';
+                            premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
+                            premiumBadge.classList.add('bg-green-400','text-white');
+                        } else {
+                            premiumBadge.textContent = 'Empfohlen';
+                            premiumBadge.classList.remove('bg-green-400','text-white');
+                            premiumBadge.classList.add('bg-yellow-400','text-gray-900');
+                        }
                     }
                 }
             };
@@ -286,14 +292,18 @@
             }
             // If stored session indicates premium (or test account), mark badge as current
             if(premiumBadge){
-                if(stored.subscription === 'premium'){
-                    premiumBadge.textContent = 'capitov blaiu';
-                    premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
-                    premiumBadge.classList.add('bg-green-400','text-white');
+                if(forcedPlan === 'premium'){
+                    premiumBadge.style.display = 'none';
                 } else {
-                    premiumBadge.textContent = 'Empfohlen';
-                    premiumBadge.classList.remove('bg-green-400','text-white');
-                    premiumBadge.classList.add('bg-yellow-400','text-gray-900');
+                    if(stored.subscription === 'premium'){
+                        premiumBadge.textContent = 'capitov blaiu';
+                        premiumBadge.classList.remove('bg-yellow-400','text-gray-900');
+                        premiumBadge.classList.add('bg-green-400','text-white');
+                    } else {
+                        premiumBadge.textContent = 'Empfohlen';
+                        premiumBadge.classList.remove('bg-green-400','text-white');
+                        premiumBadge.classList.add('bg-yellow-400','text-gray-900');
+                    }
                 }
             }
 

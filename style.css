@@ -183,6 +183,10 @@ html.cap-sub-premium .subtext-premium { display: inline; }
 html.cap-sub-premium #selected-badge-premium { display: inline-block !important; }
 html.cap-sub-free #selected-badge-free { display: inline-block !important; }
 
+/* Abo-Verwalten: cancellation card should only show for paid/premium accounts */
+#cancel-box { display: none; }
+html.cap-sub-premium #cancel-box { display: block; }
+
 /* Shared subtle glow used on some action buttons (matches Abonenten/vorlage.html) */
 .back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }
 .back-btn-glow:hover, .back-btn-glow:focus-visible {

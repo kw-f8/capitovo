@@ -196,7 +196,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             const sessionKey = 'capitovo_session';
             const stored = JSON.parse(localStorage.getItem(sessionKey) || 'null') || {};
-            let currentPlan = stored.subscription || null;
+            // Normalize stored subscription value to a lowercase plan key when possible
+            let currentPlan = (stored && stored.subscription) ? String(stored.subscription).toLowerCase() : null;
             // update header subtext based on subscription
             const headerSubtextEl = document.getElementById('header-subtext');
             if(headerSubtextEl){
@@ -344,8 +345,13 @@
                 updateUIForSelection(forcedPlan);
             } else {
                 // initialize UI from stored session
+                // Try to normalize stored subscription and always run updateUIForSelection
                 if(currentPlan && plans[currentPlan]){
                     updateUIForSelection(currentPlan);
+                } else {
+                    // ensure the next billing is displayed even when plan keys differ;
+                    // pass 'free' as visual default but the function will prefer stored.nextPayment
+                    updateUIForSelection('free');
                 }
             }
             // If stored session indicates premium, hide the recommended badge

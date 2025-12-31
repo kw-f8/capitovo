@@ -257,10 +257,15 @@
                     if(totalEl) totalEl.textContent = '€ 0,-';
                 }
                 if(nextBillingEl){
-                    // Prefer explicit stored nextPayment string, otherwise compute next month like on konto.html
+                    // Prefer explicit stored nextPayment string
                     let nb = (stored && stored.nextPayment) ? stored.nextPayment : '';
-                    if (!nb && stored && stored.subscription && stored.subscription !== 'none') {
-                        const startDateObj = stored.ts ? new Date(stored.ts) : new Date();
+
+                    // If no explicit nextPayment, compute one month ahead when we can infer an active/premium subscription.
+                    // Infer from stored.subscription OR the visual/current selection.
+                    const hasStoredSub = stored && stored.subscription && stored.subscription !== 'none';
+                    const wantsPremium = planKey === 'premium' || currentPlan === 'premium' || hasStoredSub;
+                    if (!nb && wantsPremium) {
+                        const startDateObj = (stored && stored.ts) ? new Date(stored.ts) : new Date();
                         const nextDateObj = new Date(startDateObj);
                         nextDateObj.setMonth(nextDateObj.getMonth() + 1);
                         nb = nextDateObj.toLocaleDateString('de-DE');

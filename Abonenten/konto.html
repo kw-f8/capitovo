@@ -298,28 +298,44 @@
                     const startDateObj = sess.ts ? new Date(sess.ts) : new Date();
                     const date = startDateObj.toLocaleDateString('de-DE');
 
-                    detailsEl.innerHTML = `
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Preis</span>
-                            <span class="font-medium text-gray-900">${price}</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-500">Nächste Abbuchung</span>
-                            <span class="font-medium text-gray-900">${nextPaymentStr}</span>
-                        </div>
-                    `;
-
-                    // Update Actions
-                    actionsEl.innerHTML = `
-                        <div class="rounded-lg p-3">
-                            <button class="w-full py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white transition-colors mb-3 back-btn-glow">
-                                Rechnung herunterladen
-                            </button>
-                            <a href="./abo-verwalten.html" class="block w-full py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white text-center transition-colors back-btn-glow">
-                                Abonnement verwalten
+                    if (displaySubscription === 'free') {
+                        // For free users: hide the status badge and show CTA to upgrade to Premium
+                        if (statusEl) statusEl.style.display = 'none';
+                        detailsEl.innerHTML = `
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Preis</span>
+                                <span class="font-medium text-gray-900">€ 0,- / Monat</span>
+                            </div>
+                        `;
+                        actionsEl.innerHTML = `
+                            <a href="../checkout.html?ref=account" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                                Zu Premium wechseln
                             </a>
-                        </div>
-                    `;
+                        `;
+                    } else {
+                        detailsEl.innerHTML = `
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Preis</span>
+                                <span class="font-medium text-gray-900">${price}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Nächste Abbuchung</span>
+                                <span class="font-medium text-gray-900">${nextPaymentStr}</span>
+                            </div>
+                        `;
+
+                        // Update Actions for paid plans
+                        actionsEl.innerHTML = `
+                            <div class="rounded-lg p-3">
+                                <button class="w-full py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white transition-colors mb-3 back-btn-glow">
+                                    Rechnung herunterladen
+                                </button>
+                                <a href="./abo-verwalten.html" class="block w-full py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white text-center transition-colors back-btn-glow">
+                                    Abonnement verwalten
+                                </a>
+                            </div>
+                        `;
+                    }
                 } else {
                     // Kein aktives Abo, aber Free-User (z.B. noabo@capitov.de) soll Format wie Premium bekommen
                     if (sess.email === 'noabo@capitov.de' || displaySubscription === 'free') {

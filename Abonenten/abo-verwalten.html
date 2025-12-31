@@ -127,11 +127,6 @@
                         </div>
 
                         <div class="border-t border-gray-200 pt-4">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-gray-600">Zwischensumme</span>
-                                <span id="summary-subtotal" class="font-medium">€ 0,-</span>
-                            </div>
-
                             <div class="flex justify-between items-center text-xl font-extrabold text-gray-900 mt-4">
                                 <span>Gesamt</span>
                                 <span id="summary-total">€ 0,-</span>
@@ -255,11 +250,11 @@
                 const p = plans[planKey];
                 const nextBillingEl = document.getElementById('summary-next-billing');
                 if(p){
-                    subtotalEl.textContent = p.price;
-                    totalEl.textContent = p.price + ' / Monat';
+                    if(subtotalEl) subtotalEl.textContent = p.price;
+                    if(totalEl) totalEl.textContent = p.price + ' / Monat';
                 } else {
-                    subtotalEl.textContent = '€ 0,-';
-                    totalEl.textContent = '€ 0,-';
+                    if(subtotalEl) subtotalEl.textContent = '€ 0,-';
+                    if(totalEl) totalEl.textContent = '€ 0,-';
                 }
                 if(nextBillingEl){
                     // Prefer explicit stored nextPayment string, otherwise compute next month like on konto.html

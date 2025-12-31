@@ -193,7 +193,7 @@ html.cap-sub-premium #premium-badge { display: none !important; }
 html.cap-sub-free #premium-badge { display: inline-block !important; }
 
 /* Abo-Verwalten: cancellation card should only show for paid/premium accounts */
-#cancel-box { display: none; }
+#cancel-box { display: none; margin-top: 60px; }
 html.cap-sub-premium #cancel-box { display: block; }
 
 /* Shared subtle glow used on some action buttons (matches Abonenten/vorlage.html) */

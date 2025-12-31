@@ -195,7 +195,8 @@
 
                         btn.textContent = 'Ausgewählt';
                         btn.classList.remove('bg-white','text-gray-900','text-primary-blue','border-gray-300','border-white','hover:bg-gray-100','hover:bg-blue-100');
-                        btn.classList.add('bg-gray-900','text-white','border-transparent','cursor-default','shadow-inner');
+                        // Make the selected button have a white background
+                        btn.classList.add('bg-white','text-gray-900','border-transparent','cursor-default','shadow-inner');
                     } else {
                         card.classList.add('border-transparent','opacity-90','scale-95');
                         card.classList.remove('border-blue-500','border-yellow-400','scale-105','z-10','z-20','shadow-2xl');

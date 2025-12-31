@@ -6,6 +6,21 @@
     <title>capitovo — Abonnement verwalten</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../style.css">
+    <script>
+        // Run before body paint: set a class on <html> based on stored session
+        // to prevent a flash of incorrect subscription text/badges.
+        (function(){
+            try{
+                var raw = localStorage.getItem('capitovo_session');
+                var sub = 'free';
+                if(raw){
+                    try{ var obj = JSON.parse(raw); if(obj && obj.subscription) sub = obj.subscription; }catch(e){}
+                }
+                if(sub === 'premium') document.documentElement.classList.add('cap-sub-premium');
+                else document.documentElement.classList.add('cap-sub-free');
+            }catch(e){}
+        })();
+    </script>
 </head>
 <body class="bg-white text-gray-900">
     <header>
@@ -23,7 +38,10 @@
         <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
                 <div class="p-6">
                 <h1 class="text-2xl font-bold">Abonnement verwalten</h1>
-                <p id="header-subtext" class="text-sm text-gray-500 mt-1">Passen Sie Ihr Abonnement an — Änderungen werden sofort übernommen.</p>
+                <p id="header-subtext" class="text-sm text-gray-500 mt-1">
+                    <span class="subtext-free">Der kostenlose Zugang bietet Ihnen einen ersten Eindruck der Funktionen.<br>Mit einem kostenpflichtigen Abonnement erhalten Sie den vollständigen Zugriff auf alle Inhalte und Funktionen.</span>
+                    <span class="subtext-premium">Ändern Sie Ihr Abonnement jederzeit. Anpassungen gelten ab dem nächsten Abrechnungszeitraum.</span>
+                </p>
             </div>
 
             <div class="p-6">

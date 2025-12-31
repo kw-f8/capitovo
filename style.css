@@ -171,6 +171,18 @@ main.with-sidebar {
     color: var(--color-accent-blue);
 }
 
+/* Subscription-based initial rendering: prevent flash by showing the
+    correct subtext/badge based on a class set on <html> before paint. */
+.subtext-free, .subtext-premium { display: none; }
+html.cap-sub-free .subtext-free { display: inline; }
+html.cap-sub-premium .subtext-premium { display: inline; }
+
+/* Selected badges: hidden by default, shown according to html class
+    added early from localStorage to avoid flicker. */
+#selected-badge-premium, #selected-badge-free { display: none !important; }
+html.cap-sub-premium #selected-badge-premium { display: inline-block !important; }
+html.cap-sub-free #selected-badge-free { display: inline-block !important; }
+
 /* Shared subtle glow used on some action buttons (matches Abonenten/vorlage.html) */
 .back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }
 .back-btn-glow:hover, .back-btn-glow:focus-visible {

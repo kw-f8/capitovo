@@ -82,7 +82,7 @@
                             </div>
 
                             <!-- Premium -->
-                            <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-2xl border-4 border-transparent p-8 flex flex-col justify-between transform scale-105 z-10 cursor-pointer h-full" onclick="selectPlan('premium')">
+                            <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between cursor-pointer h-full" onclick="selectPlan('premium')">
                                 <div class="relative">
                                     <span id="premium-badge" class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
                                     <span id="selected-badge-premium" class="absolute -top-10 left-4 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden" style="background-color:var(--color-accent-blue);">Aktuelles Abonnement</span>
@@ -214,8 +214,8 @@
                     const btn = card.querySelector('.select-plan-btn');
 
                     if(key === planKey){
-                        card.classList.remove('border-transparent','opacity-60','scale-95');
-                        card.classList.add('scale-105','z-20','shadow-2xl');
+                        card.classList.remove('border-transparent','opacity-60');
+                        card.classList.add('shadow-2xl');
 
                         // Use Capitovo blue for selected borders via CSS variable
                         card.style.borderColor = 'var(--color-accent-blue)';
@@ -225,8 +225,8 @@
                         // Make the selected button have a white background
                         btn.classList.add('bg-white','text-gray-900','border-transparent','cursor-default','shadow-inner');
                     } else {
-                        card.classList.add('border-transparent','opacity-90','scale-95');
-                        card.classList.remove('border-blue-500','border-yellow-400','scale-105','z-10','z-20','shadow-2xl');
+                        card.classList.add('border-transparent','opacity-90');
+                        card.classList.remove('border-blue-500','border-yellow-400','z-10','z-20','shadow-2xl');
                         card.style.borderColor = '';
 
                         btn.textContent = 'Wählen';

@@ -30,7 +30,7 @@
                 <div class="prose max-w-none">
                     
 
-                    <div class="mt-6 space-y-6">
+                    <div class="mt-4 space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-6">
                             <!-- Free -->
                             <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer h-full" onclick="selectPlan('free')">
@@ -164,6 +164,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             const sessionKey = 'capitovo_session';
             const stored = JSON.parse(localStorage.getItem(sessionKey) || 'null') || {};
+            // Force this session to Premium (update stored session)
+            stored.subscription = 'premium';
+            try{ localStorage.setItem(sessionKey, JSON.stringify(stored)); }catch(e){}
             let currentPlan = stored.subscription || null;
             // update header subtext based on subscription
             const headerSubtextEl = document.getElementById('header-subtext');

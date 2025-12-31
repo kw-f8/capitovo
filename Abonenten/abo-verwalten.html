@@ -261,8 +261,15 @@
                     totalEl.textContent = '€ 0,-';
                 }
                 if(nextBillingEl){
-                    const nb = (stored && stored.nextPayment) ? stored.nextPayment : '-';
-                    nextBillingEl.textContent = 'Nächste Abrechnung: ' + nb;
+                    // Prefer explicit stored nextPayment string, otherwise compute next month like on konto.html
+                    let nb = (stored && stored.nextPayment) ? stored.nextPayment : '';
+                    if (!nb && stored && stored.subscription && stored.subscription !== 'none') {
+                        const startDateObj = stored.ts ? new Date(stored.ts) : new Date();
+                        const nextDateObj = new Date(startDateObj);
+                        nextDateObj.setMonth(nextDateObj.getMonth() + 1);
+                        nb = nextDateObj.toLocaleDateString('de-DE');
+                    }
+                    nextBillingEl.textContent = 'Nächste Abbuchung: ' + (nb || '-');
                 }
 
                 // show selected badges
@@ -358,8 +365,12 @@
                 savePlanBtn.addEventListener('click', function(){
                     const s = stored || {};
                     s.subscription = currentPlan || null;
-                    if(s.subscription === 'premium') s.nextPayment = '01.01.2026';
-                    else s.nextPayment = '-';
+                    if(s.subscription === 'premium'){
+                        // compute next payment date one month from now
+                        const d = new Date();
+                        d.setMonth(d.getMonth() + 1);
+                        try{ s.nextPayment = d.toLocaleDateString('de-DE'); }catch(e){ s.nextPayment = '–'; }
+                    } else s.nextPayment = '-';
                     localStorage.setItem(sessionKey, JSON.stringify(s));
                     alert('Ihr Abonnement wurde aktualisiert. Änderungen sind jetzt aktiv.');
                     window.location.href = './konto.html';

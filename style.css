@@ -188,6 +188,10 @@ html.cap-sub-premium .subtext-premium { display: inline; }
 html.cap-sub-premium #selected-badge-premium { display: inline-block !important; }
 html.cap-sub-free #selected-badge-free { display: inline-block !important; }
 
+/* Abo-Verwalten: prevent "Empfohlen" badge flash for premium accounts */
+html.cap-sub-premium #premium-badge { display: none !important; }
+html.cap-sub-free #premium-badge { display: inline-block !important; }
+
 /* Abo-Verwalten: cancellation card should only show for paid/premium accounts */
 #cancel-box { display: none; }
 html.cap-sub-premium #cancel-box { display: block; }

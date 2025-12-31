@@ -351,7 +351,30 @@
                         actionsEl.innerHTML = '';
                     }
                 }
-            } catch(e) { console.error(e); }
+                // Fallback: force UI for the known Free test account
+                if (typeof sess !== 'undefined' && sess && sess.email === 'noabo@capitov.de') {
+                    try {
+                        const fallbackPlanEl = document.getElementById('page-acc-plan');
+                        const fallbackStatusEl = document.getElementById('page-acc-status');
+                        const fallbackDetailsEl = document.getElementById('page-acc-details');
+                        const fallbackActionsEl = document.getElementById('page-acc-actions');
+                        if (fallbackPlanEl) fallbackPlanEl.textContent = 'Free';
+                        if (fallbackStatusEl) fallbackStatusEl.style.display = 'none';
+                        if (fallbackDetailsEl) fallbackDetailsEl.innerHTML = `
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Preis</span>
+                                <span class="font-medium text-gray-900">€ 0,- / Monat</span>
+                            </div>
+                        `;
+                        if (fallbackActionsEl) fallbackActionsEl.innerHTML = `
+                            <a href="../checkout.html?ref=account" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                                Zu Premium wechseln
+                            </a>
+                        `;
+                    } catch(err) { console.error('fallback update failed', err); }
+                }
+
+                } catch(e) { console.error(e); }
         })();
     </script>
     <script src="../script.js?v=6"></script>

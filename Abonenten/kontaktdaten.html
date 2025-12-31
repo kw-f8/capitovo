@@ -31,6 +31,8 @@
         }
         /* Override global abonenten-page main padding */
         .abonenten-page main { padding-top: 30px !important; }
+        /* Page-local override: tighten top spacing for kontaktdaten */
+        .kontaktdaten-main { padding-top: 8px !important; }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
@@ -47,7 +49,7 @@
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-6" style="padding-top: 8px; padding-bottom: 1.25rem;">
+    <main class="max-w-6xl mx-auto px-6 kontaktdaten-main" style="padding-top: 8px; padding-bottom: 1.25rem;">
         <section class="flex items-start justify-between" style="margin-top: 0 !important; margin-bottom: 60px !important;">
             <div>
                 <h1 class="text-3xl font-extrabold text-gray-900" style="margin-top: 0 !important; margin-bottom: 0 !important;">Kontaktdaten bearbeiten</h1>
@@ -63,6 +65,18 @@
             <div class="bg-white p-6 rounded-xl shadow">
                 <!-- Contact form inline (same fields as modal) -->
                 <form id="contact-form" class="space-y-4" autocomplete="off">
+                    <div class="relative">
+                        <select id="contact-salutation" name="salutation" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                            <option value="" disabled selected>Bitte wählen</option>
+                            <option value="herr">Herr</option>
+                            <option value="frau">Frau</option>
+                            <option value="keine-angabe">Keine Angabe</option>
+                        </select>
+                        <label for="contact-salutation" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Anrede</label>
+                    </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="relative">
                             <input id="contact-firstname" name="firstname" type="text" class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" placeholder="Vorname">

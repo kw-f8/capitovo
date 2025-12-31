@@ -321,8 +321,19 @@
                         </div>
                     `;
                 } else {
-                    // No Subscription (Default HTML is already set to this, but ensuring consistency)
-                    // Optional: You could force the "Free" state here if needed, but HTML default handles it.
+                    // Kein aktives Abo, aber Free-User (z.B. noabo@capitov.de) soll Format wie Premium bekommen
+                    if (sess.email === 'noabo@capitov.de' || displaySubscription === 'free') {
+                        planEl.textContent = 'Free';
+                        statusEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800";
+                        statusEl.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>Aktiv';
+                        detailsEl.innerHTML = `
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Preis</span>
+                                <span class="font-medium text-gray-900">€ 0,- / Monat</span>
+                            </div>
+                        `;
+                        actionsEl.innerHTML = '';
+                    }
                 }
             } catch(e) { console.error(e); }
         })();

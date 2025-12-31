@@ -190,8 +190,8 @@
                         card.classList.remove('border-transparent','opacity-60','scale-95');
                         card.classList.add('scale-105','z-20','shadow-2xl');
 
-                        // Use Capitovo blue for selected borders (both free and premium)
-                        card.classList.add('border-blue-500');
+                        // Use Capitovo blue for selected borders via CSS variable
+                        card.style.borderColor = 'var(--color-accent-blue)';
 
                         btn.textContent = 'Ausgewählt';
                         btn.classList.remove('bg-white','text-gray-900','text-primary-blue','border-gray-300','border-white','hover:bg-gray-100','hover:bg-blue-100');
@@ -199,6 +199,7 @@
                     } else {
                         card.classList.add('border-transparent','opacity-90','scale-95');
                         card.classList.remove('border-blue-500','border-yellow-400','scale-105','z-10','z-20','shadow-2xl');
+                        card.style.borderColor = '';
 
                         btn.textContent = 'Wählen';
                         btn.classList.remove('bg-gray-900','text-white','border-transparent','cursor-default','shadow-inner');

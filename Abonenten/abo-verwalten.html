@@ -257,19 +257,21 @@
                     if(totalEl) totalEl.textContent = '€ 0,-';
                 }
                 if(nextBillingEl){
-                    // Prefer explicit stored nextPayment string
-                    let nb = (stored && stored.nextPayment) ? stored.nextPayment : '';
+                    // Align behavior with konto.html:
+                    // - compute next date from `ts`
+                    // - only use stored.nextPayment if it's a real date string (ignore placeholders like '-')
+                    const rawNext = (stored && typeof stored.nextPayment === 'string') ? stored.nextPayment.trim() : '';
+                    const isPlaceholder = !rawNext || rawNext === '-' || rawNext === '–' || rawNext.toLowerCase() === 'null' || rawNext.toLowerCase() === 'undefined';
+                    let nb = isPlaceholder ? '' : rawNext;
 
-                    // If no explicit nextPayment, compute one month ahead when we can infer an active/premium subscription.
-                    // Infer from stored.subscription OR the visual/current selection.
-                    const hasStoredSub = stored && stored.subscription && stored.subscription !== 'none';
-                    const wantsPremium = planKey === 'premium' || currentPlan === 'premium' || hasStoredSub;
-                    if (!nb && wantsPremium) {
+                    const isPremiumLike = (planKey === 'premium') || (currentPlan === 'premium') || (stored && String(stored.subscription || '').toLowerCase() === 'premium');
+                    if (!nb && isPremiumLike) {
                         const startDateObj = (stored && stored.ts) ? new Date(stored.ts) : new Date();
                         const nextDateObj = new Date(startDateObj);
                         nextDateObj.setMonth(nextDateObj.getMonth() + 1);
                         nb = nextDateObj.toLocaleDateString('de-DE');
                     }
+
                     nextBillingEl.textContent = 'Nächste Abbuchung: ' + (nb || '-');
                 }
 

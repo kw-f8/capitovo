@@ -222,9 +222,11 @@
                 // If user has Free and selects Premium, go to checkout
                 if(planKey === 'premium' && stored && stored.subscription === 'free' && currentPlan !== 'premium'){
                     try{
-                        window.location.href = '../checkout.html';
+                        const target = '../checkout.html';
+                        const w = window.open(target, '_blank');
+                        if (w && typeof w.focus === 'function') w.focus();
                         return;
-                    }catch(e){ /* fallback to normal flow if redirect fails */ }
+                    }catch(e){ /* fallback to normal flow if opening a new tab fails */ }
                 }
 
                 // If selecting Free while session shows Premium, prompt confirmation

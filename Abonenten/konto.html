@@ -231,9 +231,17 @@
                 
                 document.getElementById('page-acc-contact').innerHTML = contactLine || 'Keine Adresse hinterlegt';
 
+                // Determine effective subscription for display (treat certain accounts as free)
+                let displaySubscription = sess.subscription;
+                if (!displaySubscription || displaySubscription === 'none') {
+                    if (sess.email === 'noabo@capitov.de') {
+                        displaySubscription = 'free';
+                    }
+                }
+
                 // Calculate next payment date (used in both sections)
                 let nextPaymentStr = '';
-                if (sess.subscription && sess.subscription !== 'none') {
+                if (displaySubscription && displaySubscription !== 'none') {
                     const startDateObj = sess.ts ? new Date(sess.ts) : new Date();
                     const nextDateObj = new Date(startDateObj);
                     nextDateObj.setMonth(nextDateObj.getMonth() + 1);
@@ -245,7 +253,7 @@
                 const billingDateEl = document.getElementById('page-acc-billing-date');
                 const payEditBtn = document.getElementById('page-acc-payment-edit');
 
-                if (payEl) {
+                        if (payEl) {
                     if (contact.payment) {
                         const p = contact.payment;
                         if (p.method === 'card' && p.card_last4) payEl.textContent = `Karte •••• ${p.card_last4}`;
@@ -253,11 +261,11 @@
                         else if (p.method === 'paypal' && p.paypal_email) payEl.textContent = `PayPal: ${p.paypal_email}`;
                         else payEl.textContent = 'Standard-Zahlungsmethode';
                         // Show billing date only if subscription exists
-                        if (sess.subscription && sess.subscription !== 'none') {
-                            if (billingDateEl) billingDateEl.textContent = `Nächste Abbuchung am ${nextPaymentStr}`;
-                        } else {
-                            if (billingDateEl) billingDateEl.textContent = '';
-                        }
+                                if (displaySubscription && displaySubscription !== 'none') {
+                                    if (billingDateEl) billingDateEl.textContent = `Nächste Abbuchung am ${nextPaymentStr}`;
+                                } else {
+                                    if (billingDateEl) billingDateEl.textContent = '';
+                                }
                         if(payEditBtn) payEditBtn.classList.remove('hidden');
                     } else {
                         payEl.textContent = 'Keine Zahlungsmethode hinterlegt';
@@ -272,9 +280,9 @@
                 const detailsEl = document.getElementById('page-acc-details');
                 const actionsEl = document.getElementById('page-acc-actions');
 
-                if (planEl && sess.subscription && sess.subscription !== 'none') {
+                if (planEl && displaySubscription && displaySubscription !== 'none') {
                     // Active Subscription
-                    const planName = sess.subscription.charAt(0).toUpperCase() + sess.subscription.slice(1);
+                    const planName = displaySubscription.charAt(0).toUpperCase() + displaySubscription.slice(1);
                     planEl.textContent = planName;
                     
                     // Update Status Badge
@@ -283,8 +291,8 @@
 
                     // Update Details
                     let price = '–';
-                    if (sess.subscription === 'premium') price = '€ 14,99 / Monat';
-                    if (sess.subscription === 'free') price = '€ 0,- / Monat';
+                    if (displaySubscription === 'premium') price = '€ 14,99 / Monat';
+                    if (displaySubscription === 'free') price = '€ 0,- / Monat';
                     
                     // Format date
                     const startDateObj = sess.ts ? new Date(sess.ts) : new Date();

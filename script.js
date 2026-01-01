@@ -450,16 +450,10 @@ function openFreePlanGateModal() {
             document.body.style.overflow = '';
         };
 
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) close();
-        });
-
+        // Do NOT close on overlay click or Escape for this specific modal.
+        // The modal must only be closed via the explicit lower button.
         const btn = modal.querySelector('#close-free-plan-gate');
         if (btn) btn.addEventListener('click', close);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') close();
-        });
     }
 
     modal.classList.remove('hidden');

@@ -427,7 +427,7 @@ function openFreePlanGateModal() {
                     <ul class="list-disc pl-5 space-y-1">
                         <li>Alle veröffentlichten Analysen</li>
                         <li>Neue Analysen während der Laufzeit des Abonnements</li>
-                        <li>Den Aktienmonitor mit laufenden Updates</li>
+                        <li>Den Aktienmonitor</li>
                         <li>Den Wirtschaftskalender</li>
                     </ul>
                 </div>

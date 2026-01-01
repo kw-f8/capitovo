@@ -141,13 +141,19 @@
                 .sidebar-nav ul li.logout-bottom { padding: 0; }
                 .sidebar-nav ul li.logout-bottom a.logout-link { display:flex; align-items:center; gap:10px; padding:10px 0; color:#f0f0f0; text-decoration:none; }
 
-            /* Align header and main content: use same max-width and paddings so left edges line up */
-            .abonenten-page .header-content,
-            .abonenten-page main {
+            /* Align header and main content: keep header unchanged; add extra right inset in main */
+            .abonenten-page .header-content {
                 max-width: 72rem; /* matches Tailwind's max-w-6xl (72rem = 1152px) */
                 margin: 0 auto;
-                padding-left: 1.5rem; /* 24px to match Tailwind p-6 */
+                padding-left: 1.5rem; /* 24px */
                 padding-right: 1.5rem;
+            }
+
+            .abonenten-page main {
+                max-width: 72rem;
+                margin: 0 auto;
+                padding-left: 1.5rem; /* keep left unchanged */
+                padding-right: 2.5rem; /* +16px right inset (40px total) */
             }
 
             /* Page-specific: target ~60px gap between header line and heading (content only) */

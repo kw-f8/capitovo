@@ -423,11 +423,11 @@ function openFreePlanGateModal() {
                 </div>
 
                 <div class="bg-gray-50 rounded-md p-4 text-sm text-gray-700 mb-5">
-                    <p class="font-medium text-gray-900 mb-2">Mit einem Premium Abonnement erhalten Sie vollen Zugang zu:</p>
+                    <p class="font-medium text-gray-900 mb-2">Mit dem Premium-Abonnement erhalten Sie Zugriff auf:</p>
                     <ul class="list-disc pl-5 space-y-1">
-                        <li>Analysen</li>
-                        <li>Aktienmonitor</li>
-                        <li>Wirtschaftskalender</li>
+                        <li>Alle veröffentlichten und zukünftigen Analysen</li>
+                        <li>Den Aktienmonitor mit laufenden Updates</li>
+                        <li>Den Wirtschaftskalender</li>
                     </ul>
                 </div>
 

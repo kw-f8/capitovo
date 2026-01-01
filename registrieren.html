@@ -499,6 +499,53 @@
                 }
             }
 
+            // Zeigt ein modales Bestätigungsfenster nach erfolgreicher Registrierung an,
+            // das 15 Sekunden sichtbar bleibt und dann zur Login-Seite weiterleitet.
+            function showRegistrationSuccessModal() {
+                // Schließe das Verifizierungsmodal und setze Status zurück
+                if (verificationModal) {
+                    verificationModal.classList.add('hidden');
+                }
+                resetVerificationState();
+
+                // Vermeide Duplikate
+                let successModal = document.getElementById('registration-success-modal');
+                if (!successModal) {
+                    successModal = document.createElement('div');
+                    successModal.id = 'registration-success-modal';
+                    successModal.className = 'fixed inset-0 z-[1002] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4';
+                    successModal.style.zIndex = '1002';
+                    successModal.innerHTML = `
+                        <div class="w-full max-w-sm">
+                            <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200 text-center">
+                                <h2 class="text-2xl font-semibold text-gray-900 mb-2">Registrierung erfolgreich</h2>
+                                <p class="text-sm text-gray-600 mb-4">Sie haben sich erfolgreich registriert. Sie werden in <span id="registration-success-countdown">15</span> Sekunden zum Login weitergeleitet.</p>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(successModal);
+                } else {
+                    successModal.classList.remove('hidden');
+                }
+
+                // Blockiere Hintergrundscrolling
+                document.body.style.overflow = 'hidden';
+
+                // Countdown und Weiterleitung nach 15s
+                let remaining = 15;
+                const countdownEl = document.getElementById('registration-success-countdown');
+                if (countdownEl) countdownEl.textContent = String(remaining);
+                const t = setInterval(() => {
+                    remaining -= 1;
+                    if (countdownEl) countdownEl.textContent = String(remaining);
+                    if (remaining <= 0) {
+                        clearInterval(t);
+                        // Weiterleitung zum Login
+                        window.location.replace('index.html#open-login');
+                    }
+                }, 1000);
+            }
+
             // Beim Öffnen des Modals: Code generieren und senden
             const verificationModal = document.getElementById('verification-modal');
             if (verificationModal) {
@@ -591,11 +638,8 @@
                             clearTimeout(verificationSuccessTimeout);
                             verificationSuccessTimeout = null;
                         }
-                        setVerificationHint('Code erfolgreich bestätigt', false);
-                        setVerificationControlsDisabled(true);
-                        verificationSuccessTimeout = setTimeout(() => {
-                            window.location.replace('index.html#open-login');
-                        }, 2500);
+                        // Zeige das Success-Modal und leite nach 15s weiter
+                        showRegistrationSuccessModal();
                         return;
                     }
                     if (!currentVerificationCode) {
@@ -613,11 +657,8 @@
                             clearTimeout(verificationSuccessTimeout);
                             verificationSuccessTimeout = null;
                         }
-                        setVerificationHint('Code erfolgreich bestätigt', false);
-                        setVerificationControlsDisabled(true);
-                        verificationSuccessTimeout = setTimeout(() => {
-                            window.location.replace('index.html#open-login');
-                        }, 2500);
+                        // Zeige das Success-Modal und leite nach 15s weiter
+                        showRegistrationSuccessModal();
                         return;
                     } else {
                         codeInput.value = '';

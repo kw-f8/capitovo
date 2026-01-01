@@ -1022,7 +1022,7 @@ function initTestLogin() {
             const errorMessage = document.createElement('p');
             errorMessage.id = 'login-error-message';
             errorMessage.className = 'text-red-500 text-sm mt-3 text-center'; 
-            errorMessage.textContent = 'Ungültige E-Mail oder Passwort';
+            errorMessage.textContent = 'Ungültige E-Mail-Adresse oder Passwort';
             submitButton.parentNode.insertBefore(errorMessage, submitButton.nextSibling);
         }
     });

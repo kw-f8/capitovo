@@ -409,19 +409,10 @@ function openFreePlanGateModal() {
         modal.className = 'hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4';
         modal.style.zIndex = '1001';
         modal.innerHTML = `
-            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
-                <div class="flex items-start gap-3 mb-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                            <path d="M12 8v4" />
-                            <path d="M12 16h.01" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-lg leading-6 font-bold text-gray-900">Sie nutzen aktuell das Free‑Abo</h3>
-                        <p class="text-sm text-gray-600 mt-1">Das Free‑Abo ist eingeschränkt. Einige Inhalte und Funktionen stehen nur mit Premium zur Verfügung.</p>
-                    </div>
+            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+                <div class="mb-3">
+                    <h3 class="text-lg leading-6 font-bold text-gray-900">Sie nutzen aktuell das kostenlose Abonnement</h3>
+                    <p class="text-sm text-gray-600 mt-2">Das kostenlose Abonnement ist eingeschränkt. Einige Inhalte und Funktionen stehen nur mit Premium zur Verfügung.</p>
                 </div>
 
                 <div class="bg-gray-50 rounded-md p-4 text-sm text-gray-700 mb-5">

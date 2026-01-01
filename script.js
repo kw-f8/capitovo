@@ -1087,6 +1087,8 @@ function initTestLogin() {
                 // Set session storage for paywall checks
                 sessionStorage.setItem('capitovo_logged_in', 'true');
                 sessionStorage.setItem('capitovo_subscription_active', user.sub !== 'none' && user.sub ? 'true' : 'false');
+                // Ensure the free-gate flag is cleared on new login so the gate shows for non-premium users
+                try { sessionStorage.removeItem('capitovo_free_gate_shown'); } catch(e) {}
                 
                 // Set contact data if defined for this user
                 if (USER_CONTACTS[enteredEmail]) {

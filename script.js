@@ -392,6 +392,111 @@ function openSubscriptionModal() {
     document.body.style.overflow = 'hidden'; // Block scrolling
 }
 
+/** Öffnet ein Hinweis-Modal für Nutzer im Free-Abo (eingeschränkter Zugriff) inkl. CTA zu Premium. */
+function openFreePlanGateModal() {
+    let modal = document.getElementById('free-plan-gate-modal');
+
+    // Compute checkout link that works from nested Abonenten pages.
+    let checkoutLink = 'checkout.html?plan=premium';
+    try {
+        const prefix = prefixToRepoRoot();
+        checkoutLink = prefix + 'checkout.html?plan=premium';
+    } catch (e) {}
+
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'free-plan-gate-modal';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+                <div class="flex items-start gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-primary-blue" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            <path d="M12 8v4" />
+                            <path d="M12 16h.01" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-lg leading-6 font-bold text-gray-900">Sie nutzen aktuell das Free‑Abo</h3>
+                        <p class="text-sm text-gray-600 mt-1">Das Free‑Abo ist eingeschränkt. Einige Inhalte und Funktionen stehen nur mit Premium zur Verfügung.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 rounded-md p-4 text-sm text-gray-700 mb-5">
+                    <p class="font-medium text-gray-900 mb-2">Mit Premium erhalten Sie unter anderem:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Vollen Zugriff auf Analysen</li>
+                        <li>Uneingeschränkten Zugriff auf Premium‑Bereiche</li>
+                        <li>Alle Inhalte ohne Einschränkungen</li>
+                    </ul>
+                </div>
+
+                <div class="flex flex-col gap-3">
+                    <a href="${checkoutLink}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-blue text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
+                        Premium abschließen
+                    </a>
+                    <button type="button" id="close-free-plan-gate" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                        Weiter im Free‑Abo
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        const close = () => {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        };
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) close();
+        });
+
+        const btn = modal.querySelector('#close-free-plan-gate');
+        if (btn) btn.addEventListener('click', close);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') close();
+        });
+    }
+
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+}
+
+/** Zeigt den Free-Abo Hinweis einmalig pro Session im Abonenten-Bereich. */
+function maybeShowFreePlanGate() {
+    try {
+        const path = (window.location.pathname || '').toLowerCase();
+        if (!path.includes('/abonenten/')) return;
+        // Don't show on checkout itself (if embedded/linked) or on public pages.
+        if (path.endsWith('/checkout.html')) return;
+
+        // Only show once per session/tab.
+        if (sessionStorage.getItem('capitovo_free_gate_shown') === 'true') return;
+
+        const sess = JSON.parse(localStorage.getItem('capitovo_session') || '{}');
+        const email = (sess.email || '').toString().trim().toLowerCase();
+        const sub = (sess.subscription || '').toString().trim().toLowerCase();
+
+        // Require a logged-in session.
+        const loggedIn = sessionStorage.getItem('capitovo_logged_in') === 'true' || !!email;
+        if (!loggedIn) return;
+
+        // Premium users should not see this.
+        const isPremium = (email === 'test@capitovo.de') || (sub && sub !== 'none');
+        if (isPremium) return;
+
+        // Mark as shown before opening to avoid double-open on re-inits.
+        sessionStorage.setItem('capitovo_free_gate_shown', 'true');
+        openFreePlanGateModal();
+    } catch (e) {
+        // fail silently
+    }
+}
+
 /** Erstellt eine größere, gestaltete Karte für die Abonnenten-Seite. */
 function createMemberAnalysisCard(a, idx, showFavorites = false){
     const title = a.title || 'Unbenannte Analyse';
@@ -1486,6 +1591,9 @@ document.addEventListener('DOMContentLoaded', () => {
     try { if (document.getElementById('analysis-detail')) renderAnalysisDetail(); } catch(e){}
     // 8. Ensure header logo on Abonenten pages links back to the Abonenten start page
     try { initLogoLinkBehavior(); } catch(e) { /* ignore */ }
+
+    // 8b. Show Free-Abo gate once per session inside members area
+    try { maybeShowFreePlanGate(); } catch(e) { /* ignore */ }
 
     // 9. Ensure Rechtliches links do NOT open a new tab (same-tab navigation)
     try { initLegalLinksSameTab(); } catch(e) { /* ignore */ }

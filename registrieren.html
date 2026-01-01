@@ -203,10 +203,23 @@
             <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200 text-center">
                 <h2 class="text-2xl font-semibold text-gray-900 mb-2">Registrierung erfolgreich</h2>
                 <p class="text-sm text-gray-600">
-                    Sie haben sich erfolgreich registriert. Sie werden in
-                    <span id="registration-success-countdown">15</span>
-                    Sekunden zum Login weitergeleitet.
+                    Sie haben sich erfolgreich registriert. Sie werden automatisch zum Login weitergeleitet.
                 </p>
+
+                <div class="mt-5 flex justify-center">
+                    <div class="relative" style="width:96px; height:96px;">
+                        <svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true" class="block">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="8" class="text-gray-200"></circle>
+                            <circle id="registration-success-progress" cx="50" cy="50" r="42" fill="none" stroke-width="8" stroke-linecap="round"
+                                style="stroke: var(--color-accent-blue); transform: rotate(-90deg); transform-origin: 50% 50%; stroke-dasharray: 0; stroke-dashoffset: 0;"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-xl font-semibold text-gray-900">
+                                <span id="registration-success-countdown">15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -531,23 +544,52 @@
                 successModal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
 
-                // Countdown und Weiterleitung nach 15s
+                // Countdown + Ring-Progress (15s) und danach Redirect
                 if (registrationSuccessInterval) {
                     clearInterval(registrationSuccessInterval);
                     registrationSuccessInterval = null;
                 }
-                let remaining = 15;
+
+                const totalMs = 15000;
+                const start = Date.now();
+                let lastShownSeconds = null;
+
                 const countdownEl = document.getElementById('registration-success-countdown');
-                if (countdownEl) countdownEl.textContent = String(remaining);
-                registrationSuccessInterval = setInterval(() => {
-                    remaining -= 1;
-                    if (countdownEl) countdownEl.textContent = String(remaining);
-                    if (remaining <= 0) {
+                const progressEl = document.getElementById('registration-success-progress');
+
+                const radius = 42;
+                const circumference = 2 * Math.PI * radius;
+                if (progressEl) {
+                    progressEl.style.strokeDasharray = String(circumference);
+                    progressEl.style.strokeDashoffset = '0';
+                }
+
+                const tick = () => {
+                    const elapsed = Date.now() - start;
+                    const remainingMs = Math.max(0, totalMs - elapsed);
+                    const remainingSeconds = Math.ceil(remainingMs / 1000);
+                    const progress = remainingMs / totalMs; // 1 -> 0
+
+                    if (countdownEl && remainingSeconds !== lastShownSeconds) {
+                        countdownEl.textContent = String(remainingSeconds);
+                        lastShownSeconds = remainingSeconds;
+                    }
+
+                    if (progressEl) {
+                        const dashOffset = circumference * (1 - progress);
+                        progressEl.style.strokeDashoffset = String(dashOffset);
+                    }
+
+                    if (remainingMs <= 0) {
                         clearInterval(registrationSuccessInterval);
                         registrationSuccessInterval = null;
                         window.location.replace('index.html#open-login');
                     }
-                }, 1000);
+                };
+
+                // initial paint
+                tick();
+                registrationSuccessInterval = setInterval(tick, 50);
             }
 
             // Beim Öffnen des Modals: Code generieren und senden

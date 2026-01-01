@@ -417,7 +417,7 @@ function openFreePlanGateModal() {
                             <line x1="12" y1="8" x2="12" y2="12" />
                             <circle cx="12" cy="16" r="0.5" />
                         </svg>
-                        <h3 class="text-2xl leading-7 font-bold text-gray-900 whitespace-nowrap" style="margin:0;">Sie nutzen aktuell das kostenlose Abonnement</h3>
+                        <h3 class="text-xl leading-6 font-bold text-gray-900 whitespace-nowrap" style="margin:0;">Sie nutzen aktuell das kostenlose Abonnement</h3>
                     </div>
                     <p class="text-sm text-gray-600 mt-3 mx-auto" style="max-width:520px;">Das kostenlose Abonnement ist eingeschränkt. Einige Inhalte und Funktionen stehen nur mit Premium zur Verfügung.</p>
                 </div>

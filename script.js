@@ -433,10 +433,10 @@ function openFreePlanGateModal() {
 
                 <div class="flex flex-col gap-3">
                     <a href="${checkoutLink}" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-blue text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:text-sm">
-                        Premium abschließen
+                        Premium Abonnement abschließen
                     </a>
                     <button type="button" id="close-free-plan-gate" class="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
-                        Weiter im Free‑Abo
+                        Weiter mit kostenlosem Zugang
                     </button>
                 </div>
             </div>

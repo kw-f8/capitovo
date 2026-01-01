@@ -1589,9 +1589,61 @@ function initLogoLinkBehavior(){
  * ansonsten zeigt er ein einfaches `confirm()` an.
  */
 function initLogoutHandlers(){
-    const modal = document.getElementById('logout-confirm-modal');
-    const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-    const redirectPath = isInAbonenten ? '../index.html' : 'index.html';
+    // Ensure we always have the designed logout modal available.
+    // Some pages ship without the markup; in that case we inject it.
+    let modal = document.getElementById('logout-confirm-modal');
+
+    function ensureLogoutModal(){
+        modal = document.getElementById('logout-confirm-modal');
+        if (modal) return modal;
+        try{
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `
+                <div id="logout-confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+                    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
+                        <h3 class="text-lg font-semibold mb-2">Abmelden</h3>
+                        <p class="text-sm text-gray-700 mb-4">Möchten Sie sich wirklich abmelden? Lokale Sitzungsdaten werden entfernt.</p>
+                        <div class="flex gap-3">
+                            <button id="logout-confirm-no" class="flex-1 py-2 px-4 rounded border border-gray-300 text-gray-700">Abbrechen</button>
+                            <button id="logout-confirm-yes" class="flex-1 py-2 px-4 rounded bg-primary-blue text-white">Abmelden</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(wrapper.firstElementChild);
+            modal = document.getElementById('logout-confirm-modal');
+        }catch(e){
+            // If injection fails for any reason, we'll fall back to confirm below.
+            modal = null;
+        }
+        return modal;
+    }
+
+    function computeIndexRedirect(){
+        try{
+            const pathname = (window.location.pathname || '').split('?')[0].split('#')[0];
+            const lower = pathname.toLowerCase();
+
+            // If we're inside /Abonenten/, we can reliably compute the repo base (/capitovo) on GitHub Pages.
+            if (lower.includes('/abonenten/')) {
+                const base = repoBasePathBefore('Abonenten');
+                return (base || '') + '/index.html';
+            }
+
+            // For non-Abonenten pages: on *.github.io repos, the first path segment is usually the repo name.
+            const parts = pathname.split('/').filter(Boolean);
+            if (window.location.hostname && window.location.hostname.endsWith('github.io') && parts.length > 0) {
+                return '/' + parts[0] + '/index.html';
+            }
+
+            // Custom domain or root-hosted: assume index.html at root.
+            return '/index.html';
+        }catch(e){
+            return '/index.html';
+        }
+    }
+
+    const redirectPath = computeIndexRedirect();
 
     function doLogout(){
         try{ localStorage.removeItem('capitovo_session'); }catch(e){}
@@ -1608,20 +1660,22 @@ function initLogoutHandlers(){
     const links = Array.from(document.querySelectorAll('a.logout-link'));
     if (!links.length) return;
 
-    if (modal) {
+    // Prefer modal (injected or existing). Only fall back to confirm if we cannot create/find it.
+    const ensuredModal = ensureLogoutModal();
+    if (ensuredModal) {
         const yesBtn = document.getElementById('logout-confirm-yes');
         const noBtn = document.getElementById('logout-confirm-no');
-        function openConfirm(){ modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-        function closeConfirm(){ modal.classList.add('hidden'); document.body.style.overflow = ''; }
+        function openConfirm(){ ensuredModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function closeConfirm(){ ensuredModal.classList.add('hidden'); document.body.style.overflow = ''; }
         if (yesBtn) yesBtn.addEventListener('click', function(e){ e.preventDefault(); closeConfirm(); doLogout(); });
         if (noBtn) noBtn.addEventListener('click', function(e){ e.preventDefault(); closeConfirm(); });
         links.forEach(l => l.addEventListener('click', function(e){ e.preventDefault(); openConfirm(); }));
+        ensuredModal.addEventListener('click', function(e){ if (e.target === ensuredModal) closeConfirm(); });
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeConfirm(); });
     } else {
         links.forEach(l => l.addEventListener('click', function(e){
             e.preventDefault();
-            if (window.confirm('Möchten Sie sich wirklich abmelden?')) {
-                doLogout();
-            }
+            if (window.confirm('Möchten Sie sich wirklich abmelden?')) doLogout();
         }));
     }
 }

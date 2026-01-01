@@ -425,7 +425,8 @@ function openFreePlanGateModal() {
                 <div class="rounded-md p-4 text-sm text-gray-700 mb-5" style="border:1px solid rgba(0,145,214,0.12); box-shadow: 0 4px 12px rgba(2,6,23,0.04); background-color:#ffffff;">
                     <p class="font-bold text-gray-900 mb-2">Mit dem Premium Abonnement erhalten Sie Zugriff auf:</p>
                     <ul class="list-disc pl-5 space-y-1">
-                        <li>Alle veröffentlichten und zukünftigen Analysen</li>
+                        <li>Alle veröffentlichten Analysen</li>
+                        <li>Neue Analysen während der Laufzeit des Abonnements</li>
                         <li>Den Aktienmonitor mit laufenden Updates</li>
                         <li>Den Wirtschaftskalender</li>
                     </ul>

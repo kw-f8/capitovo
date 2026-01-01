@@ -402,12 +402,17 @@
 
             try{
                 const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
-                const isFreeTest = sess && sess.email === 'noabo@capitovo.de';
+                const email = (sess && sess.email) ? String(sess.email) : '';
+                const isFreeTest = email === 'noabo@capitovo.de';
                 const isFreeSub = sess && sess.subscription === 'free';
-                if (isFreeTest || isFreeSub) {
-                    // Run immediately and once again after the event loop, to override any late DOM writes
+                const planText = (document.getElementById('page-acc-plan')?.textContent || '').trim().toLowerCase();
+                const isFreeDOM = planText === 'free';
+
+                if (isFreeTest || isFreeSub || isFreeDOM) {
+                    // Run immediately and again shortly after, to override any late DOM writes
                     applyFreeUI();
                     setTimeout(applyFreeUI, 0);
+                    setTimeout(applyFreeUI, 50);
                 }
             }catch(e){}
         })();

@@ -234,7 +234,8 @@
                 // Determine effective subscription for display (treat certain accounts as free)
                 let displaySubscription = sess.subscription;
                 if (!displaySubscription || displaySubscription === 'none') {
-                    if (sess.email === 'noabo@capitov.de') {
+                    // Free test account (note: domain is capitovo.de)
+                    if (sess.email === 'noabo@capitovo.de') {
                         displaySubscription = 'free';
                     }
                 }
@@ -337,22 +338,26 @@
                         `;
                     }
                 } else {
-                    // Kein aktives Abo, aber Free-User (z.B. noabo@capitov.de) soll Format wie Premium bekommen
-                    if (sess.email === 'noabo@capitov.de' || displaySubscription === 'free') {
+                    // Kein aktives Abo, aber Free-User (z.B. noabo@capitovo.de) soll Format wie Premium bekommen
+                    if (sess.email === 'noabo@capitovo.de' || displaySubscription === 'free') {
                         planEl.textContent = 'Free';
-                        statusEl.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800";
-                        statusEl.innerHTML = '<span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>Aktiv';
+                        // Free: hide badge entirely (no "Inaktiv")
+                        if (statusEl) statusEl.style.display = 'none';
                         detailsEl.innerHTML = `
                             <div class="flex justify-between text-sm">
                                 <span class="text-gray-500">Preis</span>
                                 <span class="font-medium text-gray-900">€ 0,- / Monat</span>
                             </div>
                         `;
-                        actionsEl.innerHTML = '';
+                        actionsEl.innerHTML = `
+                            <a href="../checkout.html?ref=account" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                                Zu Premium wechseln
+                            </a>
+                        `;
                     }
                 }
                 // Fallback: force UI for the known Free test account
-                if (typeof sess !== 'undefined' && sess && sess.email === 'noabo@capitov.de') {
+                if (typeof sess !== 'undefined' && sess && sess.email === 'noabo@capitovo.de') {
                     try {
                         const fallbackPlanEl = document.getElementById('page-acc-plan');
                         const fallbackStatusEl = document.getElementById('page-acc-status');
@@ -382,21 +387,27 @@
     <script>
         // Final enforcer: run after ../script.js to ensure Free-test account UI is applied
         (function(){
+            function applyFreeUI(){
+                try{
+                    const planEl = document.getElementById('page-acc-plan');
+                    const statusEl = document.getElementById('page-acc-status');
+                    const detailsEl = document.getElementById('page-acc-details');
+                    const actionsEl = document.getElementById('page-acc-actions');
+                    if (planEl) planEl.textContent = 'Free';
+                    if (statusEl) statusEl.style.display = 'none';
+                    if (detailsEl) detailsEl.innerHTML = `\n                        <div class="flex justify-between text-sm">\n                            <span class="text-gray-500">Preis</span>\n                            <span class="font-medium text-gray-900">€ 0,- / Monat</span>\n                        </div>\n                    `;
+                    if (actionsEl) actionsEl.innerHTML = `\n                        <a href="../checkout.html?ref=account" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">\n                            Zu Premium wechseln\n                        </a>\n                    `;
+                }catch(e){console.error('enforcer failed', e);} 
+            }
+
             try{
                 const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
-                if (sess && sess.email === 'noabo@capitov.de') {
-                    document.addEventListener('DOMContentLoaded', function(){
-                        try{
-                            const planEl = document.getElementById('page-acc-plan');
-                            const statusEl = document.getElementById('page-acc-status');
-                            const detailsEl = document.getElementById('page-acc-details');
-                            const actionsEl = document.getElementById('page-acc-actions');
-                            if (planEl) planEl.textContent = 'Free';
-                            if (statusEl) statusEl.style.display = 'none';
-                            if (detailsEl) detailsEl.innerHTML = `\n                                <div class="flex justify-between text-sm">\n                                    <span class="text-gray-500">Preis</span>\n                                    <span class="font-medium text-gray-900">€ 0,- / Monat</span>\n                                </div>\n                            `;
-                            if (actionsEl) actionsEl.innerHTML = `\n                                <a href="../checkout.html?ref=account" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">\n                                    Zu Premium wechseln\n                                </a>\n                            `;
-                        }catch(e){console.error('enforcer failed', e);}   
-                    });
+                const isFreeTest = sess && sess.email === 'noabo@capitovo.de';
+                const isFreeSub = sess && sess.subscription === 'free';
+                if (isFreeTest || isFreeSub) {
+                    // Run immediately and once again after the event loop, to override any late DOM writes
+                    applyFreeUI();
+                    setTimeout(applyFreeUI, 0);
                 }
             }catch(e){}
         })();

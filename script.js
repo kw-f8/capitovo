@@ -411,13 +411,13 @@ function openFreePlanGateModal() {
         modal.innerHTML = `
             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-xl">
                 <div class="mb-3 text-center">
-                    <div class="flex items-center gap-3 justify-center w-full" style="flex-wrap:nowrap;">
+                    <div class="flex flex-wrap items-center justify-center gap-2 w-full">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <circle cx="12" cy="12" r="9" />
                             <line x1="12" y1="8" x2="12" y2="12" />
                             <circle cx="12" cy="16" r="0.5" />
                         </svg>
-                        <h3 class="text-xl leading-6 font-bold text-gray-900 whitespace-nowrap" style="margin:0;">Sie nutzen aktuell das kostenlose Abonnement</h3>
+                        <h3 class="text-xl leading-6 font-bold text-gray-900 text-center" style="margin:0;">Sie nutzen aktuell das kostenlose Abonnement</h3>
                     </div>
                     <p class="text-sm text-gray-600 mt-3 mx-auto" style="max-width:520px;">Der kostenlose Zugang bietet Ihnen einen begrenzten Einblick</p>
                 </div>

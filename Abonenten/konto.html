@@ -379,6 +379,29 @@
     </script>
     <script src="../script.js?v=6"></script>
 
+    <script>
+        // Final enforcer: run after ../script.js to ensure Free-test account UI is applied
+        (function(){
+            try{
+                const sess = JSON.parse(localStorage.getItem('capitovo_session')||'null') || {};
+                if (sess && sess.email === 'noabo@capitov.de') {
+                    document.addEventListener('DOMContentLoaded', function(){
+                        try{
+                            const planEl = document.getElementById('page-acc-plan');
+                            const statusEl = document.getElementById('page-acc-status');
+                            const detailsEl = document.getElementById('page-acc-details');
+                            const actionsEl = document.getElementById('page-acc-actions');
+                            if (planEl) planEl.textContent = 'Free';
+                            if (statusEl) statusEl.style.display = 'none';
+                            if (detailsEl) detailsEl.innerHTML = `\n                                <div class="flex justify-between text-sm">\n                                    <span class="text-gray-500">Preis</span>\n                                    <span class="font-medium text-gray-900">€ 0,- / Monat</span>\n                                </div>\n                            `;
+                            if (actionsEl) actionsEl.innerHTML = `\n                                <a href="../checkout.html?ref=account" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">\n                                    Zu Premium wechseln\n                                </a>\n                            `;
+                        }catch(e){console.error('enforcer failed', e);}   
+                    });
+                }
+            }catch(e){}
+        })();
+    </script>
+
     <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
         <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
         <nav class="sidebar-nav" aria-label="Hauptnavigation">

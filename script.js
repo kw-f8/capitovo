@@ -422,8 +422,8 @@ function openFreePlanGateModal() {
                     <p class="text-sm text-gray-600 mt-3 mx-auto" style="max-width:520px;">Der kostenlose Zugang bietet Ihnen nur einen begrenzten Einblick.</p>
                 </div>
 
-                <div class="bg-gray-50 rounded-md p-4 text-sm text-gray-700 mb-5">
-                    <p class="font-medium text-gray-900 mb-2">Mit dem Premium-Abonnement erhalten Sie Zugriff auf:</p>
+                <div class="bg-gray-50 rounded-md p-4 text-sm text-gray-700 mb-5" style="border-left:4px solid var(--color-accent-blue); background-color: rgba(0,145,214,0.04);">
+                    <p class="font-medium text-gray-900 mb-2">Mit dem Premium Abonnement erhalten Sie Zugriff auf:</p>
                     <ul class="list-disc pl-5 space-y-1">
                         <li>Alle veröffentlichten und zukünftigen Analysen</li>
                         <li>Den Aktienmonitor mit laufenden Updates</li>

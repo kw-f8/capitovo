@@ -197,6 +197,20 @@
         </div>
     </div>
 
+    <!-- Registrierung erfolgreich Modal (15s sichtbar, danach Redirect zum Login) -->
+    <div id="registration-success-modal" class="hidden fixed inset-0 z-[1002] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4">
+        <div class="w-full max-w-sm">
+            <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200 text-center">
+                <h2 class="text-2xl font-semibold text-gray-900 mb-2">Registrierung erfolgreich</h2>
+                <p class="text-sm text-gray-600">
+                    Sie haben sich erfolgreich registriert. Sie werden in
+                    <span id="registration-success-countdown">15</span>
+                    Sekunden zum Login weitergeleitet.
+                </p>
+            </div>
+        </div>
+    </div>
+
     <footer class="site-footer mt-auto" data-scroll="fade-up" data-scroll-delay="40">
         <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
@@ -501,53 +515,36 @@
 
             // Zeigt ein modales Bestätigungsfenster nach erfolgreicher Registrierung an,
             // das 15 Sekunden sichtbar bleibt und dann zur Login-Seite weiterleitet.
+            let registrationSuccessInterval = null;
             function showRegistrationSuccessModal() {
                 // Schließe das Verifizierungsmodal und setze Status zurück
-                if (verificationModal) {
-                    verificationModal.classList.add('hidden');
-                }
+                if (verificationModal) verificationModal.classList.add('hidden');
                 resetVerificationState();
 
-                // Vermeide Duplikate
-                let successModal = document.getElementById('registration-success-modal');
+                const successModal = document.getElementById('registration-success-modal');
                 if (!successModal) {
-                    successModal = document.createElement('div');
-                    successModal.id = 'registration-success-modal';
-                    successModal.className = 'fixed inset-0 z-[1002] bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4';
-                    successModal.style.zIndex = '1002';
-                    successModal.innerHTML = `
-                        <div class="w-full max-w-sm">
-                            <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200 text-center">
-                                <h2 class="text-2xl font-semibold text-gray-900 mb-2">Registrierung erfolgreich</h2>
-                                <p class="text-sm text-gray-600 mb-4">Sie haben sich erfolgreich registriert. Sie werden in <span id="registration-success-countdown">15</span> Sekunden zum Login weitergeleitet.</p>
-                            </div>
-                        </div>
-                    `;
-                    document.body.appendChild(successModal);
-                    console.log('registration-success-modal appended');
-                } else {
-                    successModal.classList.remove('hidden');
-                    console.log('registration-success-modal shown (existing)');
+                    // Falls das Modal aus irgendeinem Grund fehlt, fallback: direkt weiterleiten.
+                    window.location.replace('index.html#open-login');
+                    return;
                 }
 
-                // Blockiere Hintergrundscrolling
+                successModal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
-                if (successModal) {
-                    // Ensure visible
-                    successModal.style.display = '';
-                    successModal.classList.remove('hidden');
-                }
 
                 // Countdown und Weiterleitung nach 15s
+                if (registrationSuccessInterval) {
+                    clearInterval(registrationSuccessInterval);
+                    registrationSuccessInterval = null;
+                }
                 let remaining = 15;
                 const countdownEl = document.getElementById('registration-success-countdown');
                 if (countdownEl) countdownEl.textContent = String(remaining);
-                const t = setInterval(() => {
+                registrationSuccessInterval = setInterval(() => {
                     remaining -= 1;
                     if (countdownEl) countdownEl.textContent = String(remaining);
                     if (remaining <= 0) {
-                        clearInterval(t);
-                        // Weiterleitung zum Login
+                        clearInterval(registrationSuccessInterval);
+                        registrationSuccessInterval = null;
                         window.location.replace('index.html#open-login');
                     }
                 }, 1000);

@@ -406,7 +406,8 @@ function openFreePlanGateModal() {
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'free-plan-gate-modal';
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+        modal.className = 'hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4';
+        modal.style.zIndex = '1001';
         modal.innerHTML = `
             <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
                 <div class="flex items-start gap-3 mb-3">

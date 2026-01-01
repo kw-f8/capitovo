@@ -524,12 +524,19 @@
                         </div>
                     `;
                     document.body.appendChild(successModal);
+                    console.log('registration-success-modal appended');
                 } else {
                     successModal.classList.remove('hidden');
+                    console.log('registration-success-modal shown (existing)');
                 }
 
                 // Blockiere Hintergrundscrolling
                 document.body.style.overflow = 'hidden';
+                if (successModal) {
+                    // Ensure visible
+                    successModal.style.display = '';
+                    successModal.classList.remove('hidden');
+                }
 
                 // Countdown und Weiterleitung nach 15s
                 let remaining = 15;

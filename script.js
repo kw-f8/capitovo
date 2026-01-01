@@ -419,7 +419,7 @@ function openFreePlanGateModal() {
                         </svg>
                         <h3 class="text-xl leading-6 font-bold text-gray-900 whitespace-nowrap" style="margin:0;">Sie nutzen aktuell das kostenlose Abonnement</h3>
                     </div>
-                    <p class="text-sm text-gray-600 mt-3 mx-auto" style="max-width:520px;">Der kostenlose Zugang bietet Ihnen einen begrenzten Einblick in ausgewählte Inhalte.</p>
+                    <p class="text-sm text-gray-600 mt-3 mx-auto" style="max-width:520px;">Der kostenlose Zugang bietet Ihnen einen begrenzten Einblick</p>
                 </div>
 
                 <div class="rounded-md p-4 text-sm text-gray-700 mb-5" style="border:1px solid rgba(0,145,214,0.12); box-shadow: 0 4px 12px rgba(2,6,23,0.04); background-color:#ffffff;">

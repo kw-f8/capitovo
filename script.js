@@ -409,15 +409,15 @@ function openFreePlanGateModal() {
         modal.className = 'hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4';
         modal.style.zIndex = '1001';
         modal.innerHTML = `
-            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+            <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-xl">
                 <div class="mb-3 text-center">
-                    <div class="flex items-center gap-3 justify-center mx-auto" style="flex-wrap:nowrap;">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <div class="flex items-center gap-3 justify-center w-full" style="flex-wrap:nowrap;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <circle cx="12" cy="12" r="9" />
                             <line x1="12" y1="8" x2="12" y2="12" />
                             <circle cx="12" cy="16" r="0.5" />
                         </svg>
-                        <h3 class="text-2xl leading-7 font-bold text-gray-900 whitespace-nowrap">Sie nutzen aktuell das kostenlose Abonnement</h3>
+                        <h3 class="text-3xl leading-8 font-extrabold text-gray-900 whitespace-nowrap" style="margin:0;">Sie nutzen aktuell das kostenlose Abonnement</h3>
                     </div>
                     <p class="text-sm text-gray-600 mt-3 mx-auto" style="max-width:520px;">Das kostenlose Abonnement ist eingeschränkt. Einige Inhalte und Funktionen stehen nur mit Premium zur Verfügung.</p>
                 </div>

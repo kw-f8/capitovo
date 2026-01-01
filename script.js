@@ -423,7 +423,7 @@ function openFreePlanGateModal() {
                 </div>
 
                 <div class="bg-gray-50 rounded-md p-4 text-sm text-gray-700 mb-5">
-                    <p class="font-medium text-gray-900 mb-2">Mit Premium erhalten Sie unter anderem:</p>
+                    <p class="font-medium text-gray-900 mb-2">Mit einem Premium Abonnement erhalten Sie vollen Zugang zu:</p>
                     <ul class="list-disc pl-5 space-y-1">
                         <li>Vollen Zugriff auf Analysen</li>
                         <li>Uneingeschränkten Zugriff auf Premium‑Bereiche</li>

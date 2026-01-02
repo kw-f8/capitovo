@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="980px" height="680px" viewBox="0 0 980 680" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>WW VISA</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#EDEDED" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="-2.84217094e-14" width="900" height="600" rx="80"></rect>
+        <filter x="-6.7%" y="-10.0%" width="113.3%" height="120.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feMorphology radius="2.5" operator="dilate" in="SourceAlpha" result="shadowSpreadOuter1"></feMorphology>
+            <feOffset dx="0" dy="0" in="shadowSpreadOuter1" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="17.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="WW-VISA" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(40, 40)">
+            <g id="Rectangle">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" fill-rule="evenodd" xlink:href="#path-2"></use>
+            </g>
+            <g id="Logo" transform="translate(50.5, 170.5)" fill="#1434CB" fill-rule="nonzero">
+                <path d="M521.06908,0 C464.266103,0 413.504215,29.442121 413.504215,83.8386995 C413.504215,146.221304 503.532351,150.530044 503.532351,181.869335 C503.532351,195.064978 488.410158,206.877149 462.582059,206.877149 C425.926941,206.877149 398.530786,190.371997 398.530786,190.371997 L386.808376,245.264151 C386.808376,245.264151 418.368231,259.206004 460.268834,259.206004 C522.372671,259.206004 571.24101,228.318286 571.24101,172.991561 C571.24101,107.073085 480.837762,102.892401 480.837762,73.8043135 C480.837762,63.467417 493.251783,52.1412993 519.005936,52.1412993 C548.06445,52.1412993 571.772429,64.1450466 571.772429,64.1450466 L583.244765,11.12848 C583.244765,11.12848 557.448434,0 521.06908,0 L521.06908,0 Z M1.37542975,4.00125709 L0,12.0037553 C0,12.0037553 23.8971727,16.3773207 45.4204431,25.1015966 C73.1334543,35.1057604 75.1076116,40.9296641 79.7749299,59.0184482 L130.634572,255.079718 L198.812131,255.079718 L303.844952,4.00125709 L235.823693,4.00125709 L168.333854,174.710848 L140.793995,30.0093842 C138.268349,13.4484159 125.475148,4.00125709 109.815569,4.00125709 L1.37542975,4.00125709 Z M331.197247,4.00125709 L277.836824,255.079718 L342.700846,255.079718 L395.873713,4.00125709 L331.197247,4.00125709 Z M692.966547,4.00125709 C677.325458,4.00125709 669.038259,12.3751907 662.95717,27.0084394 L567.927472,255.079718 L635.948731,255.079718 L649.109091,217.067836 L731.978741,217.067836 L739.981239,255.079718 L800,255.079718 L747.639882,4.00125709 L692.966547,4.00125709 L692.966547,4.00125709 Z M701.813065,71.8349522 L721.975619,166.051894 L667.958732,166.051894 L701.813065,71.8349522 L701.813065,71.8349522 Z" id="path3789"></path>
+            </g>
+        </g>
+    </g>
+</svg>

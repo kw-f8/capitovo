@@ -59,7 +59,7 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-8">
                         <!-- Free -->
-                        <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300" >
+                        <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between" >
                             <div class="relative">
                                 <span id="selected-badge-free" class="absolute -top-10 left-4 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden" style="background-color:var(--color-accent-blue);">Aktuelles Abonnement</span>
                             </div>
@@ -459,11 +459,12 @@
                         card.classList.remove('border-blue-500', 'border-yellow-400', 'scale-105', 'z-10', 'z-20', 'shadow-2xl');
                         card.style.filter = 'none';
 
-                        btn.textContent = 'Wählen';
-                        
+                        // Only change button text if it's not disabled
+                        if (!btn.disabled) btn.textContent = 'Wählen';
+
                         // Reset classes
                         btn.classList.remove('bg-gray-900', 'text-white', 'border-transparent', 'cursor-default', 'shadow-inner');
-                        
+
                         if (key === 'premium') {
                             btn.classList.add('bg-white', 'text-primary-blue', 'border-white', 'hover:bg-blue-100');
                         } else {

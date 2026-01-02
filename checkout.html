@@ -135,13 +135,6 @@
                     </div>
 
                     <div class="border-t border-gray-200 pt-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-gray-600">Zwischensumme</span>
-                            <span id="summary-subtotal" class="font-medium">€ 0,-</span>
-                        </div>
-
-
-
                         <div class="flex justify-between items-center text-xl font-extrabold text-gray-900 mt-4">
                             <span>Gesamt</span>
                             <span id="summary-total">€ 0,-</span>
@@ -424,7 +417,6 @@
             };
 
             const totalEl = document.getElementById('summary-total');
-            const subtotalEl = document.getElementById('summary-subtotal');
             
             window.updateCheckoutSummary = function(planKey) {
                 const p = plans[planKey];
@@ -480,7 +472,6 @@
                 
                 // Update totals
                 if(totalEl) totalEl.textContent = p.price;
-                if(subtotalEl) subtotalEl.textContent = p.price;
 
                 // Update Summary Box
                 const summaryBox = document.getElementById('checkout-plan-summary');

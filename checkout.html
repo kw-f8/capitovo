@@ -87,7 +87,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-transparent rounded-lg text-base font-medium text-gray-900 bg-white cursor-default mt-4">Ihr aktuelles Abonnement</button>
+                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white cursor-default mt-4">Ihr aktuelles Abonnement</button>
                         </div>
 
                         <!-- Premium -->
@@ -433,7 +433,9 @@
                         card.style.filter = 'none';
 
                         btn.textContent = 'Ihr aktuelles Abonnement';
-                        btn.classList.remove('hover:bg-gray-100', 'hover:bg-blue-100', 'bg-gray-900', 'text-white', 'text-primary-blue', 'border-gray-300', 'border-white', 'shadow-inner');
+                        // Keep the same grey bordered look as in abo-verwalten (but disabled / no hover)
+                        btn.classList.remove('hover:bg-gray-100', 'hover:bg-blue-100', 'bg-gray-900', 'text-white', 'text-primary-blue', 'border-white', 'shadow-inner');
+                        btn.classList.add('bg-white', 'text-gray-900', 'border-gray-300', 'shadow-sm');
                         return;
                     }
                     

@@ -232,9 +232,13 @@
                     if (cancelBtn) {
                         // Preserve the svg icon and replace only the adjacent text node to keep markup stable
                         try{
-                            Array.from(cancelBtn.childNodes).forEach(node => {
-                                if (node.nodeType === Node.TEXT_NODE) node.nodeValue = ' Zurück';
-                            });
+                            const svg = cancelBtn.querySelector('svg');
+                            if (svg) {
+                                cancelBtn.innerHTML = svg.outerHTML + ' Zurück';
+                            } else {
+                                // Fallback: replace only textual content
+                                cancelBtn.textContent = 'Zurück';
+                            }
                         }catch(e){}
 
                         let backHref = 'index.html';

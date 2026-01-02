@@ -419,8 +419,9 @@ html.cap-sub-premium #cancel-box { display: block; }
 /* Dimmed / de-emphasized plan styling (used on warenkorb when Premium is selected) */
 .plan-dimmed {
     position: relative;
-    filter: blur(2px) brightness(0.75) saturate(0.9);
-    transition: filter 180ms ease, opacity 180ms ease;
+    /* Subtle de-emphasis: slight blur + mild darkening */
+    filter: blur(0.6px) brightness(0.92) saturate(0.98);
+    transition: filter 240ms ease, opacity 240ms ease;
     pointer-events: none; /* prevent interactions on the dimmed card */
 }
 .plan-dimmed::after {
@@ -428,7 +429,7 @@ html.cap-sub-premium #cancel-box { display: block; }
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: rgba(0,0,0,0.12);
+    background: rgba(0,0,0,0.06); /* much lighter overlay */
     pointer-events: none;
 }
 

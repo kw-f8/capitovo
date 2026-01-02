@@ -11,15 +11,11 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script>
-        // Prevent flash: apply class based on stored subscription before paint
+        // Force premium visual on checkout to avoid flash of 'free' selection
         (function(){
             try{
-                var raw = localStorage.getItem('capitovo_session');
-                var sub = 'free';
-                if(raw){ try{ var obj = JSON.parse(raw); if(obj && obj.subscription) sub = String(obj.subscription).toLowerCase(); }catch(e){}
-                }
-                if(sub === 'premium') document.documentElement.classList.add('cap-sub-premium');
-                else document.documentElement.classList.add('cap-sub-free');
+                document.documentElement.classList.remove('cap-sub-free');
+                document.documentElement.classList.add('cap-sub-premium');
             }catch(e){}
         })();
     </script>
@@ -90,7 +86,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-transparent rounded-lg shadow-inner text-base font-medium text-gray-900 bg-white cursor-default mt-4">Ihr aktuelles Abonnement</button>
+                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-transparent rounded-lg text-base font-medium text-gray-900 bg-white cursor-default mt-4">Ihr aktuelles Abonnement</button>
                         </div>
 
                         <!-- Premium -->

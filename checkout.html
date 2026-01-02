@@ -11,15 +11,12 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script>
-        // Apply class based on stored subscription before paint
+        // Checkout is the upgrade flow: current subscription should be shown as Free.
+        // Set this before paint to avoid any badge flicker.
         (function(){
             try{
-                var raw = localStorage.getItem('capitovo_session');
-                var sub = 'free';
-                if(raw){ try{ var obj = JSON.parse(raw); if(obj && obj.subscription) sub = String(obj.subscription).toLowerCase(); }catch(e){}
-                }
-                if(sub === 'premium') document.documentElement.classList.add('cap-sub-premium');
-                else document.documentElement.classList.add('cap-sub-free');
+                document.documentElement.classList.remove('cap-sub-premium');
+                document.documentElement.classList.add('cap-sub-free');
             }catch(e){}
         })();
     </script>
@@ -428,6 +425,17 @@
                 ['free', 'premium'].forEach(key => {
                     const card = document.getElementById(`card-${key}`);
                     const btn = card.querySelector('.select-plan-btn');
+
+                    // Free is locked on checkout: keep it visually static (no hover/highlight/animation)
+                    if (key === 'free' && btn && btn.disabled) {
+                        card.classList.remove('opacity-60', 'opacity-90', 'scale-95', 'scale-105', 'z-10', 'z-20', 'shadow-2xl', 'border-blue-500', 'border-yellow-400');
+                        card.classList.add('border-transparent');
+                        card.style.filter = 'none';
+
+                        btn.textContent = 'Ihr aktuelles Abonnement';
+                        btn.classList.remove('hover:bg-gray-100', 'hover:bg-blue-100', 'bg-gray-900', 'text-white', 'text-primary-blue', 'border-gray-300', 'border-white', 'shadow-inner');
+                        return;
+                    }
                     
                     if (key === planKey) {
                         // Selected

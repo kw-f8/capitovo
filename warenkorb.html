@@ -215,24 +215,46 @@
     <script src="script.js?v=6"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Carry ref param forward to checkout step.
-            try{
-                const params = new URLSearchParams(window.location.search);
-                const ref = params.get('ref');
-                const go = document.getElementById('go-to-checkout');
-                if(go){
-                    const target = new URL(go.getAttribute('href'), window.location.href);
-                    if(ref) target.searchParams.set('ref', ref);
-                    target.searchParams.set('plan', 'premium');
-                    go.setAttribute('href', target.pathname + '?' + target.searchParams.toString());
-                }
+                // Carry ref param forward to checkout step and set intelligent back navigation.
+                try{
+                    const params = new URLSearchParams(window.location.search);
+                    const ref = params.get('ref');
+                    const go = document.getElementById('go-to-checkout');
+                    if(go){
+                        const target = new URL(go.getAttribute('href'), window.location.href);
+                        if(ref) target.searchParams.set('ref', ref);
+                        target.searchParams.set('plan', 'premium');
+                        go.setAttribute('href', target.pathname + '?' + target.searchParams.toString());
+                    }
 
-                // Back/cancel link
-                if (ref === 'account') {
+                    // Back/cancel link: prefer explicit ref mapping, then same-origin document.referrer, else index.
                     const cancelBtn = document.getElementById('cancel-button');
-                    if (cancelBtn) cancelBtn.href = 'Abonenten/konto.html';
-                }
-            }catch(e){}
+                    if (cancelBtn) {
+                        // Preserve the svg icon and replace only the adjacent text node to keep markup stable
+                        try{
+                            Array.from(cancelBtn.childNodes).forEach(node => {
+                                if (node.nodeType === Node.TEXT_NODE) node.nodeValue = ' Zurück';
+                            });
+                        }catch(e){}
+
+                        let backHref = 'index.html';
+                        if (ref === 'account') {
+                            backHref = 'Abonenten/konto.html';
+                        } else {
+                            try{
+                                const referrer = document.referrer || '';
+                                if (referrer) {
+                                    const refUrl = new URL(referrer);
+                                    if (refUrl.origin === location.origin) {
+                                        backHref = refUrl.pathname + (refUrl.search || '');
+                                    }
+                                }
+                            }catch(e){}
+                        }
+
+                        cancelBtn.href = backHref;
+                    }
+                }catch(e){}
         });
     </script>
 </body>

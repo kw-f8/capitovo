@@ -198,7 +198,7 @@
                         </div>
 
                         <!-- Dynamic Payment Fields -->
-                        <div id="payment-details" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+                        <div id="payment-details" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200 hidden">
                             <!-- Card Fields -->
                             <div id="card-fields" class="space-y-4">
                                 <div class="relative">
@@ -345,8 +345,12 @@
                 cardFields.classList.add('hidden');
                 paypalFields.classList.add('hidden');
                 sepaFields.classList.add('hidden');
+                document.getElementById('payment-details').classList.add('hidden');
 
-                const val = document.querySelector('input[name="payment-method"]:checked').value;
+                const selected = document.querySelector('input[name="payment-method"]:checked');
+                if (!selected) return;
+                document.getElementById('payment-details').classList.remove('hidden');
+                const val = selected.value;
                 if (val === 'card') cardFields.classList.remove('hidden');
                 if (val === 'paypal') paypalFields.classList.remove('hidden');
                 if (val === 'sepa') sepaFields.classList.remove('hidden');

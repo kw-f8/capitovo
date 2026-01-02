@@ -287,11 +287,47 @@
                 document.getElementById('summary-plan-price').textContent = '€ 14,99 / Monat';
             } catch(e) {}
 
-            // Pre-fill email if logged in
+            // Pre-fill email and contact fields if available in localStorage
             try {
                 const sess = JSON.parse(localStorage.getItem('capitovo_session') || '{}');
                 if (sess.email) {
                     document.getElementById('checkout-email').value = sess.email;
+                }
+
+                const contact = JSON.parse(localStorage.getItem('capitovo_contact') || '{}') || {};
+                if (contact && Object.keys(contact).length > 0) {
+                    // Salutation mapping from stored values to checkout options
+                    try {
+                        const rawSal = (contact.salutation || '') + '';
+                        const s = rawSal.toLowerCase();
+                        let mapped = '';
+                        if (s.includes('herr')) mapped = 'Herr';
+                        else if (s.includes('frau')) mapped = 'Frau';
+                        else if (s.includes('div') || s.includes('keine') || s.includes('none')) mapped = 'Divers';
+                        if (mapped) {
+                            const sel = document.getElementById('checkout-salutation');
+                            if (sel) sel.value = mapped;
+                        }
+                    } catch(e){}
+
+                    if (contact.firstname) { const el = document.getElementById('checkout-firstname'); if (el) el.value = contact.firstname; }
+                    if (contact.lastname) { const el = document.getElementById('checkout-lastname'); if (el) el.value = contact.lastname; }
+                    // Only overwrite email when no session email exists
+                    if (contact.email && !(sess && sess.email)) { const el = document.getElementById('checkout-email'); if (el) el.value = contact.email; }
+                    if (contact.street) { const el = document.getElementById('checkout-street'); if (el) el.value = contact.street; }
+                    if (contact.houseno) { const el = document.getElementById('checkout-houseno'); if (el) el.value = contact.houseno; }
+                    if (contact.zip) { const el = document.getElementById('checkout-zip'); if (el) el.value = contact.zip; }
+                    if (contact.city) { const el = document.getElementById('checkout-city'); if (el) el.value = contact.city; }
+                    if (contact.country) {
+                        try {
+                            let c = (contact.country + '').toLowerCase();
+                            let code = '';
+                            if (c.includes('deut') || c === 'de' || c === 'deutschland') code = 'DE';
+                            else if (c.includes('öster') || c === 'at' || c === 'österreich') code = 'AT';
+                            else if (c.includes('schweiz') || c === 'ch') code = 'CH';
+                            const selc = document.getElementById('checkout-country'); if (selc && code) selc.value = code;
+                        } catch(e){}
+                    }
                 }
             } catch(e) {}
 
@@ -331,8 +367,10 @@
                     // Success!
                     // Create or update session
                     const email = document.getElementById('checkout-email').value;
-                    const name = document.getElementById('checkout-name').value;
-                    
+                    const firstname = (document.getElementById('checkout-firstname') || {}).value || '';
+                    const lastname = (document.getElementById('checkout-lastname') || {}).value || '';
+                    const name = (firstname + ' ' + lastname).trim();
+
                     // Update session in localStorage
                     const sess = {
                         email: email,
@@ -358,7 +396,7 @@
                 if (!currentPlan) isValid = false;
 
                 // 2. Required fields
-                const requiredIds = ['checkout-name', 'checkout-email', 'checkout-street', 'checkout-zip', 'checkout-city', 'checkout-country', 'checkout-terms'];
+                const requiredIds = ['checkout-firstname','checkout-lastname', 'checkout-email', 'checkout-street', 'checkout-zip', 'checkout-city', 'checkout-country', 'checkout-terms'];
                 requiredIds.forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {

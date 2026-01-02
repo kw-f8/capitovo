@@ -227,20 +227,6 @@
                         go.setAttribute('href', target.pathname + '?' + target.searchParams.toString());
                     }
 
-                    // If the URL indicates premium is chosen, dim the Free card to de-emphasize it
-                    try{
-                        const planParam = params.get('plan');
-                        if (planParam === 'premium') {
-                            const freeCard = document.getElementById('card-free');
-                            if (freeCard) {
-                                freeCard.classList.add('plan-dimmed');
-                                // ensure disabled button remains non-interactive
-                                const btn = freeCard.querySelector('.select-plan-btn');
-                                if (btn) btn.setAttribute('aria-disabled', 'true');
-                            }
-                        }
-                    }catch(e){}
-
                     // Back/cancel link: prefer explicit ref mapping, then same-origin document.referrer, else index.
                     const cancelBtn = document.getElementById('cancel-button');
                     if (cancelBtn) {

@@ -90,7 +90,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-gray-200 rounded-lg shadow-sm text-base font-medium text-gray-500 bg-gray-100 cursor-default transition duration-150 mt-4">Ihr aktuelles Abonnement</button>
+                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-transparent rounded-lg shadow-inner text-base font-medium text-gray-900 bg-white cursor-default mt-4">Ihr aktuelles Abonnement</button>
                         </div>
 
                         <!-- Premium -->
@@ -470,8 +470,8 @@
                     if (selPremium) selPremium.style.display = (planKey === 'premium') ? 'inline-block' : 'none';
                 });
                 
-                // Update totals
-                if(totalEl) totalEl.textContent = p.price;
+                // Update totals (show monthly label)
+                if(totalEl) totalEl.textContent = p.price + ' / Monat';
 
                 // Update Summary Box
                 const summaryBox = document.getElementById('checkout-plan-summary');

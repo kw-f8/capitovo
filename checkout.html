@@ -153,21 +153,17 @@
                     </div>
 
                     <!-- Plan Summary Box (clean, blue-outline) -->
-                    <div id="checkout-plan-summary" class="flex flex-row gap-6 bg-white rounded-xl shadow-sm border-2 border-[color:var(--color-accent-blue)] p-6 mb-10" style="margin-top:48px;margin-bottom:48px;">
-                        <div class="flex-1 min-w-[180px]">
-                            <div class="flex flex-row">
-                                <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2 flex-1">Gewähltes Abonnement</h4>
-                                <div class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2 flex-1 text-left">Zahlungsbeginn</div>
+                    <div id="checkout-plan-summary" class="bg-white rounded-xl shadow-sm border-2 border-[color:var(--color-accent-blue)] p-6 mb-10" style="margin-top:48px;margin-bottom:48px;">
+                        <div class="grid grid-cols-2 gap-0">
+                            <div class="pr-6">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2">Gewähltes Abonnement</h4>
+                                <div id="summary-plan-name" class="text-lg font-bold text-gray-900">Premium</div>
+                                <div class="text-2xl font-extrabold mt-1 text-primary-blue" id="summary-plan-price">€ 14,99 <span class="text-base font-normal text-gray-600">/ Monat</span></div>
+                                <div class="text-xs text-gray-500 mt-1">inkl. MwSt</div>
                             </div>
-                            <div class="flex flex-row">
-                                <div class="flex-1">
-                                    <div id="summary-plan-name" class="text-lg font-bold text-gray-900">Premium</div>
-                                    <div class="text-2xl font-extrabold mt-1 text-primary-blue" id="summary-plan-price">€ 14,99 <span class="text-base font-normal text-gray-600">/ Monat</span></div>
-                                    <div class="text-xs text-gray-500 mt-1">inkl. MwSt</div>
-                                </div>
-                                <div class="flex-1 border-l border-gray-200 pl-6">
-                                    <div id="summary-plan-date" class="text-lg font-bold text-gray-900">02.01.2026</div>
-                                </div>
+                            <div class="border-l border-gray-200 pl-6">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2">Zahlungsbeginn</h4>
+                                <div id="summary-plan-date" class="text-lg font-bold text-gray-900">02.01.2026 <span class="text-sm font-normal text-gray-600">(Heute)</span></div>
                             </div>
                         </div>
                     </div>
@@ -282,7 +278,7 @@
                     const d = pad(now.getDate());
                     const m = pad(now.getMonth() + 1);
                     const y = now.getFullYear();
-                    dateEl.textContent = `${d}.${m}.${y}`;
+                    dateEl.innerHTML = `${d}.${m}.${y} <span class="text-sm font-normal text-gray-600">(Heute)</span>`;
                 }
             } catch(e){}
             const currentPlan = 'premium';

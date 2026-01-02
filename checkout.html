@@ -10,6 +10,19 @@
     <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=2025-12-25a">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script>
+        // Prevent flash: apply class based on stored subscription before paint
+        (function(){
+            try{
+                var raw = localStorage.getItem('capitovo_session');
+                var sub = 'free';
+                if(raw){ try{ var obj = JSON.parse(raw); if(obj && obj.subscription) sub = String(obj.subscription).toLowerCase(); }catch(e){}
+                }
+                if(sub === 'premium') document.documentElement.classList.add('cap-sub-premium');
+                else document.documentElement.classList.add('cap-sub-free');
+            }catch(e){}
+        })();
+    </script>
     <style>
         /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
         #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
@@ -47,6 +60,9 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-8">
                         <!-- Free -->
                         <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('free')">
+                            <div class="relative">
+                                <span id="selected-badge-free" class="absolute -top-10 left-4 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden" style="background-color:var(--color-accent-blue);">Aktuelles Abonnement</span>
+                            </div>
                             <div>
                                 <h3 class="text-2xl font-bold text-gray-900 mb-4">Free</h3>
                                 <div class="text-4xl font-extrabold text-gray-900 mb-4">
@@ -80,9 +96,8 @@
                         <!-- Premium -->
                         <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-2xl border-4 border-transparent p-8 flex flex-col justify-between transform scale-105 z-10 cursor-pointer" onclick="selectPlan('premium')">
                             <div class="relative">
-                                <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">
-                                    Empfohlen
-                                </span>
+                                <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
+                                <span id="selected-badge-premium" class="absolute -top-10 left-4 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden" style="background-color:var(--color-accent-blue);">Aktuelles Abonnement</span>
                                 <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
                                 <div class="text-4xl font-extrabold text-white mb-4">
                                     € 14,99 <span class="text-xl font-normal text-blue-200">/ Monat</span>
@@ -454,6 +469,11 @@
                             btn.classList.add('bg-white', 'text-gray-900', 'border-gray-300', 'hover:bg-gray-100');
                         }
                     }
+                    // Toggle selected badge visibility (if present)
+                    const selFree = document.getElementById('selected-badge-free');
+                    const selPremium = document.getElementById('selected-badge-premium');
+                    if (selFree) selFree.style.display = (planKey === 'free') ? 'inline-block' : 'none';
+                    if (selPremium) selPremium.style.display = (planKey === 'premium') ? 'inline-block' : 'none';
                 });
                 
                 // Update totals
@@ -473,6 +493,15 @@
                 url.searchParams.set('plan', planKey);
                 window.history.replaceState({}, '', url);
             }
+
+            // Initialize selection from session or URL param (show current subscription by default)
+            try{
+                const sess = JSON.parse(localStorage.getItem('capitovo_session') || 'null') || {};
+                const params = new URLSearchParams(window.location.search);
+                const forced = params.get('plan');
+                const initial = forced && plans[forced] ? forced : ((sess.subscription && plans[String(sess.subscription).toLowerCase()]) ? String(sess.subscription).toLowerCase() : 'free');
+                if(initial && plans[initial]) window.updateCheckoutSummary(initial);
+            }catch(e){}
 
             // Pre-fill email if logged in
             try {

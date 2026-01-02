@@ -59,64 +59,85 @@
 
                 <form id="checkout-form" class="space-y-6">
                     
-                    <!-- Personal Info -->
+                    <!-- Personal Info (styled like Abonenten/kontaktdaten.html) -->
                     <div class="space-y-4">
                         <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Persönliche Daten</h3>
+
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="relative">
-                                <input id="checkout-name" name="name" type="text" required 
-                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
-                                       placeholder="Vollständiger Name">
-                                <label for="checkout-name" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                    Vollständiger Name
-                                </label>
-                            </div>
-                            <div class="relative">
-                                <input id="checkout-email" name="email" type="email" required 
-                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
-                                       placeholder="E-Mail-Adresse">
-                                <label for="checkout-email" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                    E-Mail-Adresse
-                                </label>
-                            </div>
-                            
-                            <!-- Address Fields -->
-                            <div class="relative">
-                                <input id="checkout-street" name="street" type="text" required 
-                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
-                                       placeholder="Straße und Hausnummer">
-                                <label for="checkout-street" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                    Straße und Hausnummer
-                                </label>
-                            </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="relative">
-                                    <input id="checkout-zip" name="zip" type="text" required 
-                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
-                                           placeholder="PLZ">
-                                    <label for="checkout-zip" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                        PLZ
-                                    </label>
+                                    <input id="checkout-firstname" name="firstname" type="text"
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                           placeholder="Vorname">
+                                    <label for="checkout-firstname" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                            peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                            peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Vorname</label>
                                 </div>
                                 <div class="relative">
-                                    <input id="checkout-city" name="city" type="text" required 
-                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm" 
-                                           placeholder="Stadt">
-                                    <label for="checkout-city" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                        Stadt
-                                    </label>
+                                    <input id="checkout-lastname" name="lastname" type="text"
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                           placeholder="Nachname">
+                                    <label for="checkout-lastname" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                            peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                            peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Nachname</label>
                                 </div>
                             </div>
+
                             <div class="relative">
-                                <select id="checkout-country" name="country" required 
+                                <input id="checkout-email" name="email" type="email" required
+                                       class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                       placeholder="E-Mail">
+                                <label for="checkout-email" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                        peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                        peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">E-Mail</label>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="col-span-2 relative">
+                                    <input id="checkout-street" name="street" type="text" required
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                           placeholder="Straße">
+                                    <label for="checkout-street" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                            peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                            peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Straße</label>
+                                </div>
+                                <div class="relative">
+                                    <input id="checkout-houseno" name="houseno" type="text"
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                           placeholder="Nr.">
+                                    <label for="checkout-houseno" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                            peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                            peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Nr.</label>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="relative">
+                                    <input id="checkout-zip" name="zip" type="text" required
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                           placeholder="PLZ">
+                                    <label for="checkout-zip" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                            peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                            peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">PLZ</label>
+                                </div>
+                                <div class="col-span-2 relative">
+                                    <input id="checkout-city" name="city" type="text" required
+                                           class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                           placeholder="Ort">
+                                    <label for="checkout-city" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                            peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                            peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Ort</label>
+                                </div>
+                            </div>
+
+                            <div class="relative">
+                                <select id="checkout-country" name="country" required
                                        class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
                                     <option value="DE">Deutschland</option>
                                     <option value="AT">Österreich</option>
                                     <option value="CH">Schweiz</option>
                                 </select>
-                                <label for="checkout-country" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                    Land
-                                </label>
+                                <label for="checkout-country" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Land</label>
                             </div>
                         </div>
                     </div>

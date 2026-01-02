@@ -11,11 +11,15 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script>
-        // Force premium visual on checkout to avoid flash of 'free' selection
+        // Apply class based on stored subscription before paint
         (function(){
             try{
-                document.documentElement.classList.remove('cap-sub-free');
-                document.documentElement.classList.add('cap-sub-premium');
+                var raw = localStorage.getItem('capitovo_session');
+                var sub = 'free';
+                if(raw){ try{ var obj = JSON.parse(raw); if(obj && obj.subscription) sub = String(obj.subscription).toLowerCase(); }catch(e){}
+                }
+                if(sub === 'premium') document.documentElement.classList.add('cap-sub-premium');
+                else document.documentElement.classList.add('cap-sub-free');
             }catch(e){}
         })();
     </script>
@@ -459,11 +463,8 @@
                             btn.classList.add('bg-white', 'text-gray-900', 'border-gray-300', 'hover:bg-gray-100');
                         }
                     }
-                    // Toggle selected badge visibility (if present)
-                    const selFree = document.getElementById('selected-badge-free');
-                    const selPremium = document.getElementById('selected-badge-premium');
-                    if (selFree) selFree.style.display = (planKey === 'free') ? 'inline-block' : 'none';
-                    if (selPremium) selPremium.style.display = (planKey === 'premium') ? 'inline-block' : 'none';
+                    // Note: 'Aktuelles Abonnement' badge is controlled by pre-paint html class
+                    // and should reflect the stored subscription; do not toggle it here.
                 });
                 
                 // Update totals (show monthly label)

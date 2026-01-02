@@ -64,6 +64,16 @@
                         <h3 class="text-lg font-medium text-gray-900 border-b pb-2">Persönliche Daten</h3>
 
                         <div class="grid grid-cols-1 gap-4">
+                            <div class="relative">
+                                <select id="checkout-salutation" name="salutation" required
+                                        class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                                    <option value="">Anrede</option>
+                                    <option value="Herr">Herr</option>
+                                    <option value="Frau">Frau</option>
+                                    <option value="Divers">Divers</option>
+                                </select>
+                                <label for="checkout-salutation" class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">Anrede</label>
+                            </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="relative">
                                     <input id="checkout-firstname" name="firstname" type="text"

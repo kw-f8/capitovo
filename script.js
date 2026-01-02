@@ -397,10 +397,17 @@ function openFreePlanGateModal() {
     let modal = document.getElementById('free-plan-gate-modal');
 
     // Compute checkout link that works from nested Abonenten pages.
+    // Prefer an absolute path anchored at the repository base (e.g. '/capitovo/checkout.html'),
+    // fallback to a relative prefix when repo base cannot be determined.
     let checkoutLink = 'checkout.html?plan=premium';
     try {
-        const prefix = prefixToRepoRoot();
-        checkoutLink = prefix + 'checkout.html?plan=premium';
+        const repoBase = repoBasePathBefore('Abonenten');
+        if (repoBase && repoBase.length) {
+            checkoutLink = repoBase + '/checkout.html?plan=premium';
+        } else {
+            const prefix = prefixToRepoRoot();
+            checkoutLink = prefix + 'checkout.html?plan=premium';
+        }
     } catch (e) {}
 
     if (!modal) {

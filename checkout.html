@@ -59,7 +59,7 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-8">
                         <!-- Free -->
-                        <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300 cursor-pointer" onclick="selectPlan('free')">
+                        <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between hover:shadow-2xl transition-all duration-300" >
                             <div class="relative">
                                 <span id="selected-badge-free" class="absolute -top-10 left-4 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden" style="background-color:var(--color-accent-blue);">Aktuelles Abonnement</span>
                             </div>
@@ -90,7 +90,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <button class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white hover:bg-gray-100 transition duration-150 mt-4">Wählen</button>
+                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-gray-200 rounded-lg shadow-sm text-base font-medium text-gray-500 bg-gray-100 cursor-default transition duration-150 mt-4">Ihr aktuelles Abonnement</button>
                         </div>
 
                         <!-- Premium -->
@@ -407,8 +407,9 @@
 
     <script src="script.js?v=6"></script>
     <script>
-        // Selection function
+        // Selection function (Free selection disabled on this page)
         window.selectPlan = function(plan) {
+            if (plan === 'free') return; // disallow selecting Free on checkout
             if (window.updateCheckoutSummary) {
                 window.updateCheckoutSummary(plan);
             }
@@ -494,13 +495,9 @@
                 window.history.replaceState({}, '', url);
             }
 
-            // Initialize selection from session or URL param (show current subscription by default)
+            // Always select Premium by default on checkout page
             try{
-                const sess = JSON.parse(localStorage.getItem('capitovo_session') || 'null') || {};
-                const params = new URLSearchParams(window.location.search);
-                const forced = params.get('plan');
-                const initial = forced && plans[forced] ? forced : ((sess.subscription && plans[String(sess.subscription).toLowerCase()]) ? String(sess.subscription).toLowerCase() : 'free');
-                if(initial && plans[initial]) window.updateCheckoutSummary(initial);
+                window.updateCheckoutSummary('premium');
             }catch(e){}
 
             // Pre-fill email if logged in

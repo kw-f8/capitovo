@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warenkorb - capitovo</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=2025-12-25b">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png?v=2025-12-25b">
+    <link rel="shortcut icon" href="assets/favicon-32.png?v=2025-12-25b">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=2025-12-25a">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Warenkorb is the upgrade flow: current subscription is shown as Free.
+        // Set this before paint to avoid any badge flicker.
+        (function(){
+            try{
+                document.documentElement.classList.remove('cap-sub-premium');
+                document.documentElement.classList.add('cap-sub-free');
+            }catch(e){}
+        })();
+    </script>
+    <style>
+        /* Remove black outline/frame from sidebar toggle while keeping an accessible focus-visible ring */
+        #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+        #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+        /* Provide a subtle visible focus for keyboard users */
+        #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 flex flex-col min-h-screen">
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <a href="Abonenten/abonenten.html" id="cancel-button" style="transform:translateX(-10px);" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Abbrechen
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-[1138px] mx-auto px-6 py-12" style="max-width:1138px;width:100%;margin:0 auto;">
+        <div class="w-full space-y-8">
+
+            <div class="w-full">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <h1 class="text-2xl font-bold mb-10">Warenkorb</h1>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mb-8">
+                        <!-- Free (locked) -->
+                        <div id="card-free" class="plan-card bg-white rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between">
+                            <div class="relative">
+                                <span id="selected-badge-free" class="absolute -top-10 left-4 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md hidden" style="background-color:var(--color-accent-blue);">Aktuelles Abonnement</span>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-4">Free</h3>
+                                <div class="text-4xl font-extrabold text-gray-900 mb-4">
+                                    € 0,- <span class="text-xl font-normal text-gray-500">/ Monat</span>
+                                </div>
+
+                                <div class="plan-details w-full">
+                                    <ul class="text-left space-y-3 mb-10 text-gray-700 w-full">
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            Wöchentliche Markt-Bulletins
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            2 exklusive Aktienanalysen / Monat
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            Zugang zum Performance-Dashboard
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-red-500 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                            Exklusive Webinare &amp; Q&amp;A
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-gray-300 rounded-lg shadow-sm text-base font-medium text-gray-900 bg-white cursor-default mt-4">Ihr aktuelles Abonnement</button>
+                        </div>
+
+                        <!-- Premium (selected) -->
+                        <div id="card-premium" class="plan-card bg-primary-blue rounded-xl shadow-xl border-4 border-transparent p-8 flex flex-col justify-between">
+                            <div class="relative">
+                                <span class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-bold uppercase py-1 px-3 rounded-full shadow-md">Empfohlen</span>
+                                <h3 class="text-2xl font-bold text-white mb-4">Premium</h3>
+                                <div class="text-4xl font-extrabold text-white mb-4">
+                                    € 14,99 <span class="text-xl font-normal text-blue-200">/ Monat</span>
+                                </div>
+
+                                <div class="plan-details w-full">
+                                    <ul class="text-left space-y-3 mb-10 text-white w-full">
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            Alle Free-Funktionen
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            <strong>Alle</strong> exklusiven Aktienanalysen (4+ / Monat)
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            Zugang zum Performance-Dashboard
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            Exklusive Webinare &amp; Q&amp;A
+                                        </li>
+                                        <li class="flex items-start">
+                                            <svg class="w-5 h-5 text-yellow-400 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            14-tägige Geld-zurück-Garantie
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <button disabled aria-disabled="true" class="select-plan-btn w-full block py-3 px-8 border border-transparent rounded-lg text-base font-medium text-white bg-gray-900 cursor-default mt-4">Ausgewählt</button>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex justify-between items-center text-xl font-extrabold text-gray-900 mt-4">
+                            <span>Gesamt</span>
+                            <span id="summary-total">€ 14,99 / Monat</span>
+                        </div>
+                        <div class="mt-2 text-xs text-gray-500 text-right">inkl. MwSt.</div>
+                    </div>
+
+                    <div class="mt-6 text-xs text-gray-500 space-y-2">
+                        <div class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>14 Tage Geld-zurück-Garantie für alle Neukunden.</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Monatlich und einfach kündbar</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Keine versteckten Kosten</span>
+                        </div>
+                        <div class="flex items-start">
+                            <svg class="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>Sichere Bezahlung mit SSL-Verschlüsselung</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 border-t border-gray-100 pt-6">
+                        <a id="go-to-checkout" href="checkout.html?plan=premium" class="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150">
+                            Weiter zur Kasse
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Mini FAQ -->
+    <div class="max-w-3xl mx-auto mt-12 px-4 sm:px-6 lg:px-8 mb-12">
+        <h3 class="text-lg font-bold text-gray-900 mb-6 text-center">Häufig gestellte Fragen</h3>
+        <div class="grid gap-6 md:grid-cols-2">
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Kann ich jederzeit kündigen?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Ja, absolut. Sie können Ihr Abonnement jederzeit mit nur einem Klick in Ihrem Kundenkonto zum Ende der Laufzeit kündigen. Keine versteckten Fristen.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Wie erhalte ich Zugriff?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Sofort nach der erfolgreichen Zahlung werden Sie automatisch in Ihren Mitgliederbereich weitergeleitet und haben vollen Zugriff auf alle Analysen.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Gibt es eine Garantie?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Ja, wir bieten eine 14-tägige Geld-zurück-Garantie. Wenn Sie nicht zufrieden sind, erhalten Sie Ihr Geld ohne Wenn und Aber zurück.</p>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm p-5 border border-gray-100">
+                <h4 class="font-medium text-gray-900 flex items-center">
+                    <svg class="w-5 h-5 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                    Welche Zahlungsmethoden gibt es?
+                </h4>
+                <p class="text-sm text-gray-600 mt-2 ml-7">Wir akzeptieren alle gängigen Kreditkarten (Visa, Mastercard, Amex), PayPal und SEPA-Lastschrift. Alle Zahlungen sind SSL-verschlüsselt.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer mt-auto">
+        <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+            <div class="footer-links flex items-center gap-3">
+                <a href="Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+                <a href="Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=6"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Carry ref param forward to checkout step.
+            try{
+                const params = new URLSearchParams(window.location.search);
+                const ref = params.get('ref');
+                const go = document.getElementById('go-to-checkout');
+                if(go){
+                    const target = new URL(go.getAttribute('href'), window.location.href);
+                    if(ref) target.searchParams.set('ref', ref);
+                    target.searchParams.set('plan', 'premium');
+                    go.setAttribute('href', target.pathname + '?' + target.searchParams.toString());
+                }
+
+                // Back/cancel link
+                if (ref === 'account') {
+                    const cancelBtn = document.getElementById('cancel-button');
+                    if (cancelBtn) cancelBtn.href = 'Abonenten/konto.html';
+                }
+            }catch(e){}
+        });
+    </script>
+</body>
+</html>

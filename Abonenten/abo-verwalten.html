@@ -286,7 +286,7 @@
                 // If user has Free and selects Premium, go to checkout
                 if(planKey === 'premium' && stored && stored.subscription === 'free' && currentPlan !== 'premium'){
                     try{
-                        const target = '../checkout.html';
+                        const target = '../warenkorb.html?ref=account&plan=premium';
                         const w = window.open(target, '_blank');
                         if (w && typeof w.focus === 'function') w.focus();
                         return;

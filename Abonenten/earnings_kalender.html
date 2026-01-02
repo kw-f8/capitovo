@@ -275,7 +275,7 @@
                 </div>
             </div>
 
-            <a href="../checkout.html" class="paywall-cta">Jetzt Abonnieren</a>
+            <a href="../warenkorb.html?plan=premium" class="paywall-cta">Jetzt Abonnieren</a>
             <p id="paywall-price-text" style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8;">Ab 99€/Monat · Jederzeit kündbar</p>
         </div>
     </div>
@@ -676,7 +676,7 @@
         // Fetch cheapest price from checkout page
         async function updatePaywallPrice() {
             try {
-                const response = await fetch('../checkout.html');
+                const response = await fetch('../warenkorb.html');
                 const html = await response.text();
                 
                 // Parse HTML to find all prices
@@ -690,8 +690,8 @@
                         const text = el.textContent;
                         // Only extract monthly prices
                         if (text.includes('/ Monat')) {
-                            const match = text.match(/€\s*(\d+),-/);
-                            return match ? parseInt(match[1]) : null;
+                            const match = text.match(/€\s*(\d+(?:,\d+)?)/);
+                            return match ? parseFloat(match[1].replace(',', '.')) : null;
                         }
                         return null;
                     })
@@ -701,7 +701,10 @@
                     const cheapestPrice = Math.min(...monthlyPrices);
                     const priceText = document.getElementById('paywall-price-text');
                     if (priceText) {
-                        priceText.textContent = `Ab ${cheapestPrice}€/Monat · Jederzeit kündbar`;
+                        const formatted = Number.isInteger(cheapestPrice)
+                            ? String(cheapestPrice)
+                            : cheapestPrice.toFixed(2).replace('.', ',');
+                        priceText.textContent = `Ab ${formatted}€/Monat · Jederzeit kündbar`;
                     }
                 }
             } catch (error) {

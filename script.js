@@ -339,7 +339,7 @@ function openSubscriptionModal() {
     let modal = document.getElementById('subscription-modal');
     if (!modal) {
         const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-        const pricingLink = isInAbonenten ? '../checkout.html?plan=premium' : 'checkout.html?plan=premium';
+        const pricingLink = isInAbonenten ? '../warenkorb.html?plan=premium' : 'warenkorb.html?plan=premium';
         
         modal = document.createElement('div');
         modal.id = 'subscription-modal';
@@ -396,17 +396,17 @@ function openSubscriptionModal() {
 function openFreePlanGateModal() {
     let modal = document.getElementById('free-plan-gate-modal');
 
-    // Compute checkout link that works from nested Abonenten pages.
-    // Prefer an absolute path anchored at the repository base (e.g. '/capitovo/checkout.html'),
+    // Compute cart link that works from nested Abonenten pages.
+    // Prefer an absolute path anchored at the repository base (e.g. '/capitovo/warenkorb.html'),
     // fallback to a relative prefix when repo base cannot be determined.
-    let checkoutLink = 'checkout.html?plan=premium';
+    let checkoutLink = 'warenkorb.html?plan=premium';
     try {
         const repoBase = repoBasePathBefore('Abonenten');
         if (repoBase && repoBase.length) {
-            checkoutLink = repoBase + '/checkout.html?plan=premium';
+            checkoutLink = repoBase + '/warenkorb.html?plan=premium';
         } else {
             const prefix = prefixToRepoRoot();
-            checkoutLink = prefix + 'checkout.html?plan=premium';
+            checkoutLink = prefix + 'warenkorb.html?plan=premium';
         }
     } catch (e) {}
 
@@ -474,6 +474,7 @@ function maybeShowFreePlanGate() {
         if (!path.includes('/abonenten/')) return;
         // Don't show on checkout itself (if embedded/linked) or on public pages.
         if (path.endsWith('/checkout.html')) return;
+        if (path.endsWith('/warenkorb.html')) return;
 
         // Only show once per session/tab.
         if (sessionStorage.getItem('capitovo_free_gate_shown') === 'true') return;
@@ -1115,7 +1116,7 @@ function initTestLogin() {
                 sessionStorage.removeItem('selected_plan');
                 // Only redirect to checkout if user doesn't have an active subscription
                 if (user.sub === 'none' || !user.sub) {
-                    window.location.href = 'checkout.html?plan=' + selectedPlan;
+                    window.location.href = 'warenkorb.html?plan=' + selectedPlan;
                 } else {
                     // User already has active subscription, go to member area
                     window.location.href = 'Abonenten/abonenten.html';

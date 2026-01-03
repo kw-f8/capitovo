@@ -636,6 +636,13 @@ footer {
     min-width: 0;
 }
 
+/* Make the stepper span full content width:
+   align the first/last circle to the edges and extend the edge connectors accordingly. */
+.cap-step:first-child { align-items: flex-start; }
+.cap-step:last-child { align-items: flex-end; }
+.cap-step:first-child .cap-step-label { text-align: left; }
+.cap-step:last-child .cap-step-label { text-align: right; }
+
 /* Connector line */
 .cap-step:not(:last-child)::after {
     content: "";
@@ -647,6 +654,16 @@ footer {
     height: 3px;
     background: #e5e7eb; /* light gray */
     border-radius: 999px;
+}
+
+/* First connector should start at the left edge circle */
+.cap-step:first-child:not(:last-child)::after {
+    left: 17px;
+}
+
+/* Connector into the last step should reach the right edge circle */
+.cap-step:nth-child(4)::after {
+    right: calc(-100% + 17px);
 }
 
 .cap-step.is-complete:not(:last-child)::after {

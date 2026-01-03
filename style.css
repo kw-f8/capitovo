@@ -608,6 +608,105 @@ footer {
     fill: var(--color-primary-blue) !important;
 }
 
+/* ---------------------------------------------------- */
+/* Checkout Stepper (Statusanzeige)                     */
+/* Used on warenkorb.html and checkout.html             */
+/* ---------------------------------------------------- */
+.cap-stepper-wrap {
+    margin: 0 0 28px 0;
+}
+
+.cap-stepper {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 0;
+    margin: 0;
+}
+
+.cap-step {
+    position: relative;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* Connector line */
+.cap-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 16px; /* vertical center of the circle */
+    left: calc(50% + 18px);
+    right: calc(-50% + 18px);
+    height: 3px;
+    background: #e5e7eb; /* light gray */
+    border-radius: 999px;
+}
+
+.cap-step.is-complete:not(:last-child)::after {
+    background: var(--color-accent-blue);
+}
+
+.cap-step-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    background: #e5e7eb;
+    color: #ffffff;
+    flex: 0 0 auto;
+}
+
+.cap-step.is-active .cap-step-circle,
+.cap-step.is-complete .cap-step-circle {
+    background: var(--color-accent-blue);
+    color: #ffffff;
+}
+
+.cap-step-check {
+    width: 18px;
+    height: 18px;
+    stroke: #ffffff;
+}
+
+.cap-step-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #94a3b8; /* muted */
+    text-align: center;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.cap-step.is-active .cap-step-label,
+.cap-step.is-complete .cap-step-label {
+    color: var(--color-accent-blue);
+}
+
+@media (max-width: 520px) {
+    .cap-stepper { gap: 10px; }
+    .cap-step-label { font-size: 11px; }
+    .cap-step:not(:last-child)::after {
+        top: 15px;
+        height: 3px;
+        left: calc(50% + 16px);
+        right: calc(-50% + 16px);
+    }
+    .cap-step-circle { width: 32px; height: 32px; font-size: 15px; }
+}
+
 
 /* ---------------------------------------------------- */
 /* Seitenleiste (Sidebar) */

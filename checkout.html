@@ -47,6 +47,36 @@
 
     <main class="py-12" style="max-width:1138px;width:100%;margin:0 auto;padding-left:18px;padding-right:28px;box-sizing:border-box;">
         <div class="w-full space-y-8">
+
+            <!-- Statusanzeige (Checkout-Fortschritt) -->
+            <nav class="cap-stepper-wrap" aria-label="Checkout Fortschritt">
+                <ol class="cap-stepper">
+                    <li class="cap-step is-complete">
+                        <span class="cap-step-circle" aria-hidden="true">
+                            <svg class="cap-step-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="cap-step-label">Übersicht</span>
+                    </li>
+                    <li class="cap-step is-active">
+                        <span class="cap-step-circle" aria-hidden="true">2</span>
+                        <span class="cap-step-label">Kundendaten</span>
+                    </li>
+                    <li class="cap-step">
+                        <span class="cap-step-circle" aria-hidden="true">3</span>
+                        <span class="cap-step-label">Zahlungsmethode</span>
+                    </li>
+                    <li class="cap-step">
+                        <span class="cap-step-circle" aria-hidden="true">4</span>
+                        <span class="cap-step-label">Zusammenfassung</span>
+                    </li>
+                    <li class="cap-step">
+                        <span class="cap-step-circle" aria-hidden="true">5</span>
+                        <span class="cap-step-label">Fertig</span>
+                    </li>
+                </ol>
+            </nav>
             <div class="w-full space-y-10 bg-white p-8 rounded-xl shadow-xl border border-gray-200">
                 <div>
                     <h2 class="text-2xl font-extrabold text-gray-900">

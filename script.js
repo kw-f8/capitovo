@@ -1324,6 +1324,43 @@ function initModalControl() {
     });
 }
 
+/** Initialisiert klickbare Schritte in der Checkout-Stepper-Leiste.
+ * Klick auf Kreis oder Label navigiert zur entsprechenden Checkout-Seite
+ * Mapping (index -> page): 0=warenkorb.html, 1=checkout_kundendaten.html, 2=checkout_payment.html, 3=checkout_final.html
+ */
+function initCheckoutStepperNavigation(){
+    const stepperEls = document.querySelectorAll('.cap-stepper');
+    if (!stepperEls || !stepperEls.length) return;
+
+    const pageMap = ['warenkorb.html','checkout_kundendaten.html','checkout_payment.html','checkout_final.html'];
+
+    stepperEls.forEach(stepper => {
+        const steps = Array.from(stepper.querySelectorAll('.cap-step'));
+        steps.forEach((step, idx) => {
+            // Make interactive
+            step.style.cursor = 'pointer';
+            step.setAttribute('tabindex','0');
+            step.setAttribute('role','button');
+
+            const navigateToStep = (e) => {
+                try{ e.preventDefault(); }catch(e){}
+                const targetPage = pageMap[idx] || pageMap[pageMap.length-1];
+                if (!targetPage) return;
+                const params = new URLSearchParams(window.location.search);
+                const plan = params.get('plan');
+                const ref = params.get('ref');
+                const target = new URL(targetPage, window.location.href);
+                if (plan) target.searchParams.set('plan', plan);
+                if (ref) target.searchParams.set('ref', ref);
+                window.location.href = target.pathname + (target.search ? ('?' + target.searchParams.toString()) : '');
+            };
+
+            step.addEventListener('click', navigateToStep);
+            step.addEventListener('keypress', function(e){ if (e.key === 'Enter' || e.key === ' ') { navigateToStep(e); } });
+        });
+    });
+}
+
 /** Initialisiert die Passwort-vergessen Maske (Code anfordern). */
 function initForgotPassword() {
     const modal = document.getElementById('forgot-password-modal');
@@ -1597,6 +1634,8 @@ document.addEventListener('DOMContentLoaded', () => {
     try { if (document.getElementById('analysis-detail')) renderAnalysisDetail(); } catch(e){}
     // 8. Ensure header logo on Abonenten pages links back to the Abonenten start page
     try { initLogoLinkBehavior(); } catch(e) { /* ignore */ }
+    // 9. Init clickable checkout stepper (click circle or label to navigate back)
+    try { initCheckoutStepperNavigation(); } catch(e) { /* ignore */ }
 
     // 8b. Show Free-Abo gate once per session inside members area
     try { maybeShowFreePlanGate(); } catch(e) { /* ignore */ }

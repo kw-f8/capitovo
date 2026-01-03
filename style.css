@@ -592,6 +592,23 @@ footer {
     border-top: 1px solid #e0e0e0;
 }
 
+/* --- Pricing: make the selected plan button appear white --- */
+/* Specifically target the Premium card's disabled "Ausgewählt" button */
+#card-premium .select-plan-btn[disabled],
+#card-premium .select-plan-btn[aria-disabled="true"] {
+    background-color: #ffffff !important;
+    color: var(--color-primary-blue) !important;
+    border-color: rgba(15,23,42,0.06) !important;
+    box-shadow: 0 1px 0 rgba(2,6,23,0.04) inset; /* subtle inner depth */
+    cursor: default !important;
+}
+
+#card-premium .select-plan-btn[disabled] svg,
+#card-premium .select-plan-btn[aria-disabled="true"] svg {
+    fill: var(--color-primary-blue) !important;
+}
+
+
 /* ---------------------------------------------------- */
 /* Seitenleiste (Sidebar) */
 /* ---------------------------------------------------- */

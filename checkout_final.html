@@ -183,9 +183,19 @@
                     <p class="text-sm text-gray-600 text-center whitespace-nowrap tracking-tight leading-snug">Sie werden zur Startseite weitergeleitet.</p>
                     <p class="text-sm text-gray-600 text-center whitespace-nowrap tracking-tight leading-snug">Dort können Sie Ihren Premium‑Zugang sofort nutzen.</p>
                 </div>
-                <div class="flex items-center justify-end gap-3">
-                    <button id="final-confirm-cancel" class="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700">Abbrechen</button>
-                    <button id="final-confirm-ok" class="px-4 py-2 rounded-md bg-primary-blue text-white">Weiter</button>
+
+                <div class="mt-5 flex justify-center">
+                    <div class="relative" style="width:96px; height:96px;">
+                        <svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true" class="block">
+                            <circle id="final-confirm-progress" cx="50" cy="50" r="42" fill="none" stroke-width="8" stroke-linecap="round"
+                                style="stroke: var(--color-accent-blue); transform: rotate(-90deg); transform-origin: 50% 50%; stroke-dasharray: 0; stroke-dashoffset: 0;"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-xl font-semibold text-gray-900">
+                                <span id="final-confirm-countdown">5</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -194,30 +204,73 @@
         document.addEventListener('DOMContentLoaded', function(){
             const cta = document.getElementById('final-cta');
             const modal = document.getElementById('final-confirm-modal');
-            const btnOk = document.getElementById('final-confirm-ok');
-            const btnCancel = document.getElementById('final-confirm-cancel');
             if (!cta || !modal) return;
 
-            function showModal(){ modal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-            function hideModal(){ modal.classList.add('hidden'); document.body.style.overflow = ''; }
+            let countdownInterval = null;
+
+            function startCountdownAndRedirect(){
+                const totalMs = 5000;
+                const start = Date.now();
+                let lastShownSeconds = null;
+
+                const countdownEl = document.getElementById('final-confirm-countdown');
+                const progressEl = document.getElementById('final-confirm-progress');
+
+                const radius = 42;
+                const circumference = 2 * Math.PI * radius;
+                if (progressEl) {
+                    progressEl.style.strokeDasharray = String(circumference);
+                    progressEl.style.strokeDashoffset = '0';
+                }
+
+                if (countdownInterval) {
+                    clearInterval(countdownInterval);
+                    countdownInterval = null;
+                }
+
+                const tick = () => {
+                    const elapsed = Date.now() - start;
+                    const remainingMs = Math.max(0, totalMs - elapsed);
+                    const remainingSeconds = Math.ceil(remainingMs / 1000);
+                    const progress = remainingMs / totalMs;
+
+                    if (countdownEl && remainingSeconds !== lastShownSeconds) {
+                        countdownEl.textContent = String(remainingSeconds);
+                        lastShownSeconds = remainingSeconds;
+                    }
+
+                    if (progressEl) {
+                        const dashOffset = circumference * (1 - progress);
+                        progressEl.style.strokeDashoffset = String(dashOffset);
+                    }
+
+                    if (remainingMs <= 0) {
+                        clearInterval(countdownInterval);
+                        countdownInterval = null;
+
+                        const params = new URLSearchParams(window.location.search);
+                        const plan = params.get('plan');
+                        const ref = params.get('ref');
+                        const target = new URL('Abonenten/abonenten.html', window.location.href);
+                        if (plan) target.searchParams.set('plan', plan);
+                        if (ref) target.searchParams.set('ref', ref);
+                        window.location.replace(target.pathname + (target.search ? ('?' + target.searchParams.toString()) : ''));
+                    }
+                };
+
+                tick();
+                countdownInterval = setInterval(tick, 50);
+            }
+
+            function showModal(){
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                startCountdownAndRedirect();
+            }
 
             cta.addEventListener('click', function(e){
                 e.preventDefault();
                 showModal();
-            });
-
-            btnCancel.addEventListener('click', function(e){ e.preventDefault(); hideModal(); });
-
-            btnOk.addEventListener('click', function(e){
-                e.preventDefault();
-                // preserve plan/ref query params and redirect to homepage
-                const params = new URLSearchParams(window.location.search);
-                const plan = params.get('plan');
-                const ref = params.get('ref');
-                const target = new URL('index.html', window.location.href);
-                if (plan) target.searchParams.set('plan', plan);
-                if (ref) target.searchParams.set('ref', ref);
-                window.location.href = target.pathname + (target.search ? ('?' + target.searchParams.toString()) : '');
             });
         });
     </script>

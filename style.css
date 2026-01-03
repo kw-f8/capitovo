@@ -873,6 +873,50 @@ details[open] .details-marker {
     #checkout-plan-summary #summary-plan-date span { transform: translateY(-2px); }
 }
 
+/* Magic glow button used on checkout_final */
+.magic-glow {
+    position: relative;
+    overflow: visible;
+    border-radius: 12px;
+}
+.magic-glow::before {
+    /* subtle outer glow */
+    content: '';
+    position: absolute;
+    inset: -6px; /* extend beyond button */
+    border-radius: 14px;
+    background: radial-gradient(ellipse at center, rgba(99,102,241,0.12), rgba(99,102,241,0.02) 40%, transparent 60%);
+    filter: blur(8px);
+    z-index: 0;
+    pointer-events: none;
+}
+.magic-glow::after {
+    /* moving light sweep */
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -40%;
+    width: 40%;
+    height: calc(100% + 16px);
+    background: linear-gradient(90deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.0) 100%);
+    transform: skewX(-20deg);
+    filter: blur(6px);
+    border-radius: 12px;
+    z-index: 1;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    animation: glow-sweep 3.6s linear infinite;
+}
+.magic-glow > * { position: relative; z-index: 2; }
+
+@keyframes glow-sweep {
+    0% { left: -40%; opacity: 0; }
+    10% { opacity: 1; }
+    50% { left: 120%; opacity: 0.9; }
+    100% { left: 220%; opacity: 0; }
+}
+
+
 /* ==================================================== */
 /* RESPONSIVE DESIGN (Media Queries) */
 /* ==================================================== */

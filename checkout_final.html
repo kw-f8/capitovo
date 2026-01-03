@@ -178,7 +178,7 @@
     <div id="final-confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
         <div class="w-full max-w-sm">
             <div class="bg-white p-8 rounded-lg shadow-xl border border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Weiterleitung</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Weiter zur Startseite</h3>
                 <p class="text-sm text-gray-600 mb-4">Sie werden zur Startseite weitergeleitet und bleiben dabei angemeldet. Dort können Sie Ihren Premium‑Zugang sofort nutzen.</p>
                 <div class="flex items-center justify-end gap-3">
                     <button id="final-confirm-cancel" class="px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700">Abbrechen</button>
@@ -207,11 +207,11 @@
 
             btnOk.addEventListener('click', function(e){
                 e.preventDefault();
-                // preserve plan/ref query params and redirect to Abonenten start
+                // preserve plan/ref query params and redirect to homepage
                 const params = new URLSearchParams(window.location.search);
                 const plan = params.get('plan');
                 const ref = params.get('ref');
-                const target = new URL('Abonenten/abonenten.html', window.location.href);
+                const target = new URL('index.html', window.location.href);
                 if (plan) target.searchParams.set('plan', plan);
                 if (ref) target.searchParams.set('ref', ref);
                 window.location.href = target.pathname + (target.search ? ('?' + target.searchParams.toString()) : '');

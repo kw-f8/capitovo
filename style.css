@@ -614,44 +614,56 @@ footer {
 /* ---------------------------------------------------- */
 .cap-stepper-wrap {
     margin: 0 0 28px 0;
+    width: 100%;
+    /* Default: step 1 active (0 completed segments) */
+    --cap-step-progress: 0;
 }
+
+/* Completed segments (1..4) per page */
+.cap-stepper-wrap.step-1 { --cap-step-progress: 0; }
+.cap-stepper-wrap.step-2 { --cap-step-progress: 1; }
+.cap-stepper-wrap.step-3 { --cap-step-progress: 2; }
+.cap-stepper-wrap.step-4 { --cap-step-progress: 3; }
+.cap-stepper-wrap.step-5 { --cap-step-progress: 4; }
 
 .cap-stepper {
     list-style: none;
-    /* Use an equal-width grid so spacing between points is always uniform */
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    align-items: center;
-    gap: 0;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
     padding: 0;
     margin: 0;
 }
 
+/* Base (gray) line + progress (blue) line.
+   Line runs from the right edge of the first circle to the left edge of the last circle. */
+.cap-stepper::before,
+.cap-stepper::after {
+    content: "";
+    position: absolute;
+    top: 16px; /* vertical center of 34px circle */
+    left: 34px;
+    right: 34px;
+    height: 3px;
+    border-radius: 999px;
+}
+.cap-stepper::before { background: #e5e7eb; }
+.cap-stepper::after {
+    background: var(--color-accent-blue);
+    /* 4 segments between 5 steps */
+    width: calc((100% - 68px) * (var(--cap-step-progress) / 4));
+    right: auto;
+}
+
 .cap-step {
     position: relative;
+    flex: 0 0 34px; /* fixed width so spacing is perfectly even */
+    width: 34px;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    min-width: 0;
-    justify-self: center;
-}
-
-/* Connector line */
-.cap-step:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    top: 16px; /* vertical center of the circle */
-    /* In grid: next step center is exactly 100% of this grid cell away */
-    left: calc(50% + 17px);
-    width: calc(100% - 34px);
-    height: 3px;
-    background: #e5e7eb; /* light gray */
-    border-radius: 999px;
-}
-
-.cap-step.is-complete:not(:last-child)::after {
-    background: var(--color-accent-blue);
 }
 
 .cap-step-circle {
@@ -681,6 +693,10 @@ footer {
 }
 
 .cap-step-label {
+    position: absolute;
+    top: 42px;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 12px;
     font-weight: 700;
     color: #94a3b8; /* muted */
@@ -689,7 +705,7 @@ footer {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100%;
+    max-width: 160px;
 }
 
 .cap-step.is-active .cap-step-label,
@@ -698,14 +714,17 @@ footer {
 }
 
 @media (max-width: 520px) {
-    .cap-stepper { gap: 0; }
-    .cap-step-label { font-size: 11px; }
-    .cap-step:not(:last-child)::after {
+    .cap-stepper::before,
+    .cap-stepper::after {
         top: 15px;
-        height: 3px;
-        left: calc(50% + 16px);
-        width: calc(100% - 32px);
+        left: 32px;
+        right: 32px;
     }
+    .cap-stepper::after {
+        width: calc((100% - 64px) * (var(--cap-step-progress) / 4));
+    }
+    .cap-step { flex-basis: 32px; width: 32px; }
+    .cap-step-label { font-size: 11px; top: 40px; max-width: 140px; }
     .cap-step-circle { width: 32px; height: 32px; font-size: 15px; }
 }
 

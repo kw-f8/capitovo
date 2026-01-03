@@ -1346,6 +1346,10 @@ function initCheckoutStepperNavigation(){
                 try{ e.preventDefault(); }catch(e){}
                 const targetPage = pageMap[idx] || pageMap[pageMap.length-1];
                 if (!targetPage) return;
+                // If we're already on that page (same pathname), do nothing to avoid reload
+                const currentPage = (window.location.pathname || '').split('/').filter(Boolean).pop() || 'index.html';
+                if (currentPage === targetPage) return;
+
                 const params = new URLSearchParams(window.location.search);
                 const plan = params.get('plan');
                 const ref = params.get('ref');

@@ -725,6 +725,11 @@ footer {
     text-align: right;
 }
 
+/* Fine-tune: center the first circle above its left-aligned label */
+.cap-step:first-child .cap-step-circle {
+    transform: translateX(11px);
+}
+
 .cap-step.is-active .cap-step-label,
 .cap-step.is-complete .cap-step-label {
     color: var(--color-accent-blue);
@@ -743,6 +748,7 @@ footer {
     .cap-step { flex-basis: 32px; width: 32px; }
     .cap-step-label { font-size: 11px; top: 40px; max-width: 140px; }
     .cap-step-circle { width: 32px; height: 32px; font-size: 15px; }
+    .cap-step:first-child .cap-step-circle { transform: translateX(11px); }
 }
 
 

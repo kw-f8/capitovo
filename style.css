@@ -1245,6 +1245,26 @@ html body .abonenten-page .site-footer .copyright {
     color: #0f172a !important;
 }
 
+/* FAQ: format 'Häufig gestellte Fragen' like the Übersicht card */
+/* Targets the specific max-width container used on the page to avoid broad side-effects */
+.max-w-3xl.mx-auto.mt-12 .grid > div {
+    background: #ffffff !important;
+    padding: 1.5rem !important; /* match p-6 / 24px */
+    border-radius: 0.75rem !important; /* rounded-xl */
+    border: 1px solid rgba(15,23,42,0.06) !important;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.12) !important;
+    color: #0f172a !important;
+}
+.max-w-3xl.mx-auto.mt-12 .grid > div h4 {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+.max-w-3xl.mx-auto.mt-12 .grid > div p {
+    color: #475569 !important;
+    margin-top: 0.5rem !important;
+}
+
+
 
 /* Checklist icons (Reassurance block on the pricing/checkout page) */
 /* Color the small SVG check icons in the four reassurance items capitovo-blue */

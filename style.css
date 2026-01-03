@@ -866,11 +866,11 @@ details[open] .details-marker {
 /* Nudge small '(Heute)' label in plan summary up slightly to vertically center it with the date */
 #checkout-plan-summary #summary-plan-date span {
     display: inline-block;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
 
 @media (max-width: 520px) {
-    #checkout-plan-summary #summary-plan-date span { transform: translateY(-1px); }
+    #checkout-plan-summary #summary-plan-date span { transform: translateY(-2px); }
 }
 
 /* ==================================================== */

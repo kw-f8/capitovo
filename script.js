@@ -1335,32 +1335,47 @@ function initCheckoutStepperNavigation(){
     const pageMap = ['warenkorb.html','checkout_kundendaten.html','checkout_payment.html','checkout_final.html'];
 
     stepperEls.forEach(stepper => {
+        const wrapper = stepper.closest('.cap-stepper-wrap');
+        let currentStepNum = 1;
+        if (wrapper) {
+            const m = Array.from(wrapper.classList).join(' ').match(/step-(\d+)/);
+            if (m) currentStepNum = parseInt(m[1], 10) || 1;
+        }
+        // Allowed to navigate only to steps that are strictly before the current step
+        // (i.e. already completed). For step N, allowed indices are 0..(N-2).
+        const allowedMaxIdx = Math.max(-1, currentStepNum - 2);
+
         const steps = Array.from(stepper.querySelectorAll('.cap-step'));
         steps.forEach((step, idx) => {
-            // Make interactive
-            step.style.cursor = 'pointer';
-            step.setAttribute('tabindex','0');
-            step.setAttribute('role','button');
+            // By default non-interactive
+            step.style.cursor = '';
+            step.removeAttribute('role');
+            step.removeAttribute('tabindex');
+            step.setAttribute('aria-disabled', 'true');
 
-            const navigateToStep = (e) => {
-                try{ e.preventDefault(); }catch(e){}
-                const targetPage = pageMap[idx] || pageMap[pageMap.length-1];
-                if (!targetPage) return;
-                // If we're already on that page (same pathname), do nothing to avoid reload
-                const currentPage = (window.location.pathname || '').split('/').filter(Boolean).pop() || 'index.html';
-                if (currentPage === targetPage) return;
+            // If this index is strictly less than currentStepNum-1 (i.e. already completed), make clickable
+            if (idx <= allowedMaxIdx) {
+                step.style.cursor = 'pointer';
+                step.setAttribute('tabindex','0');
+                step.setAttribute('role','button');
+                step.removeAttribute('aria-disabled');
 
-                const params = new URLSearchParams(window.location.search);
-                const plan = params.get('plan');
-                const ref = params.get('ref');
-                const target = new URL(targetPage, window.location.href);
-                if (plan) target.searchParams.set('plan', plan);
-                if (ref) target.searchParams.set('ref', ref);
-                window.location.href = target.pathname + (target.search ? ('?' + target.searchParams.toString()) : '');
-            };
+                const navigateToStep = (e) => {
+                    try{ e.preventDefault(); }catch(e){}
+                    const targetPage = pageMap[idx] || pageMap[pageMap.length-1];
+                    if (!targetPage) return;
+                    const params = new URLSearchParams(window.location.search);
+                    const plan = params.get('plan');
+                    const ref = params.get('ref');
+                    const target = new URL(targetPage, window.location.href);
+                    if (plan) target.searchParams.set('plan', plan);
+                    if (ref) target.searchParams.set('ref', ref);
+                    window.location.href = target.pathname + (target.search ? ('?' + target.searchParams.toString()) : '');
+                };
 
-            step.addEventListener('click', navigateToStep);
-            step.addEventListener('keypress', function(e){ if (e.key === 'Enter' || e.key === ' ') { navigateToStep(e); } });
+                step.addEventListener('click', navigateToStep);
+                step.addEventListener('keypress', function(e){ if (e.key === 'Enter' || e.key === ' ') { navigateToStep(e); } });
+            }
         });
     });
 }

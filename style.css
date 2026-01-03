@@ -891,7 +891,7 @@ details[open] .details-marker {
     pointer-events: none;
 }
 .magic-glow::after {
-    /* conic-gradient ring: a bright segment + trailing faint segment that orbits the full border */
+    /* static thin ring (no animation) to give a subtle border glow */
     content: '';
     position: absolute;
     inset: -8px; /* sit outside the button so it traces the border */
@@ -900,18 +900,11 @@ details[open] .details-marker {
     pointer-events: none;
     mix-blend-mode: screen;
     filter: blur(6px);
-    /* bright segment (sharp) + faint tail */
-    background: conic-gradient(
-        from 0deg,
-        transparent 0deg 260deg,
-        rgba(255,255,255,0.95) 260deg 275deg,
-        rgba(255,255,255,0.22) 275deg 320deg,
-        transparent 320deg 360deg
-    );
+    /* subtle static ring with a light accent and faint highlight */
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.06), rgba(99,102,241,0.06) 40%, transparent 60%);
     /* mask out interior so only thin ring remains */
     -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 12px), black calc(100% - 12px));
     mask: radial-gradient(farthest-side, transparent calc(100% - 12px), black calc(100% - 12px));
-    animation: spin 3.6s linear infinite;
 }
 .magic-glow > * { position: relative; z-index: 4; }
 

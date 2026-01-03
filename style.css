@@ -619,12 +619,11 @@ footer {
     --cap-step-progress: 0;
 }
 
-/* Completed segments (1..4) per page */
+/* Completed segments (1..3) per page */
 .cap-stepper-wrap.step-1 { --cap-step-progress: 0; }
 .cap-stepper-wrap.step-2 { --cap-step-progress: 1; }
 .cap-stepper-wrap.step-3 { --cap-step-progress: 2; }
 .cap-stepper-wrap.step-4 { --cap-step-progress: 3; }
-.cap-stepper-wrap.step-5 { --cap-step-progress: 4; }
 
 .cap-stepper {
     list-style: none;
@@ -652,8 +651,8 @@ footer {
 .cap-stepper::before { background: #e5e7eb; }
 .cap-stepper::after {
     background: var(--color-accent-blue);
-    /* 4 segments between 5 steps */
-    width: calc((100% - 68px) * (var(--cap-step-progress) / 4));
+    /* 3 segments between 4 steps */
+    width: calc((100% - 68px) * (var(--cap-step-progress) / 3));
     right: auto;
 }
 
@@ -743,7 +742,7 @@ footer {
         right: 32px;
     }
     .cap-stepper::after {
-        width: calc((100% - 64px) * (var(--cap-step-progress) / 4));
+        width: calc((100% - 64px) * (var(--cap-step-progress) / 3));
     }
     .cap-step { flex-basis: 32px; width: 32px; }
     .cap-step-label { font-size: 11px; top: 40px; max-width: 140px; }

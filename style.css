@@ -621,7 +621,7 @@ footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    gap: 0;
     padding: 0;
     margin: 0;
 }
@@ -641,8 +641,9 @@ footer {
     content: "";
     position: absolute;
     top: 16px; /* vertical center of the circle */
-    left: calc(50% + 18px);
-    right: calc(-50% + 18px);
+    /* Extend the connector line to touch the next circle (no gap) */
+    left: calc(50% + 17px);
+    right: calc(-50% + 17px);
     height: 3px;
     background: #e5e7eb; /* light gray */
     border-radius: 999px;
@@ -696,7 +697,7 @@ footer {
 }
 
 @media (max-width: 520px) {
-    .cap-stepper { gap: 10px; }
+    .cap-stepper { gap: 0; }
     .cap-step-label { font-size: 11px; }
     .cap-step:not(:last-child)::after {
         top: 15px;

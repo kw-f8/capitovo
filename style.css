@@ -1246,5 +1246,15 @@ html body .abonenten-page .site-footer .copyright {
 }
 
 
+/* Checklist icons (Reassurance block on the pricing/checkout page) */
+/* Color the small SVG check icons in the four reassurance items capitovo-blue */
+.flex.flex-col.justify-center.pl-4 svg,
+.flex.flex-col.justify-center.pl-4 .w-5.h-5 {
+    color: var(--color-accent-blue) !important;
+    stroke: var(--color-accent-blue) !important;
+    fill: var(--color-accent-blue) !important;
+}
+
+
 
 

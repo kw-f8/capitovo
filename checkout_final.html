@@ -80,23 +80,113 @@
 
             <div class="w-full space-y-10 bg-white p-8 rounded-xl shadow-xl border border-gray-200">
                 <div>
-                    <h2 class="text-2xl font-extrabold text-gray-900">Vielen Dank!</h2>
-                    <p class="mt-2 text-sm text-gray-600">Sie haben nun Zugriff auf das Premium-Abonnement</p>
+                    <h2 class="text-2xl font-extrabold text-gray-900">Zahlung</h2>
+                    <p class="mt-2 text-sm text-gray-600">Bitte wählen Sie eine Zahlungsmethode und schließen Sie das Abonnement ab.</p>
                 </div>
 
-                <div id="checkout-final" class="space-y-6">
-                    <p class="text-sm text-gray-700">Sie werden in Kürze eine Bestätigung per E-Mail erhalten. Über den Button gelangen Sie zu Ihrem Konto.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-                        <div id="checkout-plan-summary" class="bg-white rounded-xl shadow-sm border-2 border-[color:var(--color-accent-blue)] p-6">
-                            <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2">Gewähltes Abonnement</h4>
-                            <div id="summary-plan-name" class="text-lg font-bold text-gray-900">Premium</div>
-                            <div class="text-2xl font-extrabold mt-1 text-primary-blue" id="summary-plan-price">€ 14,99 <span class="text-base font-normal text-gray-600">/ Monat</span></div>
-                        </div>
-                        <div class="flex items-center justify-center">
-                            <a href="Abonenten/abonenten.html" class="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150">Zu meinem Konto</a>
+                <form id="checkout-payment-form" class="space-y-10" novalidate>
+
+                    <!-- Plan Summary Box (clean, blue-outline) -->
+                    <div id="checkout-plan-summary" class="bg-white rounded-xl shadow-sm border-2 border-[color:var(--color-accent-blue)] p-6 mb-10" style="margin-top:48px;margin-bottom:48px;">
+                        <div class="grid grid-cols-2 gap-0">
+                            <div class="pr-6">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2">Gewähltes Abonnement</h4>
+                                <div id="summary-plan-name" class="text-lg font-bold text-gray-900">Premium</div>
+                                <div class="text-2xl font-extrabold mt-1 text-primary-blue" id="summary-plan-price">€ 14,99 <span class="text-base font-normal text-gray-600">/ Monat</span></div>
+                                <div class="text-xs text-gray-500 mt-1">inkl. MwSt</div>
+                            </div>
+                            <div class="border-l border-gray-200 pl-6">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2">Zahlungsbeginn</h4>
+                                <div id="summary-plan-date" class="text-lg font-bold text-gray-900">–</div>
+                                <div class="mt-3 space-y-2">
+                                    <div class="flex items-center text-xs text-gray-600">
+                                        <svg class="w-4 h-4 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        Keine Mindestlaufzeit
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-600">
+                                        <svg class="w-4 h-4 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        Monatlich kündbar
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <!-- Payment Method -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold text-gray-900">Zahlungsmethode</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="pay-card" name="payment-method" type="radio" value="card" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-card" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">Kreditkarte</span>
+                                    <img src="Abonenten/Bilder/Payment_logos/payment_logo_visa.svg" alt="Visa" class="h-7 w-auto ml-2">
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="pay-paypal" name="payment-method" type="radio" value="paypal" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-paypal" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">PayPal</span>
+                                    <img src="Abonenten/Bilder/Payment_logos/payment_logo_paypal.svg" alt="PayPal" class="h-7 w-auto ml-2">
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="pay-sepa" name="payment-method" type="radio" value="sepa" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-sepa" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">Sofortüberweisung</span>
+                                    <img src="Abonenten/Bilder/Payment_logos/payment_logo_sofortüberweisung.svg" alt="Sofortüberweisung" class="h-7 w-auto ml-2">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Payment Fields -->
+                        <div id="payment-details" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200 hidden">
+                            <!-- Card Fields -->
+                            <div id="card-fields" class="space-y-4">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="card-number" placeholder="Kartennummer" class="block w-full pl-10 border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" id="card-expiry" placeholder="MM / JJ" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                    <input type="text" id="card-cvc" placeholder="CVC" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                </div>
+                                <div class="flex items-center text-xs text-gray-500 mt-2">
+                                    <svg class="h-4 w-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    Zahlungen werden sicher über Stripe verarbeitet (PCI-konform)
+                                </div>
+                            </div>
+                            <!-- PayPal Info -->
+                            <div id="paypal-fields" class="hidden text-sm text-gray-600">
+                                Sie werden nach dem Klick auf "Jetzt kostenpflichtig abonnieren" zu PayPal weitergeleitet.
+                            </div>
+                            <!-- SEPA Fields -->
+                            <div id="sepa-fields" class="hidden space-y-4">
+                                <input type="text" id="sepa-iban" placeholder="IBAN" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                <input type="text" id="sepa-owner" placeholder="Kontoinhaber" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center pt-4">
+                            <input id="checkout-terms" name="terms" type="checkbox" required class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300 rounded">
+                            <label for="checkout-terms" class="ml-2 block text-sm text-gray-900">
+                                Ich stimme den <a href="Rechtliches/agb.html" target="_blank" class="font-medium text-accent-blue hover:text-accent-blue font-bold" style="color: var(--color-accent-blue);" onclick="event.stopPropagation();">AGB</a> und der <a href="Rechtliches/widerrufsbelehrung.html" target="_blank" class="font-medium text-accent-blue hover:text-accent-blue font-bold" style="color: var(--color-accent-blue);" onclick="event.stopPropagation();">Widerrufsbelehrung</a> zu und bestätige den kostenpflichtigen Kauf.
+                            </label>
+                        </div>
+
+                        <button id="pay-submit" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-500 cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150" disabled>
+                            Jetzt kostenpflichtig abonnieren
+                        </button>
+                        <div class="flex items-center justify-center text-xs text-gray-500 mt-3">
+                            <svg class="w-4 h-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            100% sichere Zahlung. SSL-verschlüsselt.
+                        </div>
+
+                    </form>
             </div>
 
         </div>

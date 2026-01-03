@@ -1351,6 +1351,18 @@ function initCheckoutStepperNavigation(){
         const allowedMaxIdx = Math.max(-1, currentStepNum - 2);
 
         const steps = Array.from(stepper.querySelectorAll('.cap-step'));
+
+        // If this wrapper represents the final step (step-4), do not allow any step clicks
+        // — prevents navigating back from the final confirmation page.
+        if (wrapper && Array.from(wrapper.classList).some(c => c === 'step-4')) {
+            steps.forEach(step => {
+                step.style.cursor = '';
+                step.removeAttribute('role');
+                step.removeAttribute('tabindex');
+                step.setAttribute('aria-disabled', 'true');
+            });
+            return;
+        }
         steps.forEach((step, idx) => {
             // By default non-interactive
             step.style.cursor = '';

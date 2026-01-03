@@ -128,33 +128,34 @@ header {
     width: 100%;
     margin: 0 auto; 
     padding: 0 24px; /* matches Tailwind `p-6` (1.5rem = 24px) */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .cap-step {
+        position: relative;
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+    }
 
-.header-logo {
-    height: 80px; 
-    width: auto; 
-    display: block;
-}
+    /* Draw a single continuous connector line across the whole stepper. */
+    .cap-stepper {
+        position: relative;
+    }
+    .cap-stepper::before {
+        content: "";
+        position: absolute;
+        top: 16px; /* vertical center of the circles */
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: #e5e7eb; /* light gray */
+        border-radius: 999px;
+        z-index: 1;
+    }
+    .cap-step.is-complete .cap-step-circle + .cap-step-label { /* keep label colored */ }
 
-/* Ensure main content aligns with header content on subscriber pages.
-   Sidebar positioning is defined later in this file (right-based slide-in).
-   We avoid duplicating left/right positioning to prevent conflicts. */
-main.with-sidebar {
-    max-width: 72rem;
-    margin: 0 auto;
-    padding: 0 24px; /* header-content provides horizontal padding, keep same */
-    box-sizing: border-box;
-    transition: margin 0.28s ease;
-}
-@media (max-width: 1024px) { main.with-sidebar { margin: 0 auto; } }
-
-/* Tweak menu toggle focus styles and remove default outline where not desired */
-#menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
-#menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
-#menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+    .cap-step-circle {
 
 /* Small utility used on some pages to force article alignment */
 .page-article-align { margin-left: 0 !important; margin-right: 0 !important; }
@@ -163,9 +164,11 @@ main.with-sidebar {
 .menu-toggle {
     background: none;
     border: 2px solid #1a1a1a; /* Dunkler Rahmen */
-    color: #1a1a1a; /* Dunkles Icon */
-    font-size: 1.5em;
-    padding: 5px 10px;
+        background: #e5e7eb;
+        color: #ffffff;
+        flex: 0 0 auto;
+        position: relative;
+        z-index: 2; /* sit above the connector line */
     cursor: pointer;
     border-radius: 4px;
     transition: all 0.3s;
@@ -698,12 +701,7 @@ footer {
 @media (max-width: 520px) {
     .cap-stepper { gap: 10px; }
     .cap-step-label { font-size: 11px; }
-    .cap-step:not(:last-child)::after {
-        top: 15px;
-        height: 3px;
-        left: calc(50% + 16px);
-        right: calc(-50% + 16px);
-    }
+    .cap-stepper::before { top: 15px; height: 3px; }
     .cap-step-circle { width: 32px; height: 32px; font-size: 15px; }
 }
 

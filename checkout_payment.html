@@ -354,6 +354,8 @@
                         } catch(e) {}
 
                         try {
+                            // Disable stepper navigation after payment
+                            try { localStorage.setItem('capitovo_disable_stepper', '1'); } catch(e){}
                             const target = new URL('checkout_final.html', window.location.href);
                             target.searchParams.set('plan', plan);
                             if (ref) target.searchParams.set('ref', ref);

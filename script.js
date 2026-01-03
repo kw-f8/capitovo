@@ -1332,6 +1332,11 @@ function initCheckoutStepperNavigation(){
     const stepperEls = document.querySelectorAll('.cap-stepper');
     if (!stepperEls || !stepperEls.length) return;
 
+    // If the flow set a flag to disable stepper navigation (e.g. after payment), do nothing
+    try{
+        if (localStorage.getItem('capitovo_disable_stepper') === '1') return;
+    }catch(e){}
+
     const pageMap = ['warenkorb.html','checkout_kundendaten.html','checkout_payment.html','checkout_final.html'];
 
     stepperEls.forEach(stepper => {

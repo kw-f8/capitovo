@@ -613,7 +613,7 @@ footer {
 /* Used on warenkorb.html and checkout.html             */
 /* ---------------------------------------------------- */
 .cap-stepper-wrap {
-    margin: 0 0 28px 0;
+    margin: 0 0 35px 0;
     width: 100%;
     /* Default: step 1 active (0 completed segments) */
     --cap-step-progress: 0;

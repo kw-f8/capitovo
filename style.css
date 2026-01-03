@@ -98,37 +98,61 @@ main {
 }
 
 /* --- ANPASSUNG: ANALYSE-SEKTION HOCHSCHIEBEN --- */
-#analysen {
-    /* Negatives margin entfernt; sorgt sonst für Überlagerung mit Header */
-    margin-top: 0;
-    /* Padding wird jetzt von der globalen main > section Regel gesteuert */
-    padding-top: 0;
-    padding-bottom: 0;
-}
-/* ------------------------------------------------- */
-
-
-/* --- Header und Navigation (Jetzt wieder IMMER Weiß/Sticky) --- */
-
-header {
-    margin: 0; 
-    padding: 20px 0; 
-    border-bottom: 1px solid #e0e0e0; 
-    background-color: #ffffff; /* Hintergrund auf Weiß gesetzt */
-    position: sticky; 
-    top: 0;
-    z-index: 50; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
-    transition: background-color 0.3s, box-shadow 0.3s, border-bottom 0.3s;
+.cap-stepper {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 0;
+    margin: 0;
+    position: relative;
 }
 
-.header-content {
-    /* Match Tailwind's `max-w-6xl` and `p-6` to align with main content */
-    max-width: 72rem; /* 1152px - aligns with Tailwind `max-w-6xl` */
-    width: 100%;
-    margin: 0 auto; 
-    padding: 0 24px; /* matches Tailwind `p-6` (1.5rem = 24px) */
-    .cap-step {
+.cap-step {
+    position: relative;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* Per-step connector that stretches from the center of this step to its right edge
+   so the line reaches the next circle without gaps. */
+.cap-step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%);
+    height: 3px;
+    width: calc(100% - 34px); /* subtract circle diameter so line reaches next circle center */
+    background: #e5e7eb;
+    border-radius: 999px;
+    z-index: 1;
+}
+
+.cap-step.is-complete:not(:last-child)::after {
+    background: var(--color-accent-blue);
+}
+
+.cap-step-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    background: #e5e7eb;
+    color: #ffffff;
+    flex: 0 0 auto;
+    position: relative;
+    z-index: 2; /* sit above the connector line */
+}
         position: relative;
         flex: 1 1 0;
         display: flex;

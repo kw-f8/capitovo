@@ -474,6 +474,8 @@ function maybeShowFreePlanGate() {
         if (!path.includes('/abonenten/')) return;
         // Don't show on checkout itself (if embedded/linked) or on public pages.
         if (path.endsWith('/checkout.html')) return;
+        if (path.endsWith('/checkout_kundendaten.html')) return;
+        if (path.endsWith('/checkout_payment.html')) return;
         if (path.endsWith('/warenkorb.html')) return;
 
         // Only show once per session/tab.

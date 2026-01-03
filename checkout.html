@@ -11,6 +11,19 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script>
+        // Redirect legacy checkout URL to the new two-step flow.
+        (function(){
+            try{
+                const target = new URL('checkout_kundendaten.html', window.location.href);
+                const params = new URLSearchParams(window.location.search);
+                params.forEach((v, k) => target.searchParams.set(k, v));
+                window.location.replace(target.pathname + '?' + target.searchParams.toString());
+            }catch(e){
+                // If anything fails, continue rendering the legacy page.
+            }
+        })();
+    </script>
+    <script>
         // Final checkout step (form-only): no subscription-badge prepaint needed.
         (function(){
             try{

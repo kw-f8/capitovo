@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout – Zahlung - capitovo</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=2025-12-25b">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png?v=2025-12-25b">
+    <link rel="shortcut icon" href="assets/favicon-32.png?v=2025-12-25b">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=2025-12-25a">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>
+        (function(){
+            try{
+                document.documentElement.classList.remove('cap-sub-premium');
+                document.documentElement.classList.remove('cap-sub-free');
+            }catch(e){}
+        })();
+    </script>
+</head>
+<body class="bg-white text-gray-900 flex flex-col min-h-screen">
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                </a>
+            </div>
+            <a href="checkout_kundendaten.html" id="cancel-button" style="transform:translateX(-10px);" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+                <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Zurück
+            </a>
+        </div>
+    </header>
+
+    <main class="py-12" style="max-width:1138px;width:100%;margin:0 auto;padding-left:18px;padding-right:28px;box-sizing:border-box;">
+        <div class="w-full space-y-8">
+
+            <!-- Statusanzeige (Checkout-Fortschritt) -->
+            <nav class="cap-stepper-wrap" aria-label="Checkout Fortschritt">
+                <ol class="cap-stepper">
+                    <li class="cap-step is-complete">
+                        <span class="cap-step-circle" aria-hidden="true">
+                            <svg class="cap-step-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="cap-step-label">Übersicht</span>
+                    </li>
+                    <li class="cap-step is-complete">
+                        <span class="cap-step-circle" aria-hidden="true">
+                            <svg class="cap-step-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="cap-step-label">Kundendaten</span>
+                    </li>
+                    <li class="cap-step is-active">
+                        <span class="cap-step-circle" aria-hidden="true">3</span>
+                        <span class="cap-step-label">Zahlungsmethode</span>
+                    </li>
+                    <li class="cap-step">
+                        <span class="cap-step-circle" aria-hidden="true">4</span>
+                        <span class="cap-step-label">Zusammenfassung</span>
+                    </li>
+                    <li class="cap-step">
+                        <span class="cap-step-circle" aria-hidden="true">5</span>
+                        <span class="cap-step-label">Fertig</span>
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="w-full space-y-10 bg-white p-8 rounded-xl shadow-xl border border-gray-200">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-900">Zahlung</h2>
+                    <p class="mt-2 text-sm text-gray-600">Bitte wählen Sie eine Zahlungsmethode und schließen Sie das Abonnement ab.</p>
+                </div>
+
+                <form id="checkout-payment-form" class="space-y-10" novalidate>
+
+                    <!-- Plan Summary Box (clean, blue-outline) -->
+                    <div id="checkout-plan-summary" class="bg-white rounded-xl shadow-sm border-2 border-[color:var(--color-accent-blue)] p-6 mb-10" style="margin-top:48px;margin-bottom:48px;">
+                        <div class="grid grid-cols-2 gap-0">
+                            <div class="pr-6">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2">Gewähltes Abonnement</h4>
+                                <div id="summary-plan-name" class="text-lg font-bold text-gray-900">Premium</div>
+                                <div class="text-2xl font-extrabold mt-1 text-primary-blue" id="summary-plan-price">€ 14,99 <span class="text-base font-normal text-gray-600">/ Monat</span></div>
+                                <div class="text-xs text-gray-500 mt-1">inkl. MwSt</div>
+                            </div>
+                            <div class="border-l border-gray-200 pl-6">
+                                <h4 class="text-xs font-semibold uppercase tracking-wider text-primary-blue mb-2">Zahlungsbeginn</h4>
+                                <div id="summary-plan-date" class="text-lg font-bold text-gray-900">–</div>
+                                <div class="mt-3 space-y-2">
+                                    <div class="flex items-center text-xs text-gray-600">
+                                        <svg class="w-4 h-4 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        Keine Mindestlaufzeit
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-600">
+                                        <svg class="w-4 h-4 text-primary-blue mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        Monatlich kündbar
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-bold text-gray-900">Zahlungsmethode</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center">
+                                <input id="pay-card" name="payment-method" type="radio" value="card" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-card" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">Kreditkarte</span>
+                                    <img src="Abonenten/Bilder/Payment_logos/payment_logo_visa.svg" alt="Visa" class="h-7 w-auto ml-2">
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="pay-paypal" name="payment-method" type="radio" value="paypal" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-paypal" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">PayPal</span>
+                                    <img src="Abonenten/Bilder/Payment_logos/payment_logo_paypal.svg" alt="PayPal" class="h-7 w-auto ml-2">
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input id="pay-sepa" name="payment-method" type="radio" value="sepa" class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300">
+                                <label for="pay-sepa" class="ml-3 flex items-center text-sm font-medium text-gray-700">
+                                    <span class="mr-2">Sofortüberweisung</span>
+                                    <img src="Abonenten/Bilder/Payment_logos/payment_logo_sofortüberweisung.svg" alt="Sofortüberweisung" class="h-7 w-auto ml-2">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Payment Fields -->
+                        <div id="payment-details" class="mt-4 p-4 bg-gray-50 rounded-md border border-gray-200 hidden">
+                            <!-- Card Fields -->
+                            <div id="card-fields" class="space-y-4">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="card-number" placeholder="Kartennummer" class="block w-full pl-10 border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <input type="text" id="card-expiry" placeholder="MM / JJ" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                    <input type="text" id="card-cvc" placeholder="CVC" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                </div>
+                                <div class="flex items-center text-xs text-gray-500 mt-2">
+                                    <svg class="h-4 w-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                    Zahlungen werden sicher über Stripe verarbeitet (PCI-konform)
+                                </div>
+                            </div>
+                            <!-- PayPal Info -->
+                            <div id="paypal-fields" class="hidden text-sm text-gray-600">
+                                Sie werden nach dem Klick auf "Jetzt kostenpflichtig abonnieren" zu PayPal weitergeleitet.
+                            </div>
+                            <!-- SEPA Fields -->
+                            <div id="sepa-fields" class="hidden space-y-4">
+                                <input type="text" id="sepa-iban" placeholder="IBAN" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                                <input type="text" id="sepa-owner" placeholder="Kontoinhaber" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-accent-blue focus:border-accent-blue sm:text-sm p-2 border">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center pt-4">
+                        <input id="checkout-terms" name="terms" type="checkbox" required class="h-4 w-4 text-accent-blue focus:ring-accent-blue border-gray-300 rounded">
+                        <label for="checkout-terms" class="ml-2 block text-sm text-gray-900">
+                            Ich stimme den <a href="Rechtliches/agb.html" target="_blank" class="font-medium text-accent-blue hover:text-accent-blue font-bold" style="color: var(--color-accent-blue);" onclick="event.stopPropagation();">AGB</a> und der <a href="Rechtliches/widerrufsbelehrung.html" target="_blank" class="font-medium text-accent-blue hover:text-accent-blue font-bold" style="color: var(--color-accent-blue);" onclick="event.stopPropagation();">Widerrufsbelehrung</a> zu und bestätige den kostenpflichtigen Kauf.
+                        </label>
+                    </div>
+
+                    <button id="pay-submit" type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gray-500 cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150" disabled>
+                        Jetzt kostenpflichtig abonnieren
+                    </button>
+                    <div class="flex items-center justify-center text-xs text-gray-500 mt-3">
+                        <svg class="w-4 h-4 text-green-500 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                        100% sichere Zahlung. SSL-verschlüsselt.
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="site-footer mt-auto">
+        <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
+            <div class="footer-links flex items-center gap-3">
+                <a href="Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+                <a href="Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js?v=6"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const ref = params.get('ref');
+            const plan = (params.get('plan') || 'premium');
+
+            // Redirect back to customer data if user didn't fill it yet
+            try {
+                const customer = JSON.parse(localStorage.getItem('capitovo_checkout_customer') || '{}') || {};
+                if (!customer.email || !customer.firstname || !customer.lastname) {
+                    const target = new URL('checkout_kundendaten.html', window.location.href);
+                    target.searchParams.set('plan', plan);
+                    if (ref) target.searchParams.set('ref', ref);
+                    window.location.replace(target.pathname + '?' + target.searchParams.toString());
+                    return;
+                }
+            } catch(e) {}
+
+            // Back link
+            const cancelBtn = document.getElementById('cancel-button');
+            if (cancelBtn) {
+                const target = new URL('checkout_kundendaten.html', window.location.href);
+                target.searchParams.set('plan', plan);
+                if (ref) target.searchParams.set('ref', ref);
+                cancelBtn.href = target.pathname + '?' + target.searchParams.toString();
+            }
+
+            // Date label
+            try {
+                const dateEl = document.getElementById('summary-plan-date');
+                if (dateEl) {
+                    const now = new Date();
+                    const pad = n => n.toString().padStart(2, '0');
+                    const d = pad(now.getDate());
+                    const m = pad(now.getMonth() + 1);
+                    const y = now.getFullYear();
+                    dateEl.innerHTML = `${d}.${m}.${y} <span class="text-sm font-normal text-gray-600">(Heute)</span>`;
+                }
+            } catch(e){}
+
+            // Plan summary
+            try {
+                const nameEl = document.getElementById('summary-plan-name');
+                const priceEl = document.getElementById('summary-plan-price');
+                if (plan === 'premium') {
+                    if (nameEl) nameEl.textContent = 'Premium';
+                    if (priceEl) priceEl.innerHTML = '€ 14,99 <span class="text-base font-normal text-gray-600">/ Monat</span>';
+                } else {
+                    if (nameEl) nameEl.textContent = 'Free';
+                    if (priceEl) priceEl.innerHTML = '€ 0,00 <span class="text-base font-normal text-gray-600">/ Monat</span>';
+                }
+            } catch(e){}
+
+            // Payment method toggle
+            const radios = document.getElementsByName('payment-method');
+            const cardFields = document.getElementById('card-fields');
+            const paypalFields = document.getElementById('paypal-fields');
+            const sepaFields = document.getElementById('sepa-fields');
+            const paymentDetails = document.getElementById('payment-details');
+
+            function updatePaymentFields() {
+                if (!cardFields || !paypalFields || !sepaFields || !paymentDetails) return;
+                cardFields.classList.add('hidden');
+                paypalFields.classList.add('hidden');
+                sepaFields.classList.add('hidden');
+                paymentDetails.classList.add('hidden');
+
+                const selected = document.querySelector('input[name="payment-method"]:checked');
+                if (!selected) return;
+
+                paymentDetails.classList.remove('hidden');
+                if (selected.value === 'card') cardFields.classList.remove('hidden');
+                if (selected.value === 'paypal') paypalFields.classList.remove('hidden');
+                if (selected.value === 'sepa') sepaFields.classList.remove('hidden');
+            }
+
+            radios.forEach(r => r.addEventListener('change', () => {
+                updatePaymentFields();
+                validateForm();
+            }));
+            updatePaymentFields();
+
+            const form = document.getElementById('checkout-payment-form');
+            const submitBtn = document.getElementById('pay-submit');
+            const formInputs = form ? form.querySelectorAll('input, select') : [];
+
+            function validateForm() {
+                if (!submitBtn) return;
+
+                let isValid = true;
+
+                // Terms required
+                const terms = document.getElementById('checkout-terms');
+                if (!terms || !terms.checked) isValid = false;
+
+                // Payment method + fields
+                const methodInput = document.querySelector('input[name="payment-method"]:checked');
+                if (!methodInput) {
+                    isValid = false;
+                } else {
+                    const method = methodInput.value;
+                    if (method === 'card') {
+                        if (!String((document.getElementById('card-number') || {}).value || '').trim()) isValid = false;
+                        if (!String((document.getElementById('card-expiry') || {}).value || '').trim()) isValid = false;
+                        if (!String((document.getElementById('card-cvc') || {}).value || '').trim()) isValid = false;
+                    } else if (method === 'sepa') {
+                        if (!String((document.getElementById('sepa-iban') || {}).value || '').trim()) isValid = false;
+                        if (!String((document.getElementById('sepa-owner') || {}).value || '').trim()) isValid = false;
+                    }
+                }
+
+                if (isValid) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('bg-gray-500', 'cursor-not-allowed');
+                    submitBtn.classList.add('bg-primary-blue', 'hover:bg-blue-700');
+                } else {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
+                    submitBtn.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
+                }
+            }
+
+            formInputs.forEach(input => {
+                input.addEventListener('input', validateForm);
+                input.addEventListener('change', validateForm);
+            });
+            validateForm();
+
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (!submitBtn || submitBtn.disabled) return;
+
+                    // Simulate processing
+                    const originalText = submitBtn.textContent;
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Verarbeite Zahlung...';
+                    submitBtn.classList.add('bg-gray-500', 'cursor-not-allowed');
+
+                    setTimeout(() => {
+                        // Success: create/update session
+                        try {
+                            const customer = JSON.parse(localStorage.getItem('capitovo_checkout_customer') || '{}') || {};
+                            const email = customer.email || '';
+                            const name = ((customer.firstname || '') + ' ' + (customer.lastname || '')).trim();
+
+                            const sess = {
+                                email: email,
+                                name: name,
+                                subscription: plan,
+                                ts: Date.now()
+                            };
+                            localStorage.setItem('capitovo_session', JSON.stringify(sess));
+                        } catch(e) {}
+
+                        window.location.href = 'Abonenten/abonenten.html';
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

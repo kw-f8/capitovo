@@ -224,10 +224,10 @@
                         try{
                             const svg = cancelBtn.querySelector('svg');
                             if (svg) {
-                                cancelBtn.innerHTML = svg.outerHTML + ' Zurück';
+                                cancelBtn.innerHTML = svg.outerHTML + ' Abbrechen';
                             } else {
                                 // Fallback: replace only textual content
-                                cancelBtn.textContent = 'Zurück';
+                                cancelBtn.textContent = 'Abbrechen';
                             }
                         }catch(e){}
 

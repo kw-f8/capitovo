@@ -177,7 +177,7 @@
     <!-- Confirmation modal for final CTA (match homepage login modal background/structure) -->
     <div id="final-confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">
         <div class="w-full max-w-sm">
-            <div class="bg-white p-8 rounded-lg shadow-xl border border-gray-200">
+            <div id="final-confirm-content" class="bg-white p-8 rounded-lg shadow-xl border border-gray-200 select-none" style="-webkit-user-select:none; user-select:none;">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2 text-center">Weiter zur Startseite</h3>
                 <div class="space-y-1">
                     <p class="text-sm text-gray-600 text-center whitespace-nowrap tracking-tight leading-snug">Sie werden zur Startseite weitergeleitet.</p>
@@ -185,13 +185,13 @@
                 </div>
 
                 <div class="mt-5 flex justify-center">
-                    <div class="relative" style="width:96px; height:96px;">
-                        <svg viewBox="0 0 100 100" width="96" height="96" aria-hidden="true" class="block">
-                            <circle id="final-confirm-progress" cx="50" cy="50" r="42" fill="none" stroke-width="8" stroke-linecap="round"
+                    <div class="relative" style="width:72px; height:72px;">
+                        <svg viewBox="0 0 100 100" width="72" height="72" aria-hidden="true" class="block">
+                            <circle id="final-confirm-progress" cx="50" cy="50" r="42" fill="none" stroke-width="7" stroke-linecap="round"
                                 style="stroke: var(--color-accent-blue); transform: rotate(-90deg); transform-origin: 50% 50%; stroke-dasharray: 0; stroke-dashoffset: 0;"></circle>
                         </svg>
                         <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="text-xl font-semibold text-gray-900">
+                            <div class="text-lg font-semibold text-gray-900">
                                 <span id="final-confirm-countdown">5</span>
                             </div>
                         </div>
@@ -204,13 +204,16 @@
         document.addEventListener('DOMContentLoaded', function(){
             const cta = document.getElementById('final-cta');
             const modal = document.getElementById('final-confirm-modal');
+            const content = document.getElementById('final-confirm-content');
             if (!cta || !modal) return;
 
             let countdownInterval = null;
+            let isPaused = false;
 
             function startCountdownAndRedirect(){
                 const totalMs = 5000;
-                const start = Date.now();
+                let remainingMs = totalMs;
+                let lastTs = Date.now();
                 let lastShownSeconds = null;
 
                 const countdownEl = document.getElementById('final-confirm-countdown');
@@ -229,10 +232,18 @@
                 }
 
                 const tick = () => {
-                    const elapsed = Date.now() - start;
-                    const remainingMs = Math.max(0, totalMs - elapsed);
+                    if (isPaused) {
+                        lastTs = Date.now();
+                        return;
+                    }
+
+                    const now = Date.now();
+                    const delta = Math.max(0, now - lastTs);
+                    lastTs = now;
+                    remainingMs = Math.max(0, remainingMs - delta);
+
                     const remainingSeconds = Math.ceil(remainingMs / 1000);
-                    const progress = remainingMs / totalMs;
+                    const progress = remainingMs / totalMs; // 1 -> 0
 
                     if (countdownEl && remainingSeconds !== lastShownSeconds) {
                         countdownEl.textContent = String(remainingSeconds);
@@ -265,7 +276,21 @@
             function showModal(){
                 modal.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
+                isPaused = false;
                 startCountdownAndRedirect();
+            }
+
+            function pause(){ isPaused = true; }
+            function resume(){ isPaused = false; }
+
+            // Press-and-hold pause (mouse/touch)
+            if (content) {
+                content.addEventListener('mousedown', pause);
+                content.addEventListener('mouseup', resume);
+                content.addEventListener('mouseleave', resume);
+                content.addEventListener('touchstart', function(e){ pause(); }, { passive: true });
+                content.addEventListener('touchend', function(e){ resume(); }, { passive: true });
+                content.addEventListener('touchcancel', function(e){ resume(); }, { passive: true });
             }
 
             cta.addEventListener('click', function(e){

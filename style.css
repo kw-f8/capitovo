@@ -647,6 +647,7 @@ footer {
     right: 34px;
     height: 3px;
     border-radius: 999px;
+    z-index: 0; /* keep lines behind circles */
 }
 .cap-stepper::before { background: #e5e7eb; }
 .cap-stepper::after {
@@ -664,6 +665,7 @@ footer {
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    z-index: 1; /* above stepper lines */
 }
 
 .cap-step-circle {
@@ -678,6 +680,8 @@ footer {
     background: #e5e7eb;
     color: #ffffff;
     flex: 0 0 auto;
+    position: relative;
+    z-index: 2; /* ensure the line never draws through the circle */
 }
 
 .cap-step.is-active .cap-step-circle,
@@ -706,6 +710,19 @@ footer {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 160px;
+}
+
+/* Prevent edge labels from visually sticking out past the content width */
+.cap-step:first-child .cap-step-label {
+    left: 0;
+    transform: none;
+    text-align: left;
+}
+.cap-step:last-child .cap-step-label {
+    left: auto;
+    right: 0;
+    transform: none;
+    text-align: right;
 }
 
 .cap-step.is-active .cap-step-label,

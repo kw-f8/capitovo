@@ -1252,7 +1252,7 @@ html body .abonenten-page .site-footer .copyright {
 .flex.flex-col.justify-center.pl-4 .w-5.h-5 {
     color: var(--color-accent-blue) !important;
     stroke: var(--color-accent-blue) !important;
-    fill: var(--color-accent-blue) !important;
+    fill: none !important; /* keep original no-fill so icons don't become solid circles */
 }
 
 

@@ -13,14 +13,6 @@
     <script>
         // Prevent returning to checkout after successful payment
         (function(){
-            function isBackForwardNav(){
-                try{
-                    const nav = performance.getEntriesByType && performance.getEntriesByType('navigation');
-                    if (nav && nav.length) return nav[0].type === 'back_forward';
-                    if (performance.navigation) return performance.navigation.type === 2;
-                }catch(e){}
-                return false;
-            }
             function shouldBlock(){
                 try{
                     const s = (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1');
@@ -32,12 +24,9 @@
             function enforce(){
                 try{ if (shouldBlock()) window.location.replace('../abonenten.html'); }catch(e){}
             }
-            // Only enforce when the page is reached via Back/Forward (history traversal).
-            if (isBackForwardNav()) enforce();
+            // Only enforce when restored from BFCache (i.e., user navigated Back/Forward and the page was restored).
             window.addEventListener('pageshow', function(e){
-                try{
-                    if ((e && e.persisted) || isBackForwardNav()) enforce();
-                }catch(_){ }
+                try{ if (e && e.persisted) enforce(); }catch(_){ }
             });
         })();
     </script>

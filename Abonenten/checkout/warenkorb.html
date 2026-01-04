@@ -11,6 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../style.css">
     <script>
+        // Prevent returning to checkout after successful payment
+        try{ if (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1') { window.location.replace('../abonenten.html'); } }catch(e){}
+    </script>
+    <script>
         // Warenkorb is the upgrade flow: current subscription is shown as Free.
         // Set this before paint to avoid any badge flicker.
         (function(){

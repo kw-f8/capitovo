@@ -354,6 +354,7 @@
                         } catch(e) {}
 
                         try {
+                            try { sessionStorage.setItem('capitovo_disable_back_after_payment','1'); } catch(e){}
                             // Disable stepper navigation after payment
                             try { localStorage.setItem('capitovo_disable_stepper', '1'); } catch(e){}
                             const target = new URL('checkout_final.html', window.location.href);

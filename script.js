@@ -302,6 +302,11 @@ function createGlobalContactModal() {
                     <label class="sr-only" for="contact-message">Ihre Nachricht</label>
                     <textarea id="contact-message" name="message" rows="4" required class="w-full border rounded-md px-3 py-2" placeholder="Ihre Nachricht"></textarea>
                 </div>
+                <div class="mt-2 w-full flex justify-center">
+                    <div id="turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
+                        Sicherheitsabfrage (Cloudflare Turnstile)
+                    </div>
+                </div>
                 <div class="flex justify-end gap-3">
                     <button type="button" id="contact-cancel" class="px-4 py-2 border rounded-md">Abbrechen</button>
                     <button type="submit" id="contact-submit" class="px-4 py-2 bg-primary-blue text-white rounded-md">Absenden</button>

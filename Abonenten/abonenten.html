@@ -617,16 +617,10 @@
                         </label>
                     </div>
 
-                    <div class="relative">
-                        <input type="number" id="contact-captcha" name="captcha" required
-                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
-                            placeholder="Sicherheitsfrage: Was ist 3 + 2?">
-                        <label for="contact-captcha" 
-                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
-                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
-                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                            Sicherheitsfrage: Was ist 3 + 2?
-                        </label>
+                    <div class="mt-2 w-full flex justify-center">
+                        <div id="turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
+                            Sicherheitsabfrage (Cloudflare Turnstile)
+                        </div>
                     </div>
 
                     <div class="text-center">
@@ -816,7 +810,6 @@
             const closeContactModalBtn = document.getElementById('close-contact-modal');
             const contactModal = document.getElementById('contact-modal');
             const contactForm = document.getElementById('contact-form-modal');
-            const contactCaptcha = document.getElementById('contact-captcha');
             const contactSubmit = document.getElementById('contact-submit');
 
             if (openContactModalBtn && contactModal) {
@@ -846,7 +839,7 @@
             // Contact form validation
             if (contactForm) {
                 const inputs = contactForm.querySelectorAll('input, select, textarea');
-                
+
                 function validateContactForm() {
                     let isValid = true;
                     inputs.forEach(input => {
@@ -854,9 +847,6 @@
                             isValid = false;
                         }
                     });
-                    if (contactCaptcha && contactCaptcha.value.trim() !== '5') {
-                        isValid = false;
-                    }
                     if (contactSubmit) {
                         if (isValid) {
                             contactSubmit.disabled = false;
@@ -879,11 +869,7 @@
 
                 contactForm.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    if (contactCaptcha && contactCaptcha.value !== '5') {
-                        alert('Bitte beantworten Sie die Sicherheitsfrage korrekt (3 + 2 = 5).');
-                        contactCaptcha.focus();
-                        return;
-                    }
+                    // Turnstile placeholder replaces numeric captcha; assume server-side validation
                     alert('Ihre Nachricht wurde erfolgreich versendet. Wir werden uns in Kürze bei Ihnen melden.');
                     contactModal.classList.add('hidden');
                     document.body.style.overflow = '';

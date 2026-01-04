@@ -68,6 +68,10 @@
             }
             .capitovo-register-link:hover { transform: scale(1.08); }
 
+            /* Ensure the world-map section doesn't break layout */
+            #market-map { max-width: 100%; overflow-x: auto; }
+            #market-map svg { max-width: 100%; height: auto; display: block; }
+
             /* Mobile Optimierung (nur kleine Screens, Desktop bleibt unverändert) */
             @media (max-width: 640px) {
                 header { padding: 12px 0; }
@@ -597,7 +601,7 @@
             </div>
         </section>
 
-        <section id="pricing" class="bg-white">
+        <section id="market-map" class="bg-white">
                                 </filter>
                                 <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
                                     <feGaussianBlur stdDeviation="2" result="blur" />

@@ -770,6 +770,13 @@ footer {
     border: none;
 }
 
+@media (max-width: 420px) {
+    .sidebar {
+        width: min(300px, 92vw);
+        padding: 16px;
+    }
+}
+
 .sidebar.open {
     transform: translateX(0);
 }

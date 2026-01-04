@@ -114,7 +114,7 @@
                         </div>
 
                         <div id="page-acc-actions">
-                            <a href="../warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                            <a href="checkout/warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
                                 Jetzt Mitglied werden
                             </a>
                         </div>
@@ -309,7 +309,7 @@
                             </div>
                         `;
                         actionsEl.innerHTML = `
-                            <a href="../warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                            <a href="checkout/warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
                                 Zu Premium wechseln
                             </a>
                         `;
@@ -350,7 +350,7 @@
                             </div>
                         `;
                         actionsEl.innerHTML = `
-                            <a href="../warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                            <a href="checkout/warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
                                 Zu Premium wechseln
                             </a>
                         `;
@@ -372,7 +372,7 @@
                             </div>
                         `;
                         if (fallbackActionsEl) fallbackActionsEl.innerHTML = `
-                            <a href="../warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
+                            <a href="checkout/warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">
                                 Zu Premium wechseln
                             </a>
                         `;
@@ -396,7 +396,7 @@
                     if (planEl) planEl.textContent = 'Free';
                     if (statusEl) statusEl.style.display = 'none';
                     if (detailsEl) detailsEl.innerHTML = `\n                        <div class="flex justify-between text-sm">\n                            <span class="text-gray-500">Preis</span>\n                            <span class="font-medium text-gray-900">€ 0,- / Monat</span>\n                        </div>\n                    `;
-                    if (actionsEl) actionsEl.innerHTML = `\n                        <a href="../warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">\n                            Zu Premium wechseln\n                        </a>\n                    `;
+                    if (actionsEl) actionsEl.innerHTML = `\n                        <a href="checkout/warenkorb.html?ref=account&plan=premium" class="block w-full py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-primary-blue hover:bg-blue-700 text-center transition-colors mb-3">\n                            Zu Premium wechseln\n                        </a>\n                    `;
                 }catch(e){console.error('enforcer failed', e);} 
             }
 

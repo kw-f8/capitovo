@@ -422,7 +422,7 @@ function openSubscriptionModal() {
     let modal = document.getElementById('subscription-modal');
     if (!modal) {
         const isInAbonenten = (window.location.pathname || '').toLowerCase().includes('/abonenten/');
-        const pricingLink = isInAbonenten ? '../warenkorb.html?plan=premium' : 'warenkorb.html?plan=premium';
+        const pricingLink = isInAbonenten ? 'checkout/warenkorb.html?plan=premium' : 'Abonenten/checkout/warenkorb.html?plan=premium';
         
         modal = document.createElement('div');
         modal.id = 'subscription-modal';
@@ -480,16 +480,16 @@ function openFreePlanGateModal() {
     let modal = document.getElementById('free-plan-gate-modal');
 
     // Compute cart link that works from nested Abonenten pages.
-    // Prefer an absolute path anchored at the repository base (e.g. '/capitovo/warenkorb.html'),
+    // Prefer an absolute path anchored at the repository base (e.g. '/capitovo/Abonenten/checkout/warenkorb.html'),
     // fallback to a relative prefix when repo base cannot be determined.
-    let checkoutLink = 'warenkorb.html?plan=premium';
+    let checkoutLink = 'Abonenten/checkout/warenkorb.html?plan=premium';
     try {
         const repoBase = repoBasePathBefore('Abonenten');
         if (repoBase && repoBase.length) {
-            checkoutLink = repoBase + '/warenkorb.html?plan=premium';
+            checkoutLink = repoBase + '/Abonenten/checkout/warenkorb.html?plan=premium';
         } else {
             const prefix = prefixToRepoRoot();
-            checkoutLink = prefix + 'warenkorb.html?plan=premium';
+            checkoutLink = prefix + 'Abonenten/checkout/warenkorb.html?plan=premium';
         }
     } catch (e) {}
 

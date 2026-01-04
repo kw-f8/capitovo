@@ -275,7 +275,7 @@
                 </div>
             </div>
 
-            <a href="../warenkorb.html?plan=premium" class="paywall-cta">Jetzt Abonnieren</a>
+            <a href="checkout/warenkorb.html?plan=premium" class="paywall-cta">Jetzt Abonnieren</a>
             <p id="paywall-price-text" style="margin-top: 1.25rem; font-size: 0.85rem; color: #94a3b8;">Ab 99€/Monat · Jederzeit kündbar</p>
         </div>
     </div>
@@ -676,7 +676,7 @@
         // Fetch cheapest price from checkout page
         async function updatePaywallPrice() {
             try {
-                const response = await fetch('../warenkorb.html');
+                const response = await fetch('checkout/warenkorb.html');
                 const html = await response.text();
                 
                 // Parse HTML to find all prices

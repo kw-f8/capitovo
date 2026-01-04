@@ -174,13 +174,24 @@
             try{
                 const disabled = sessionStorage.getItem('capitovo_disable_back_after_payment');
                 if (disabled === '1') {
-                    // Push a history state so a single Back triggers popstate
-                    try { history.pushState(null, '', window.location.href); } catch(e){}
+                    // Push an extra history entry so Back stays on this page
+                    try { history.pushState({}, '', window.location.href); history.pushState({}, '', window.location.href); } catch(e){}
+
+                    // When user presses Back, immediately re-push the state so they remain on Final
                     window.addEventListener('popstate', function(ev){
-                        // On back, navigate to member area instead of previous checkout step
-                        try { sessionStorage.removeItem('capitovo_disable_back_after_payment'); } catch(e){}
-                        window.location.replace('../abonenten.html');
-                    }, { once: true });
+                        try { history.pushState({}, '', window.location.href); } catch(e){}
+                    });
+
+                    // Clear flag when user clicks the final CTA (explicit navigation)
+                    const finalCta = document.getElementById('final-cta');
+                    if (finalCta) finalCta.addEventListener('click', () => { try{ sessionStorage.removeItem('capitovo_disable_back_after_payment'); }catch(e){} });
+
+                    // Also clear flag when we programmatically redirect from the confirmation modal
+                    const originalReplace = window.location.replace;
+                    window.location.replace = function(url){
+                        try{ sessionStorage.removeItem('capitovo_disable_back_after_payment'); }catch(e){}
+                        return originalReplace.call(window.location, url);
+                    };
                 }
             }catch(e){}
         })();

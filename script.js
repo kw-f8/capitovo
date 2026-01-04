@@ -1332,10 +1332,9 @@ function initCheckoutStepperNavigation(){
     const stepperEls = document.querySelectorAll('.cap-stepper');
     if (!stepperEls || !stepperEls.length) return;
 
-    // If the flow set a flag to disable stepper navigation (e.g. after payment), do nothing
-    try{
-        if (localStorage.getItem('capitovo_disable_stepper') === '1') return;
-    }catch(e){}
+    // NOTE: Do not disable the entire stepper setup globally here —
+    // disabling should be handled per-wrapper (e.g. final step) so other pages
+    // keep their clickable stepper functionality.
 
     const pageMap = ['warenkorb.html','checkout_kundendaten.html','checkout_payment.html','checkout_final.html'];
 

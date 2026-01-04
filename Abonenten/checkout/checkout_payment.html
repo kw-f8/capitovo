@@ -360,7 +360,8 @@
                             const target = new URL('checkout_final.html', window.location.href);
                             target.searchParams.set('plan', plan);
                             if (ref) target.searchParams.set('ref', ref);
-                            window.location.href = target.pathname + '?' + target.searchParams.toString();
+                            // Use replace so the payment page is removed from history (prevents Back)
+                            window.location.replace(target.pathname + '?' + target.searchParams.toString());
                         } catch(e) {
                             window.location.href = '../abonenten.html';
                         }

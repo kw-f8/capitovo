@@ -13,12 +13,21 @@
     <script>
         // Prevent returning to checkout after successful payment
         (function(){
-            try{
-                const s = (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1');
-                const ts = Number(localStorage.getItem('capitovo_recent_payment_complete_ts') || '0');
-                const fresh = ts && (Date.now() - ts) < (10 * 60 * 1000);
-                if (s || fresh) window.location.replace('../abonenten.html');
-            }catch(e){}
+            function shouldBlock(){
+                try{
+                    const s = (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1');
+                    const ts = Number(localStorage.getItem('capitovo_recent_payment_complete_ts') || '0');
+                    const fresh = ts && (Date.now() - ts) < (10 * 60 * 1000);
+                    return s || fresh;
+                }catch(e){ return false; }
+            }
+            function enforce(){
+                try{ if (shouldBlock()) window.location.replace('../abonenten.html'); }catch(e){}
+            }
+            // Run now, and also when restored from bfcache (Back/Forward Cache)
+            enforce();
+            window.addEventListener('pageshow', enforce);
+            document.addEventListener('visibilitychange', function(){ if (!document.hidden) enforce(); });
         })();
     </script>
     <script>

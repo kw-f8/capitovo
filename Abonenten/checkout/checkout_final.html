@@ -14,12 +14,20 @@
         // Final page: block standard browser back navigation (run as early as possible).
         (function(){
             try {
-                // Replace current entry and add one extra entry so Back triggers popstate on this document.
-                try { history.replaceState({ capFinal: 1 }, '', window.location.href); } catch(e){}
-                try { history.pushState({ capFinal: 1 }, '', window.location.href); } catch(e){}
-                window.addEventListener('popstate', function(){
-                    try { history.pushState({ capFinal: 1 }, '', window.location.href); } catch(e){}
-                });
+                    function arm(){
+                        try{
+                            history.replaceState({ capiFinal: true }, '', location.href);
+                            history.pushState({ capiFinalTrap: true }, '', location.href);
+                        } catch(e) {}
+                    }
+                    arm();
+                    window.addEventListener('popstate', function(){
+                        try { history.pushState({ capiFinalTrap: true }, '', location.href); } catch(e) {}
+                    });
+                    // If restored from bfcache, re-arm the trap again.
+                    window.addEventListener('pageshow', function(e){
+                        try { if (e && e.persisted) arm(); } catch(_) {}
+                    });
             } catch(e) {}
         })();
     </script>

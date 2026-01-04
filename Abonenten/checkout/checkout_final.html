@@ -169,34 +169,21 @@
         });
     </script>
     <script>
-        // Prevent browser back navigation to checkout steps after successful payment
+        // Prevent browser back navigation from the final page (keep user on this page).
+        // Note: Users can still use browser history menus; this blocks the normal back action.
         (function(){
             try{
-                const disabled = sessionStorage.getItem('capitovo_disable_back_after_payment');
-                if (disabled === '1') {
-                    // Push an extra history entry so Back stays on this page
-                    try { history.pushState({}, '', window.location.href); history.pushState({}, '', window.location.href); } catch(e){}
+                // Mark current entry as final and add one extra entry so Back triggers popstate here.
+                try { history.replaceState({ capFinal: 1 }, '', window.location.href); } catch(e){}
+                try { history.pushState({ capFinal: 1 }, '', window.location.href); } catch(e){}
 
-                    // When user presses Back, immediately re-push the Final state so Back has no effect
-                    window.addEventListener('popstate', function(ev){
-                        try {
-                            // Re-push the same URL to stay on Final
-                            history.pushState({}, '', window.location.href);
-                        } catch(e){}
-                    });
-
-                    // Clear flag when user clicks the final CTA (explicit navigation)
-                    const finalCta = document.getElementById('final-cta');
-                    if (finalCta) finalCta.addEventListener('click', () => { try{ sessionStorage.removeItem('capitovo_disable_back_after_payment'); }catch(e){} });
-
-                    // Also clear flag when we programmatically redirect from the confirmation modal
-                    const originalReplace = window.location.replace;
-                    window.location.replace = function(url){
-                        try{ sessionStorage.removeItem('capitovo_disable_back_after_payment'); }catch(e){}
-                        return originalReplace.call(window.location, url);
-                    };
-                }
-            }catch(e){}
+                window.addEventListener('popstate', function(ev){
+                    try {
+                        // Re-push the same URL to stay on Final
+                        history.pushState({ capFinal: 1 }, '', window.location.href);
+                    } catch(e){}
+                });
+            } catch(e) {}
         })();
     </script>
     <!-- Confirmation modal for final CTA (match homepage login modal background/structure) -->

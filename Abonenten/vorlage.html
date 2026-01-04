@@ -20,8 +20,9 @@
     header { position: static !important; }
 
     /* Page specific: keep article unboxed and readable */
-    /* Ensure consistent spacing to header across Abonenten pages (~66px) */
-    main { background: transparent; padding-top: 66px !important; }
+    /* Ensure consistent spacing to header across Abonenten pages (effective ~66px) */
+    /* Adjusted to 55px here because other element margins add to the final distance. */
+    main { background: transparent; padding-top: 55px !important; }
     /* Align content with the outer edges of logo + sidebar button */
     .analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; padding-right: 16px; }
     .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }
@@ -160,7 +161,7 @@
   </div>
 </header>
 
-<main style="padding-top: 66px !important;">
+<main style="padding-top: 55px !important;">
   <article class="analysis-article" id="vorlage-analysis" style="margin-top: 0 !important;">
     <div class="mb-2">
       <div class="flex items-start justify-between gap-3 flex-wrap">

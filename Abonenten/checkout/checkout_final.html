@@ -177,9 +177,10 @@
                     // Push an extra history entry so Back stays on this page
                     try { history.pushState({}, '', window.location.href); history.pushState({}, '', window.location.href); } catch(e){}
 
-                    // When user presses Back, immediately re-push the state so they remain on Final
+                    // When user presses Back, redirect to member area to avoid returning to checkout
                     window.addEventListener('popstate', function(ev){
-                        try { history.pushState({}, '', window.location.href); } catch(e){}
+                        try { sessionStorage.removeItem('capitovo_disable_back_after_payment'); } catch(e){}
+                        try { window.location.replace('../abonenten.html'); } catch(e){}
                     });
 
                     // Clear flag when user clicks the final CTA (explicit navigation)

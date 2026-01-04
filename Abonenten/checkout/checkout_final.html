@@ -11,6 +11,19 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../style.css">
     <script>
+        // Final page: block standard browser back navigation (run as early as possible).
+        (function(){
+            try {
+                // Replace current entry and add one extra entry so Back triggers popstate on this document.
+                try { history.replaceState({ capFinal: 1 }, '', window.location.href); } catch(e){}
+                try { history.pushState({ capFinal: 1 }, '', window.location.href); } catch(e){}
+                window.addEventListener('popstate', function(){
+                    try { history.pushState({ capFinal: 1 }, '', window.location.href); } catch(e){}
+                });
+            } catch(e) {}
+        })();
+    </script>
+    <script>
         (function(){
             try{
                 document.documentElement.classList.remove('cap-sub-premium');
@@ -167,24 +180,6 @@
                 }
             } catch(e){}
         });
-    </script>
-    <script>
-        // Prevent browser back navigation from the final page (keep user on this page).
-        // Note: Users can still use browser history menus; this blocks the normal back action.
-        (function(){
-            try{
-                // Mark current entry as final and add one extra entry so Back triggers popstate here.
-                try { history.replaceState({ capFinal: 1 }, '', window.location.href); } catch(e){}
-                try { history.pushState({ capFinal: 1 }, '', window.location.href); } catch(e){}
-
-                window.addEventListener('popstate', function(ev){
-                    try {
-                        // Re-push the same URL to stay on Final
-                        history.pushState({ capFinal: 1 }, '', window.location.href);
-                    } catch(e){}
-                });
-            } catch(e) {}
-        })();
     </script>
     <!-- Confirmation modal for final CTA (match homepage login modal background/structure) -->
     <div id="final-confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4" style="z-index: 1001;">

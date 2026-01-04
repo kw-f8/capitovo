@@ -12,7 +12,14 @@
     <link rel="stylesheet" href="../../style.css">
     <script>
         // Prevent returning to checkout after successful payment
-        try{ if (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1') { window.location.replace('../abonenten.html'); } }catch(e){}
+        (function(){
+            try{
+                const s = (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1');
+                const ts = Number(localStorage.getItem('capitovo_recent_payment_complete_ts') || '0');
+                const fresh = ts && (Date.now() - ts) < (10 * 60 * 1000);
+                if (s || fresh) window.location.replace('../abonenten.html');
+            }catch(e){}
+        })();
     </script>
     <script>
         (function(){
@@ -359,6 +366,7 @@
 
                         try {
                             try { sessionStorage.setItem('capitovo_disable_back_after_payment','1'); } catch(e){}
+                            try { localStorage.setItem('capitovo_recent_payment_complete_ts', String(Date.now())); } catch(e){}
                             // Disable stepper navigation after payment
                             try { localStorage.setItem('capitovo_disable_stepper', '1'); } catch(e){}
                             const target = new URL('checkout_final.html', window.location.href);

@@ -12,7 +12,14 @@
     <link rel="stylesheet" href="../../style.css">
     <script>
         // Prevent returning to checkout after successful payment
-        try{ if (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1') { window.location.replace('../abonenten.html'); } }catch(e){}
+        (function(){
+            try{
+                const s = (sessionStorage.getItem('capitovo_disable_back_after_payment') === '1');
+                const ts = Number(localStorage.getItem('capitovo_recent_payment_complete_ts') || '0');
+                const fresh = ts && (Date.now() - ts) < (10 * 60 * 1000);
+                if (s || fresh) window.location.replace('../abonenten.html');
+            }catch(e){}
+        })();
     </script>
     <script>
         // Redirect legacy checkout URL to the new two-step flow.

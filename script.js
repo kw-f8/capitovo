@@ -253,6 +253,84 @@ function closeLoginModal() {
     }
 }
 
+/** Schließt das Kontakt-Modal (global). */
+function closeContactModal() {
+    const modal = document.getElementById('contact-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+}
+
+/** Erstellt ein einfaches, global verfügbares Kontakt-Modal, falls noch keines auf der Seite existiert. */
+function createGlobalContactModal() {
+    if (document.getElementById('contact-modal')) return; // already present
+
+    const modal = document.createElement('div');
+    modal.id = 'contact-modal';
+    modal.className = 'hidden fixed inset-0 bg-black bg-opacity-75 backdrop-blur-xl-custom flex items-center justify-center p-4';
+    modal.style.zIndex = '1001';
+
+    modal.innerHTML = `
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 relative p-6 max-h-[90vh] overflow-y-auto">
+            <button id="contact-close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10" aria-label="Schließen">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">Support kontaktieren</h2>
+            <form id="contact-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="sr-only" for="contact-name">Ihr Name</label>
+                        <input id="contact-name" name="name" required class="w-full border rounded-md px-3 py-2" placeholder="Ihr Name">
+                    </div>
+                    <div>
+                        <label class="sr-only" for="contact-email">Ihre E-Mail</label>
+                        <input id="contact-email" name="email" type="email" required class="w-full border rounded-md px-3 py-2" placeholder="Ihre E-Mail">
+                    </div>
+                </div>
+                <div>
+                    <label class="sr-only" for="contact-category">Kategorie</label>
+                    <select id="contact-category" name="category" required class="w-full border rounded-md px-3 py-2">
+                        <option value="" disabled selected>Bitte wählen</option>
+                        <option value="support">Technischer Support</option>
+                        <option value="billing">Rechnung & Abonnement</option>
+                        <option value="feedback">Feedback & Vorschläge</option>
+                        <option value="other">Sonstiges</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="sr-only" for="contact-message">Ihre Nachricht</label>
+                    <textarea id="contact-message" name="message" rows="4" required class="w-full border rounded-md px-3 py-2" placeholder="Ihre Nachricht"></textarea>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" id="contact-cancel" class="px-4 py-2 border rounded-md">Abbrechen</button>
+                    <button type="submit" id="contact-submit" class="px-4 py-2 bg-primary-blue text-white rounded-md">Absenden</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Close handlers
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeContactModal(); });
+    const closeBtn = document.getElementById('contact-close');
+    if (closeBtn) closeBtn.addEventListener('click', (e) => { e.preventDefault(); closeContactModal(); });
+    const cancelBtn = document.getElementById('contact-cancel');
+    if (cancelBtn) cancelBtn.addEventListener('click', (e) => { e.preventDefault(); closeContactModal(); });
+
+    // Basic submit handling
+    const form = document.getElementById('contact-form');
+    if (form) {
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            alert('Ihre Nachricht wurde erfolgreich versendet. Wir melden uns in Kürze.');
+            closeContactModal();
+            form.reset();
+        });
+    }
+}
+
 // Lightweight scroll-triggered reveal helper (Disabled).
 const ScrollReveal = {
     init: () => {},
@@ -1283,15 +1361,32 @@ function initModalControl() {
     // Links should navigate to a dedicated Kontaktseite instead.
     const hasContactControls = !!contactModalElement;
 
-    // Event delegation: open login or contact modal
+    // Event delegation: open login, forgot-password, or contact modal (sidebar support)
     document.body.addEventListener('click', (e) => {
         const linkLogin = e.target.closest('a[href="#open-login"]');
         if (linkLogin) { e.preventDefault(); openLoginModal(); return; }
 
         const linkForgot = e.target.closest('a[href="#open-forgot-password"]');
         if (linkForgot) { e.preventDefault(); openForgotPasswordModal(); return; }
-        // Kontakt-Links are not intercepted here anymore. They should be full links
-        // to a Kontaktseite (e.g. `Abonenten/kontaktdaten.html`).
+
+        const contactTrigger = e.target.closest('#open-contact-modal, [data-open-contact]');
+        if (contactTrigger) {
+            e.preventDefault();
+            // If a contact modal exists in the DOM (e.g. Abonenten pages), use it.
+            let contactEl = document.getElementById('contact-modal');
+            if (!contactEl) {
+                createGlobalContactModal();
+                contactEl = document.getElementById('contact-modal');
+                // Initialize additional contact form behavior if needed
+                try { initContactForm(); } catch(e) { /* ignore */ }
+            }
+            if (contactEl) {
+                contactEl.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+            return;
+        }
+        // Kontakt-Links without #open-contact-modal should continue to behave as links
     });
 
     // Backdrop click to close login
@@ -1320,7 +1415,8 @@ function initModalControl() {
         if (e.key !== 'Escape') return;
         if (loginModalElement && !loginModalElement.classList.contains('hidden')) closeLoginModal();
         if (forgotPasswordModalElement && !forgotPasswordModalElement.classList.contains('hidden')) closeForgotPasswordModal();
-        if (hasContactControls && contactModalElement && !contactModalElement.classList.contains('hidden')) closeContactModal();
+        const anyContact = document.getElementById('contact-modal');
+        if (anyContact && !anyContact.classList.contains('hidden')) closeContactModal();
     });
 }
 

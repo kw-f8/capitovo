@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout – Fertig - capitovo</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=2025-12-25b">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png?v=2025-12-25b">
-    <link rel="shortcut icon" href="assets/favicon-32.png?v=2025-12-25b">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png?v=2025-12-25a">
+    <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32.png?v=2025-12-25b">
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16.png?v=2025-12-25b">
+    <link rel="shortcut icon" href="../../assets/favicon-32.png?v=2025-12-25b">
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png?v=2025-12-25a">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../style.css">
     <script>
         (function(){
             try{
@@ -24,8 +24,8 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                <a href="index.html">
-                    <img src="assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
+                <a href="../../index.html">
+                    <img src="../../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
                 </a>
             </div>
         </div>
@@ -105,7 +105,7 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-center">
-                        <a href="index.html" id="final-cta" class="w-full inline-flex magic-glow justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150">Zur Startseite</a>
+                        <a href="../../index.html" id="final-cta" class="w-full inline-flex magic-glow justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-blue transition duration-150">Zur Startseite</a>
                     </div>
                 </div>
             </div>
@@ -117,15 +117,15 @@
         <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="copyright text-sm text-gray-600">&copy; 2024 capitovo. Wachstum durch Wissen.</p>
             <div class="footer-links flex items-center gap-3">
-                <a href="Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
-                <a href="Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
-                <a href="Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
-                <a href="Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
+                <a href="../../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
+                <a href="../../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
+                <a href="../../Rechtliches/haftung.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Haftungsausschluss</a>
+                <a href="../../Rechtliches/agb.html" class="footer-btn" target="_blank" rel="noopener noreferrer">AGB</a>
             </div>
         </div>
     </footer>
 
-    <script src="script.js?v=6"></script>
+    <script src="../../script.js?v=6"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
@@ -256,7 +256,7 @@
                         const params = new URLSearchParams(window.location.search);
                         const plan = params.get('plan');
                         const ref = params.get('ref');
-                        const target = new URL('Abonenten/abonenten.html', window.location.href);
+                        const target = new URL('../abonenten.html', window.location.href);
                         if (plan) target.searchParams.set('plan', plan);
                         if (ref) target.searchParams.set('ref', ref);
                         window.location.replace(target.pathname + (target.search ? ('?' + target.searchParams.toString()) : ''));

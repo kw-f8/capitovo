@@ -18,9 +18,16 @@
         #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
         /* Profile header: ensure exact vertical centering for title and icons */
         .profile-header { height:50px; box-sizing:border-box; border-bottom:1px solid #f3f4f6; display:flex; align-items:center; justify-content:space-between; padding:0 24px; background:#ffffff; }
-        .profile-header h2, .profile-header .account-edit { display:flex; align-items:center; }
-        .profile-header svg { display:block; vertical-align:middle; }
-        .profile-header .account-edit svg { margin-right:6px; }
+        .profile-header h2, .profile-header .account-edit { display:flex; align-items:center; margin:0; padding:0; line-height:1; }
+        /* Force exact vertical centering for SVGs (higher specificity + !important to override inline/other rules) */
+        .profile-header h2 svg, .profile-header .account-edit svg {
+            display: block !important;
+            align-self: center !important;
+            margin: 0 !important;
+            width: 20px !important;
+            height: 20px !important;
+        }
+        .profile-header .account-edit svg { margin-right: 6px !important; }
     </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">

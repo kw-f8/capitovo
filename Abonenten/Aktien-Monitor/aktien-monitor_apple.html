@@ -114,6 +114,76 @@
                   </a>
                 </div>
 
+                <!-- capitovo-Score (zentraler Score-Kasten; keine Kennzahlen außer Score/Perzentil) -->
+                <section id="capitovo-score" class="card mb-6" style="border:1px solid rgba(15,23,42,0.06); border-radius:12px; background:#fff; box-shadow:0 6px 20px rgba(2,6,23,0.04);">
+                  <div class="p-5">
+                    <div class="flex flex-col md:flex-row md:items-start md:justify-between md:gap-6">
+                      <div class="flex-1">
+                        <div class="text-sm font-semibold text-gray-500 tracking-wide">capitovo-Score</div>
+                        <div class="mt-1 flex items-baseline gap-2">
+                          <div id="capitovo-score-value" class="text-4xl md:text-5xl font-extrabold text-gray-900">— / 100</div>
+                        </div>
+                        <div id="capitovo-score-rating" class="mt-2 text-lg font-semibold text-gray-900">—</div>
+                      </div>
+
+                      <div class="w-full md:w-80">
+                        <div class="flex items-center gap-3" aria-label="Ampel-Einstufung">
+                          <div class="flex items-center gap-2" aria-hidden="true">
+                            <span id="capitovo-dot-green" class="w-3 h-3 rounded-full bg-gray-200"></span>
+                            <span id="capitovo-dot-yellow" class="w-3 h-3 rounded-full bg-gray-200"></span>
+                            <span id="capitovo-dot-red" class="w-3 h-3 rounded-full bg-gray-200"></span>
+                          </div>
+                          <div id="capitovo-traffic-label" class="text-sm font-semibold text-gray-700">—</div>
+                        </div>
+                        <p id="capitovo-traffic-explain" class="mt-2 text-sm text-gray-600">—</p>
+                      </div>
+                    </div>
+
+                    <hr class="my-5" style="border-color: rgba(15,23,42,0.06);" />
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <div class="text-sm font-semibold text-gray-700">Einordnung im Branchenvergleich</div>
+                        <div id="capitovo-sector-line" class="mt-2 text-gray-900 font-semibold">—</div>
+                        <div id="capitovo-sector-text" class="mt-1 text-sm text-gray-600">—</div>
+                      </div>
+
+                      <div>
+                        <div class="text-sm font-semibold text-gray-700">So setzt sich der Score zusammen</div>
+                        <div class="mt-3 grid grid-cols-1 gap-2">
+                          <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-gray-700">Qualität</span>
+                            <span id="capitovo-sub-quality" class="text-sm text-gray-900">—</span>
+                          </div>
+                          <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-gray-700">Wachstum</span>
+                            <span id="capitovo-sub-growth" class="text-sm text-gray-900">—</span>
+                          </div>
+                          <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-gray-700">Stabilität</span>
+                            <span id="capitovo-sub-stability" class="text-sm text-gray-900">—</span>
+                          </div>
+                          <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-gray-700">Bewertung</span>
+                            <span id="capitovo-sub-valuation" class="text-sm text-gray-900">—</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <hr class="my-5" style="border-color: rgba(15,23,42,0.06);" />
+
+                    <div>
+                      <div class="text-sm font-semibold text-gray-700">Einordnung des Modells</div>
+                      <p id="capitovo-model-summary" class="mt-2 text-sm text-gray-600">—</p>
+                    </div>
+
+                    <p class="mt-4 text-xs text-gray-500">
+                      Der capitovo-Score basiert auf einem quantitativen Analysemodell und dient ausschließlich Informationszwecken. Er stellt keine Anlageberatung oder Handlungsempfehlung dar.
+                    </p>
+                  </div>
+                </section>
+
                     <div id="intro-row" class="mb-4">
                     <div class="flex flex-col md:flex-row md:items-stretch md:gap-6">
                         <!-- Left: description (takes remaining space) -->
@@ -289,7 +359,7 @@
   <script src="../../src/components/insert_components.js"></script>
   <script src="../config.js"></script>
   <script src="../../script.js?v=6"></script>
-  <script src="./scoring-ui.js?v=1"></script>
+  <script src="./score-box.js?v=1"></script>
   <script>
     // Sidebar toggle wiring (single, shared handler)
     document.addEventListener('click', function(e){

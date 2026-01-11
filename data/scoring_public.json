@@ -1,0 +1,86 @@
+{
+  "AAPL": {
+    "symbol": "AAPL",
+    "sector": "Technology",
+    "score_total": 49,
+    "score_quality": "solide",
+    "score_growth": "moderat",
+    "score_stability": "solide",
+    "score_valuation": "leicht erhöht",
+    "sector_percentile": 40,
+    "traffic_light": "red",
+    "summary_text": "Das Unternehmen verfügt über eine solide Profitabilität. Im Branchenvergleich liegt das Unternehmen unter dem Durchschnitt. Die Bewertung ist leicht erhöht."
+  },
+  "MSFT": {
+    "symbol": "MSFT",
+    "sector": "Technology",
+    "score_total": 68,
+    "score_quality": "sehr hoch",
+    "score_growth": "hoch",
+    "score_stability": "hoch",
+    "score_valuation": "leicht erhöht",
+    "sector_percentile": 90,
+    "traffic_light": "yellow",
+    "summary_text": "Das Unternehmen überzeugt durch sehr hohe Qualität und stabile Cashflows. Im Branchenvergleich gehört das Unternehmen zur Spitzengruppe. Die Bewertung ist leicht erhöht."
+  },
+  "AMZN": {
+    "symbol": "AMZN",
+    "sector": "Consumer Discretionary",
+    "score_total": 38,
+    "score_quality": "sehr schwach",
+    "score_growth": "hoch",
+    "score_stability": "solide",
+    "score_valuation": "leicht erhöht",
+    "sector_percentile": 20,
+    "traffic_light": "red",
+    "summary_text": "Das Unternehmen weist schwache Qualitätskennzahlen auf. Im Branchenvergleich liegt das Unternehmen im unteren Viertel. Die Bewertung ist leicht erhöht."
+  },
+  "GOOGL": {
+    "symbol": "GOOGL",
+    "sector": "Technology",
+    "score_total": 57,
+    "score_quality": "solide",
+    "score_growth": "solide",
+    "score_stability": "sehr hoch",
+    "score_valuation": "fair",
+    "sector_percentile": 60,
+    "traffic_light": "yellow",
+    "summary_text": "Das Unternehmen verfügt über eine solide Profitabilität. Im Branchenvergleich liegt das Unternehmen über dem Durchschnitt. Die Bewertung liegt im fairen Bereich."
+  },
+  "TSLA": {
+    "symbol": "TSLA",
+    "sector": "Consumer Discretionary",
+    "score_total": 43,
+    "score_quality": "schwach",
+    "score_growth": "hoch",
+    "score_stability": "solide",
+    "score_valuation": "leicht erhöht",
+    "sector_percentile": 40,
+    "traffic_light": "red",
+    "summary_text": "Die Qualitätskennzahlen des Unternehmens sind unterdurchschnittlich. Im Branchenvergleich liegt das Unternehmen unter dem Durchschnitt. Die Bewertung ist leicht erhöht."
+  },
+  "META": {
+    "symbol": "META",
+    "sector": "Technology",
+    "score_total": 56,
+    "score_quality": "solide",
+    "score_growth": "moderat",
+    "score_stability": "hoch",
+    "score_valuation": "günstig",
+    "sector_percentile": 50,
+    "traffic_light": "yellow",
+    "summary_text": "Das Unternehmen verfügt über eine solide Profitabilität. Im Branchenvergleich liegt das Unternehmen über dem Durchschnitt. Die Bewertung ist im Sektorvergleich günstig."
+  },
+  "NVDA": {
+    "symbol": "NVDA",
+    "sector": "Technology",
+    "score_total": 59,
+    "score_quality": "sehr hoch",
+    "score_growth": "sehr hoch",
+    "score_stability": "solide",
+    "score_valuation": "anspruchsvoll",
+    "sector_percentile": 80,
+    "traffic_light": "yellow",
+    "summary_text": "Das Unternehmen zeigt eine überdurchschnittlich hohe Profitabilität. Im Branchenvergleich liegt das Unternehmen im oberen Viertel. Die Bewertung ist ambitioniert."
+  }
+}

@@ -205,6 +205,8 @@
 
     <script src="../../script.js?v=5"></script>
 
+    <script src="./scoring-ui.js?v=1"></script>
+
     <script>
         (function () {
             const stocks = [
@@ -258,6 +260,7 @@
                     const row = document.createElement('a');
                     row.className = 'stock-row';
                     row.href = stock.href;
+                    row.dataset.ticker = stock.ticker;
 
                     const left = document.createElement('div');
                     left.className = 'stock-left';

@@ -9,7 +9,7 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 40,
     "traffic_light": "red",
-    "summary_text": "Das Unternehmen verfügt über eine solide Profitabilität. Im Branchenvergleich liegt das Unternehmen unter dem Durchschnitt. Die Bewertung ist leicht erhöht."
+    "summary_text": "Die Qualitätskennzahlen bewegen sich im Branchendurchschnitt. Das Wachstum liegt leicht unter dem Niveau vergleichbarer Unternehmen. Insgesamt positioniert sich das Unternehmen im unteren Mittelfeld seines Sektors."
   },
   "MSFT": {
     "symbol": "MSFT",
@@ -21,7 +21,7 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 90,
     "traffic_light": "yellow",
-    "summary_text": "Das Unternehmen überzeugt durch sehr hohe Qualität und stabile Cashflows. Im Branchenvergleich gehört das Unternehmen zur Spitzengruppe. Die Bewertung ist leicht erhöht."
+    "summary_text": "Das Unternehmen zeigt in den Bereichen Qualität und Stabilität Werte deutlich über Branchenniveau. Im Branchenvergleich positioniert es sich im oberen Segment. Die Bewertung liegt leicht über dem Sektordurchschnitt."
   },
   "AMZN": {
     "symbol": "AMZN",
@@ -33,7 +33,7 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 20,
     "traffic_light": "red",
-    "summary_text": "Das Unternehmen weist schwache Qualitätskennzahlen auf. Im Branchenvergleich liegt das Unternehmen im unteren Viertel. Die Bewertung ist leicht erhöht."
+    "summary_text": "Die Qualitätskennzahlen liegen deutlich unter dem Branchendurchschnitt. Das Wachstum positioniert sich hingegen über dem Sektorniveau. Insgesamt ordnet sich das Unternehmen im unteren Bereich seines Sektors ein."
   },
   "GOOGL": {
     "symbol": "GOOGL",
@@ -45,7 +45,7 @@
     "score_valuation": "fair",
     "sector_percentile": 60,
     "traffic_light": "yellow",
-    "summary_text": "Das Unternehmen verfügt über eine solide Profitabilität. Im Branchenvergleich liegt das Unternehmen über dem Durchschnitt. Die Bewertung liegt im fairen Bereich."
+    "summary_text": "Die Qualitäts- und Wachstumskennzahlen bewegen sich im Branchendurchschnitt. Die Stabilität liegt deutlich über dem Sektorniveau. Insgesamt positioniert sich das Unternehmen im oberen Mittelfeld."
   },
   "TSLA": {
     "symbol": "TSLA",
@@ -57,7 +57,7 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 40,
     "traffic_light": "red",
-    "summary_text": "Die Qualitätskennzahlen des Unternehmens sind unterdurchschnittlich. Im Branchenvergleich liegt das Unternehmen unter dem Durchschnitt. Die Bewertung ist leicht erhöht."
+    "summary_text": "Die Qualitätskennzahlen liegen unter dem Branchendurchschnitt. Das Wachstum positioniert sich hingegen über dem Sektorniveau. Im Gesamtbild ordnet sich das Unternehmen im unteren Mittelfeld seines Sektors ein."
   },
   "META": {
     "symbol": "META",
@@ -69,7 +69,7 @@
     "score_valuation": "günstig",
     "sector_percentile": 50,
     "traffic_light": "yellow",
-    "summary_text": "Das Unternehmen verfügt über eine solide Profitabilität. Im Branchenvergleich liegt das Unternehmen über dem Durchschnitt. Die Bewertung ist im Sektorvergleich günstig."
+    "summary_text": "Die Qualitätskennzahlen bewegen sich im Branchendurchschnitt. Die Stabilität liegt über dem Sektorniveau. Im Branchenvergleich positioniert sich das Unternehmen im mittleren Bereich."
   },
   "NVDA": {
     "symbol": "NVDA",
@@ -81,6 +81,6 @@
     "score_valuation": "anspruchsvoll",
     "sector_percentile": 80,
     "traffic_light": "yellow",
-    "summary_text": "Das Unternehmen zeigt eine überdurchschnittlich hohe Profitabilität. Im Branchenvergleich liegt das Unternehmen im oberen Viertel. Die Bewertung ist ambitioniert."
+    "summary_text": "Das Unternehmen zeigt in den Bereichen Qualität und Wachstum Werte deutlich über Branchenniveau. Die Stabilität bewegt sich im Sektordurchschnitt. Im Gesamtbild positioniert es sich im oberen Segment seines Sektors."
   }
 }

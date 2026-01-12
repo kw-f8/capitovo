@@ -32,6 +32,7 @@ class ScoringOutput:
     - Sektor-Perzentil
     - Ampelfarbe
     - Beschreibungstext
+    - Interpretationen für Teil-Scores
     
     Enthält KEINE Finanzkennzahlen!
     """
@@ -45,6 +46,10 @@ class ScoringOutput:
     sector_percentile: int
     traffic_light: str
     summary_text: str
+    interpretation_quality: str = "—"
+    interpretation_growth: str = "—"
+    interpretation_stability: str = "—"
+    interpretation_valuation: str = "—"
 
 
 class ScoringAPI:
@@ -121,6 +126,9 @@ class ScoringAPI:
         # Qualitative Labels generieren
         labels = self._text_gen.generate_score_labels(score_result)
         
+        # Interpretationen generieren
+        interpretations = self._text_gen.generate_interpretations(score_result)
+        
         # Beschreibungstext generieren
         summary = self._text_gen.generate_summary(score_result, sector_ranking)
         
@@ -138,7 +146,11 @@ class ScoringAPI:
             score_valuation=labels["valuation"],
             sector_percentile=int(score_result.sector_percentile),
             traffic_light=traffic_light,
-            summary_text=summary
+            summary_text=summary,
+            interpretation_quality=interpretations["interpretation_quality"],
+            interpretation_growth=interpretations["interpretation_growth"],
+            interpretation_stability=interpretations["interpretation_stability"],
+            interpretation_valuation=interpretations["interpretation_valuation"]
         )
         
         return asdict(output)

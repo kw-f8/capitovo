@@ -9,7 +9,11 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 40,
     "traffic_light": "red",
-    "summary_text": "Die Qualitätskennzahlen bewegen sich im Branchendurchschnitt. Das Wachstum liegt leicht unter dem Niveau vergleichbarer Unternehmen. Insgesamt positioniert sich das Unternehmen im unteren Mittelfeld seines Sektors."
+    "summary_text": "Die Profitabilität und Stabilität des Unternehmens liegen im Branchendurchschnitt. Das Wachstum fällt im Vergleich zu vielen Wettbewerbern schwächer aus. Insgesamt positioniert sich das Unternehmen im mittleren Bereich des Technologiesektors.",
+    "interpretation_quality": "Die Profitabilität bewegt sich im Branchendurchschnitt.",
+    "interpretation_growth": "Die Umsatz- und Ergebnisentwicklung bleibt hinter vielen Wettbewerbern zurück.",
+    "interpretation_stability": "Die Cashflow-Stabilität liegt im Sektordurchschnitt.",
+    "interpretation_valuation": "Das Bewertungsniveau liegt leicht über dem Branchendurchschnitt."
   },
   "MSFT": {
     "symbol": "MSFT",
@@ -21,7 +25,11 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 90,
     "traffic_light": "yellow",
-    "summary_text": "Das Unternehmen zeigt in den Bereichen Qualität und Stabilität Werte deutlich über Branchenniveau. Im Branchenvergleich positioniert es sich im oberen Segment. Die Bewertung liegt leicht über dem Sektordurchschnitt."
+    "summary_text": "Das Unternehmen zeigt in den Bereichen Qualität und Wachstum und Stabilität Werte deutlich über Branchenniveau. leicht über dem Sektordurchschnitt. Im Gesamtbild positioniert es sich klar im oberen Segment des Technologiesektors.",
+    "interpretation_quality": "Die Profitabilität liegt deutlich über dem Branchendurchschnitt.",
+    "interpretation_growth": "Die Umsatz- und Ergebnisentwicklung übertrifft die Mehrheit der Wettbewerber.",
+    "interpretation_stability": "Die Cashflow-Stabilität liegt über dem Sektorniveau.",
+    "interpretation_valuation": "Das Bewertungsniveau liegt leicht über dem Branchendurchschnitt."
   },
   "AMZN": {
     "symbol": "AMZN",
@@ -33,7 +41,11 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 20,
     "traffic_light": "red",
-    "summary_text": "Die Qualitätskennzahlen liegen deutlich unter dem Branchendurchschnitt. Das Wachstum positioniert sich hingegen über dem Sektorniveau. Insgesamt ordnet sich das Unternehmen im unteren Bereich seines Sektors ein."
+    "summary_text": "Das Wachstum positioniert sich über dem Sektorniveau. Die Qualitätskennzahlen liegen unter dem Branchendurchschnitt. Insgesamt ergibt sich daraus eine unterdurchschnittliche Positionierung im Technologiesektor.",
+    "interpretation_quality": "Die Profitabilität liegt deutlich unter dem Branchendurchschnitt.",
+    "interpretation_growth": "Die Umsatz- und Ergebnisentwicklung übertrifft die Mehrheit der Wettbewerber.",
+    "interpretation_stability": "Die Cashflow-Stabilität liegt im Sektordurchschnitt.",
+    "interpretation_valuation": "Das Bewertungsniveau liegt leicht über dem Branchendurchschnitt."
   },
   "GOOGL": {
     "symbol": "GOOGL",
@@ -45,7 +57,11 @@
     "score_valuation": "fair",
     "sector_percentile": 60,
     "traffic_light": "yellow",
-    "summary_text": "Die Qualitäts- und Wachstumskennzahlen bewegen sich im Branchendurchschnitt. Die Stabilität liegt deutlich über dem Sektorniveau. Insgesamt positioniert sich das Unternehmen im oberen Mittelfeld."
+    "summary_text": "Die Stabilität des Unternehmens liegt deutlich über dem Sektorniveau. Das Wachstum liegt über dem Niveau vergleichbarer Unternehmen. Insgesamt positioniert sich das Unternehmen solide im oberen Mittelfeld des Technologiesektors.",
+    "interpretation_quality": "Die Profitabilität bewegt sich im Branchendurchschnitt.",
+    "interpretation_growth": "Die Umsatz- und Ergebnisentwicklung liegt im Sektordurchschnitt.",
+    "interpretation_stability": "Die Cashflow-Stabilität liegt deutlich über dem Sektorniveau.",
+    "interpretation_valuation": "Das Bewertungsniveau liegt im fairen Bereich des Branchendurchschnitts."
   },
   "TSLA": {
     "symbol": "TSLA",
@@ -57,7 +73,11 @@
     "score_valuation": "leicht erhöht",
     "sector_percentile": 40,
     "traffic_light": "red",
-    "summary_text": "Die Qualitätskennzahlen liegen unter dem Branchendurchschnitt. Das Wachstum positioniert sich hingegen über dem Sektorniveau. Im Gesamtbild ordnet sich das Unternehmen im unteren Mittelfeld seines Sektors ein."
+    "summary_text": "Das Wachstum positioniert sich über dem Sektorniveau. Die Qualitätskennzahlen liegen unter dem Branchendurchschnitt. Insgesamt positioniert sich das Unternehmen im mittleren Bereich des Technologiesektors.",
+    "interpretation_quality": "Die Profitabilität liegt unter dem Branchendurchschnitt.",
+    "interpretation_growth": "Die Umsatz- und Ergebnisentwicklung übertrifft die Mehrheit der Wettbewerber.",
+    "interpretation_stability": "Die Cashflow-Stabilität liegt im Sektordurchschnitt.",
+    "interpretation_valuation": "Das Bewertungsniveau liegt leicht über dem Branchendurchschnitt."
   },
   "META": {
     "symbol": "META",
@@ -69,7 +89,11 @@
     "score_valuation": "günstig",
     "sector_percentile": 50,
     "traffic_light": "yellow",
-    "summary_text": "Die Qualitätskennzahlen bewegen sich im Branchendurchschnitt. Die Stabilität liegt über dem Sektorniveau. Im Branchenvergleich positioniert sich das Unternehmen im mittleren Bereich."
+    "summary_text": "Die Stabilität des Unternehmens liegt deutlich über dem Sektorniveau. Das Wachstum fällt im Vergleich zu vielen Wettbewerbern schwächer aus. Insgesamt positioniert sich das Unternehmen im mittleren Bereich des Technologiesektors.",
+    "interpretation_quality": "Die Profitabilität bewegt sich im Branchendurchschnitt.",
+    "interpretation_growth": "Die Umsatz- und Ergebnisentwicklung bleibt hinter vielen Wettbewerbern zurück.",
+    "interpretation_stability": "Die Cashflow-Stabilität liegt über dem Sektorniveau.",
+    "interpretation_valuation": "Das Bewertungsniveau liegt unter dem Branchendurchschnitt."
   },
   "NVDA": {
     "symbol": "NVDA",
@@ -81,6 +105,10 @@
     "score_valuation": "anspruchsvoll",
     "sector_percentile": 80,
     "traffic_light": "yellow",
-    "summary_text": "Das Unternehmen zeigt in den Bereichen Qualität und Wachstum Werte deutlich über Branchenniveau. Die Stabilität bewegt sich im Sektordurchschnitt. Im Gesamtbild positioniert es sich im oberen Segment seines Sektors."
+    "summary_text": "Das Unternehmen zeigt in den Bereichen Qualität und Wachstum Werte deutlich über Branchenniveau. Die Bewertung liegt allerdings ebenfalls deutlich über dem Sektordurchschnitt. Im Gesamtbild positioniert es sich klar im oberen Segment des Technologiesektors.",
+    "interpretation_quality": "Die Profitabilität liegt deutlich über dem Branchendurchschnitt.",
+    "interpretation_growth": "Die Umsatz- und Ergebnisentwicklung übertrifft deutlich die Mehrheit der Wettbewerber.",
+    "interpretation_stability": "Die Cashflow-Stabilität liegt im Sektordurchschnitt.",
+    "interpretation_valuation": "Das Bewertungsniveau liegt deutlich über dem Branchendurchschnitt."
   }
 }

@@ -77,7 +77,51 @@ class TextGenerator:
     """
     
     def __init__(self):
-        # Textbausteine für verschiedene Score-Bereiche
+        # Interpretationstexte für Teil-Scores (1 Satz)
+        self._quality_interpretations = {
+            "hervorragend": "Die Profitabilität liegt deutlich über dem Branchendurchschnitt.",
+            "sehr hoch": "Die Profitabilität liegt deutlich über dem Branchendurchschnitt.",
+            "hoch": "Die Profitabilität liegt über dem Branchendurchschnitt.",
+            "solide": "Die Profitabilität bewegt sich im Branchendurchschnitt.",
+            "fair": "Die Profitabilität bewegt sich im Branchendurchschnitt.",
+            "moderat": "Die Profitabilität liegt leicht unter dem Branchendurchschnitt.",
+            "schwach": "Die Profitabilität liegt unter dem Branchendurchschnitt.",
+            "sehr schwach": "Die Profitabilität liegt deutlich unter dem Branchendurchschnitt."
+        }
+        
+        self._growth_interpretations = {
+            "hervorragend": "Die Umsatz- und Ergebnisentwicklung übertrifft deutlich die Mehrheit der Wettbewerber.",
+            "sehr hoch": "Die Umsatz- und Ergebnisentwicklung übertrifft deutlich die Mehrheit der Wettbewerber.",
+            "hoch": "Die Umsatz- und Ergebnisentwicklung übertrifft die Mehrheit der Wettbewerber.",
+            "solide": "Die Umsatz- und Ergebnisentwicklung liegt im Sektordurchschnitt.",
+            "fair": "Die Umsatz- und Ergebnisentwicklung liegt im Sektordurchschnitt.",
+            "moderat": "Die Umsatz- und Ergebnisentwicklung bleibt hinter vielen Wettbewerbern zurück.",
+            "schwach": "Die Umsatz- und Ergebnisentwicklung liegt unter dem Sektordurchschnitt.",
+            "sehr schwach": "Die Umsatz- und Ergebnisentwicklung liegt deutlich unter dem Sektordurchschnitt."
+        }
+        
+        self._stability_interpretations = {
+            "hervorragend": "Die Cashflow-Stabilität liegt deutlich über dem Sektorniveau.",
+            "sehr hoch": "Die Cashflow-Stabilität liegt deutlich über dem Sektorniveau.",
+            "hoch": "Die Cashflow-Stabilität liegt über dem Sektorniveau.",
+            "solide": "Die Cashflow-Stabilität liegt im Sektordurchschnitt.",
+            "fair": "Die Cashflow-Stabilität liegt im Sektordurchschnitt.",
+            "moderat": "Die Cashflow-Stabilität liegt leicht unter dem Sektorniveau.",
+            "schwach": "Die Cashflow-Stabilität liegt unter dem Sektorniveau.",
+            "sehr schwach": "Die Cashflow-Stabilität liegt deutlich unter dem Sektorniveau."
+        }
+        
+        self._valuation_interpretations = {
+            "sehr günstig": "Das Bewertungsniveau liegt deutlich unter dem Branchendurchschnitt.",
+            "günstig": "Das Bewertungsniveau liegt unter dem Branchendurchschnitt.",
+            "fair": "Das Bewertungsniveau liegt im fairen Bereich des Branchendurchschnitts.",
+            "leicht erhöht": "Das Bewertungsniveau liegt leicht über dem Branchendurchschnitt.",
+            "erhöht": "Das Bewertungsniveau liegt über dem Branchendurchschnitt.",
+            "anspruchsvoll": "Das Bewertungsniveau liegt deutlich über dem Branchendurchschnitt.",
+            "sehr anspruchsvoll": "Das Bewertungsniveau liegt deutlich über dem Branchendurchschnitt."
+        }
+        
+        # Legacy-Textbausteine (für Abwärtskompatibilität)
         self._quality_phrases = {
             "hervorragend": "Das Unternehmen weist eine hervorragende Profitabilität und Kapitalrendite auf.",
             "sehr hoch": "Das Unternehmen zeigt eine überdurchschnittlich hohe Profitabilität.",
@@ -134,66 +178,115 @@ class TextGenerator:
         sector_ranking: Optional[SectorRanking] = None
     ) -> str:
         """
-        Generiert einen zusammenfassenden Text für das Unternehmen.
+        Generiert einen zusammenfassenden 3-Satz-Text für das Unternehmen.
         
-        Der Text ist neutral, sachlich und enthält:
-        - Einschätzung zur Qualität/Stabilität
-        - Branchenvergleich
-        - Bewertungseinschätzung
+        Struktur:
+        - Satz 1: Was stabil/positiv ist (Stärke)
+        - Satz 2: Wo der strukturelle Nachteil liegt (Schwäche)
+        - Satz 3: Gesamteinordnung im Sektor
         
         Args:
             score_result: Die berechneten Scores
             sector_ranking: Optional, das Sektor-Ranking
         
         Returns:
-            Automatisch generierter Beschreibungstext
+            Automatisch generierter 3-Satz-Beschreibungstext
         """
         sentences = []
         
-        # 1. Satz: Qualität und Stabilität
+        # Bestimme Labels
         quality_label = _get_quality_label(score_result.quality_score)
+        growth_label = _get_quality_label(score_result.growth_score)
         stability_label = _get_quality_label(score_result.stability_score)
-        
-        # Kombiniere Qualität und Stabilität intelligent
-        if quality_label in ["hervorragend", "sehr hoch", "hoch"]:
-            if stability_label in ["hervorragend", "sehr hoch", "hoch"]:
-                sentences.append(
-                    f"Das Unternehmen überzeugt durch {quality_label.replace('hervorragend', 'hervorragende').replace('sehr hoch', 'sehr hohe').replace('hoch', 'hohe')} Qualität und stabile Cashflows."
-                )
-            else:
-                sentences.append(self._quality_phrases.get(quality_label, "Das Unternehmen zeigt eine solide Profitabilität."))
-        elif quality_label in ["solide", "moderat"]:
-            sentences.append(self._quality_phrases.get(quality_label, "Das Unternehmen verfügt über eine solide Profitabilität."))
-        else:
-            sentences.append(self._quality_phrases.get(quality_label, "Die Qualitätskennzahlen sind verbesserungswürdig."))
-        
-        # 2. Satz: Branchenvergleich
-        if sector_ranking:
-            position_phrase = self._sector_position_phrases.get(
-                sector_ranking.position_description,
-                f"Im Branchenvergleich liegt das Unternehmen auf Platz {sector_ranking.rank} von {sector_ranking.total_in_sector}."
-            )
-            sentences.append(position_phrase)
-        else:
-            # Fallback basierend auf Perzentil
-            if score_result.sector_percentile >= 75:
-                sentences.append("Im Branchenvergleich liegt das Unternehmen im oberen Viertel.")
-            elif score_result.sector_percentile >= 50:
-                sentences.append("Im Branchenvergleich liegt das Unternehmen über dem Durchschnitt.")
-            elif score_result.sector_percentile >= 25:
-                sentences.append("Im Branchenvergleich liegt das Unternehmen unter dem Durchschnitt.")
-            else:
-                sentences.append("Im Branchenvergleich liegt das Unternehmen im unteren Viertel.")
-        
-        # 3. Satz: Bewertung
         valuation_label = _get_valuation_label(score_result.valuation_score)
-        valuation_phrase = self._valuation_phrases.get(
-            valuation_label,
-            "Die Bewertung liegt im durchschnittlichen Bereich."
-        )
-        sentences.append(valuation_phrase)
+        
+        # Satz 1: Stärken (Was ist positiv/solide?)
+        strengths = []
+        if quality_label in ["hervorragend", "sehr hoch", "hoch"]:
+            strengths.append("Qualität")
+        if growth_label in ["hervorragend", "sehr hoch", "hoch"]:
+            strengths.append("Wachstum")
+        if stability_label in ["hervorragend", "sehr hoch", "hoch"]:
+            strengths.append("Stabilität")
+        
+        if len(strengths) >= 2:
+            sentence1 = f"Das Unternehmen zeigt in den Bereichen {' und '.join(strengths)} Werte deutlich über Branchenniveau."
+        elif len(strengths) == 1:
+            if strengths[0] == "Wachstum":
+                sentence1 = "Das Wachstum positioniert sich über dem Sektorniveau."
+            elif strengths[0] == "Stabilität":
+                sentence1 = f"Die {strengths[0]} des Unternehmens liegt deutlich über dem Sektorniveau."
+            else:
+                sentence1 = f"Die {strengths[0]} des Unternehmens liegt über dem Branchendurchschnitt."
+        else:
+            # Fallback: Solide Bereiche
+            if quality_label in ["solide", "fair"]:
+                sentence1 = "Die Profitabilität und Stabilität des Unternehmens liegen im Branchendurchschnitt."
+            elif stability_label in ["solide", "fair"]:
+                sentence1 = "Die Stabilität liegt über dem Sektorniveau und die Bewertung unter dem Branchendurchschnitt." if valuation_label in ["günstig", "sehr günstig"] else "Die Stabilität des Unternehmens liegt im Branchendurchschnitt."
+            else:
+                sentence1 = "Das Gesamtprofil bewegt sich im mittleren Bereich des Sektors."
+        
+        sentences.append(sentence1)
+        
+        # Satz 2: Schwächen / Kontext (Was ist verbesserungswürdig?)
+        weaknesses = []
+        if quality_label in ["schwach", "sehr schwach"]:
+            weaknesses.append(("quality", "Die Qualitätskennzahlen liegen unter dem Branchendurchschnitt"))
+        if growth_label in ["schwach", "sehr schwach", "moderat"]:
+            weaknesses.append(("growth", "Das Wachstum fällt im Vergleich zu vielen Wettbewerbern schwächer aus"))
+        if valuation_label in ["anspruchsvoll", "sehr anspruchsvoll", "erhöht", "leicht erhöht"]:
+            weaknesses.append(("valuation", f"Die Bewertung liegt {'allerdings ebenfalls ' if len(strengths) >= 2 else ''}deutlich über dem Sektordurchschnitt" if "sehr" in valuation_label or "anspruchsvoll" in valuation_label else "leicht über dem Sektordurchschnitt"))
+        
+        if weaknesses:
+            if len(weaknesses) == 1:
+                sentence2 = weaknesses[0][1] + "."
+            else:
+                # Priorisiere Qualität vor Wachstum
+                sentence2 = weaknesses[0][1] + "."
+        else:
+            # Kein klarer Nachteil → Neutraler Kontext
+            sentence2 = f"Das Wachstum liegt {'leicht ' if growth_label == 'moderat' else ''}{'unter' if growth_label in ['moderat', 'schwach'] else 'über'} dem Niveau vergleichbarer Unternehmen."
+        
+        sentences.append(sentence2)
+        
+        # Satz 3: Gesamteinordnung
+        if score_result.sector_percentile >= 80:
+            sentence3 = "Im Gesamtbild positioniert es sich klar im oberen Segment des Technologiesektors."
+        elif score_result.sector_percentile >= 60:
+            sentence3 = "Insgesamt positioniert sich das Unternehmen solide im oberen Mittelfeld des Technologiesektors."
+        elif score_result.sector_percentile >= 40:
+            sentence3 = "Insgesamt positioniert sich das Unternehmen im mittleren Bereich des Technologiesektors."
+        elif score_result.sector_percentile >= 20:
+            sentence3 = "Insgesamt ergibt sich daraus eine unterdurchschnittliche Positionierung im Technologiesektor."
+        else:
+            sentence3 = "Insgesamt ordnet sich das Unternehmen im unteren Bereich seines Sektors ein."
+        
+        sentences.append(sentence3)
         
         return " ".join(sentences)
+    
+    def generate_interpretations(self, score_result: ScoreResult) -> Dict[str, str]:
+        """
+        Generiert 1-Satz-Interpretationen für alle Teil-Scores.
+        
+        Args:
+            score_result: Die berechneten Scores
+        
+        Returns:
+            Dict mit Interpretationstexten für jeden Bereich
+        """
+        quality_label = _get_quality_label(score_result.quality_score)
+        growth_label = _get_quality_label(score_result.growth_score)
+        stability_label = _get_quality_label(score_result.stability_score)
+        valuation_label = _get_valuation_label(score_result.valuation_score)
+        
+        return {
+            "interpretation_quality": self._quality_interpretations.get(quality_label, "—"),
+            "interpretation_growth": self._growth_interpretations.get(growth_label, "—"),
+            "interpretation_stability": self._stability_interpretations.get(stability_label, "—"),
+            "interpretation_valuation": self._valuation_interpretations.get(valuation_label, "—")
+        }
     
     def generate_score_labels(self, score_result: ScoreResult) -> Dict[str, str]:
         """

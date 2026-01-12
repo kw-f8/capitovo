@@ -1,8 +1,11 @@
 /**
- * capitovo Score-Box – Frontend-Rendering
+ * capitovo Score-Box – Premium-Visualisierung mit durchgängigem Tacho
  * 
- * Rendert den großen Score-Kasten auf den Aktien-Monitor Detailseiten.
- * Verwendet ausschließlich relative Begriffe (Branchenvergleich), keine absoluten Urteile.
+ * Zentrales Score-Modul mit:
+ * - Kontinuierlicher Tacho-Visualisierung (keine Segmente)
+ * - Fließendem Farbverlauf (Rot → Gelb → Grün)
+ * - Detaillierten Teil-Score-Interpretationen
+ * - Erklärenden Kontext-Texten
  * 
  * RECHTLICHER HINWEIS: Dieses System stellt keine Anlageberatung dar.
  */
@@ -49,38 +52,89 @@
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // KOPFBEREICH: Rating & Kontext
+  // TACHO-VISUALISIERUNG (Gauge)
+  // ═══════════════════════════════════════════════════════════════════
+
+  function renderGauge(score) {
+    if (typeof score !== 'number') score = 0;
+    score = Math.max(0, Math.min(100, score));
+
+    const centerX = 140;
+    const centerY = 145;
+    const radius = 90;
+    const startAngle = -180; // links
+    const endAngle = 0;      // rechts
+
+    // Berechne Arc-Pfad für Hintergrund (voller Halbkreis)
+    const bgPath = describeArc(centerX, centerY, radius, startAngle, endAngle);
+    document.getElementById('gauge-bg').setAttribute('d', bgPath);
+
+    // Berechne Arc-Pfad für Progress (bis zum aktuellen Score)
+    const scoreAngle = startAngle + (score / 100) * (endAngle - startAngle);
+    const progressPath = describeArc(centerX, centerY, radius, startAngle, scoreAngle);
+    document.getElementById('gauge-progress').setAttribute('d', progressPath);
+
+    // Zeiger (Nadel) positionieren
+    const needleAngle = scoreAngle * (Math.PI / 180);
+    const needleLength = 90;
+    const needleX = centerX + needleLength * Math.cos(needleAngle);
+    const needleY = centerY + needleLength * Math.sin(needleAngle);
+
+    const needle = document.getElementById('gauge-needle');
+    needle.innerHTML = `
+      <line x1="${centerX}" y1="${centerY}" x2="${needleX}" y2="${needleY}" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="${centerX}" cy="${centerY}" r="8" fill="#1f2937"/>
+    `;
+
+    // Score-Text im Zentrum
+    document.getElementById('gauge-score-text').textContent = String(score);
+  }
+
+  function describeArc(x, y, radius, startAngle, endAngle) {
+    const start = polarToCartesian(x, y, radius, endAngle);
+    const end = polarToCartesian(x, y, radius, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
+    return `M ${start.x} ${start.y} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${end.x} ${end.y}`;
+  }
+
+  function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+    const angleInRadians = (angleInDegrees) * Math.PI / 180.0;
+    return {
+      x: centerX + (radius * Math.cos(angleInRadians)),
+      y: centerY + (radius * Math.sin(angleInRadians))
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // INTERPRETATION & KONTEXT-TEXTE
   // ═══════════════════════════════════════════════════════════════════
 
   function ratingTextFromScore(score) {
     if (typeof score !== 'number') return '—';
-    if (score >= 70) return 'Attraktives Gesamtprofil';
+    if (score >= 70) return 'Überdurchschnittliches Gesamtprofil';
     if (score >= 50) return 'Ausgewogenes Gesamtprofil';
-    return 'Schwaches Gesamtprofil';
+    return 'Unterdurchschnittliches Gesamtprofil';
   }
 
   function contextTextFromScore(score, sectorPct) {
     if (typeof score !== 'number') return '—';
 
     if (score >= 70) {
-      return 'Überdurchschnittlich im Branchenvergleich';
+      return 'Klarer struktureller Vorteil gegenüber dem Branchendurchschnitt';
     }
     if (score >= 50) {
       if (typeof sectorPct === 'number' && sectorPct >= 50) {
-        return 'Im oberen Bereich des Branchendurchschnitts';
+        return 'Solides Profil im oberen Bereich des Branchendurchschnitts';
       }
-      return 'Im Bereich des Branchendurchschnitts';
+      return 'Profil bewegt sich im Bereich des Branchendurchschnitts';
     }
 
     // Score < 50
-    if (typeof sectorPct === 'number' && sectorPct < 30) {
-      return 'Mehrere Bereiche liegen deutlich unter dem Branchendurchschnitt';
-    }
-    return 'Unterdurchschnittlich im Branchenvergleich';
+    return 'Kein struktureller Vorteil gegenüber dem Branchendurchschnitt erkennbar';
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // AMPEL: Ausführliche Erklärung (nicht nur Farbe)
+  // AMPEL-ERKLÄRUNG
   // ═══════════════════════════════════════════════════════════════════
 
   function trafficExplainFull(light) {
@@ -91,13 +145,13 @@
       return 'Gelb bedeutet, dass der Gesamt-Score im mittleren Bereich liegt. Einige Teilbereiche sind solide, andere weisen Verbesserungspotenzial auf.';
     }
     if (light === 'red') {
-      return 'Rot bedeutet, dass der Gesamt-Score unter dem Branchendurchschnitt liegt und mehrere Teilbereiche schwach ausgeprägt sind.';
+      return 'Rot bedeutet, dass der Gesamt-Score unter dem Branchendurchschnitt liegt und mehrere Teilbereiche schwächer ausgeprägt sind.';
     }
     return '—';
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // BRANCHENVERGLEICH: Median-Kontext & Position
+  // BRANCHENVERGLEICH: Median-Kontext & Vergleichssatz
   // ═══════════════════════════════════════════════════════════════════
 
   function sectorContextText(sectorPct) {
@@ -112,7 +166,18 @@
     if (sectorPct >= 35) {
       return 'Der Score liegt unter dem Median des Sektors.';
     }
-    return 'Die Mehrheit der Wettbewerber schneidet aktuell besser ab.';
+    return 'Der Score liegt deutlich unter dem Median des Sektors.';
+  }
+
+  function sectorComparisonText(sectorPct) {
+    if (typeof sectorPct !== 'number') return '—';
+    if (sectorPct >= 60) {
+      return 'Das Unternehmen schneidet im Branchenvergleich besser ab als die Mehrheit der Wettbewerber.';
+    }
+    if (sectorPct >= 40) {
+      return 'Das Profil liegt im mittleren Bereich der Branche.';
+    }
+    return 'Die Mehrheit der Wettbewerber weist aktuell stärkere Profile auf.';
   }
 
   function sectorPositionText(sectorPct) {
@@ -125,13 +190,13 @@
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // TEIL-SCORES: Nur relative Begriffe (KEINE absoluten Urteile!)
+  // TEIL-SCORES: Relative Labels
   // ═══════════════════════════════════════════════════════════════════
 
   function toRelativeLabel(raw) {
     const v = (raw || '').toString().toLowerCase().trim();
 
-    // Qualität / Wachstum / Stabilität → Relative zur Branche
+    // Qualität / Wachstum / Stabilität
     if (['hervorragend', 'sehr hoch'].includes(v)) return 'Deutlich über Branchenniveau';
     if (['hoch'].includes(v)) return 'Über Branchenniveau';
     if (['solide', 'fair'].includes(v)) return 'Im Branchendurchschnitt';
@@ -139,7 +204,7 @@
     if (['schwach'].includes(v)) return 'Unter Branchendurchschnitt';
     if (['sehr schwach'].includes(v)) return 'Deutlich unter Branchenniveau';
 
-    // Bewertung (umgekehrte Logik: niedrig bewertet = potenziell attraktiv)
+    // Bewertung (umgekehrte Logik)
     if (['sehr günstig'].includes(v)) return 'Deutlich unter Branchenniveau bewertet';
     if (['günstig'].includes(v)) return 'Unter Branchenniveau bewertet';
     if (['leicht erhöht'].includes(v)) return 'Leicht über Branchenniveau bewertet';
@@ -181,18 +246,21 @@
     const light = payload.traffic_light;
 
     // ─────────────────────────────────────────────────────────────────
-    // 1. KOPFBEREICH
+    // 1. TACHO rendern
     // ─────────────────────────────────────────────────────────────────
-    const elScore = document.getElementById('capitovo-score-value');
+    renderGauge(score);
+
+    // ─────────────────────────────────────────────────────────────────
+    // 2. KOPFBEREICH (Interpretation)
+    // ─────────────────────────────────────────────────────────────────
     const elRating = document.getElementById('capitovo-score-rating');
     const elContext = document.getElementById('capitovo-score-context');
 
-    if (elScore) elScore.textContent = (score === null ? '—' : String(score));
     if (elRating) elRating.textContent = ratingTextFromScore(score);
     if (elContext) elContext.textContent = contextTextFromScore(score, sectorPct);
 
     // ─────────────────────────────────────────────────────────────────
-    // 2. AMPEL
+    // 3. AMPEL (sekundär)
     // ─────────────────────────────────────────────────────────────────
     const elTrafficLabel = document.getElementById('capitovo-traffic-label');
     const elTrafficExplain = document.getElementById('capitovo-traffic-explain');
@@ -208,10 +276,11 @@
     setDotActive(light);
 
     // ─────────────────────────────────────────────────────────────────
-    // 3. BRANCHENVERGLEICH
+    // 4. BRANCHENVERGLEICH (erweitert)
     // ─────────────────────────────────────────────────────────────────
     const elSectorLine = document.getElementById('capitovo-sector-line');
     const elSectorContext = document.getElementById('capitovo-sector-context');
+    const elSectorComparison = document.getElementById('capitovo-sector-comparison');
     const elSectorPosition = document.getElementById('capitovo-sector-position');
 
     if (elSectorLine) {
@@ -223,23 +292,29 @@
     }
 
     if (elSectorContext) elSectorContext.textContent = sectorContextText(sectorPct);
+    if (elSectorComparison) elSectorComparison.textContent = sectorComparisonText(sectorPct);
     if (elSectorPosition) elSectorPosition.textContent = sectorPositionText(sectorPct);
 
     // ─────────────────────────────────────────────────────────────────
-    // 4. TEIL-SCORES (relative Begriffe!)
+    // 5. TEIL-SCORES (mit Interpretationen)
     // ─────────────────────────────────────────────────────────────────
-    const elQ = document.getElementById('capitovo-sub-quality');
-    const elG = document.getElementById('capitovo-sub-growth');
-    const elS = document.getElementById('capitovo-sub-stability');
-    const elV = document.getElementById('capitovo-sub-valuation');
+    const subScores = [
+      { key: 'quality', label: 'score_quality', text: 'interpretation_quality' },
+      { key: 'growth', label: 'score_growth', text: 'interpretation_growth' },
+      { key: 'stability', label: 'score_stability', text: 'interpretation_stability' },
+      { key: 'valuation', label: 'score_valuation', text: 'interpretation_valuation' }
+    ];
 
-    if (elQ) elQ.textContent = toRelativeLabel(payload.score_quality);
-    if (elG) elG.textContent = toRelativeLabel(payload.score_growth);
-    if (elS) elS.textContent = toRelativeLabel(payload.score_stability);
-    if (elV) elV.textContent = toRelativeLabel(payload.score_valuation);
+    subScores.forEach(sub => {
+      const elLabel = document.getElementById(`capitovo-sub-${sub.key}`);
+      const elText = document.getElementById(`capitovo-sub-${sub.key}-text`);
+
+      if (elLabel) elLabel.textContent = toRelativeLabel(payload[sub.label]);
+      if (elText) elText.textContent = (payload[sub.text] || '—');
+    });
 
     // ─────────────────────────────────────────────────────────────────
-    // 5. EINORDNUNG DES MODELLS (summary_text)
+    // 6. EINORDNUNG DES MODELLS (summary_text)
     // ─────────────────────────────────────────────────────────────────
     const elSummary = document.getElementById('capitovo-model-summary');
     if (elSummary) elSummary.textContent = (payload.summary_text || '—');

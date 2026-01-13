@@ -1,11 +1,11 @@
 /**
- * capitovo Score-Box – Radikale Vereinfachung
+ * capitovo Score-Box – Research-Snapshot Design
  * 
  * Design-Prinzipien:
- * - Monochromer Tacho (Grau + Petrol-Akzent)
- * - Maximale Klarheit in 3 Sekunden
- * - Eine zentrale Aussage
- * - Minimale visuelle Komplexität
+ * - Blau-Verlauf-Tacho (hell → dunkel)
+ * - Balken-Visualisierung mit Branchenmedian
+ * - Klare Informationshierarchie
+ * - Keine Ampel-Farben, keine Signale
  * 
  * RECHTLICH: Keine Anlageberatung
  */
@@ -48,27 +48,35 @@
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // TACHO (MONOCHROM)
+  // TACHO (BLAU-VERLAUF)
   // ═══════════════════════════════════════════════════════════════════
 
   function renderGauge(score) {
     if (typeof score !== 'number') score = 0;
     score = Math.max(0, Math.min(100, score));
 
-    const centerX = 120;
-    const centerY = 125;
-    const radius = 80;
+    const centerX = 130;
+    const centerY = 130;
+    const radius = 90;
     const startAngle = -180;
     const endAngle = 0;
 
-    // Hintergrund-Arc (grau)
+    // Hintergrund-Arc
     const bgPath = describeArc(centerX, centerY, radius, startAngle, endAngle);
     document.getElementById('gauge-bg').setAttribute('d', bgPath);
 
-    // Progress-Arc (Petrol-Akzent)
+    // Progress-Arc (Blau-Verlauf über CSS)
     const scoreAngle = startAngle + (score / 100) * (endAngle - startAngle);
     const progressPath = describeArc(centerX, centerY, radius, startAngle, scoreAngle);
     document.getElementById('gauge-progress').setAttribute('d', progressPath);
+
+    // Marker Position
+    const markerPos = polarToCartesian(centerX, centerY, radius, scoreAngle);
+    const marker = document.getElementById('gauge-marker');
+    if (marker) {
+      marker.setAttribute('cx', markerPos.x);
+      marker.setAttribute('cy', markerPos.y);
+    }
 
     // Score-Text
     document.getElementById('gauge-score-text').textContent = String(score);
@@ -90,7 +98,7 @@
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // TEXTE (RADIKAL REDUZIERT)
+  // TEXTLICHE EINORDNUNG (OHNE WERTUNG)
   // ═══════════════════════════════════════════════════════════════════
 
   function getCoreMessage(score) {
@@ -100,24 +108,66 @@
     return 'Unterdurchschnittliche Wettbewerbsposition';
   }
 
-  function getSectorContext(sectorPct) {
-    if (typeof sectorPct !== 'number') return '—';
-    if (sectorPct >= 50) return 'Über dem Branchendurchschnitt';
-    return 'Unter dem Branchendurchschnitt';
+  function getContextSentence(score, sectorPct) {
+    if (typeof score !== 'number') return '—';
+    
+    if (score >= 70) {
+      return 'Das Unternehmen zeigt strukturelle Vorteile gegenüber dem Branchenmedian.';
+    }
+    if (score >= 50) {
+      return 'Das strukturelle Profil bewegt sich im Bereich des Branchendurchschnitts.';
+    }
+    return 'Das strukturelle Profil liegt unter dem Branchendurchschnitt.';
   }
 
-  function toCompactLabel(raw) {
+  function getSectorLine(sectorPct, sector) {
+    if (typeof sectorPct !== 'number') return '—';
+    const sectorName = sector || 'Sektor';
+    return `Besser als ${sectorPct} % der Unternehmen im ${sectorName}`;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // BALKEN-VISUALISIERUNG (vs. Branchenmedian)
+  // ═══════════════════════════════════════════════════════════════════
+
+  function labelToBarWidth(raw) {
     const v = (raw || '').toString().toLowerCase().trim();
     
-    // Qualität / Wachstum / Stabilität
-    if (['hervorragend', 'sehr hoch', 'hoch'].includes(v)) return '↑';
-    if (['solide', 'fair'].includes(v)) return 'Ø';
-    if (['moderat', 'schwach', 'sehr schwach'].includes(v)) return '↓';
+    // Qualität / Wachstum / Stabilität (50% = Median)
+    if (['hervorragend', 'sehr hoch'].includes(v)) return 85;
+    if (['hoch'].includes(v)) return 70;
+    if (['solide', 'fair'].includes(v)) return 50;
+    if (['moderat'].includes(v)) return 35;
+    if (['schwach'].includes(v)) return 25;
+    if (['sehr schwach'].includes(v)) return 15;
     
-    // Bewertung (umgekehrt)
-    if (['sehr günstig', 'günstig'].includes(v)) return '↓';
-    if (['fair'].includes(v)) return 'Ø';
-    if (['leicht erhöht', 'erhöht', 'anspruchsvoll', 'sehr anspruchsvoll'].includes(v)) return '↑';
+    // Bewertung (umgekehrt: günstig = niedrige Bewertung = positiv)
+    if (['sehr günstig'].includes(v)) return 25;
+    if (['günstig'].includes(v)) return 35;
+    if (['leicht erhöht'].includes(v)) return 60;
+    if (['erhöht', 'anspruchsvoll'].includes(v)) return 75;
+    if (['sehr anspruchsvoll'].includes(v)) return 90;
+    
+    return 50;
+  }
+
+  function labelToText(raw, isValuation = false) {
+    const v = (raw || '').toString().toLowerCase().trim();
+    
+    if (isValuation) {
+      // Bewertung: Beschreibung ohne Wertung
+      if (['sehr günstig', 'günstig'].includes(v)) return 'Unter Branchenniveau';
+      if (['fair'].includes(v)) return 'Im Branchendurchschnitt';
+      if (['leicht erhöht'].includes(v)) return 'Leicht über Branchenniveau';
+      if (['erhöht', 'anspruchsvoll', 'sehr anspruchsvoll'].includes(v)) return 'Über Branchenniveau';
+    } else {
+      // Qualität / Wachstum / Stabilität
+      if (['hervorragend', 'sehr hoch'].includes(v)) return 'Deutlich über Branchenniveau';
+      if (['hoch'].includes(v)) return 'Über Branchenniveau';
+      if (['solide', 'fair'].includes(v)) return 'Im Branchendurchschnitt';
+      if (['moderat'].includes(v)) return 'Leicht unter Branchenniveau';
+      if (['schwach', 'sehr schwach'].includes(v)) return 'Unter Branchenniveau';
+    }
     
     return '—';
   }
@@ -131,40 +181,44 @@
 
     const score = typeof payload.score_total === 'number' ? payload.score_total : null;
     const sectorPct = typeof payload.sector_percentile === 'number' ? payload.sector_percentile : null;
+    const sector = payload.sector || 'Sektor';
 
-    // Tacho rendern
+    // 1. Tacho rendern
     renderGauge(score);
 
-    // Eine zentrale Aussage
+    // 2. Verbale Einordnung
     const elRating = document.getElementById('capitovo-score-rating');
+    const elContext = document.getElementById('capitovo-score-context');
+    
     if (elRating) elRating.textContent = getCoreMessage(score);
+    if (elContext) elContext.textContent = getContextSentence(score, sectorPct);
 
-    // Branchenvergleich (2 Zeilen)
+    // 3. Branchenvergleich (ein Satz)
     const elSectorLine = document.getElementById('capitovo-sector-line');
-    const elSectorContext = document.getElementById('capitovo-sector-context');
+    if (elSectorLine) elSectorLine.textContent = getSectorLine(sectorPct, sector);
 
-    if (elSectorLine) {
-      if (sectorPct === null) {
-        elSectorLine.textContent = '—';
-      } else {
-        elSectorLine.textContent = `Besser als ${sectorPct} % der Unternehmen im Sektor`;
+    // 4. Teilbereiche (Balken + Label)
+    const areas = [
+      { key: 'quality', field: 'score_quality', isValuation: false },
+      { key: 'growth', field: 'score_growth', isValuation: false },
+      { key: 'stability', field: 'score_stability', isValuation: false },
+      { key: 'valuation', field: 'score_valuation', isValuation: true }
+    ];
+
+    areas.forEach(area => {
+      const bar = document.getElementById(`capitovo-bar-${area.key}`);
+      const label = document.getElementById(`capitovo-sub-${area.key}-label`);
+      const rawValue = payload[area.field];
+      
+      if (bar) {
+        bar.style.width = `${labelToBarWidth(rawValue)}%`;
       }
-    }
+      if (label) {
+        label.textContent = labelToText(rawValue, area.isValuation);
+      }
+    });
 
-    if (elSectorContext) elSectorContext.textContent = getSectorContext(sectorPct);
-
-    // Teilbereiche (kompakte Symbole)
-    const elQ = document.getElementById('capitovo-sub-quality');
-    const elG = document.getElementById('capitovo-sub-growth');
-    const elS = document.getElementById('capitovo-sub-stability');
-    const elV = document.getElementById('capitovo-sub-valuation');
-
-    if (elQ) elQ.textContent = toCompactLabel(payload.score_quality);
-    if (elG) elG.textContent = toCompactLabel(payload.score_growth);
-    if (elS) elS.textContent = toCompactLabel(payload.score_stability);
-    if (elV) elV.textContent = toCompactLabel(payload.score_valuation);
-
-    // Erläuterung (eingeklappt)
+    // 5. Einordnung des Modells
     const elSummary = document.getElementById('capitovo-model-summary');
     if (elSummary) elSummary.textContent = (payload.summary_text || '—');
   }

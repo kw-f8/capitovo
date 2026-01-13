@@ -115,130 +115,75 @@
                 </div>
 
                 <!-- capitovo-Score (zentraler Score-Kasten; keine Kennzahlen außer Score/Perzentil) -->
-                <section id="capitovo-score" class="card mb-6" style="border:1px solid rgba(15,23,42,0.08); border-radius:14px; background:#fff; box-shadow:0 8px 28px rgba(2,6,23,0.06);">
-                  <div class="p-6">
+                <section id="capitovo-score" class="card mb-6" style="border:1px solid rgba(15,23,42,0.06); border-radius:16px; background:#fff; box-shadow:0 2px 12px rgba(2,6,23,0.04);">
+                  <div class="p-8">
 
-                    <!-- 1. Kopfbereich mit TACHO-VISUALISIERUNG -->
+                    <!-- 1. Tacho (monochrom, zentral) -->
                     <div class="flex flex-col items-center mb-6">
-                      <!-- Tacho (Gauge) -->
-                      <div id="capitovo-gauge-container" class="mb-4" style="width: 280px; height: 180px;">
-                        <svg id="capitovo-gauge-svg" width="280" height="180" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                      <div id="capitovo-gauge-container" class="mb-4" style="width: 240px; height: 160px;">
+                        <svg id="capitovo-gauge-svg" width="240" height="160" viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
                           <!-- Hintergrund-Arc (grau) -->
-                          <path id="gauge-bg" d="" fill="none" stroke="#e5e7eb" stroke-width="28" stroke-linecap="round"/>
-                          <!-- Farbverlauf-Arc (durchgängig) -->
-                          <defs>
-                            <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                              <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
-                              <stop offset="50%" style="stop-color:#eab308;stop-opacity:1" />
-                              <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1" />
-                            </linearGradient>
-                          </defs>
-                          <path id="gauge-progress" d="" fill="none" stroke="url(#gaugeGradient)" stroke-width="28" stroke-linecap="round"/>
-                          <!-- Zeiger -->
-                          <g id="gauge-needle" transform="">
-                            <line x1="140" y1="145" x2="140" y2="55" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
-                            <circle cx="140" cy="145" r="8" fill="#1f2937"/>
-                          </g>
+                          <path id="gauge-bg" d="" fill="none" stroke="#e5e7eb" stroke-width="20" stroke-linecap="round"/>
+                          <!-- Progress-Arc (Akzentfarbe) -->
+                          <path id="gauge-progress" d="" fill="none" stroke="#0891b2" stroke-width="20" stroke-linecap="round"/>
                           <!-- Score-Wert im Zentrum -->
-                          <text id="gauge-score-text" x="140" y="165" text-anchor="middle" font-size="36" font-weight="900" fill="#1f2937">—</text>
-                          <text x="140" y="178" text-anchor="middle" font-size="12" font-weight="600" fill="#9ca3af">/ 100</text>
+                          <text id="gauge-score-text" x="120" y="130" text-anchor="middle" font-size="52" font-weight="900" fill="#0f172a">—</text>
+                          <text x="120" y="148" text-anchor="middle" font-size="11" font-weight="600" fill="#94a3b8" letter-spacing="0.05em">capitovo-Score</text>
                         </svg>
                       </div>
-                      <!-- Interpretation unterhalb des Tachos -->
-                      <div class="text-center">
-                        <div class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">capitovo-Score</div>
-                        <div id="capitovo-score-rating" class="text-2xl font-bold text-gray-900 mb-1">—</div>
-                        <div id="capitovo-score-context" class="text-sm text-gray-600 italic max-w-md">—</div>
-                      </div>
+                      <!-- Eine einzige Kernaussage -->
+                      <div id="capitovo-score-rating" class="text-lg font-semibold text-gray-800 text-center">—</div>
                     </div>
 
-                    <!-- 2. Ampel-Bereich (sekundär) -->
-                    <div class="p-4 rounded-xl mb-6" style="background: rgba(15,23,42,0.02);">
-                      <div class="flex items-center gap-3 mb-2">
-                        <div class="flex items-center gap-1.5" aria-hidden="true">
-                          <span id="capitovo-dot-green" class="w-4 h-4 rounded-full bg-gray-200 border-2 border-gray-300"></span>
-                          <span id="capitovo-dot-yellow" class="w-4 h-4 rounded-full bg-gray-200 border-2 border-gray-300"></span>
-                          <span id="capitovo-dot-red" class="w-4 h-4 rounded-full bg-gray-200 border-2 border-gray-300"></span>
-                        </div>
-                        <span id="capitovo-traffic-label" class="text-sm font-bold text-gray-800">—</span>
-                      </div>
-                      <p id="capitovo-traffic-explain" class="text-sm text-gray-600 leading-relaxed">—</p>
+                    <hr class="my-6" style="border-color: rgba(15,23,42,0.04);" />
+
+                    <!-- 2. Branchenvergleich (maximal 2 Zeilen) -->
+                    <div class="mb-6">
+                      <div class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Branchenvergleich</div>
+                      <div id="capitovo-sector-line" class="text-base font-semibold text-gray-900 mb-1">—</div>
+                      <div id="capitovo-sector-context" class="text-sm text-gray-600">—</div>
                     </div>
 
-                    <hr class="my-6" style="border-color: rgba(15,23,42,0.06);" />
+                    <hr class="my-6" style="border-color: rgba(15,23,42,0.04);" />
 
-                    <!-- 3. Branchenvergleich + 4. Teil-Scores -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-                      <!-- Branchenvergleich -->
-                      <div>
-                        <div class="text-sm font-bold text-gray-800 mb-3">Einordnung im Branchenvergleich</div>
-                        <div id="capitovo-sector-line" class="text-base text-gray-900 font-semibold">—</div>
-                        <div id="capitovo-sector-context" class="mt-2 text-sm text-gray-600">—</div>
-                        <div id="capitovo-sector-comparison" class="mt-2 text-sm text-gray-600 italic">—</div>
-                        <div id="capitovo-sector-position" class="mt-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">—</div>
-                      </div>
-
-                      <!-- Teil-Scores mit Interpretationen -->
-                      <div>
-                        <div class="text-sm font-bold text-gray-800 mb-3">Strukturelle Einordnung nach Bereichen</div>
-                        <div class="space-y-4">
-                          <div>
-                            <div class="flex items-center justify-between mb-1">
-                              <span class="text-sm font-semibold text-gray-700">Qualität</span>
-                              <span id="capitovo-sub-quality" class="text-sm font-semibold text-gray-900">—</span>
-                            </div>
-                            <p id="capitovo-sub-quality-text" class="text-xs text-gray-600 italic leading-relaxed">—</p>
-                          </div>
-                          <div>
-                            <div class="flex items-center justify-between mb-1">
-                              <span class="text-sm font-semibold text-gray-700">Wachstum</span>
-                              <span id="capitovo-sub-growth" class="text-sm font-semibold text-gray-900">—</span>
-                            </div>
-                            <p id="capitovo-sub-growth-text" class="text-xs text-gray-600 italic leading-relaxed">—</p>
-                          </div>
-                          <div>
-                            <div class="flex items-center justify-between mb-1">
-                              <span class="text-sm font-semibold text-gray-700">Stabilität</span>
-                              <span id="capitovo-sub-stability" class="text-sm font-semibold text-gray-900">—</span>
-                            </div>
-                            <p id="capitovo-sub-stability-text" class="text-xs text-gray-600 italic leading-relaxed">—</p>
-                          </div>
-                          <div>
-                            <div class="flex items-center justify-between mb-1">
-                              <span class="text-sm font-semibold text-gray-700">Bewertung</span>
-                              <span id="capitovo-sub-valuation" class="text-sm font-semibold text-gray-900">—</span>
-                            </div>
-                            <p id="capitovo-sub-valuation-text" class="text-xs text-gray-600 italic leading-relaxed">—</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <hr class="my-6" style="border-color: rgba(15,23,42,0.06);" />
-
-                    <!-- 5. Einordnung des Modells -->
-                    <div>
-                      <div class="text-sm font-bold text-gray-800 mb-2">Einordnung des Modells</div>
-                      <p id="capitovo-model-summary" class="text-sm text-gray-700 leading-relaxed">—</p>
-                    </div>
-
-                    <hr class="my-6" style="border-color: rgba(15,23,42,0.06);" />
-
-                    <!-- 6. Meta-Erklärung -->
+                    <!-- 3. Teilbereiche (kompakt, eingeklappt) -->
                     <details class="group">
-                      <summary class="cursor-pointer text-sm font-semibold text-gray-700 hover:text-gray-900 flex items-center gap-2">
-                        <svg class="w-4 h-4 text-gray-500 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-                        Was sagt mir dieser Score?
+                      <summary class="cursor-pointer text-sm font-semibold text-gray-700 hover:text-gray-900 flex items-center gap-2 mb-3">
+                        <svg class="w-4 h-4 text-gray-400 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                        Teilbereiche
                       </summary>
-                      <p class="mt-3 text-sm text-gray-600 leading-relaxed pl-6">
-                        Der capitovo-Score vergleicht Unternehmen innerhalb ihres jeweiligen Sektors anhand mehrerer quantitativer Kriterien. Er dient dazu, strukturelle Stärken und Schwächen im Branchenvergleich sichtbar zu machen.
-                      </p>
+                      <div class="pl-6 space-y-2 text-sm">
+                        <div class="flex items-center justify-between">
+                          <span class="text-gray-600">Qualität</span>
+                          <span id="capitovo-sub-quality" class="font-medium text-gray-800">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-gray-600">Wachstum</span>
+                          <span id="capitovo-sub-growth" class="font-medium text-gray-800">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-gray-600">Stabilität</span>
+                          <span id="capitovo-sub-stability" class="font-medium text-gray-800">—</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                          <span class="text-gray-600">Bewertung</span>
+                          <span id="capitovo-sub-valuation" class="font-medium text-gray-800">—</span>
+                        </div>
+                      </div>
                     </details>
 
-                    <!-- 7. Rechtlicher Hinweis -->
-                    <p class="mt-5 pt-4 text-xs text-gray-500 border-t" style="border-color: rgba(15,23,42,0.06);">
-                      Der capitovo-Score basiert auf einem quantitativen Analysemodell und dient ausschließlich Informationszwecken. Er stellt keine Anlageberatung oder Handlungsempfehlung dar.
+                    <!-- 4. Weitere Informationen (eingeklappt) -->
+                    <details class="group mt-4">
+                      <summary class="cursor-pointer text-sm font-semibold text-gray-700 hover:text-gray-900 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-gray-400 transition-transform group-open:rotate-90" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                        Erläuterung
+                      </summary>
+                      <p id="capitovo-model-summary" class="mt-3 pl-6 text-sm text-gray-600 leading-relaxed">—</p>
+                    </details>
+
+                    <!-- Rechtlicher Hinweis (minimal) -->
+                    <p class="mt-8 text-xs text-gray-400">
+                      Der capitovo-Score dient ausschließlich Informationszwecken und stellt keine Anlageberatung dar.
                     </p>
                   </div>
                 </section>

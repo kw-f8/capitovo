@@ -103,27 +103,27 @@
 
   function getCoreMessage(score) {
     if (typeof score !== 'number') return '—';
-    if (score >= 70) return 'Überdurchschnittliche Wettbewerbsposition';
-    if (score >= 50) return 'Durchschnittliche Wettbewerbsposition';
-    return 'Unterdurchschnittliche Wettbewerbsposition';
+    if (score >= 70) return 'Überdurchschnittliche Wettbewerbsposition im Branchenvergleich';
+    if (score >= 50) return 'Durchschnittliche Wettbewerbsposition im Branchenvergleich';
+    return 'Unterdurchschnittliche Wettbewerbsposition im Branchenvergleich';
   }
 
-  function getContextSentence(score, sectorPct) {
+  function getSubline(score, sector) {
     if (typeof score !== 'number') return '—';
+    const sectorName = sector || 'Sektors';
     
     if (score >= 70) {
-      return 'Das Unternehmen zeigt strukturelle Vorteile gegenüber dem Branchenmedian.';
+      return `Der Score liegt deutlich über dem Median des ${sectorName}.`;
     }
     if (score >= 50) {
-      return 'Das strukturelle Profil bewegt sich im Bereich des Branchendurchschnitts.';
+      return `Der Score bewegt sich im Bereich des Medians des ${sectorName}.`;
     }
-    return 'Das strukturelle Profil liegt unter dem Branchendurchschnitt.';
+    return `Der Score liegt unter dem Median des ${sectorName}.`;
   }
 
   function getSectorLine(sectorPct, sector) {
     if (typeof sectorPct !== 'number') return '—';
-    const sectorName = sector || 'Sektor';
-    return `Besser als ${sectorPct} % der Unternehmen im ${sectorName}`;
+    return `Besser positioniert als rund ${sectorPct} % der vergleichbaren Unternehmen.`;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -181,19 +181,19 @@
 
     const score = typeof payload.score_total === 'number' ? payload.score_total : null;
     const sectorPct = typeof payload.sector_percentile === 'number' ? payload.sector_percentile : null;
-    const sector = payload.sector || 'Sektor';
+    const sector = payload.sector || 'Technologiesektors';
 
     // 1. Tacho rendern
     renderGauge(score);
 
-    // 2. Verbale Einordnung
+    // 2. Verbale Einordnung (Hauptheadline + Subline)
     const elRating = document.getElementById('capitovo-score-rating');
-    const elContext = document.getElementById('capitovo-score-context');
+    const elSubline = document.getElementById('capitovo-score-subline');
     
     if (elRating) elRating.textContent = getCoreMessage(score);
-    if (elContext) elContext.textContent = getContextSentence(score, sectorPct);
+    if (elSubline) elSubline.textContent = getSubline(score, sector);
 
-    // 3. Branchenvergleich (ein Satz)
+    // 3. Branchenvergleich (Kontextzeile)
     const elSectorLine = document.getElementById('capitovo-sector-line');
     if (elSectorLine) elSectorLine.textContent = getSectorLine(sectorPct, sector);
 

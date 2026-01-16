@@ -118,38 +118,26 @@
                 <section id="capitovo-score" class="card mb-6" style="border:1px solid rgba(15,23,42,0.05); border-radius:16px; background:#fff; box-shadow:0 1px 8px rgba(2,6,23,0.03);">
                   <div class="p-8">
 
-                    <!-- 1. Tacho (Blau-Verlauf, zentral) -->
+                    <!-- 1. Gauge (Einfarbig, Systemfarbe) -->
                     <div class="flex flex-col items-center mb-8">
                       <div id="capitovo-gauge-container" style="width: 260px; height: 160px;">
                         <svg id="capitovo-gauge-svg" width="260" height="160" viewBox="0 0 260 160" xmlns="http://www.w3.org/2000/svg">
-                          <defs>
-                            <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                              <stop offset="0%" style="stop-color:#bfdbfe;stop-opacity:1" />
-                              <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
-                            </linearGradient>
-                          </defs>
-                          <!-- Hintergrund-Arc -->
-                          <path id="gauge-bg" d="" fill="none" stroke="#f1f5f9" stroke-width="18" stroke-linecap="round"/>
-                          <!-- Progress-Arc (Blau-Verlauf) -->
-                          <path id="gauge-progress" d="" fill="none" stroke="url(#gaugeGradient)" stroke-width="18" stroke-linecap="round"/>
+                          <!-- Hintergrund-Arc (Grau) -->
+                          <path id="gauge-bg" d="" fill="none" stroke="#e2e8f0" stroke-width="16" stroke-linecap="round"/>
+                          <!-- Progress-Arc (Systemfarbe: Indigo) -->
+                          <path id="gauge-progress" d="" fill="none" stroke="#4F46E5" stroke-width="16" stroke-linecap="round"/>
                           <!-- Marker -->
-                          <circle id="gauge-marker" cx="130" cy="130" r="6" fill="#1e40af"/>
+                          <circle id="gauge-marker" cx="130" cy="130" r="5" fill="#312e81"/>
                           <!-- Score im Zentrum -->
-                          <text id="gauge-score-text" x="130" y="120" text-anchor="middle" font-size="48" font-weight="800" fill="#1e293b">—</text>
-                          <text x="130" y="142" text-anchor="middle" font-size="13" fill="#94a3b8">von 100</text>
+                          <text id="gauge-score-text" x="130" y="118" text-anchor="middle" font-size="44" font-weight="700" fill="#1e293b">—</text>
+                          <text x="130" y="142" text-anchor="middle" font-size="12" fill="#94a3b8" letter-spacing="0.5">von 100</text>
                         </svg>
                       </div>
 
-                      <!-- Verbale Einordnung (Headline + Subline + Kontextzeile) -->
-                      <div class="text-center mt-4 space-y-2">
-                        <div id="capitovo-score-rating" class="text-lg font-semibold text-slate-800">—</div>
-                        <p id="capitovo-score-subline" class="text-sm text-slate-500">—</p>
+                      <!-- Verbale Einordnung (Eine klare Aussage) -->
+                      <div class="text-center mt-5">
+                        <p id="capitovo-score-rating" class="text-base font-medium text-slate-700 leading-relaxed">—</p>
                       </div>
-                    </div>
-
-                    <!-- 2. Branchenvergleich (Kontextzeile) -->
-                    <div class="text-center py-4 px-6 rounded-xl mb-8" style="background: #f8fafc;">
-                      <p id="capitovo-sector-line" class="text-sm font-medium text-slate-600">—</p>
                     </div>
 
                     <!-- 3. Score-Zusammensetzung (klappbar) -->
@@ -159,69 +147,59 @@
                         Score-Zusammensetzung anzeigen
                       </summary>
                       
-                      <div class="mt-6 space-y-6">
-                        <!-- Farbverlauf-Definition -->
-                        <style>
-                          .bar-gradient {
-                            background: linear-gradient(to right, #c9a89a 0%, #d4a574 35%, #b8c9a8 65%, #8fbc8f 100%);
-                          }
-                          .bar-track {
-                            background: linear-gradient(to right, #f1e8e4 0%, #f5efe8 35%, #eef3eb 65%, #e8f0e8 100%);
-                          }
-                        </style>
-
+                      <div class="mt-6 space-y-5">
                         <!-- Qualität -->
                         <div class="score-bar-item">
-                          <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-slate-700">Qualität</span>
-                            <span id="capitovo-sub-quality-label" class="text-xs text-slate-500">—</span>
+                          <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm text-slate-600">Qualität</span>
+                            <span id="capitovo-sub-quality-label" class="text-xs text-slate-400">—</span>
                           </div>
-                          <div class="relative h-2.5 bar-track rounded-full overflow-hidden">
-                            <div id="capitovo-bar-quality" class="absolute h-full bar-gradient rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-                            <div class="absolute h-full w-px bg-slate-400" style="left: 50%"></div>
+                          <div class="relative h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="capitovo-bar-quality" class="absolute h-full bg-indigo-500 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                            <div class="absolute h-full w-px bg-slate-300" style="left: 50%"></div>
                           </div>
                         </div>
 
                         <!-- Wachstum -->
                         <div class="score-bar-item">
-                          <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-slate-700">Wachstum</span>
-                            <span id="capitovo-sub-growth-label" class="text-xs text-slate-500">—</span>
+                          <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm text-slate-600">Wachstum</span>
+                            <span id="capitovo-sub-growth-label" class="text-xs text-slate-400">—</span>
                           </div>
-                          <div class="relative h-2.5 bar-track rounded-full overflow-hidden">
-                            <div id="capitovo-bar-growth" class="absolute h-full bar-gradient rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-                            <div class="absolute h-full w-px bg-slate-400" style="left: 50%"></div>
+                          <div class="relative h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="capitovo-bar-growth" class="absolute h-full bg-indigo-500 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                            <div class="absolute h-full w-px bg-slate-300" style="left: 50%"></div>
                           </div>
                         </div>
 
                         <!-- Stabilität -->
                         <div class="score-bar-item">
-                          <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-slate-700">Stabilität</span>
-                            <span id="capitovo-sub-stability-label" class="text-xs text-slate-500">—</span>
+                          <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm text-slate-600">Stabilität</span>
+                            <span id="capitovo-sub-stability-label" class="text-xs text-slate-400">—</span>
                           </div>
-                          <div class="relative h-2.5 bar-track rounded-full overflow-hidden">
-                            <div id="capitovo-bar-stability" class="absolute h-full bar-gradient rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-                            <div class="absolute h-full w-px bg-slate-400" style="left: 50%"></div>
+                          <div class="relative h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="capitovo-bar-stability" class="absolute h-full bg-indigo-500 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                            <div class="absolute h-full w-px bg-slate-300" style="left: 50%"></div>
                           </div>
                         </div>
 
                         <!-- Bewertung -->
                         <div class="score-bar-item">
-                          <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-medium text-slate-700">Bewertung</span>
-                            <span id="capitovo-sub-valuation-label" class="text-xs text-slate-500">—</span>
+                          <div class="flex justify-between items-center mb-1.5">
+                            <span class="text-sm text-slate-600">Bewertung</span>
+                            <span id="capitovo-sub-valuation-label" class="text-xs text-slate-400">—</span>
                           </div>
-                          <div class="relative h-2.5 bar-track rounded-full overflow-hidden">
-                            <div id="capitovo-bar-valuation" class="absolute h-full bar-gradient rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-                            <div class="absolute h-full w-px bg-slate-400" style="left: 50%"></div>
+                          <div class="relative h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="capitovo-bar-valuation" class="absolute h-full bg-indigo-500 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
+                            <div class="absolute h-full w-px bg-slate-300" style="left: 50%"></div>
                           </div>
                         </div>
 
-                        <p class="text-xs text-slate-400 mt-5 flex items-center gap-2">
-                          <span class="inline-block w-px h-3 bg-slate-400"></span>
-                          Branchenmedian
-                        </p>
+                        <div class="flex items-center gap-2 mt-4 text-xs text-slate-400">
+                          <span class="inline-block w-px h-3 bg-slate-300"></span>
+                          <span>Branchenmedian (50 %)</span>
+                        </div>
                       </div>
                     </details>
 
@@ -413,7 +391,7 @@
   <script src="../../src/components/insert_components.js"></script>
   <script src="../config.js"></script>
   <script src="../../script.js?v=6"></script>
-  <script src="./score-box.js?v=4"></script>
+  <script src="./score-box.js?v=5"></script>
   <script>
     // Sidebar toggle wiring (single, shared handler)
     document.addEventListener('click', function(e){

@@ -98,32 +98,25 @@
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // TEXTLICHE EINORDNUNG (OHNE WERTUNG)
+  // TEXTLICHE EINORDNUNG (EINE KLARE AUSSAGE)
   // ═══════════════════════════════════════════════════════════════════
 
-  function getCoreMessage(score) {
+  function getCoreMessage(score, sectorPct, sector) {
     if (typeof score !== 'number') return '—';
-    if (score >= 70) return 'Überdurchschnittliche Wettbewerbsposition im Branchenvergleich';
-    if (score >= 50) return 'Durchschnittliche Wettbewerbsposition im Branchenvergleich';
-    return 'Unterdurchschnittliche Wettbewerbsposition im Branchenvergleich';
-  }
-
-  function getSubline(score, sector) {
-    if (typeof score !== 'number') return '—';
-    const sectorName = sector || 'Sektors';
+    const sectorName = sector || 'vergleichbarer Technologieunternehmen';
+    const pct = typeof sectorPct === 'number' ? sectorPct : 50;
     
+    // Eine einzige, widerspruchsfreie Aussage
     if (score >= 70) {
-      return `Der Score liegt deutlich über dem Median des ${sectorName}.`;
+      return `Überdurchschnittlich positioniert – der Score liegt über dem Median ${sectorName}.`;
     }
     if (score >= 50) {
-      return `Der Score bewegt sich im Bereich des Medians des ${sectorName}.`;
+      return `Im Branchendurchschnitt positioniert – der Score entspricht dem Median ${sectorName}.`;
     }
-    return `Der Score liegt unter dem Median des ${sectorName}.`;
-  }
-
-  function getSectorLine(sectorPct, sector) {
-    if (typeof sectorPct !== 'number') return '—';
-    return `Besser positioniert als rund ${sectorPct} % der vergleichbaren Unternehmen.`;
+    if (pct >= 30) {
+      return `Leicht unter dem Branchendurchschnitt – der Score liegt unter dem Median ${sectorName}.`;
+    }
+    return `Unter dem Branchendurchschnitt – der Score liegt deutlich unter dem Median ${sectorName}.`;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -181,23 +174,16 @@
 
     const score = typeof payload.score_total === 'number' ? payload.score_total : null;
     const sectorPct = typeof payload.sector_percentile === 'number' ? payload.sector_percentile : null;
-    const sector = payload.sector || 'Technologiesektors';
+    const sector = payload.sector || 'vergleichbarer Technologieunternehmen';
 
-    // 1. Tacho rendern
+    // 1. Gauge rendern (einfarbig)
     renderGauge(score);
 
-    // 2. Verbale Einordnung (Hauptheadline + Subline)
+    // 2. Eine klare Einordnung (keine widersprüchlichen Aussagen)
     const elRating = document.getElementById('capitovo-score-rating');
-    const elSubline = document.getElementById('capitovo-score-subline');
-    
-    if (elRating) elRating.textContent = getCoreMessage(score);
-    if (elSubline) elSubline.textContent = getSubline(score, sector);
+    if (elRating) elRating.textContent = getCoreMessage(score, sectorPct, sector);
 
-    // 3. Branchenvergleich (Kontextzeile)
-    const elSectorLine = document.getElementById('capitovo-sector-line');
-    if (elSectorLine) elSectorLine.textContent = getSectorLine(sectorPct, sector);
-
-    // 4. Teilbereiche (Balken + Label)
+    // 3. Teilbereiche (Balken + Label)
     const areas = [
       { key: 'quality', field: 'score_quality', isValuation: false },
       { key: 'growth', field: 'score_growth', isValuation: false },
@@ -218,7 +204,7 @@
       }
     });
 
-    // 5. Einordnung des Modells
+    // 4. Einordnung des Modells
     const elSummary = document.getElementById('capitovo-model-summary');
     if (elSummary) elSummary.textContent = (payload.summary_text || '—');
   }

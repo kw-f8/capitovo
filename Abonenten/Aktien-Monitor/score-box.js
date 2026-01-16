@@ -471,15 +471,18 @@
     (function initInfoPopover() {
       const btn = document.getElementById('capitovo-score-info-btn');
       const pop = document.getElementById('capitovo-score-info-popover');
+      const section = document.getElementById('capitovo-score');
       if (!btn || !pop) return;
 
       function setOpen(open) {
         if (open) {
           pop.classList.remove('hidden');
           btn.setAttribute('aria-expanded', 'true');
+          if (section) section.classList.add('capitovo-score--blurred');
         } else {
           pop.classList.add('hidden');
           btn.setAttribute('aria-expanded', 'false');
+          if (section) section.classList.remove('capitovo-score--blurred');
         }
       }
 

@@ -411,9 +411,9 @@
     // 1. Gauge rendern (einfarbig)
     renderGauge(score);
 
-    // 2. Eine klare Einordnung (keine widersprüchlichen Aussagen)
+    // 2. Entfernt: Einordnungssatz unter dem Gauge
     const elRating = document.getElementById('capitovo-score-rating');
-    if (elRating) elRating.textContent = getCoreMessage(score, sectorPct, sector);
+    if (elRating) elRating.textContent = '';
 
     // 3. Teilbereiche (Balken + Label)
     const areas = [

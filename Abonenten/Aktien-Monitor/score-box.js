@@ -452,6 +452,40 @@
     const box = document.getElementById('capitovo-score');
     if (!box) return;
 
+    // Info-Popover (optional)
+    (function initInfoPopover() {
+      const btn = document.getElementById('capitovo-score-info-btn');
+      const pop = document.getElementById('capitovo-score-info-popover');
+      if (!btn || !pop) return;
+
+      function setOpen(open) {
+        if (open) {
+          pop.classList.remove('hidden');
+          btn.setAttribute('aria-expanded', 'true');
+        } else {
+          pop.classList.add('hidden');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpen(pop.classList.contains('hidden'));
+      });
+
+      document.addEventListener('click', function (e) {
+        if (pop.classList.contains('hidden')) return;
+        const target = e.target;
+        if (btn.contains(target) || pop.contains(target)) return;
+        setOpen(false);
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') setOpen(false);
+      });
+    })();
+
     const title = document.querySelector('[data-ticker]');
     const ticker = normalizeSymbol(title && title.getAttribute('data-ticker'));
     if (!ticker) return;

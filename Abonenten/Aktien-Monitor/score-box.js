@@ -297,18 +297,12 @@
     const progressPath = describeArc(centerX, centerY, radius, startAngle, scoreAngle);
     document.getElementById('gauge-progress').setAttribute('d', progressPath);
 
-    // Farbe = aggregierter Score-Farbwert (gleiches System wie Balken)
-    const gaugeColor = getScoreColor(score);
-    const progressEl = document.getElementById('gauge-progress');
-    if (progressEl) progressEl.setAttribute('stroke', gaugeColor);
-
     // Marker Position
     const markerPos = polarToCartesian(centerX, centerY, radius, scoreAngle);
     const marker = document.getElementById('gauge-marker');
     if (marker) {
       marker.setAttribute('cx', markerPos.x);
       marker.setAttribute('cy', markerPos.y);
-      marker.setAttribute('fill', gaugeColor);
     }
 
     // Score-Text
@@ -334,30 +328,22 @@
   // TEXTLICHE EINORDNUNG (EINE KLARE AUSSAGE)
   // ═══════════════════════════════════════════════════════════════════
 
-  function getCoreMessage(score) {
+  function getCoreMessage(score, sectorPct, sector) {
     if (typeof score !== 'number') return '—';
-    if (score >= 70) return 'Leicht über Branchendurchschnitt';
-    if (score >= 50) return 'Im Branchendurchschnitt';
-    return 'Leicht unter Branchendurchschnitt';
-  }
-
-  function labelToLongText(raw, isValuation = false) {
-    const v = (raw || '').toString().toLowerCase().trim();
-
-    if (isValuation) {
-      if (['sehr günstig', 'günstig'].includes(v)) return 'Unter Branchenniveau';
-      if (['fair'].includes(v)) return 'Im Branchendurchschnitt';
-      if (['leicht erhöht'].includes(v)) return 'Leicht über Branchenniveau';
-      if (['erhöht', 'anspruchsvoll', 'sehr anspruchsvoll'].includes(v)) return 'Über Branchenniveau';
-      return '—';
+    const sectorName = sector || 'vergleichbarer Technologieunternehmen';
+    const pct = typeof sectorPct === 'number' ? sectorPct : 50;
+    
+    // Eine einzige, widerspruchsfreie Aussage
+    if (score >= 70) {
+      return `Überdurchschnittlich positioniert – der Score liegt über dem Median ${sectorName}.`;
     }
-
-    if (['hervorragend', 'sehr hoch'].includes(v)) return 'Deutlich über Branchenniveau';
-    if (['hoch'].includes(v)) return 'Über Branchenniveau';
-    if (['solide', 'fair'].includes(v)) return 'Im Branchendurchschnitt';
-    if (['moderat'].includes(v)) return 'Leicht unter Branchenniveau';
-    if (['schwach', 'sehr schwach'].includes(v)) return 'Unter Branchenniveau';
-    return '—';
+    if (score >= 50) {
+      return `Im Branchendurchschnitt positioniert – der Score entspricht dem Median ${sectorName}.`;
+    }
+    if (pct >= 30) {
+      return `Leicht unter dem Branchendurchschnitt – der Score liegt unter dem Median ${sectorName}.`;
+    }
+    return `Unter dem Branchendurchschnitt – der Score liegt deutlich unter dem Median ${sectorName}.`;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -386,14 +372,24 @@
   }
 
   function labelToText(raw, isValuation = false) {
-    const longText = labelToLongText(raw, isValuation);
-    if (longText === '—') return '—';
-
-    if (longText.includes('Im Branchendurchschnitt')) return 'Ø';
-    if (longText.includes('über Branchenniveau')) return 'Über Ø';
-    if (longText.includes('Unter Branchenniveau')) return 'Unter Ø';
-    if (longText.includes('unter Branchenniveau')) return 'Unter Ø';
-    return 'Ø';
+    const v = (raw || '').toString().toLowerCase().trim();
+    
+    if (isValuation) {
+      // Bewertung: Beschreibung ohne Wertung
+      if (['sehr günstig', 'günstig'].includes(v)) return 'Unter Branchenniveau';
+      if (['fair'].includes(v)) return 'Im Branchendurchschnitt';
+      if (['leicht erhöht'].includes(v)) return 'Leicht über Branchenniveau';
+      if (['erhöht', 'anspruchsvoll', 'sehr anspruchsvoll'].includes(v)) return 'Über Branchenniveau';
+    } else {
+      // Qualität / Wachstum / Stabilität
+      if (['hervorragend', 'sehr hoch'].includes(v)) return 'Deutlich über Branchenniveau';
+      if (['hoch'].includes(v)) return 'Über Branchenniveau';
+      if (['solide', 'fair'].includes(v)) return 'Im Branchendurchschnitt';
+      if (['moderat'].includes(v)) return 'Leicht unter Branchenniveau';
+      if (['schwach', 'sehr schwach'].includes(v)) return 'Unter Branchenniveau';
+    }
+    
+    return '—';
   }
 
   function getBarScoreForColor(rawValue, isValuation) {
@@ -417,7 +413,7 @@
 
     // 2. Eine klare Einordnung (keine widersprüchlichen Aussagen)
     const elRating = document.getElementById('capitovo-score-rating');
-    if (elRating) elRating.textContent = getCoreMessage(score);
+    if (elRating) elRating.textContent = getCoreMessage(score, sectorPct, sector);
 
     // 3. Teilbereiche (Balken + Label)
     const areas = [
@@ -439,9 +435,7 @@
         bar.style.backgroundImage = getScoreFillGradient(scoreForColor);
       }
       if (label) {
-        const longText = labelToLongText(rawValue, area.isValuation);
         label.textContent = labelToText(rawValue, area.isValuation);
-        if (longText && longText !== '—') label.setAttribute('title', longText);
       }
     });
 

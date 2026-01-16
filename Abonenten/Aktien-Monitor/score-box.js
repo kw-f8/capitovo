@@ -471,6 +471,7 @@
     (function initInfoPopover() {
       const btn = document.getElementById('capitovo-score-info-btn');
       const pop = document.getElementById('capitovo-score-info-popover');
+      const closeBtn = document.getElementById('capitovo-score-info-close');
       const section = document.getElementById('capitovo-score');
       if (!btn || !pop) return;
 
@@ -491,6 +492,14 @@
         e.stopPropagation();
         setOpen(pop.classList.contains('hidden'));
       });
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(false);
+        });
+      }
 
       document.addEventListener('click', function (e) {
         if (pop.classList.contains('hidden')) return;

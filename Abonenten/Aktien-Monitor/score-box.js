@@ -275,12 +275,11 @@
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // TACHO (BLAU-VERLAUF)
+  // TACHO (FARBE AUS SCORE – gleiche Logik wie Balken)
   // ═══════════════════════════════════════════════════════════════════
 
   function renderGauge(score) {
-    if (typeof score !== 'number') score = 0;
-    score = Math.max(0, Math.min(100, score));
+    score = clampScore(score);
 
     const centerX = 130;
     const centerY = 130;
@@ -292,10 +291,24 @@
     const bgPath = describeArc(centerX, centerY, radius, startAngle, endAngle);
     document.getElementById('gauge-bg').setAttribute('d', bgPath);
 
-    // Progress-Arc (Blau-Verlauf über CSS)
+    // Progress-Arc
     const scoreAngle = startAngle + (score / 100) * (endAngle - startAngle);
     const progressPath = describeArc(centerX, centerY, radius, startAngle, scoreAngle);
-    document.getElementById('gauge-progress').setAttribute('d', progressPath);
+    const progressEl = document.getElementById('gauge-progress');
+    if (progressEl) {
+      progressEl.setAttribute('d', progressPath);
+    }
+
+    // Farbe wie Balken: Gradient (hell -> Endfarbe) anhand Score
+    const endColor = getScoreColor(score);
+    const startColor = mixWithWhite(endColor, 0.55);
+    const stopStart = document.getElementById('gauge-grad-start');
+    const stopEnd = document.getElementById('gauge-grad-end');
+    if (stopStart) stopStart.setAttribute('stop-color', startColor);
+    if (stopEnd) stopEnd.setAttribute('stop-color', endColor);
+    if (progressEl && (!stopStart || !stopEnd)) {
+      progressEl.setAttribute('stroke', endColor);
+    }
 
     // Marker Position
     const markerPos = polarToCartesian(centerX, centerY, radius, scoreAngle);
@@ -303,10 +316,12 @@
     if (marker) {
       marker.setAttribute('cx', markerPos.x);
       marker.setAttribute('cy', markerPos.y);
+      marker.setAttribute('fill', endColor);
     }
 
     // Score-Text
-    document.getElementById('gauge-score-text').textContent = String(score);
+    const scoreText = document.getElementById('gauge-score-text');
+    if (scoreText) scoreText.textContent = String(score);
   }
 
   function describeArc(x, y, radius, startAngle, endAngle) {

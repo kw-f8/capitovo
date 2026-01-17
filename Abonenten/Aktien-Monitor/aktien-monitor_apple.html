@@ -114,6 +114,84 @@
                   </a>
                 </div>
 
+                    <div id="intro-row" class="mb-4">
+                    <div class="flex flex-col md:flex-row md:items-stretch md:gap-6">
+                        <!-- Left: description (takes remaining space) -->
+                        <div id="description-col" class="md:flex-1 text-gray-700">
+                            <p class="text-gray-600 mb-3">Apple ist eines der weltweit führenden Technologieunternehmen und steht für Innovation, Design und digitale Lösungen. Das Unternehmen wurde 1976 gegründet und ist heute bekannt für seine Produkte wie iPhone, iPad, Mac, Apple Watch und AirPods, die weltweit Millionen von Nutzern begeistern.</p>
+                            <p class="text-gray-600 mb-3">Neben Hardware bietet Apple auch eine Vielzahl digitaler Dienstleistungen an, darunter den App Store, Apple Music, iCloud und Apple Pay, die einen immer größeren Anteil am Geschäftsmodell einnehmen. Das Unternehmen zeichnet sich durch eine starke Markenloyalität und eine globale Präsenz aus.</p>
+                            <p class="text-gray-600 mb-0">Die Produkte von Apple sind nicht nur technisch fortschrittlich, sondern auch für ihr einzigartiges Design und die einfache Bedienung bekannt. Apple setzt zudem auf Nachhaltigkeit und Datenschutz, was die Marke bei vielen Kunden zusätzlich stärkt. Mit Sitz in Cupertino, Kalifornien, beschäftigt das Unternehmen Zehntausende Mitarbeiter und betreibt Geschäfte in fast allen Ländern der Welt.</p>
+                        </div>
+
+                        <!-- Right: chart (flexible width on md+, full width on small screens) -->
+                        <div class="mt-4 md:mt-0" style="flex:0 0 48%; max-width:48%;">
+                          <div id="tv-container" class="tradingview-widget-container card h-full" style="width:100%; height:100%;" role="region" aria-label="Aktueller Kurs und Chart">
+      <div class="tradingview-widget-container__widget"></div>
+      <script>
+        (function(){
+          var cfg = {
+            "lineWidth": 2,
+            "lineType": 0,
+            "chartType": "area",
+            "fontColor": "rgb(106, 109, 120)",
+            "gridLineColor": "rgba(255, 255, 255, 0)",
+            "volumeUpColor": "rgba(34, 171, 148, 0.5)",
+            "volumeDownColor": "rgba(247, 82, 95, 0.5)",
+            "backgroundColor": "#ffffff",
+            "widgetFontColor": "#0F0F0F",
+            "upColor": "#22ab94",
+            "downColor": "#f7525f",
+            "borderUpColor": "#22ab94",
+            "borderDownColor": "#f7525f",
+            "wickUpColor": "#22ab94",
+            "wickDownColor": "#f7525f",
+            "colorTheme": "light",
+            "isTransparent": true,
+            "locale": "de_DE",
+            "chartOnly": false,
+            "scalePosition": "right",
+            "scaleMode": "Normal",
+            "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+            "valuesTracking": "1",
+            "changeMode": "price-and-percent",
+            "symbols": [["GETTEX:APC|1D"]],
+            "dateRanges": ["1d|1","1w|15","1m|30","12m|1D","60m|1W","all|1M"],
+            "fontSize": "10",
+            "headerFontSize": "medium",
+            "autosize": false,
+            "dateFormat": "dd/MM/yyyy",
+            "width": "100%",
+            "height": 400,
+            "noTimeScale": false,
+            "hideDateRanges": false,
+            "hideMarketStatus": false,
+            "hideSymbolLogo": false
+          };
+          var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
+          s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+          s.text = JSON.stringify(cfg);
+          var target = document.getElementById('tv-container'); if(target) target.appendChild(s);
+        })();
+      </script>
+    </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Heading removed as requested -->
+                <!-- Letzte Analysen (ohne umschließenden Kasten) -->
+                <section class="member-grid mb-6">
+                  <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Letzte Analysen</h3>
+                    <a href="https://kw-f8.github.io/capitovo/Abonenten/alle_analysen.html" class="text-sm font-semibold tracking-wide text-primary-blue">Alle Analysen</a>
+                  </div>
+
+                  <div id="member-analyses" class="member-analyses-grid" data-filter="apple">
+                    <!-- Wird vom globalen script.js geladen und rendert die gleichen Vorschau‑Karten wie auf anderen Seiten -->
+                    <p class="text-sm text-gray-400">Lade Analysen…</p>
+                  </div>
+                </section>
+
                 <!-- capitovo-Score (Research-Snapshot) -->
                 <section id="capitovo-score" class="card mb-6" style="border:1px solid rgba(15,23,42,0.05); border-radius:16px; background:#fff; box-shadow:0 1px 8px rgba(2,6,23,0.03);">
                   <div class="p-8 relative">
@@ -241,84 +319,6 @@
 
                     <!-- Rechtlicher Hinweis: im Info-Popover -->
                     </div>
-                  </div>
-                </section>
-
-                    <div id="intro-row" class="mb-4">
-                    <div class="flex flex-col md:flex-row md:items-stretch md:gap-6">
-                        <!-- Left: description (takes remaining space) -->
-                        <div id="description-col" class="md:flex-1 text-gray-700">
-                            <p class="text-gray-600 mb-3">Apple ist eines der weltweit führenden Technologieunternehmen und steht für Innovation, Design und digitale Lösungen. Das Unternehmen wurde 1976 gegründet und ist heute bekannt für seine Produkte wie iPhone, iPad, Mac, Apple Watch und AirPods, die weltweit Millionen von Nutzern begeistern.</p>
-                            <p class="text-gray-600 mb-3">Neben Hardware bietet Apple auch eine Vielzahl digitaler Dienstleistungen an, darunter den App Store, Apple Music, iCloud und Apple Pay, die einen immer größeren Anteil am Geschäftsmodell einnehmen. Das Unternehmen zeichnet sich durch eine starke Markenloyalität und eine globale Präsenz aus.</p>
-                            <p class="text-gray-600 mb-0">Die Produkte von Apple sind nicht nur technisch fortschrittlich, sondern auch für ihr einzigartiges Design und die einfache Bedienung bekannt. Apple setzt zudem auf Nachhaltigkeit und Datenschutz, was die Marke bei vielen Kunden zusätzlich stärkt. Mit Sitz in Cupertino, Kalifornien, beschäftigt das Unternehmen Zehntausende Mitarbeiter und betreibt Geschäfte in fast allen Ländern der Welt.</p>
-                        </div>
-
-                        <!-- Right: chart (flexible width on md+, full width on small screens) -->
-                        <div class="mt-4 md:mt-0" style="flex:0 0 48%; max-width:48%;">
-                          <div id="tv-container" class="tradingview-widget-container card h-full" style="width:100%; height:100%;" role="region" aria-label="Aktueller Kurs und Chart">
-      <div class="tradingview-widget-container__widget"></div>
-      <script>
-        (function(){
-          var cfg = {
-            "lineWidth": 2,
-            "lineType": 0,
-            "chartType": "area",
-            "fontColor": "rgb(106, 109, 120)",
-            "gridLineColor": "rgba(255, 255, 255, 0)",
-            "volumeUpColor": "rgba(34, 171, 148, 0.5)",
-            "volumeDownColor": "rgba(247, 82, 95, 0.5)",
-            "backgroundColor": "#ffffff",
-            "widgetFontColor": "#0F0F0F",
-            "upColor": "#22ab94",
-            "downColor": "#f7525f",
-            "borderUpColor": "#22ab94",
-            "borderDownColor": "#f7525f",
-            "wickUpColor": "#22ab94",
-            "wickDownColor": "#f7525f",
-            "colorTheme": "light",
-            "isTransparent": true,
-            "locale": "de_DE",
-            "chartOnly": false,
-            "scalePosition": "right",
-            "scaleMode": "Normal",
-            "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-            "valuesTracking": "1",
-            "changeMode": "price-and-percent",
-            "symbols": [["GETTEX:APC|1D"]],
-            "dateRanges": ["1d|1","1w|15","1m|30","12m|1D","60m|1W","all|1M"],
-            "fontSize": "10",
-            "headerFontSize": "medium",
-            "autosize": false,
-            "dateFormat": "dd/MM/yyyy",
-            "width": "100%",
-            "height": 400,
-            "noTimeScale": false,
-            "hideDateRanges": false,
-            "hideMarketStatus": false,
-            "hideSymbolLogo": false
-          };
-          var s = document.createElement('script'); s.type='text/javascript'; s.async=true;
-          s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
-          s.text = JSON.stringify(cfg);
-          var target = document.getElementById('tv-container'); if(target) target.appendChild(s);
-        })();
-      </script>
-    </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Heading removed as requested -->
-                <!-- Letzte Analysen (ohne umschließenden Kasten) -->
-                <section class="member-grid mb-6">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold">Letzte Analysen</h3>
-                    <a href="https://kw-f8.github.io/capitovo/Abonenten/alle_analysen.html" class="text-sm font-semibold tracking-wide text-primary-blue">Alle Analysen</a>
-                  </div>
-
-                  <div id="member-analyses" class="member-analyses-grid" data-filter="apple">
-                    <!-- Wird vom globalen script.js geladen und rendert die gleichen Vorschau‑Karten wie auf anderen Seiten -->
-                    <p class="text-sm text-gray-400">Lade Analysen…</p>
                   </div>
                 </section>
 

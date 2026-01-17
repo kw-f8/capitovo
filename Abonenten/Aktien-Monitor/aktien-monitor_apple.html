@@ -107,7 +107,12 @@
         <section class="member-grid">
             <div class="analyses-box">
                 <div class="flex items-center justify-between mb-4">
-                  <h2 class="text-4xl font-semibold" data-ticker="AAPL">Apple Inc.</h2>
+                  <div class="flex items-center gap-3 min-w-0">
+                    <span class="w-10 h-10 rounded-lg border border-gray-200 bg-white flex items-center justify-center overflow-hidden flex-shrink-0" aria-hidden="true">
+                      <img src="../Bilder/logos/apple_logo.svg" alt="" class="w-6 h-6 object-contain">
+                    </span>
+                    <h2 class="text-4xl font-semibold truncate" data-ticker="AAPL">Apple Inc.</h2>
+                  </div>
                   <a href="./aktien-monitor.html" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 ml-4" aria-label="Zurück zur Übersicht">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
                     <span>Zurück zur Übersicht</span>
@@ -177,20 +182,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Heading removed as requested -->
-                <!-- Letzte Analysen (ohne umschließenden Kasten) -->
-                <section class="member-grid mb-6">
-                  <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold">Letzte Analysen</h3>
-                    <a href="https://kw-f8.github.io/capitovo/Abonenten/alle_analysen.html" class="text-sm font-semibold tracking-wide text-primary-blue">Alle Analysen</a>
-                  </div>
-
-                  <div id="member-analyses" class="member-analyses-grid" data-filter="apple">
-                    <!-- Wird vom globalen script.js geladen und rendert die gleichen Vorschau‑Karten wie auf anderen Seiten -->
-                    <p class="text-sm text-gray-400">Lade Analysen…</p>
-                  </div>
-                </section>
 
                 <!-- capitovo-Score (Research-Snapshot) -->
                 <section id="capitovo-score" class="card mb-6" style="border:1px solid rgba(15,23,42,0.05); border-radius:16px; background:#fff; box-shadow:0 1px 8px rgba(2,6,23,0.03);">
@@ -319,6 +310,20 @@
 
                     <!-- Rechtlicher Hinweis: im Info-Popover -->
                     </div>
+                  </div>
+                </section>
+
+                <!-- Heading removed as requested -->
+                <!-- Letzte Analysen (ohne umschließenden Kasten) -->
+                <section class="member-grid mb-6">
+                  <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Letzte Analysen</h3>
+                    <a href="https://kw-f8.github.io/capitovo/Abonenten/alle_analysen.html" class="text-sm font-semibold tracking-wide text-primary-blue">Alle Analysen</a>
+                  </div>
+
+                  <div id="member-analyses" class="member-analyses-grid" data-filter="apple">
+                    <!-- Wird vom globalen script.js geladen und rendert die gleichen Vorschau‑Karten wie auf anderen Seiten -->
+                    <p class="text-sm text-gray-400">Lade Analysen…</p>
                   </div>
                 </section>
 

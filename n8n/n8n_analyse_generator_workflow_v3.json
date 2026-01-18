@@ -1,0 +1,337 @@
+{
+  "name": "Capitovo Analyse Generator v3 - Compliant",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// === TEST-DATEN ===\n// Hier die Aktie eintragen, die analysiert werden soll:\n\nreturn {\n  json: {\n    company: 'Apple',\n    ticker: 'AAPL',\n    exchange: 'NASDAQ',\n    sector: 'Technologie',\n    currency: 'USD',\n    slug: 'apple',\n    testMode: false  // Auf true setzen für Mock-Daten\n  }\n};"
+      },
+      "id": "test-data",
+      "name": "Test Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [400, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json;\n\nconst required = ['company', 'ticker', 'exchange', 'sector', 'currency'];\nconst missing = required.filter(f => !input[f]);\n\nif (missing.length > 0) {\n  throw new Error(`Fehlende Pflichtfelder: ${missing.join(', ')}`);\n}\n\nconst slug = input.slug || input.company.toLowerCase().replace(/[^a-z0-9]+/g, '-');\nconst date = new Date().toISOString().split('T')[0];\n\nreturn {\n  json: {\n    ...input,\n    slug,\n    date,\n    analysisType: input.analysisType || 'initial',\n    testMode: input.testMode || false\n  }\n};"
+      },
+      "id": "input-validator",
+      "name": "1. Input Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json;\n\n// Vereinfachter History Loader ohne Dateizugriff\n// In Produktion: Hier könnte die letzte Analyse geladen werden\n\nreturn {\n  json: {\n    ...input,\n    previousAnalysis: null,\n    isUpdate: false\n  }\n};"
+      },
+      "id": "history-loader",
+      "name": "2. History Loader",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [800, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.testMode }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "test-mode",
+      "name": "Test Mode?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1000, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mock Content für Test-Modus\nconst input = $input.item.json;\n\nreturn {\n  json: {\n    ...input,\n    rawContent: `# ${input.company} – Unternehmensanalyse\\n\\n## Kurzüberblick\\n\\nDies ist ein Test-Mock-Inhalt für den Testmodus.\\n\\n## Geschäftsmodell\\n\\nTestinhalt für das Geschäftsmodell.`,\n    tokensUsed: 100,\n    citations: ['Test-Quelle 1', 'Test-Quelle 2']\n  }\n};"
+      },
+      "id": "mock-content",
+      "name": "Mock Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json;\n\n// === HAUPT-PROMPT FÜR PERPLEXITY ===\n// Dieser Prompt ist BaFin-konform: KEINE Empfehlungen, KEINE Kursziele\n\nconst systemPrompt = `Du bist ein erfahrener Equity Research Analyst und schreibst professionelle, fundierte Unternehmensanalysen für capitovo.de – ein deutschsprachiges Finanzportal für eigenständig agierende Anleger.\n\n**DEINE ROLLE:**\nDu lieferst sachliche, faktenbasierte Informationen. Du gibst dem Leser alle relevanten Daten, damit er SELBST eine Anlageentscheidung treffen kann.\n\n**ABSOLUTE VERBOTE (BaFin-Compliance):**\n- KEINE Anlageempfehlungen (kein \"Kaufen\", \"Halten\", \"Verkaufen\")\n- KEINE Ratings oder Scores\n- KEINE eigenen Kursziele\n- KEINE Aussagen wie \"unterbewertet\", \"überbewertet\", \"fair bewertet\"\n- KEINE direkten Handlungsaufforderungen (\"Anleger sollten kaufen/verkaufen\")\n- KEINE Bull/Bear-Cases oder Investment-Thesen\n\n**ERLAUBT:**\n- Objektive Darstellung von Bewertungskennzahlen (KGV, KUV, EV/EBITDA) mit historischem und Branchenvergleich\n- Zitation von Analystenerwartungen und deren Kurszielspannen (als Drittmeinung)\n- Neutrale Einordnung: \"Das aktuelle KGV liegt über/unter dem historischen Durchschnitt\"\n- Chancen und Risiken aufzeigen, ohne Gewichtung\n\n**STIL:**\n- Professioneller Finanzjournalismus (wie Handelsblatt, FAZ Finanzen, Bloomberg)\n- Aktiv formulieren, keine Passivkonstruktionen\n- Keine KI-typischen Phrasen (\"Es ist wichtig zu beachten\", \"Zusammenfassend lässt sich sagen\")\n- Keine Aufzählungslisten – nur Fließtext mit Zwischenüberschriften\n- Konkrete Zahlen, Prozentangaben, Zeiträume\n\n**LÄNGE:**\nMindestens 1.300 Wörter, optimal 1.400-1.800 Wörter.`;\n\nconst userPrompt = `Erstelle eine professionelle Unternehmensanalyse für **${input.company} (${input.ticker})** – börsennotiert an der ${input.exchange}, Sektor: ${input.sector}.\n\n**STRUKTUR (6 Abschnitte mit H2-Überschriften):**\n\n## ${input.company} im Überblick\nEinleitung mit Positionierung des Unternehmens, Marktkapitalisierung, aktuellem Kurs und der zentralen These des Artikels (ohne Empfehlung). Was macht ${input.company} interessant für Anleger? (150-200 Wörter)\n\n## Das Geschäftsmodell\nDetaillierte Darstellung: Hauptumsatzquellen, Segmente mit Umsatzanteilen, geografische Verteilung, Wettbewerbsvorteile (Moat), wichtigste Kunden/Partner. Wie verdient ${input.company} Geld? (250-350 Wörter)\n\n## Fundamentale Entwicklung\nAnalyse der letzten 3-5 Jahre: Umsatzwachstum, Gewinnentwicklung, Margenentwicklung (Brutto, EBIT, Netto), Free Cashflow, Bilanzqualität (Verschuldung, Eigenkapitalquote). Aktuelle Quartalszahlen und Ausblick des Managements. (300-400 Wörter)\n\n## Bewertungseinordnung\nOBJEKTIVE Darstellung der aktuellen Bewertung:\n- KGV, KUV, EV/EBITDA im Vergleich zum 5-Jahres-Durchschnitt\n- Vergleich mit Branchenpeers\n- Zitation der Analystenerwartungen (Konsens-Kursziel, Bandbreite)\nKEINE eigene Bewertungsaussage! (200-300 Wörter)\n\n## Wachstumstreiber und Risiken\nChancen: Markttrends, neue Produkte, Expansion, strategische Initiativen.\nRisiken: Wettbewerb, regulatorische Risiken, makroökonomische Faktoren, unternehmensspezifische Risiken.\nNeutral gewichten, keine Seite bevorzugen. (200-300 Wörter)\n\n## Einordnung für Anleger\nFazit ohne Empfehlung: Für welchen Anlegertyp könnte die Aktie interessant sein? Was sind die entscheidenden Fragen, die sich Anleger stellen sollten? Wann könnte ein Einstieg/Ausstieg sinnvoll sein (an Bedingungen geknüpft, nicht als Empfehlung)?\nAbschluss mit: \"Diese Analyse dient ausschließlich Informationszwecken und stellt keine Anlageberatung dar.\" (150-250 Wörter)\n\n**WICHTIG:**\n- Recherchiere AKTUELLE Daten (letzte verfügbare Quartalszahlen, aktueller Kurs)\n- Gib am Ende alle verwendeten Quellen an (Unternehmensberichte, Finanzdatenbanken, Nachrichtenquellen)\n- Schreibe mindestens 1.300 Wörter\n- Nutze NUR Fließtext, KEINE Aufzählungslisten`;\n\nreturn {\n  json: {\n    ...input,\n    systemPrompt,\n    userPrompt\n  }\n};"
+      },
+      "id": "research-orchestrator",
+      "name": "3. Research Orchestrator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1200, 500]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.3,\n  \"max_tokens\": 8000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": {{ JSON.stringify($json.systemPrompt) }}\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify($json.userPrompt) }}\n    }\n  ],\n  \"return_citations\": true,\n  \"search_recency_filter\": \"month\"\n}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "id": "perplexity-api",
+      "name": "4. Perplexity API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1440, 500],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $('3. Research Orchestrator').item.json;\nconst response = $input.item.json;\n\n// API-Fehler abfangen\nif (response.error) {\n  throw new Error(`Perplexity API Fehler: ${response.error.message || JSON.stringify(response.error)}`);\n}\n\nconst content = response.choices?.[0]?.message?.content || '';\nconst citations = response.citations || [];\nconst usage = response.usage || {};\n\n// Wörter zählen\nconst wordCount = content.split(/\\s+/).filter(w => w.length > 0).length;\n\n// Prüfen ob Mindestlänge erreicht\nif (wordCount < 800) {\n  console.log(`Warnung: Nur ${wordCount} Wörter generiert (Minimum: 1300)`);\n}\n\nreturn {\n  json: {\n    ...input,\n    rawContent: content,\n    citations,\n    tokensUsed: (usage.prompt_tokens || 0) + (usage.completion_tokens || 0),\n    wordCount\n  }\n};"
+      },
+      "id": "content-extractor",
+      "name": "5. Content Extractor",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1680, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json;\n\n// === COMPLIANCE CHECK ===\n// Prüft ob verbotene Inhalte enthalten sind\n\nconst content = (input.rawContent || '').toLowerCase();\n\n// Verbotene Begriffe\nconst forbidden = [\n  'kaufen',\n  'halten',\n  'verkaufen',\n  'buy',\n  'hold',\n  'sell',\n  'kursziel',\n  'price target',\n  'unterbewertet',\n  'überbewertet',\n  'fair bewertet',\n  'undervalued',\n  'overvalued',\n  'investment-these',\n  'bull case',\n  'bear case',\n  'empfehlung:',\n  'rating:'\n];\n\nconst violations = forbidden.filter(term => content.includes(term));\n\n// Erlaubte Kontexte (z.B. \"Analysten empfehlen\" ist OK)\nconst allowedContexts = [\n  'analysten',\n  'konsens',\n  'wall street',\n  'experten'\n];\n\n// Filtere Violations, die in erlaubtem Kontext stehen\nconst realViolations = violations.filter(v => {\n  const index = content.indexOf(v);\n  const context = content.substring(Math.max(0, index - 50), index + 50);\n  return !allowedContexts.some(ac => context.includes(ac));\n});\n\nconst compliancePassed = realViolations.length === 0;\n\n// Wortanzahl prüfen\nconst wordCount = input.wordCount || 0;\nconst lengthPassed = wordCount >= 1000; // Minimum mit Toleranz\n\nconst qualityScore = Math.min(10, Math.round(\n  (compliancePassed ? 4 : 0) +\n  (lengthPassed ? 3 : 0) +\n  (wordCount >= 1300 ? 2 : wordCount >= 1000 ? 1 : 0) +\n  (input.citations?.length >= 3 ? 1 : 0)\n));\n\nreturn {\n  json: {\n    ...input,\n    compliancePassed,\n    complianceViolations: realViolations,\n    lengthPassed,\n    qualityScore,\n    qualityComment: compliancePassed \n      ? `Analyse compliant. ${wordCount} Wörter, ${input.citations?.length || 0} Quellen.`\n      : `WARNUNG: Verbotene Begriffe gefunden: ${realViolations.join(', ')}`\n  }\n};"
+      },
+      "id": "compliance-check",
+      "name": "6. Compliance Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1920, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json;\n\n// === HTML RENDERER ===\n// Konvertiert Markdown zu sauberem HTML\n\nfunction mdToHtml(md) {\n  let html = md\n    // Escapen\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;')\n    // Überschriften\n    .replace(/^### (.*)$/gm, '</p><h3>$1</h3><p>')\n    .replace(/^## (.*)$/gm, '</p><h2>$1</h2><p>')\n    .replace(/^# (.*)$/gm, '</p><h1>$1</h1><p>')\n    // Fett und Kursiv\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n    // Absätze\n    .replace(/\\n\\n+/g, '</p><p>')\n    .replace(/\\n/g, ' ');\n  \n  // Aufräumen\n  html = '<p>' + html + '</p>';\n  html = html.replace(/<p><\\/p>/g, '');\n  html = html.replace(/<p>\\s*<h/g, '<h');\n  html = html.replace(/<\\/h([1-6])>\\s*<\\/p>/g, '</h$1>');\n  html = html.replace(/<p>\\s*<\\/p>/g, '');\n  \n  return html;\n}\n\nconst htmlContent = mdToHtml(input.rawContent || '');\n\n// Quellen-Sektion erstellen\nlet sourcesHtml = '';\nif (input.citations && input.citations.length > 0) {\n  sourcesHtml = `\n    <section class=\"sources\">\n      <h3>Quellen</h3>\n      <ul class=\"source-list\">\n        ${input.citations.map((c, i) => `<li><a href=\"${c}\" target=\"_blank\" rel=\"noopener\">[${i+1}] ${c}</a></li>`).join('\\n        ')}\n      </ul>\n    </section>`;\n}\n\nconst dateObj = new Date(input.date);\nconst formattedDate = dateObj.toLocaleDateString('de-DE', {\n  day: '2-digit',\n  month: 'long',\n  year: 'numeric'\n});\n\nconst html = `<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>${input.company} (${input.ticker}) – Unternehmensanalyse | capitovo</title>\n  <meta name=\"description\" content=\"${input.company} Aktienanalyse: Geschäftsmodell, Fundamentaldaten, Bewertung und Ausblick. Equity Research von capitovo.\">\n  <link rel=\"stylesheet\" href=\"../style.css\">\n  <style>\n    .analysis-article {\n      max-width: 800px;\n      margin: 0 auto;\n      padding: 2rem;\n      font-family: 'Georgia', 'Times New Roman', serif;\n      line-height: 1.75;\n      color: #1a1a1a;\n    }\n    .analysis-header {\n      border-bottom: 2px solid #e5e5e5;\n      padding-bottom: 1.5rem;\n      margin-bottom: 2rem;\n    }\n    .analysis-meta {\n      display: flex;\n      gap: 1rem;\n      color: #666;\n      font-size: 0.9rem;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n      margin-bottom: 1rem;\n    }\n    .analysis-title {\n      font-size: 2.25rem;\n      font-weight: 700;\n      color: #0f172a;\n      margin: 0 0 0.5rem 0;\n      line-height: 1.2;\n    }\n    .analysis-subtitle {\n      font-size: 1.125rem;\n      color: #475569;\n      font-style: italic;\n    }\n    .analysis-body h2 {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n      font-size: 1.375rem;\n      font-weight: 600;\n      color: #0f172a;\n      margin: 2.5rem 0 1rem 0;\n      padding-bottom: 0.5rem;\n      border-bottom: 1px solid #e5e5e5;\n    }\n    .analysis-body p {\n      margin: 0 0 1.25rem 0;\n      text-align: justify;\n      hyphens: auto;\n    }\n    .analysis-body strong {\n      color: #0f172a;\n    }\n    .sources {\n      margin-top: 3rem;\n      padding-top: 1.5rem;\n      border-top: 1px solid #e5e5e5;\n    }\n    .sources h3 {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n      font-size: 1rem;\n      font-weight: 600;\n      color: #475569;\n      margin-bottom: 1rem;\n    }\n    .source-list {\n      list-style: none;\n      padding: 0;\n      margin: 0;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n      font-size: 0.875rem;\n    }\n    .source-list li {\n      margin: 0.5rem 0;\n    }\n    .source-list a {\n      color: #2563eb;\n      text-decoration: none;\n      word-break: break-all;\n    }\n    .source-list a:hover {\n      text-decoration: underline;\n    }\n    .disclaimer {\n      margin-top: 3rem;\n      padding: 1.5rem;\n      background: #f8fafc;\n      border-radius: 0.5rem;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n      font-size: 0.875rem;\n      color: #64748b;\n    }\n    .analysis-footer {\n      margin-top: 2rem;\n      padding-top: 1rem;\n      border-top: 1px solid #e5e5e5;\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n      font-size: 0.75rem;\n      color: #94a3b8;\n    }\n  </style>\n</head>\n<body>\n  <header class=\"site-header\">\n    <div class=\"header-content\">\n      <div class=\"logo\">\n        <a href=\"./abonenten.html\">\n          <img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\n        </a>\n      </div>\n    </div>\n  </header>\n  \n  <main class=\"analysis-article\">\n    <a href=\"./alle_analysen.html\" class=\"back-link\" style=\"display: inline-block; margin-bottom: 1.5rem; color: #2563eb; text-decoration: none; font-family: sans-serif; font-size: 0.9rem;\">← Zurück zur Übersicht</a>\n    \n    <article>\n      <header class=\"analysis-header\">\n        <div class=\"analysis-meta\">\n          <span>${input.sector}</span>\n          <span>•</span>\n          <span>${input.ticker}</span>\n          <span>•</span>\n          <span>${input.exchange}</span>\n        </div>\n        <h1 class=\"analysis-title\">${input.company} – Unternehmensanalyse</h1>\n        <p class=\"analysis-subtitle\">Geschäftsmodell, Fundamentaldaten und Bewertungseinordnung</p>\n        <div class=\"analysis-meta\" style=\"margin-top: 1rem;\">\n          <span>capitovo Research</span>\n          <span>•</span>\n          <time datetime=\"${input.date}\">${formattedDate}</time>\n        </div>\n      </header>\n      \n      <div class=\"analysis-body\">\n        ${htmlContent}\n      </div>\n      \n      ${sourcesHtml}\n      \n      <div class=\"disclaimer\">\n        <strong>Rechtlicher Hinweis:</strong> Diese Analyse dient ausschließlich Informationszwecken und stellt keine Anlageberatung im Sinne des WpHG dar. Die bereitgestellten Informationen sind keine Empfehlung zum Kauf oder Verkauf von Wertpapieren. Anleger sollten eigene Recherchen durchführen und gegebenenfalls professionelle Beratung in Anspruch nehmen.\n      </div>\n      \n      <footer class=\"analysis-footer\">\n        Analyse-ID: ${input.ticker.toLowerCase()}-${input.date} | \n        ${input.wordCount} Wörter | \n        ${input.citations?.length || 0} Quellen\n      </footer>\n    </article>\n  </main>\n  \n  <footer style=\"border-top: 1px solid #e5e5e5; padding: 1.5rem; text-align: center; color: #64748b; font-size: 0.875rem;\">\n    &copy; ${new Date().getFullYear()} capitovo – Alle Rechte vorbehalten.\n  </footer>\n  \n  <script src=\"../script.js\"></script>\n</body>\n</html>`;\n\nreturn {\n  json: {\n    ...input,\n    html\n  }\n};"
+      },
+      "id": "html-renderer",
+      "name": "7. HTML Renderer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2160, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.item.json;\n\n// === OUTPUT GENERATOR ===\n// Erstellt alle Ausgabe-Artefakte\n\n// SVG Vorschaubild (ohne Empfehlung!)\nconst svg = `<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">\n      <stop offset=\"0%\" stop-color=\"#0f172a\" />\n      <stop offset=\"100%\" stop-color=\"#1e293b\" />\n    </linearGradient>\n  </defs>\n  <rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"24\" />\n  <g transform=\"translate(60 80)\" font-family=\"'Inter', -apple-system, sans-serif\">\n    <text x=\"0\" y=\"0\" fill=\"#94a3b8\" font-size=\"14\" letter-spacing=\"0.15em\">${input.ticker} · ${input.sector}</text>\n    <text x=\"0\" y=\"50\" fill=\"#e2e8f0\" font-size=\"36\" font-weight=\"700\">${input.company}</text>\n    <text x=\"0\" y=\"90\" fill=\"#94a3b8\" font-size=\"16\">Unternehmensanalyse</text>\n    <line x1=\"0\" y1=\"120\" x2=\"100\" y2=\"120\" stroke=\"#3b82f6\" stroke-width=\"3\" />\n    <text x=\"0\" y=\"160\" fill=\"#64748b\" font-size=\"14\">Equity Research</text>\n  </g>\n  <g transform=\"translate(60 300)\" font-family=\"'Inter', sans-serif\">\n    <text x=\"0\" y=\"0\" fill=\"#64748b\" font-size=\"12\">capitovo · ${input.date}</text>\n  </g>\n</svg>`;\n\n// JSON-Eintrag für analysen.json (ohne Empfehlung!)\nconst jsonEntry = {\n  id: `${input.ticker.toLowerCase()}-${input.date}`,\n  category: input.sector,\n  title: `${input.company} – Unternehmensanalyse`,\n  summary: `Analyse des Geschäftsmodells, der Fundamentaldaten und Bewertung von ${input.company} (${input.ticker}).`,\n  link: `Abonenten/${input.slug}.html`,\n  image: `data/vorschaubilder_analysen/${input.slug}.svg`,\n  date: input.date,\n  author: 'capitovo Research',\n  tags: [input.company, input.ticker, input.sector],\n  published: true,\n  wordCount: input.wordCount,\n  sourcesCount: input.citations?.length || 0,\n  isUpdate: input.isUpdate || false\n};\n\nreturn {\n  json: {\n    success: true,\n    company: input.company,\n    ticker: input.ticker,\n    wordCount: input.wordCount,\n    compliancePassed: input.compliancePassed,\n    qualityScore: input.qualityScore,\n    message: input.compliancePassed \n      ? `✅ Analyse für ${input.company} erfolgreich generiert (${input.wordCount} Wörter, ${input.citations?.length || 0} Quellen)`\n      : `⚠️ Analyse generiert, aber Compliance-Warnung: ${input.complianceViolations?.join(', ')}`,\n    outputs: {\n      html: input.html,\n      svg: svg,\n      jsonEntry: jsonEntry\n    },\n    filePaths: {\n      html: `Abonenten/${input.slug}.html`,\n      svg: `data/vorschaubilder_analysen/${input.slug}.svg`,\n      json: 'data/analysen.json'\n    }\n  }\n};"
+      },
+      "id": "output-generator",
+      "name": "8. Output Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2400, 500]
+    },
+    {
+      "parameters": {},
+      "id": "output",
+      "name": "Output",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [2640, 500]
+    },
+    {
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "id": "merge-branches",
+      "name": "Merge Branches",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1680, 400]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Test Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Data": {
+      "main": [
+        [
+          {
+            "node": "1. Input Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Input Validator": {
+      "main": [
+        [
+          {
+            "node": "2. History Loader",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. History Loader": {
+      "main": [
+        [
+          {
+            "node": "Test Mode?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Mode?": {
+      "main": [
+        [
+          {
+            "node": "Mock Content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "3. Research Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Content": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Research Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "4. Perplexity API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Perplexity API": {
+      "main": [
+        [
+          {
+            "node": "5. Content Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Content Extractor": {
+      "main": [
+        [
+          {
+            "node": "Merge Branches",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge Branches": {
+      "main": [
+        [
+          {
+            "node": "6. Compliance Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6. Compliance Check": {
+      "main": [
+        [
+          {
+            "node": "7. HTML Renderer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. HTML Renderer": {
+      "main": [
+        [
+          {
+            "node": "8. Output Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8. Output Generator": {
+      "main": [
+        [
+          {
+            "node": "Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "production"
+    },
+    {
+      "name": "analysis"
+    },
+    {
+      "name": "v3-compliant"
+    }
+  ]
+}

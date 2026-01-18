@@ -1,0 +1,419 @@
+{
+  "name": "capitovo Analyse Generator v2 (Multi-Stage Pipeline)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "create-analysis-v2",
+        "responseMode": "lastNode",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 400],
+      "webhookId": "capitovo-analysis-v2"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// STAGE 1: INPUT VALIDATION & ENRICHMENT\n// ═══════════════════════════════════════════════════════════════\n\nconst body = $input.item.json.body || $input.item.json;\n\n// 1. Pflichtfelder validieren\nconst requiredFields = ['company', 'ticker'];\nconst missing = requiredFields.filter(f => !body[f]);\nif (missing.length > 0) {\n  throw new Error(`Fehlende Pflichtfelder: ${missing.join(', ')}`);\n}\n\n// 2. Sector-Mapping (Normalisierung)\nconst sectorMap = {\n  'tech': 'Technologie',\n  'technology': 'Technologie',\n  'technologie': 'Technologie',\n  'finance': 'Finanzen',\n  'finanzen': 'Finanzen',\n  'financials': 'Finanzen',\n  'healthcare': 'Gesundheit',\n  'gesundheit': 'Gesundheit',\n  'consumer': 'Konsum',\n  'konsum': 'Konsum',\n  'zyklischer konsum': 'Zyklischer Konsum',\n  'cyclical': 'Zyklischer Konsum',\n  'industrial': 'Industrie',\n  'industrie': 'Industrie',\n  'energy': 'Energie',\n  'energie': 'Energie',\n  'utilities': 'Versorger',\n  'versorger': 'Versorger',\n  'real estate': 'Immobilien',\n  'immobilien': 'Immobilien',\n  'materials': 'Rohstoffe',\n  'rohstoffe': 'Rohstoffe',\n  'communication': 'Kommunikation',\n  'kommunikation': 'Kommunikation'\n};\n\nconst rawSector = (body.sector || 'Technologie').toLowerCase().trim();\nconst sector = sectorMap[rawSector] || body.sector || 'Technologie';\n\n// 3. Weitere Felder normalisieren\nconst company = body.company.trim();\nconst ticker = body.ticker.toUpperCase().trim();\nconst date = body.date || new Date().toISOString().split('T')[0];\nconst baseDir = $env.BASE_DIR || '/workspaces/capitovo';\nconst analysisType = body.analysisType || 'full'; // full, update, quarterly\n\n// 4. Slug generieren\nconst slug = (body.filename || `${company}-${ticker}`)\n  .toLowerCase()\n  .replace(/[äöüß]/g, c => ({ 'ä': 'ae', 'ö': 'oe', 'ü': 'ue', 'ß': 'ss' }[c]))\n  .replace(/[^a-z0-9]+/g, '-')\n  .replace(/(^-|-$)/g, '');\n\n// 5. Exchange & Currency Detection (Basic)\nconst exchangeMap = {\n  'AAPL': { exchange: 'NASDAQ', currency: 'USD' },\n  'MSFT': { exchange: 'NASDAQ', currency: 'USD' },\n  'GOOGL': { exchange: 'NASDAQ', currency: 'USD' },\n  'TSLA': { exchange: 'NASDAQ', currency: 'USD' },\n  'AMZN': { exchange: 'NASDAQ', currency: 'USD' },\n  'SAP': { exchange: 'XETRA', currency: 'EUR' },\n  'SIE': { exchange: 'XETRA', currency: 'EUR' },\n  'BMW': { exchange: 'XETRA', currency: 'EUR' },\n  'VOW3': { exchange: 'XETRA', currency: 'EUR' },\n  'ALV': { exchange: 'XETRA', currency: 'EUR' }\n};\nconst exchangeInfo = exchangeMap[ticker] || { exchange: 'NYSE', currency: 'USD' };\n\n// 6. Output\nreturn {\n  json: {\n    company,\n    ticker,\n    sector,\n    date,\n    baseDir,\n    slug,\n    analysisType,\n    exchange: exchangeInfo.exchange,\n    currency: exchangeInfo.currency,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "input-validator",
+      "name": "1. Input Validator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// STAGE 1b: HISTORY LOADER\n// Lädt frühere Analysen zum selben Ticker für Kontext\n// ═══════════════════════════════════════════════════════════════\n\nconst fs = require('fs');\nconst path = require('path');\nconst input = $input.item.json;\n\nlet previousAnalysis = null;\nlet historyContext = '';\n\ntry {\n  const jsonPath = path.join(input.baseDir, 'data', 'analysen.json');\n  if (fs.existsSync(jsonPath)) {\n    const analysen = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));\n    \n    // Suche nach früherer Analyse zum selben Ticker\n    const previous = analysen.find(a => \n      a.id && a.id.toLowerCase().startsWith(input.ticker.toLowerCase() + '-') &&\n      a.date !== input.date\n    );\n    \n    if (previous) {\n      previousAnalysis = {\n        id: previous.id,\n        date: previous.date,\n        title: previous.title,\n        summary: previous.summary,\n        recommendation: previous.recommendation || null\n      };\n      \n      // Kontext für KI generieren\n      historyContext = `\\n\\nHINWEIS: Es existiert eine frühere Analyse vom ${previous.date}.\\nVorherige Zusammenfassung: ${previous.summary}\\n${previous.recommendation ? `Vorherige Empfehlung: ${previous.recommendation}` : ''}\\nBitte beziehe dich auf Änderungen seit der letzten Analyse.`;\n    }\n  }\n} catch (e) {\n  // Keine Historie verfügbar - kein Problem\n  console.log('History load skipped:', e.message);\n}\n\nreturn {\n  json: {\n    ...input,\n    previousAnalysis,\n    historyContext,\n    isUpdate: previousAnalysis !== null\n  }\n};"
+      },
+      "id": "history-loader",
+      "name": "2. History Loader",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $env.TEST_MODE }}",
+              "operation": "equals",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "id": "if-test",
+      "name": "Test Mode?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [860, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Mock Content für Test-Modus\nconst input = $input.item.json;\nconst mockSections = {\n  marketValuation: `## Marktbewertung\\n\\n- **Aktueller Kurs:** 185.50 ${input.currency}\\n- **Marktkapitalisierung:** 2.85 Billionen ${input.currency}\\n- **52-Wochen-Hoch:** 199.62 ${input.currency}\\n- **52-Wochen-Tief:** 164.08 ${input.currency}\\n- **Performance YTD:** +12.4%\\n- **Performance 12M:** +28.7%`,\n  \n  fundamentals: `## Fundamentaldaten\\n\\n| Kennzahl | Wert | Branche |\\n|----------|------|---------|\\n| KGV (TTM) | 29.5 | 25.2 |\\n| KGV (Forward) | 26.8 | 23.1 |\\n| KBV | 45.2 | 12.8 |\\n| EV/EBITDA | 22.1 | 18.5 |\\n| Bruttomarge | 45.6% | 42.1% |\\n| EBIT-Marge | 31.2% | 24.8% |\\n| Eigenkapitalrendite | 147.3% | 28.5% |\\n| Verschuldungsgrad | 1.8x | 2.1x |`,\n  \n  competition: `## Wettbewerb & Marktposition\\n\\n**Marktstellung:** Marktführer im Segment mit ~58% Marktanteil in den USA.\\n\\n**Wettbewerbsvorteile (Moat):**\\n- Starkes Ökosystem-Lock-in\\n- Premium-Markenpositionierung\\n- Hohe Wechselkosten für Kunden\\n- Vertikale Integration (Hardware + Software)\\n\\n**Hauptkonkurrenten:**\\n- Samsung (Hardware)\\n- Google (Software/Services)\\n- Microsoft (Enterprise)`,\n  \n  risks: `## Risiken & Katalysatoren\\n\\n**Risiken:**\\n- Regulatorische Eingriffe (App Store, DMA)\\n- China-Abhängigkeit (Fertigung & Absatz)\\n- Sättigung im Smartphone-Markt\\n- Wettbewerbsdruck bei Services\\n\\n**Katalysatoren:**\\n- Vision Pro & AR/VR-Expansion\\n- KI-Integration (Apple Intelligence)\\n- Services-Wachstum (+15% YoY)\\n- Indien als neuer Wachstumsmarkt`,\n  \n  thesis: `## Investment-These\\n\\n**Bull-Case:**\\n- Services-Segment wächst mit >20% CAGR\\n- Margin-Expansion durch höheren Services-Anteil\\n- Neuer Produktzyklus (iPhone 17, Vision Pro 2)\\n\\n**Bear-Case:**\\n- Hardware-Wachstum stagniert\\n- Regulatorische Risiken in EU und USA\\n- Multiple-Kompression bei Tech-Korrektur\\n\\n**Kursziel:** 210 ${input.currency} (12 Monate)\\n\\n**Empfehlung: HALTEN**\\n\\nDie Aktie ist fair bewertet. Der Premium-Multiple ist durch die Qualität des Geschäftsmodells gerechtfertigt, bietet aber begrenztes Upside.`\n};\n\nreturn {\n  json: {\n    ...input,\n    sections: mockSections,\n    rawContent: Object.values(mockSections).join('\\n\\n'),\n    tokensUsed: 0,\n    isTest: true\n  }\n};"
+      },
+      "id": "mock-content",
+      "name": "Mock Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// STAGE 2: RESEARCH ORCHESTRATOR\n// Bereitet die parallelen Prompt-Calls vor\n// ═══════════════════════════════════════════════════════════════\n\nconst input = $input.item.json;\n\n// Master-System-Prompt (für alle Calls)\nconst systemPrompt = `Du agierst als Senior Equity Research Analyst für einen deutschsprachigen Börsenbrief mit professionellem Publikum.\n\nSTIL-VORGABEN:\n- Sachlich-analytisch, keine emotionalen Formulierungen\n- Präzise Zahlenangaben mit Quellenkontext (z.B. \"laut Q3-Bericht\")\n- Keine Floskeln wie \"Es bleibt abzuwarten\" oder \"Die Zukunft wird zeigen\"\n- Keine Disclaimer oder Risikohinweise (werden separat hinzugefügt)\n- Keine Spekulationen, nur belegbare Fakten und begründete Einschätzungen\n\nFORMAT:\n- Markdown mit ## für Hauptüberschriften\n- Bullet Points für Aufzählungen\n- Tabellen für Kennzahlenvergleiche (| Spalte | Wert |)\n- Fettdruck (**) für wichtige Zahlen und Empfehlungen\n\nSPRACHE: Deutsch\nWÄHRUNG: ${input.currency}`;\n\n// Kontext-Ergänzung bei Updates\nconst historyNote = input.historyContext || '';\n\n// Die 5 spezialisierten Prompts\nconst prompts = [\n  {\n    id: 'marketValuation',\n    name: 'Marktbewertung',\n    userPrompt: `Analysiere die aktuelle Marktbewertung von ${input.company} (${input.ticker}, ${input.exchange}):\n\nPFLICHTINHALTE:\n1. Aktueller Aktienkurs mit Währung\n2. Marktkapitalisierung\n3. 52-Wochen-Hoch und -Tief mit prozentualem Abstand zum aktuellen Kurs\n4. Performance YTD (Year-to-Date)\n5. Performance letzte 12 Monate\n6. Vergleich zum relevanten Sektorindex\n\nLÄNGE: 150-200 Wörter\nOUTPUT: Beginne mit ## Marktbewertung${historyNote}`\n  },\n  {\n    id: 'fundamentals',\n    name: 'Fundamentaldaten',\n    userPrompt: `Analysiere die Fundamentaldaten von ${input.company} (${input.ticker}):\n\nPFLICHTINHALTE (als Tabelle):\n1. KGV (TTM und Forward)\n2. Kurs-Buchwert-Verhältnis (KBV)\n3. EV/EBITDA\n4. Bruttomarge und EBIT-Marge\n5. Eigenkapitalrendite (ROE)\n6. Verschuldungsgrad (Debt/EBITDA)\n\nZusätzlich: Vergleich mit Branchendurchschnitt wo möglich.\n\nLÄNGE: 200-250 Wörter\nOUTPUT: Beginne mit ## Fundamentaldaten${historyNote}`\n  },\n  {\n    id: 'competition',\n    name: 'Wettbewerb',\n    userPrompt: `Analysiere die Wettbewerbsposition von ${input.company} (${input.ticker}) im Sektor ${input.sector}:\n\nPFLICHTINHALTE:\n1. Marktstellung: Marktanteil und Position\n2. Wettbewerbsvorteile (Economic Moat): Was macht das Unternehmen einzigartig?\n3. Die 3 wichtigsten Konkurrenten mit Kurzbeschreibung\n4. Relative Stärken und Schwächen vs. Wettbewerb\n\nLÄNGE: 200-250 Wörter\nOUTPUT: Beginne mit ## Wettbewerb & Marktposition${historyNote}`\n  },\n  {\n    id: 'risks',\n    name: 'Risiken',\n    userPrompt: `Identifiziere Risiken und Katalysatoren für ${input.company} (${input.ticker}):\n\nPFLICHTINHALTE:\n**Risiken (mindestens 4):**\n- Regulatorische Risiken\n- Wettbewerbsrisiken\n- Makro-/Zyklusrisiken\n- Unternehmensspezifische Risiken\n\n**Katalysatoren (mindestens 3):**\n- Kurzfristige Trigger (0-12 Monate)\n- Mittelfristige Wachstumstreiber\n\nLÄNGE: 200-250 Wörter\nOUTPUT: Beginne mit ## Risiken & Katalysatoren${historyNote}`\n  },\n  {\n    id: 'thesis',\n    name: 'Investment-These',\n    userPrompt: `Formuliere eine Investment-These für ${input.company} (${input.ticker}):\n\nPFLICHTINHALTE:\n1. **Bull-Case:** 3 Argumente für ein Investment\n2. **Bear-Case:** 3 Argumente gegen ein Investment\n3. **Kursziel:** Begründetes 12-Monats-Kursziel in ${input.currency}\n4. **Empfehlung:** Genau eines von: **KAUFEN**, **HALTEN**, oder **VERKAUFEN**\n5. Begründung der Empfehlung in 2-3 Sätzen\n\nWICHTIG:\n- Die Empfehlung muss konsistent mit der Analyse sein\n- Bei Unsicherheit: HALTEN bevorzugen\n- Kursziel sollte realistisch sein (nicht >40% vom aktuellen Kurs entfernt ohne starke Begründung)\n\nLÄNGE: 250-300 Wörter\nOUTPUT: Beginne mit ## Investment-These${historyNote}`\n  }\n];\n\nreturn {\n  json: {\n    ...input,\n    systemPrompt,\n    prompts\n  }\n};"
+      },
+      "id": "research-orchestrator",
+      "name": "3. Research Orchestrator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 500]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Split in 5 parallele Items für jeden Prompt\nconst input = $input.item.json;\nconst results = input.prompts.map(p => ({\n  json: {\n    ...input,\n    currentPrompt: p\n  }\n}));\nreturn results;"
+      },
+      "id": "split-prompts",
+      "name": "Split Prompts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 500]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.2,\n  \"max_tokens\": 1500,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": {{ JSON.stringify($json.systemPrompt) }}\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify($json.currentPrompt.userPrompt) }}\n    }\n  ]\n}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "perplexity-call",
+      "name": "4. Perplexity API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1520, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-api-key",
+          "name": "Perplexity API"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrahiere Content aus Perplexity Response\nconst input = $input.item.json;\nconst promptId = $('Split Prompts').item.json.currentPrompt.id;\nconst promptName = $('Split Prompts').item.json.currentPrompt.name;\n\nlet content = '';\nlet tokensUsed = 0;\n\ntry {\n  content = input.choices?.[0]?.message?.content || '';\n  tokensUsed = input.usage?.total_tokens || 0;\n} catch (e) {\n  content = `## ${promptName}\\n\\n_Fehler beim Laden der Daten._`;\n}\n\nreturn {\n  json: {\n    promptId,\n    promptName,\n    content,\n    tokensUsed\n  }\n};"
+      },
+      "id": "extract-content",
+      "name": "Extract Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1740, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// STAGE 2b: CONTENT MERGER\n// Führt alle Sektionen zusammen\n// ═══════════════════════════════════════════════════════════════\n\nconst items = $input.all();\nconst originalInput = $('3. Research Orchestrator').item.json;\n\n// Sortiere nach definierter Reihenfolge\nconst order = ['marketValuation', 'fundamentals', 'competition', 'risks', 'thesis'];\nconst sections = {};\nlet totalTokens = 0;\n\nitems.forEach(item => {\n  sections[item.json.promptId] = item.json.content;\n  totalTokens += item.json.tokensUsed || 0;\n});\n\n// Zusammenführen in korrekter Reihenfolge\nconst orderedContent = order\n  .map(id => sections[id] || '')\n  .filter(c => c.length > 0)\n  .join('\\n\\n');\n\n// Empfehlung extrahieren\nlet recommendation = 'HALTEN';\nconst thesisContent = sections['thesis'] || '';\nif (thesisContent.includes('**KAUFEN**') || thesisContent.includes('KAUFEN')) {\n  recommendation = 'KAUFEN';\n} else if (thesisContent.includes('**VERKAUFEN**') || thesisContent.includes('VERKAUFEN')) {\n  recommendation = 'VERKAUFEN';\n}\n\n// Kursziel extrahieren (Regex)\nlet priceTarget = null;\nconst priceMatch = thesisContent.match(/Kursziel[:\\s]+([\\d.,]+)\\s*(USD|EUR|CHF)?/i);\nif (priceMatch) {\n  priceTarget = parseFloat(priceMatch[1].replace(',', '.'));\n}\n\nreturn {\n  json: {\n    company: originalInput.company,\n    ticker: originalInput.ticker,\n    sector: originalInput.sector,\n    date: originalInput.date,\n    baseDir: originalInput.baseDir,\n    slug: originalInput.slug,\n    exchange: originalInput.exchange,\n    currency: originalInput.currency,\n    previousAnalysis: originalInput.previousAnalysis,\n    isUpdate: originalInput.isUpdate,\n    sections,\n    rawContent: orderedContent,\n    recommendation,\n    priceTarget,\n    tokensUsed: totalTokens,\n    isTest: false\n  }\n};"
+      },
+      "id": "content-merger",
+      "name": "5. Content Merger",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1960, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// MERGE: Test-Content und Live-Content zusammenführen\n// ═══════════════════════════════════════════════════════════════\n\nconst item = $input.item.json;\n\n// Extrahiere Empfehlung falls noch nicht vorhanden\nlet recommendation = item.recommendation || 'HALTEN';\nif (!item.recommendation && item.rawContent) {\n  if (item.rawContent.includes('**KAUFEN**')) recommendation = 'KAUFEN';\n  else if (item.rawContent.includes('**VERKAUFEN**')) recommendation = 'VERKAUFEN';\n}\n\nreturn {\n  json: {\n    ...item,\n    recommendation\n  }\n};"
+      },
+      "id": "merge-content",
+      "name": "Merge Content",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2180, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar\",\n  \"temperature\": 0.1,\n  \"max_tokens\": 800,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Qualitätsprüfer für Finanzanalysen. Bewerte die folgende Analyse auf Vollständigkeit, Konsistenz und Qualität.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Prüfe diese Aktienanalyse zu {{ $json.company }} ({{ $json.ticker }}):\\n\\n{{ $json.rawContent.substring(0, 4000) }}\\n\\nBewerte auf einer Skala von 1-10:\\n1. Vollständigkeit (alle wichtigen Bereiche abgedeckt?)\\n2. Konsistenz (passt die Empfehlung zur Analyse?)\\n3. Qualität (präzise Zahlen, keine Floskeln?)\\n\\nAntworte NUR im Format:\\nVOLLSTÄNDIGKEIT: [1-10]\\nKONSISTENZ: [1-10]\\nQUALITÄT: [1-10]\\nGESAMT: [1-10]\\nKOMMENTAR: [1-2 Sätze]\"\n    }\n  ]\n}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "quality-check",
+      "name": "6. Quality Check",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2400, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "perplexity-api-key",
+          "name": "Perplexity API"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// STAGE 3: QUALITY GATE\n// Parst Quality-Check und entscheidet über Weitergabe\n// ═══════════════════════════════════════════════════════════════\n\nconst mergedData = $('Merge Content').item.json;\nconst qcResponse = $input.item.json;\n\n// Parse Quality-Check Response\nlet qualityScore = 7; // Default\nlet qualityComment = '';\n\ntry {\n  const content = qcResponse.choices?.[0]?.message?.content || '';\n  \n  const gesamtMatch = content.match(/GESAMT:\\s*(\\d+)/i);\n  if (gesamtMatch) {\n    qualityScore = parseInt(gesamtMatch[1]);\n  }\n  \n  const kommentarMatch = content.match(/KOMMENTAR:\\s*(.+)/i);\n  if (kommentarMatch) {\n    qualityComment = kommentarMatch[1].trim();\n  }\n} catch (e) {\n  qualityScore = 7; // Bei Fehler: durchlassen\n}\n\n// Word Count\nconst wordCount = mergedData.rawContent.split(/\\s+/).length;\n\nreturn {\n  json: {\n    ...mergedData,\n    qualityScore,\n    qualityComment,\n    wordCount,\n    qualityPassed: qualityScore >= 6\n  }\n};"
+      },
+      "id": "quality-gate",
+      "name": "7. Quality Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2620, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// STAGE 4: HTML RENDERER\n// Erstellt semantisches HTML mit Structured Data\n// ═══════════════════════════════════════════════════════════════\n\nconst input = $input.item.json;\n\n// Markdown zu HTML konvertieren (verbessert)\nfunction mdToHtml(md) {\n  return md\n    // Tabellen\n    .replace(/\\|(.+)\\|/g, (match) => {\n      const cells = match.split('|').filter(c => c.trim());\n      const isHeader = match.includes('---');\n      if (isHeader) return '';\n      const tag = 'td';\n      return '<tr>' + cells.map(c => `<${tag}>${c.trim()}</${tag}>`).join('') + '</tr>';\n    })\n    // Headers\n    .replace(/^### (.*)$/gm, '<h3>$1</h3>')\n    .replace(/^## (.*)$/gm, '<h2>$1</h2>')\n    .replace(/^# (.*)$/gm, '<h1>$1</h1>')\n    // Formatting\n    .replace(/\\*\\*(.+?)\\*\\*/g, '<strong>$1</strong>')\n    .replace(/\\*(.+?)\\*/g, '<em>$1</em>')\n    // Lists\n    .replace(/^- (.*)$/gm, '<li>$1</li>')\n    .replace(/(<li>.*<\\/li>\\n?)+/gs, '<ul>$&</ul>')\n    // Paragraphs\n    .replace(/\\n\\n/g, '</p><p>')\n    .replace(/\\n/g, '<br>');\n}\n\nconst htmlContent = mdToHtml(input.rawContent);\n\n// Recommendation CSS Class\nconst recClass = {\n  'KAUFEN': 'buy',\n  'HALTEN': 'hold',\n  'VERKAUFEN': 'sell'\n}[input.recommendation] || 'hold';\n\n// Datum formatieren\nconst dateObj = new Date(input.date);\nconst formattedDate = dateObj.toLocaleDateString('de-DE', {\n  day: '2-digit',\n  month: 'long',\n  year: 'numeric'\n});\n\n// HTML Template\nconst html = `<!DOCTYPE html>\n<html lang=\"de\" itemscope itemtype=\"https://schema.org/Article\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>${input.company}: Equity-Research-Bericht | capitovo</title>\n  \n  <!-- SEO Meta -->\n  <meta name=\"description\" content=\"${input.company} (${input.ticker}) Aktienanalyse: ${input.recommendation}. Equity Research von capitovo.\">\n  <meta name=\"author\" content=\"capitovo Research\">\n  <meta name=\"robots\" content=\"noindex, nofollow\">\n  \n  <!-- Open Graph -->\n  <meta property=\"og:type\" content=\"article\">\n  <meta property=\"og:title\" content=\"${input.company} Analyse | capitovo\">\n  <meta property=\"og:description\" content=\"${input.recommendation} - Equity Research Bericht\">\n  <meta property=\"og:image\" content=\"data/vorschaubilder/${input.slug}.svg\">\n  \n  <!-- Styles -->\n  <link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"../style.css\">\n  \n  <style>\n    .recommendation-buy { color: #16a34a; background: #dcfce7; }\n    .recommendation-hold { color: #ca8a04; background: #fef9c3; }\n    .recommendation-sell { color: #dc2626; background: #fee2e2; }\n    .key-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0; }\n    .metric { padding: 1rem; background: #f8fafc; border-radius: 0.5rem; text-align: center; }\n    .metric .label { font-size: 0.75rem; color: #64748b; text-transform: uppercase; }\n    .metric .value { font-size: 1.25rem; font-weight: 700; color: #0f172a; }\n    .analysis-body h2 { margin-top: 2rem; margin-bottom: 1rem; font-size: 1.5rem; font-weight: 700; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }\n    .analysis-body ul { margin: 1rem 0; padding-left: 1.5rem; }\n    .analysis-body li { margin: 0.5rem 0; }\n    .analysis-body table { width: 100%; border-collapse: collapse; margin: 1rem 0; }\n    .analysis-body td, .analysis-body th { padding: 0.5rem; border: 1px solid #e2e8f0; }\n    .analysis-body tr:nth-child(even) { background: #f8fafc; }\n  </style>\n</head>\n<body class=\"abonenten-page bg-white text-gray-900\">\n  \n  <header class=\"site-header\">\n    <div class=\"header-content\">\n      <div class=\"logo\">\n        <a href=\"./abonenten.html\">\n          <img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\n        </a>\n      </div>\n    </div>\n  </header>\n  \n  <main class=\"max-w-4xl mx-auto p-6\">\n    <div class=\"mb-4\">\n      <a href=\"./alle_analysen.html\" class=\"text-blue-600 hover:underline\">← Zurück zur Übersicht</a>\n    </div>\n    \n    <article itemscope itemtype=\"https://schema.org/AnalysisNewsArticle\">\n      \n      <!-- Meta-Header -->\n      <header class=\"mb-6\">\n        <div class=\"flex items-center gap-2 text-sm text-gray-500 mb-2\">\n          <span class=\"uppercase tracking-wider\" itemprop=\"articleSection\">${input.sector}</span>\n          <span>•</span>\n          <span class=\"font-mono\">${input.ticker}</span>\n          <span>•</span>\n          <span>${input.exchange}</span>\n        </div>\n        <h1 class=\"text-3xl font-bold text-gray-900\" itemprop=\"headline\">\n          ${input.company}: Equity-Research-Bericht\n        </h1>\n        <div class=\"flex items-center gap-4 mt-2 text-sm text-gray-500\">\n          <span itemprop=\"author\">capitovo Research</span>\n          <time itemprop=\"datePublished\" datetime=\"${input.date}\">${formattedDate}</time>\n          ${input.isUpdate ? '<span class=\"px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs\">UPDATE</span>' : ''}\n        </div>\n      </header>\n      \n      <!-- Key Metrics Box -->\n      <aside class=\"key-metrics\">\n        <div class=\"metric\">\n          <div class=\"label\">Empfehlung</div>\n          <div class=\"value recommendation-${recClass}\" style=\"padding: 0.25rem 0.75rem; border-radius: 0.25rem; display: inline-block;\">\n            ${input.recommendation}\n          </div>\n        </div>\n        ${input.priceTarget ? `\n        <div class=\"metric\">\n          <div class=\"label\">Kursziel</div>\n          <div class=\"value\">${input.priceTarget.toFixed(2)} ${input.currency}</div>\n        </div>\n        ` : ''}\n        <div class=\"metric\">\n          <div class=\"label\">Qualitätsscore</div>\n          <div class=\"value\">${input.qualityScore}/10</div>\n        </div>\n      </aside>\n      \n      <!-- Content Sections -->\n      <section class=\"analysis-body prose max-w-none\" itemprop=\"articleBody\">\n        ${htmlContent}\n      </section>\n      \n      <!-- Disclaimer -->\n      <footer class=\"mt-12 pt-6 border-t border-gray-200\">\n        <div class=\"text-sm text-gray-600\">\n          <strong>Disclaimer:</strong> Diese Analyse dient ausschließlich Informationszwecken und stellt keine Anlageberatung dar. \n          Bitte beachten Sie unsere <a href=\"../Rechtliches/haftung.html\" class=\"text-blue-600 hover:underline\">Haftungshinweise</a>.\n        </div>\n        <div class=\"mt-4 text-xs text-gray-400\">\n          Analyse-ID: ${input.ticker.toLowerCase()}-${input.date} | \n          Wörter: ${input.wordCount} | \n          Tokens: ${input.tokensUsed}\n        </div>\n      </footer>\n      \n    </article>\n  </main>\n  \n  <footer class=\"border-t py-6 mt-12 text-center text-sm text-gray-500\">\n    <div>&copy; ${new Date().getFullYear()} capitovo — Alle Rechte vorbehalten.</div>\n  </footer>\n  \n  <script src=\"../script.js\"></script>\n</body>\n</html>`;\n\nreturn {\n  json: {\n    ...input,\n    html\n  }\n};"
+      },
+      "id": "html-renderer",
+      "name": "8. HTML Renderer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2840, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ═══════════════════════════════════════════════════════════════\n// STAGE 4b: FILE WRITER\n// Schreibt HTML, JSON und SVG atomar\n// ═══════════════════════════════════════════════════════════════\n\nconst fs = require('fs');\nconst path = require('path');\nconst input = $input.item.json;\n\nconst results = {\n  html: { success: false, path: '' },\n  json: { success: false, path: '' },\n  svg: { success: false, path: '' }\n};\n\ntry {\n  // 1. HTML schreiben\n  const htmlPath = path.join(input.baseDir, 'Abonenten', `${input.slug}.html`);\n  fs.writeFileSync(htmlPath, input.html, 'utf8');\n  results.html = { success: true, path: htmlPath };\n  \n  // 2. analysen.json aktualisieren\n  const jsonPath = path.join(input.baseDir, 'data', 'analysen.json');\n  let analysen = [];\n  try {\n    analysen = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));\n  } catch (e) {\n    analysen = [];\n  }\n  \n  // Alten Eintrag mit gleichem ID entfernen (falls Update)\n  const newId = `${input.ticker.toLowerCase()}-${input.date}`;\n  analysen = analysen.filter(a => a.id !== newId);\n  \n  const entry = {\n    id: newId,\n    category: input.sector,\n    title: `${input.company}: Equity-Research-Bericht`,\n    summary: `${input.recommendation} – ${input.company} Aktienanalyse mit Kursziel${input.priceTarget ? ` ${input.priceTarget} ${input.currency}` : ''}.`,\n    link: `Abonenten/${input.slug}.html`,\n    image: `data/vorschaubilder/${input.slug}.svg`,\n    date: input.date,\n    author: 'capitovo Research',\n    tags: [input.company, input.ticker, input.sector, input.recommendation],\n    published: true,\n    recommendation: input.recommendation,\n    priceTarget: input.priceTarget,\n    qualityScore: input.qualityScore,\n    wordCount: input.wordCount,\n    isUpdate: input.isUpdate || false\n  };\n  \n  analysen.unshift(entry);\n  fs.writeFileSync(jsonPath, JSON.stringify(analysen, null, 2), 'utf8');\n  results.json = { success: true, path: jsonPath, entry };\n  \n  // 3. SVG Vorschaubild generieren\n  const svg = `<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">\n      <stop offset=\"0%\" stop-color=\"#0f172a\" />\n      <stop offset=\"100%\" stop-color=\"#1e293b\" />\n    </linearGradient>\n  </defs>\n  <rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"24\" />\n  <g transform=\"translate(60 60)\" font-family=\"'Inter', -apple-system, sans-serif\">\n    <text x=\"0\" y=\"14\" fill=\"#94a3b8\" font-size=\"14\" letter-spacing=\"0.2em\">${input.ticker}</text>\n    <text x=\"0\" y=\"58\" fill=\"#e2e8f0\" font-size=\"40\" font-weight=\"700\">${input.company}</text>\n    <text x=\"0\" y=\"96\" fill=\"#93c5fd\" font-size=\"18\">Equity Research • capitovo</text>\n    <rect x=\"0\" y=\"120\" width=\"120\" height=\"36\" rx=\"6\" fill=\"${input.recommendation === 'KAUFEN' ? '#16a34a' : input.recommendation === 'VERKAUFEN' ? '#dc2626' : '#ca8a04'}\" />\n    <text x=\"60\" y=\"144\" fill=\"white\" font-size=\"16\" font-weight=\"600\" text-anchor=\"middle\">${input.recommendation}</text>\n  </g>\n  <g transform=\"translate(60 280)\" font-family=\"'Inter', sans-serif\" fill=\"#64748b\">\n    <text x=\"0\" y=\"0\" font-size=\"14\">${input.date} • ${input.sector}</text>\n  </g>\n</svg>`;\n  \n  const svgDir = path.join(input.baseDir, 'data', 'vorschaubilder');\n  if (!fs.existsSync(svgDir)) {\n    fs.mkdirSync(svgDir, { recursive: true });\n  }\n  const svgPath = path.join(svgDir, `${input.slug}.svg`);\n  fs.writeFileSync(svgPath, svg, 'utf8');\n  results.svg = { success: true, path: svgPath };\n  \n} catch (e) {\n  throw new Error(`File write failed: ${e.message}`);\n}\n\nreturn {\n  json: {\n    success: true,\n    company: input.company,\n    ticker: input.ticker,\n    recommendation: input.recommendation,\n    qualityScore: input.qualityScore,\n    wordCount: input.wordCount,\n    files: results,\n    message: `Analyse für ${input.company} (${input.ticker}) erfolgreich erstellt.`\n  }\n};"
+      },
+      "id": "file-writer",
+      "name": "9. File Writer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3060, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json, null, 2) }}"
+      },
+      "id": "respond",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [3280, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "1. Input Validator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Input Validator": {
+      "main": [
+        [
+          {
+            "node": "2. History Loader",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. History Loader": {
+      "main": [
+        [
+          {
+            "node": "Test Mode?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Mode?": {
+      "main": [
+        [
+          {
+            "node": "Mock Content",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "3. Research Orchestrator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mock Content": {
+      "main": [
+        [
+          {
+            "node": "Merge Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Research Orchestrator": {
+      "main": [
+        [
+          {
+            "node": "Split Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Prompts": {
+      "main": [
+        [
+          {
+            "node": "4. Perplexity API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Perplexity API": {
+      "main": [
+        [
+          {
+            "node": "Extract Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Content": {
+      "main": [
+        [
+          {
+            "node": "5. Content Merger",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Content Merger": {
+      "main": [
+        [
+          {
+            "node": "Merge Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Content": {
+      "main": [
+        [
+          {
+            "node": "6. Quality Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6. Quality Check": {
+      "main": [
+        [
+          {
+            "node": "7. Quality Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. Quality Gate": {
+      "main": [
+        [
+          {
+            "node": "8. HTML Renderer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8. HTML Renderer": {
+      "main": [
+        [
+          {
+            "node": "9. File Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "9. File Writer": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "production"
+    },
+    {
+      "name": "analysis"
+    }
+  ]
+}

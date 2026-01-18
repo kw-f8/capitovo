@@ -3,19 +3,23 @@
   "nodes": [
     {
       "parameters": {
-        "httpMethod": "POST",
-        "path": "create-analysis-v2",
-        "responseMode": "lastNode",
-        "options": {
-          "responseCode": 200
-        }
+        "options": {}
       },
-      "id": "webhook-trigger",
-      "name": "Webhook Trigger",
-      "type": "n8n-nodes-base.webhook",
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Test-Daten für manuellen Trigger\nreturn {\n  json: {\n    body: {\n      company: 'Apple',\n      ticker: 'AAPL',\n      sector: 'Technologie',\n      date: '2026-01-18'\n    }\n  }\n};"
+      },
+      "id": "test-data",
+      "name": "Test Data",
+      "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [200, 400],
-      "webhookId": "capitovo-analysis-v2"
+      "position": [300, 400]
     },
     {
       "parameters": {
@@ -25,7 +29,7 @@
       "name": "1. Input Validator",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [420, 400]
+      "position": [520, 400]
     },
     {
       "parameters": {
@@ -35,7 +39,7 @@
       "name": "2. History Loader",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [640, 400]
+      "position": [740, 400]
     },
     {
       "parameters": {
@@ -53,7 +57,7 @@
       "name": "Test Mode?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
-      "position": [860, 400]
+      "position": [960, 400]
     },
     {
       "parameters": {
@@ -63,7 +67,7 @@
       "name": "Mock Content",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1080, 200]
+      "position": [1180, 200]
     },
     {
       "parameters": {
@@ -73,7 +77,7 @@
       "name": "3. Research Orchestrator",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1080, 500]
+      "position": [1180, 500]
     },
     {
       "parameters": {
@@ -84,20 +88,23 @@
       "name": "Split Prompts",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1300, 500]
+      "position": [1400, 500]
     },
     {
       "parameters": {
         "method": "POST",
         "url": "https://api.perplexity.ai/chat/completions",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "httpHeaderAuth",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Content-Type",
               "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
             }
           ]
         },
@@ -112,13 +119,7 @@
       "name": "4. Perplexity API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1520, 500],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "perplexity-api-key",
-          "name": "Perplexity API"
-        }
-      },
+      "position": [1620, 500],
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 5000
@@ -131,7 +132,7 @@
       "name": "Extract Content",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1740, 500]
+      "position": [1840, 500]
     },
     {
       "parameters": {
@@ -141,7 +142,7 @@
       "name": "5. Content Merger",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1960, 500]
+      "position": [2060, 500]
     },
     {
       "parameters": {
@@ -151,20 +152,23 @@
       "name": "Merge Content",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2180, 400]
+      "position": [2280, 400]
     },
     {
       "parameters": {
         "method": "POST",
         "url": "https://api.perplexity.ai/chat/completions",
-        "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "httpHeaderAuth",
+        "authentication": "none",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "Content-Type",
               "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
             }
           ]
         },
@@ -179,13 +183,7 @@
       "name": "6. Quality Check",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [2400, 400],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "perplexity-api-key",
-          "name": "Perplexity API"
-        }
-      },
+      "position": [2500, 400],
       "continueOnFail": true
     },
     {
@@ -196,7 +194,7 @@
       "name": "7. Quality Gate",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2620, 400]
+      "position": [2720, 400]
     },
     {
       "parameters": {
@@ -206,7 +204,7 @@
       "name": "8. HTML Renderer",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2840, 400]
+      "position": [2940, 400]
     },
     {
       "parameters": {
@@ -216,22 +214,30 @@
       "name": "9. File Writer",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [3060, 400]
+      "position": [3160, 400]
     },
     {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify($json, null, 2) }}"
-      },
-      "id": "respond",
-      "name": "Webhook Response",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1.1,
-      "position": [3280, 400]
+      "parameters": {},
+      "id": "output",
+      "name": "Output",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [3380, 400]
     }
   ],
   "connections": {
-    "Webhook Trigger": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Test Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Data": {
       "main": [
         [
           {
@@ -396,7 +402,7 @@
       "main": [
         [
           {
-            "node": "Webhook Response",
+            "node": "Output",
             "type": "main",
             "index": 0
           }

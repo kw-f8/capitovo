@@ -2,142 +2,316 @@
 <html lang="de">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Apple (AAPL) – Unternehmensanalyse | capitovo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png?v=2025-12-25b">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png?v=2025-12-25b">
+  <link rel="shortcut icon" href="../assets/favicon-32.png?v=2025-12-25b">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2025-12-25a">
+  <title>capitovo — Apple – Unternehmensanalyse (Januar 2026)</title>
   <meta name="description" content="Apple (AAPL) Unternehmensanalyse: Geschäftsmodell, Fundamentaldaten, Bewertungseinordnung. Equity Research von capitovo.">
   <meta name="robots" content="noindex, nofollow">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
   <style>
-    :root {
-      --text-primary: #1a1a1a;
-      --text-secondary: #4a5568;
-      --text-muted: #718096;
-      --border-color: #e2e8f0;
-      --bg-subtle: #f7fafc;
-      --accent: #2563eb;
+    /* Match header/menu-toggle styling used on other Abonenten pages */
+    #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
+    #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
+    #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+
+    /* Ensure header is static, not sticky */
+    header { position: static !important; }
+
+    /* Page specific: keep article unboxed and readable */
+    main { background: transparent; padding-top: 55px !important; }
+    .analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; padding-right: 16px; }
+    .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }
+    .analysis-meta { color: #6b7280; margin-bottom: 1rem; }
+    .analysis-intro {
+      font-size: 1.08rem;
+      line-height: 1.7;
+      color: #0f172a;
+      margin: 24px 0 32px 0;
+      text-align: justify;
+      hyphens: auto;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
-    .analysis-container { max-width: 48rem; margin: 0 auto; padding: 2rem 1.5rem; }
-    .analysis-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
-    .analysis-meta { display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    .analysis-meta span:not(:last-child)::after { content: '·'; margin-left: 0.75rem; }
-    .analysis-title { font-size: 2rem; font-weight: 700; color: var(--text-primary); line-height: 1.25; margin: 0 0 0.75rem 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    .analysis-subtitle { font-size: 1.125rem; color: var(--text-secondary); margin: 0; }
-    .analysis-body { font-family: Georgia, 'Times New Roman', serif; font-size: 1.0625rem; line-height: 1.8; color: var(--text-primary); }
-    .analysis-body h2 { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 2.5rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); }
-    .analysis-body h2:first-of-type { margin-top: 0; }
-    .analysis-body p { margin: 0 0 1.25rem 0; text-align: justify; hyphens: auto; }
-    .sources-section { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); }
-    .sources-section h3 { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.9375rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 1rem 0; }
-    .sources-list { list-style: decimal; padding-left: 1.25rem; margin: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.875rem; }
-    .sources-list li { margin: 0.375rem 0; color: var(--text-muted); }
-    .sources-list a { color: var(--accent); text-decoration: none; word-break: break-all; }
-    .sources-list a:hover { text-decoration: underline; }
-    .disclaimer { margin-top: 2.5rem; padding: 1.25rem; background: var(--bg-subtle); border-radius: 0.5rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.8125rem; color: var(--text-muted); line-height: 1.6; }
-    .disclaimer strong { color: var(--text-secondary); }
-    .analysis-footer { margin-top: 1.5rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.75rem; color: var(--text-muted); }
-    .back-link { display: inline-flex; align-items: center; gap: 0.25rem; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 0.875rem; color: var(--accent); text-decoration: none; margin-bottom: 1.5rem; }
-    .back-link:hover { text-decoration: underline; }
+    .analysis-section { margin-top: 1rem; }
+    .analysis-section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 2rem 0 1rem 0;
+      color: #0f172a;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.5rem;
+    }
+    .analysis-section p { text-align: justify; hyphens: auto; }
+    .toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .toc-link {
+      display: inline-block;
+      font-size: 1.08rem;
+      font-weight: 600;
+      color: #334155;
+      line-height: 1.45;
+      text-decoration: none;
+      position: relative;
+      padding: 0;
+      background: linear-gradient(
+        110deg,
+        var(--color-accent-blue) 0%,
+        var(--color-accent-blue) 15%,
+        #0ea5e9 20%,
+        var(--color-accent-blue) 25%,
+        var(--color-accent-blue) 40%,
+        #334155 45%,
+        #334155 100%
+      );
+      background-size: 300% 100%;
+      background-position: 100% 0;
+      transition: background-position 550ms cubic-bezier(0.65, 0, 0.35, 1), transform 550ms cubic-bezier(0.65, 0, 0.35, 1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .toc-link:hover { background-position: 0 0; transform: translateX(4px); }
+    .toc-link:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); border-radius: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      .toc-link { transition: none; background-position: 100% 0; }
+      .toc-link:hover { transform: none; background-position: 0 0; }
+    }
+    .refs, .refs a, .refs li { overflow-wrap: anywhere; word-break: break-word; }
+    .back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }
+    .back-btn-glow:hover, .back-btn-glow:focus-visible { box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08); }
   </style>
 </head>
-<body>
-  <header class="site-header">
+
+<body class="bg-white text-gray-900 abonenten-page">
+  <header>
     <div class="header-content">
       <div class="logo">
-        <a href="./abonenten.html">
+        <a href="./abonenten.html" class="logo-link">
           <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
         </a>
       </div>
+      <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
     </div>
   </header>
 
-  <main class="analysis-container">
-    <a href="./alle_analysen.html" class="back-link">← Zurück zur Übersicht</a>
-
-    <article>
-      <header class="analysis-header">
-        <div class="analysis-meta">
-          <span>Technologie</span>
-          <span>AAPL</span>
-          <span>NASDAQ</span>
+  <main style="padding-top: 55px !important;">
+    <article class="analysis-article" id="aapl-2026-01-19-analysis" style="margin-top: 0 !important;">
+      <div class="mb-2">
+        <div class="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Apple – Unternehmensanalyse (Januar 2026)</h1>
+            <p class="text-xs font-semibold uppercase mb-2" style="color: #64748b;">Unternehmensanalyse <span class="text-gray-400 mx-1">•</span> Apple Inc. (AAPL)</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-2 border-[color:var(--color-accent-blue)] rounded-md px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow">← Zurück</a>
+          </div>
         </div>
-        <h1 class="analysis-title">Apple – Unternehmensanalyse</h1>
-        <p class="analysis-subtitle">Geschäftsmodell, Fundamentaldaten und Bewertungseinordnung</p>
-        <div class="analysis-meta" style="margin-top: 1rem; margin-bottom: 0;">
-          <span>capitovo Research</span>
-          <time datetime="2026-01-19">19. Januar 2026</time>
+        <div class="text-sm analysis-meta" style="color: #64748b;">
+          <span>19.01.2026</span>
+          <span class="text-gray-400 mx-2">·</span>
+          <span>Ticker: AAPL</span>
+          <span class="text-gray-400 mx-2">·</span>
+          <span>WKN: 865985</span>
+          <span class="text-gray-400 mx-2">·</span>
+          <span>ISIN: US0378331005</span>
         </div>
-      </header>
+      </div>
 
-      <div class="analysis-body">
-        <h2>Einordnung und zentrale These</h2>
+      <div class="hero-intro-wrapper" style="display:flex; gap:24px; margin:24px 0 0 0; align-items:flex-start; flex-wrap:wrap;">
+        <div class="analysis-hero" style="flex:1; min-width:300px;">
+          <img src="../data/vorschaubilder_analysen/apple_111225.png" alt="Apple Analyse" style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block; border-radius:8px;">
+        </div>
+
+        <nav aria-label="Inhaltsverzeichnis" style="flex:1; min-width:260px; margin:0 0 0 12px; align-self:flex-start; display:flex; flex-direction:column; justify-content:flex-start; position:relative; top:-15px;">
+          <h2 style="font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0; border-bottom:2px solid #e2e8f0; padding-bottom:2px;">Inhalt der Analyse</h2>
+          <ol class="toc-list" style="margin-top:0;">
+            <li><a class="toc-link" href="#einordnung">Einordnung &amp; These</a></li>
+            <li><a class="toc-link" href="#geschaeftsmodell">Geschäftsmodell</a></li>
+            <li><a class="toc-link" href="#fundamental">Fundamentale Entwicklung</a></li>
+            <li><a class="toc-link" href="#bewertung">Bewertungseinordnung</a></li>
+            <li><a class="toc-link" href="#szenarien">Szenario-Analyse</a></li>
+            <li><a class="toc-link" href="#treiber-risiken">Treiber &amp; Risiken</a></li>
+            <li><a class="toc-link" href="#strukturell">Strukturelle Einordnung</a></li>
+            <li><a class="toc-link" href="#rechtliches">Rechtlicher Hinweis</a></li>
+            <li><a class="toc-link" href="#quellen">Quellen</a></li>
+          </ol>
+        </nav>
+      </div>
+
+      <p class="analysis-intro">
+        Apple ist ein großskaliges Premium-Ökosystem aus Hardware, Software und Services. In reifen Endgerätemärkten verlagert sich die Wertschöpfung zunehmend von Stückzahlen hin zu Produktmix, Preissetzung und der Monetarisierung einer installierten Basis. Entscheidend für die mittelfristige Ergebnisqualität ist, ob Services und neue Software-Funktionalitäten (einschließlich KI) die zyklische Hardware-Logik weiter überlagern können, ohne dass regulatorische Eingriffe die Plattformmonetarisierung strukturell verwässern.
+      </p>
+
+      <section class="analysis-section" id="einordnung">
+        <h2>1) Einordnung und zentrale These</h2>
         <p>Apple Inc. (AAPL) zählt zu den größten integrierten Anbietern von Consumer-Hardware und digitalen Diensten. Ökonomisch ist der Konzern in einem reifen Endgeräte-Markt positioniert, in dem sich Wachstum und Marge weniger über Stückzahlen als über Preissetzung, Produktmix und die Monetarisierung einer installierten Basis ergeben. Die zentrale Frage für die nächsten Jahre ist daher nicht, ob Apple „noch mehr Smartphones“ verkauft, sondern ob das Ökosystem (Software, Services, Zahlungs- und Abodienste) die zyklische Hardware-Logik zunehmend überlagert.</p>
         <p>Apple ist dabei weder „reine Software“ noch „reine Hardware“: Die Ertragslogik entsteht aus der Kopplung beider Bereiche. Entsprechend sollte die Analyse die Kettenreaktion verstehen, die von Gerätedurchdringung über Nutzung bis hin zu Services-Erlösen reicht.</p>
         <p>Zentrale These: Apples Ertragskraft wird kurzfristig weiterhin maßgeblich vom iPhone-Ökosystem und den Upgrade-Zyklen geprägt. Mittelfristig hängt der Pfad der Ergebnisqualität davon ab, ob (a) der Services-Anteil am Konzernmix weiter steigt, (b) neue Gerätetypen oder Produktkategorien eine zusätzliche installierte Basis schaffen, und (c) regulatorische Eingriffe in App-Store- und Plattformpraktiken die Monetarisierung nicht strukturell verwässern. Diese drei Hebel wirken nicht unabhängig: Ein höherer Services-Mix kann Margen stabilisieren, ist jedoch zugleich stärker regulierungsanfällig.</p>
         <p>Die Abweichung vom Marktkonsens entsteht typischerweise nicht aus „überraschend hohen“ iPhone-Stückzahlen, sondern aus zweiten Ordnungseffekten: Welche Take-Rate und welches Engagement erzielt Apple je aktivem Gerät? Wie verändern sich Kosten (z. B. Cloud, Content, KI-Rechenlast) relativ zur Monetarisierung? Und wie stark verschiebt Regulierung die Wertschöpfungskette zwischen Plattformbetreiber, Entwicklern und Zahlungsdienstleistern? In einem großen Ökosystem kann eine kleine strukturelle Verschiebung, über Jahre kumuliert, einen wesentlichen Unterschied machen.</p>
+      </section>
 
-        <h2>Geschäftsmodell und ökonomische Logik</h2>
+      <section class="analysis-section" id="geschaeftsmodell">
+        <h2>2) Geschäftsmodell und ökonomische Logik</h2>
         <p>Apple kombiniert Premium-Hardware (insbesondere iPhone, daneben Mac, iPad, Wearables und Zubehör) mit wiederkehrenden Erlösströmen aus Services (z. B. digitaler Content, Cloud, Zahlungs- und Plattformdienste). Die integrierte Systemarchitektur ist dabei mehr als Design-Philosophie: Sie reduziert technische Fragmentierung, stärkt die Nutzerbindung und senkt die Wechselbereitschaft. Für das Geschäftsmodell bedeutet das: Der erste Verkauf des Geräts ist häufig der Eintritt in ein Bündel komplementärer Dienste, das über die Zeit monetarisiert wird.</p>
         <p>Operativ ist das Modell ein Balanceakt zwischen Premium-Positionierung und Skalierung. Premium-Positionierung erlaubt eine höhere Bruttomarge je Gerät, ist aber sensitiv gegenüber makroökonomischen Schocks, weil das Produktportfolio klar im Consumer-Discretionary verankert ist. Skalierung entsteht über eine große installierte Basis, die Services ermöglicht. Entscheidend ist dabei, dass Apple nicht nur „Abo-Umsätze“ steigert, sondern die Stabilität der Nutzung und der Zahlungsbereitschaft über Zeit hält. In der Praxis sind dafür Produktqualität, Datenschutz-Positionierung, Integration und der „Default“-Charakter von Apple-Diensten zentrale Stellgrößen.</p>
         <p>Die ökonomische Logik lässt sich als „Installed Base → Engagement → Services-Monetarisierung → Reinvestition“ beschreiben. Je größer und aktiver die installierte Basis, desto größer ist die Wahrscheinlichkeit für wiederkehrende Umsätze aus Abos, Transaktionen oder Speichernutzung. Gleichzeitig erlaubt die vertikale Integration (eigene Chips, Betriebssysteme, Geräte-Software-Kopplung) eine engere Produktdifferenzierung und kann Kosten- sowie Leistungsprofile optimieren. Der Preis dieser Logik ist eine höhere Exponierung gegenüber Plattformregulierung und gegenüber Schocks in globalen Lieferketten, da die Hardware weiterhin der zentrale Ankerpunkt bleibt.</p>
         <p>Ein weiterer, häufig unterschätzter Aspekt ist die Kapitalallokation: Apple nutzt den operativen Cashflow typischerweise für Forschung und Entwicklung, für strategische Investitionen (z. B. Infrastruktur/Cloud, Supply-Chain-Absicherung) und für Kapitalrückführung. Damit kann das Unternehmen die Kennzahlen pro Aktie stützen, auch wenn das absolute Wachstum moderat ist. Aus Analystensicht sollte dies aber sauber getrennt werden: Operative Verbesserung (bessere Margen, höherer Services-Anteil) ist ökonomisch qualitativ anders als rein finanzielle Effekte (z. B. geringere Aktienanzahl). Beide können zugleich auftreten, sind aber unterschiedlich robust.</p>
         <p>Wettbewerblich steht Apple in mehreren Arenen: im Smartphone-Markt (Premium-Segment), in PC/Tablet, bei Wearables, sowie in digitalen Ökosystemen (App-Distribution, Payments, Medien). Der Wettbewerbsvorteil ist weniger „Feature X“ als die kumulative Wirkung aus Marke, Software-Integration, Geräte-Portfolio und Entwickler-Ökonomie. Ob dieser Vorteil in den nächsten Jahren weiter trägt, hängt unter anderem davon ab, wie sich KI-Funktionalitäten in das Betriebssystem integrieren lassen, ohne dass Wertschöpfung an Drittplattformen abfließt.</p>
         <p>Für den ökonomischen Burggraben sind die Incentives der Entwicklerseite zentral: Entwickler folgen Nutzeraufmerksamkeit, Monetarisierung und Distributionsfriktionen. Wenn Regulierung alternative Distributionswege erleichtert oder Gebührenstrukturen verändert, kann sich die Plattformökonomie graduell verschieben. Apple dürfte versuchen, den Wertbeitrag stärker über End-to-End-Erlebnis, Sicherheit, Zahlungsabwicklung und integrierte Dienste zu verteidigen. Ob das gelingt, ist eine der strukturellen Variablen für die mittelfristige Ertragsqualität.</p>
+      </section>
 
-        <h2>Fundamentale Entwicklung</h2>
+      <section class="analysis-section" id="fundamental">
+        <h2>3) Fundamentale Entwicklung</h2>
         <p>Aus den vergangenen Geschäftsberichten ergibt sich ein wiederkehrendes Muster: Hardware bleibt der größte Umsatzblock, während Services über Zeit an Bedeutung gewinnen und die Ergebnismarge stützen können. Der Konzern bewegt sich dabei seit Jahren in Umsatzdimensionen im hohen dreistelligen Milliarden-USD-Bereich, mit starker Cash-Generierung. In reifen Hardwaremärkten ist die absolute Wachstumsrate typischerweise begrenzt; wichtiger ist daher die Qualität des Wachstums: Mix-Verschiebung, Preissetzung, Bruttomarge und operative Effizienz.</p>
         <p>Die fundamentale Dynamik ist dabei stark von wenigen Stellgrößen abhängig. Erstens: Produktzyklen im iPhone-Portfolio, die Umsatz und Bruttomix kurzfristig steuern. Zweitens: Services-Wachstum, das tendenziell weniger saisonal ist und über mehrere Quartale stabilisierend wirken kann. Drittens: Kosten- und Investitionsdisziplin, insbesondere bei Forschung und Entwicklung sowie bei Infrastruktur (z. B. Rechenkapazität). Viertens: regionale Nachfrage und Wechselkurse. Gerade bei einem globalen Umsatzmix können Währungseffekte Umsatzwachstum „optisch“ verzerren, während die zugrunde liegende Nachfrage stabiler oder schwächer sein kann.</p>
         <p>Unterstellt man einen anhaltenden Ausbau des Servicegeschäfts, ist eine Stabilisierung der Konzernmarge plausibel, weil Services strukturell kapitalärmer und tendenziell margenstärker sind als Hardware. Gleichzeitig ist diese Stabilisierung nicht „automatisch“: (a) Veränderungen bei Plattformgebühren, (b) höhere Kosten für Content, Cloud-Infrastruktur oder KI-Compute, sowie (c) eine schwächere Konsumentennachfrage in Kernmärkten können gegenläufig wirken. In der Praxis dürfte die Ergebnisqualität daher stärker schwanken als der Umsatz, weil kleine Mix- oder Kostenänderungen in einem großen Konzern absolute Effekte erzeugen.</p>
         <p>Der Free Cash Flow ist für Apple traditionell ein Kernindikator, weil er die Fähigkeit zur Finanzierung von Forschung und Entwicklung, zur Resilienz in Angebotskrisen und zur Kapitalrückführung abbildet. Die Kapitalrückführung (Aktienrückkäufe und Dividenden) wirkt zudem indirekt auf Kennzahlen pro Aktie. Für die Analyse ist relevant: Ein Teil der EPS-Dynamik kann aus Share-Count-Effekten kommen, nicht nur aus operativem Wachstum. Für ein belastbares Bild sollten daher neben EPS auch operative Kennzahlen, Cashflow und Investitionsintensität betrachtet werden.</p>
         <p>Für 2026 ist aus fundamentaler Sicht zu beobachten, wie Apple den Zielkonflikt aus Innovationstempo und Margenschutz löst. KI-Funktionen können Differenzierung schaffen, erhöhen aber typischerweise auch laufende Kosten. Entscheidend ist, ob diese Kosten in wiederkehrende Erlösströme übersetzt werden.</p>
+      </section>
 
-        <h2>Bewertungseinordnung</h2>
+      <section class="analysis-section" id="bewertung">
+        <h2>4) Bewertungseinordnung</h2>
         <p>Das Bewertungsniveau von Apple ist historisch häufig von zwei Prämien geprägt: einer Qualitätsprämie (Marke, Cashflow-Stärke, Ökosystem) und einer „Stabilitätsprämie“ (Planbarkeit relativ zu vielen Hardware-Peers). In einem Umfeld, in dem der Markt KI-Integration als potenziellen Produktivitäts- und Monetarisierungshebel bewertet, kann diese Prämie steigen. Gleichzeitig sinkt bei höherer Bewertung die Fehlertoleranz: Enttäuschungen bei iPhone-Zyklen, eine unerwartet harte Regulierung der Plattformökonomie oder ein schwächerer Services-Mix können sich über den Bewertungsmultiplikator überproportional auswirken.</p>
         <p>Ein zweiter Blickwinkel ist die „Duration“ des Geschäftsmodells: Je stärker der Markt Apple als Plattform mit wiederkehrenden Erlösen interpretiert, desto eher werden Cashflows als länger laufend und weniger zyklisch bewertet. Je stärker Apple als Premium-Hardwareanbieter gesehen wird, desto stärker dominiert die Zyklik, und desto geringer ist in der Regel die Bereitschaft, hohe Multiplikatoren dauerhaft zu bezahlen. Diese Interpretation kann sich mit Produktentscheidungen, regulatorischen Rahmenbedingungen und dem Verlauf der Services-Ökonomie verändern.</p>
-        <p>Eine robuste Einordnung sollte daher weniger an einem einzelnen Multiplikator hängen, sondern an der Frage, welche „implizite Erwartung“ im Kurs steckt: Wie viel nachhaltiges Gewinnwachstum wird unterstellt, wie stabil sollen Margen bleiben, und wie groß wird die Rolle von Services und neuen Produktkategorien? Für Investoren ist insbesondere wichtig, ob das Unternehmen sein Profil stärker in Richtung „Plattform und wiederkehrende Umsätze“ verschiebt oder ob die Wahrnehmung weiterhin von einem Premium-Hardwarezyklus dominiert wird.</p>
+        <p>Eine robuste Einordnung sollte daher weniger an einem einzelnen Multiplikator hängen, sondern an der Frage, welche „implizite Erwartung“ im Kurs steckt: Wie viel nachhaltiges Gewinnwachstum wird unterstellt, wie stabil sollen Margen bleiben, und wie groß wird die Rolle von Services und neuen Produktkategorien? Für Investoren ist insbesondere wichtig, ob das Unternehmen sein Profil stärker in Richtung „Plattform und wiederkehrende Umsätze" verschiebt oder ob die Wahrnehmung weiterhin von einem Premium-Hardwarezyklus dominiert wird.</p>
+      </section>
 
-        <h2>Szenario-Analyse</h2>
+      <section class="analysis-section" id="szenarien">
+        <h2>5) Szenario-Analyse</h2>
         <p>Positives Szenario: Apple gelingt eine spürbare Monetarisierung zusätzlicher Software- und Servicewerte pro Gerät, ohne dass regulatorische Eingriffe den Take-Rate-Mechanismus wesentlich reduzieren. Gleichzeitig stabilisiert sich die Nachfrage in wichtigen Regionen, und die Produktpipeline (inklusive KI-Funktionen im Betriebssystem) erhöht die Upgrade-Bereitschaft. In diesem Szenario wäre ein höherer Services-Mix plausibel, was die Ergebnisqualität gegenüber Hardwarezyklen relativ verbessert.</p>
         <p>Basisszenario: Der Konzern entwickelt sich im Rahmen eines reifen Ökosystems weiter. Hardware bleibt der Hauptumsatzträger mit zyklischen Schwankungen, Services wachsen moderat und stützen die Marge. Regulierung führt zu Anpassungen (z. B. alternative Distributionswege oder veränderte Gebührenstrukturen), ohne das Geschäftsmodell zu brechen. Die Ergebnisentwicklung bleibt in diesem Szenario stark von Mix, Kostenkontrolle und Regionentrends abhängig.</p>
         <p>Negatives Szenario: Mehrere Risiken materialisieren sich gleichzeitig. Eine schwächere Konsumkonjunktur verlängert Upgrade-Zyklen, die Wettbewerbsdynamik in Smartphones und Ökosystemen erhöht den Preisdruck, und regulatorische Eingriffe reduzieren die Plattformmonetarisierung. Zusätzlich könnten geopolitische Spannungen Lieferketten oder Absatzmärkte belasten. In diesem Szenario kann das Geschäftsmodell weiterhin cashflow-stark bleiben, aber die Bewertungsprämie könnte sinken, wenn Stabilität und Wachstumsannahmen infrage gestellt werden.</p>
         <p>Als pragmatische Prüfpunkte eignen sich: Aussagen zur installierten Basis und Services-Entwicklung, Hinweise zu Upgrade-Zyklen, konkrete regulatorische Änderungen sowie Signale zur KI-Kosten- und Investitionsdynamik.</p>
+      </section>
 
-        <h2>Wachstumstreiber und Risiken</h2>
+      <section class="analysis-section" id="treiber-risiken">
+        <h2>6) Wachstumstreiber und Risiken</h2>
         <p>Priorisierte Wachstumstreiber: Erstens ist Services-Wachstum der naheliegende Hebel, weil es die installierte Basis monetarisiert und Ergebnisqualität stützen kann. Zweitens kann eine überzeugende KI-Integration im Betriebssystem die Nutzungsintensität erhöhen und neue Produkt- bzw. Servicepakete ermöglichen; der Wertbeitrag hängt dabei davon ab, ob Apple die Nutzerbeziehung und die Daten- bzw. Recheninfrastruktur so kontrolliert, dass die Marge nicht zu stark an Drittanbieter abfließt. Drittens können neue Formfaktoren oder Produktkategorien die installierte Basis erweitern und damit die Plattformökonomie vergrößern.</p>
         <p>Priorisierte Risiken (symmetrisch betrachtet): Erstens ist Plattformregulierung ein strukturelles Risiko, weil kleine Änderungen bei Gebühren, Default-Einstellungen oder Distributionswegen die Profitabilität über den Mix beeinflussen können. Zweitens bleibt die Lieferketten- und Geopolitik-Exponierung relevant: Produktion und Absatz sind global, und Störungen wirken in einem hochvolumigen Hardwaregeschäft schnell. Drittens ist Apple trotz Services-Anteil nicht vollständig defensiv: Konsumzyklen und Austauschzyklen können kurzfristig die Dynamik von Umsatz und Marge prägen.</p>
-        <p>Als „Leading Indicators“ sind vor allem die Qualität des Services-Wachstums (Nutzung versus Preis), Signale zur Upgrade-Bereitschaft sowie konkrete regulatorische Änderungen (Gebühren, Distributionswege, Defaults) relevant. Im KI-Kontext ist zusätzlich entscheidend, ob Differenzierung und Monetarisierung überwiegend im eigenen Stack stattfinden oder zunehmend zu externen Plattformen wandern.</p>
+        <p>Als „Leading Indicators" sind vor allem die Qualität des Services-Wachstums (Nutzung versus Preis), Signale zur Upgrade-Bereitschaft sowie konkrete regulatorische Änderungen (Gebühren, Distributionswege, Defaults) relevant. Im KI-Kontext ist zusätzlich entscheidend, ob Differenzierung und Monetarisierung überwiegend im eigenen Stack stattfinden oder zunehmend zu externen Plattformen wandern.</p>
         <p>Ein praktischer Monitoring-Ansatz für Mitglieder ist daher: (1) Services-Wachstum und Hinweise zur Monetarisierung, (2) Aussagen zu iPhone-Nachfrage/Upgrade-Zyklen, (3) regulatorische Entwicklungen in Kernjurisdiktionen, (4) Aussagen zu Lieferketten- und Produktionsrisiken sowie (5) Investitionsniveau in Forschung und Entwicklung, insbesondere im Kontext von KI.</p>
+      </section>
 
-        <h2>Strukturelle Einordnung</h2>
-        <p>Apple ist aus Portfoliosicht häufig ein Kernbestandteil breit diversifizierter Mandate, weil der Titel eine hohe Liquidität, eine große Indexrelevanz und eine historisch starke Cashflow-Generierung aufweist. Gleichzeitig ist die Aktie in vielen Portfolios bereits indirekt hoch gewichtet (z. B. über Indizes), was die praktische Frage der Positionsgröße und des Risikobeitrags stärker betont als die reine „Story“.</p>
+      <section class="analysis-section" id="strukturell">
+        <h2>7) Strukturelle Einordnung</h2>
+        <p>Apple ist aus Portfoliosicht häufig ein Kernbestandteil breit diversifizierter Mandate, weil der Titel eine hohe Liquidität, eine große Indexrelevanz und eine historisch starke Cashflow-Generierung aufweist. Gleichzeitig ist die Aktie in vielen Portfolios bereits indirekt hoch gewichtet (z. B. über Indizes), was die praktische Frage der Positionsgröße und des Risikobeitrags stärker betont als die reine „Story".</p>
         <p>Die Zyklizität ist gemischt: Der Hardwareanteil bringt zyklische Komponenten über Konsum und Upgrade-Zyklen, während wiederkehrende Services die Volatilität tendenziell reduzieren. Für die nächsten Quartale bleibt entscheidend, ob das Unternehmen die Balance zwischen Produktinnovation, Margenschutz und regulatorischer Anpassung halten kann. Offene Beobachtungspunkte sind dabei insbesondere: die Entwicklung der Services-Ökonomie unter regulatorischen Veränderungen, die Qualität der Nachfrage in wichtigen Regionen und die Form, in der KI-Funktionen monetarisiert werden.</p>
+      </section>
 
-        <h2>Rechtlicher Hinweis</h2>
+      <section class="analysis-section" id="rechtliches">
+        <h2>8) Rechtlicher Hinweis</h2>
         <p>Diese Analyse dient ausschließlich Informationszwecken und stellt keine Anlageberatung im Sinne des Wertpapierhandelsgesetzes (WpHG) dar.</p>
-      </div>
+      </section>
 
-      <aside class="sources-section">
-        <h3>Quellen</h3>
-        <ol class="sources-list">
-          <li><a href="https://investor.apple.com/investor-relations/default.aspx" target="_blank" rel="noopener noreferrer">https://investor.apple.com/investor-relations/default.aspx</a></li>
-          <li><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&owner=exclude&count=40&hidefilings=0" target="_blank" rel="noopener noreferrer">https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000320193&amp;owner=exclude&amp;count=40&amp;hidefilings=0</a></li>
-          <li><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=10-K&owner=exclude&count=40" target="_blank" rel="noopener noreferrer">https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000320193&amp;type=10-K&amp;owner=exclude&amp;count=40</a></li>
-          <li><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=10-Q&owner=exclude&count=40" target="_blank" rel="noopener noreferrer">https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&amp;CIK=0000320193&amp;type=10-Q&amp;owner=exclude&amp;count=40</a></li>
-        </ol>
-      </aside>
+      <section class="analysis-section" id="quellen">
+        <h2>9) Quellen</h2>
+        <div class="refs">
+          <ol>
+            <li><a href="https://investor.apple.com/investor-relations/default.aspx" target="_blank" rel="noopener">Apple Investor Relations</a></li>
+            <li><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&owner=exclude&count=40&hidefilings=0" target="_blank" rel="noopener">SEC EDGAR – Apple (CIK 0000320193)</a></li>
+            <li><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=10-K&owner=exclude&count=40" target="_blank" rel="noopener">SEC EDGAR – 10‑K Filings</a></li>
+            <li><a href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000320193&type=10-Q&owner=exclude&count=40" target="_blank" rel="noopener">SEC EDGAR – 10‑Q Filings</a></li>
+          </ol>
+        </div>
 
-      <div class="disclaimer">
-        <strong>Rechtlicher Hinweis:</strong> Diese Analyse dient ausschließlich Informationszwecken und stellt keine Anlageberatung im Sinne des Wertpapierhandelsgesetzes (WpHG) dar. Die bereitgestellten Informationen sind keine Aufforderung zum Kauf oder Verkauf von Wertpapieren. Anlageentscheidungen sollten auf Basis eigener Recherche und gegebenenfalls professioneller Beratung getroffen werden.
-      </div>
+        <hr style="margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;">
 
-      <footer class="analysis-footer">
-        Analyse-ID: aapl-2026-01-19 · 1763 Wörter · 4 Quellen
-      </footer>
+        <p style="font-size:0.9rem; color:#64748b;"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.</p>
+        <p style="font-size:0.85rem; color:#94a3b8;">Analyse-ID: aapl-2026-01-19 · 1763 Wörter · 4 Quellen</p>
+      </section>
     </article>
   </main>
 
-  <footer style="border-top: 1px solid #e2e8f0; padding: 1.5rem; text-align: center; color: #718096; font-size: 0.875rem; font-family: -apple-system, sans-serif;">
-    © 2026 capitovo – Alle Rechte vorbehalten.
+  <footer id="abo" class="site-footer" data-scroll="fade-up" data-scroll-delay="40">
+    <div class="footer-inner max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="copyright text-sm text-gray-600">&copy; 2026 capitovo. Wachstum durch Wissen.</p>
+
+      <div class="footer-links flex items-center gap-3">
+        <a href="../Rechtliches/impressum.html" class="footer-btn">Impressum</a>
+        <a href="../Rechtliches/datenschutz.html" class="footer-btn">Datenschutz</a>
+        <a href="../Rechtliches/haftung.html" class="footer-btn">Haftungsausschluss</a>
+        <a href="../Rechtliches/agb.html" class="footer-btn">AGB</a>
+      </div>
+    </div>
   </footer>
+
+  <div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
+    <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
+    <nav class="sidebar-nav" aria-label="Hauptnavigation">
+      <ul>
+        <li>
+          <a href="./abonenten.html" class="flex items-center space-x-3" aria-label="Startseite">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 11.5L12 4l9 7.5" />
+              <path d="M5 10.5v7.5a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7.5" />
+            </svg>
+            <span>Startseite</span>
+          </a>
+        </li>
+        <li>
+          <div>
+            <a href="./konto.html" class="flex items-center space-x-3" aria-label="Mein Konto">
+              <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
+                <path d="M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Mein Konto</span>
+            </a>
+          </div>
+        </li>
+        <li>
+          <a href="./alle_analysen.html" class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="10" width="4" height="11" rx="0.5" /><rect x="10" y="6" width="4" height="15" rx="0.5" /><rect x="17" y="3" width="4" height="18" rx="0.5" /></svg>
+            <span>Analysen</span>
+          </a>
+        </li>
+        <li>
+          <a href="./Aktien-Monitor/aktien-monitor.html" class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+              <polyline points="3 17 9 11 13 15 21 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            </svg>
+            <span>Aktien‑Monitor</span>
+          </a>
+        </li>
+        <li>
+          <a href="./earnings_kalender.html" class="flex items-center space-x-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>Wirtschaftskalender</span>
+          </a>
+        </li>
+
+        <li class="logout-bottom">
+          <a href="#" id="open-contact-modal" class="flex items-center space-x-3" aria-label="Kontakt aufnehmen">
+            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Kontakt</span>
+          </a>
+        </li>
+
+        <li class="logout-bottom">
+          <a href="#" id="logout-link" class="logout-link" aria-label="Abmelden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <path d="M16 17l5-5-5-5" />
+              <path d="M21 12H9" />
+            </svg>
+            <span>Abmelden</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
   <script src="../script.js"></script>
 </body>

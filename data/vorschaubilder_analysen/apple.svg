@@ -1,0 +1,20 @@
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg-gradient)" rx="16"/>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">
+    <text x="48" y="72" fill="#64748b" font-size="13" letter-spacing="0.1em" font-weight="500">AAPL · TECHNOLOGIE</text>
+    <text x="48" y="120" fill="#f1f5f9" font-size="32" font-weight="700">Apple</text>
+    <text x="48" y="156" fill="#94a3b8" font-size="16">Unternehmensanalyse</text>
+    <rect x="48" y="180" width="80" height="3" fill="#3b82f6" rx="1.5"/>
+    <text x="48" y="224" fill="#64748b" font-size="14">Geschäftsmodell · Fundamentaldaten · Bewertung</text>
+    <g transform="translate(48, 296)">
+      <text x="0" y="0" fill="#475569" font-size="12">capitovo Research</text>
+      <text x="0" y="20" fill="#64748b" font-size="11">2026-01-19</text>
+    </g>
+  </g>
+</svg>

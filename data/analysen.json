@@ -12,6 +12,20 @@
     "published": false
   },
   {
+    "id": "aapl-2026-01-19",
+    "category": "TECHNOLOGIE",
+    "title": "Apple – Unternehmensanalyse (Januar 2026)",
+    "summary": "Analyse des Geschäftsmodells, der Fundamentaldaten und der Bewertungseinordnung von Apple (AAPL).",
+    "link": "Abonenten/apple_2026-01-19.html",
+    "image": "data/vorschaubilder_analysen/apple.svg",
+    "date": "2026-01-19",
+    "author": "capitovo Research",
+    "tags": ["Apple", "AAPL", "Technologie"],
+    "published": false,
+    "wordCount": 1763,
+    "sourcesCount": 4
+  },
+  {
     "id": "apple-investment-analyse-121125",
     "category": "TECHNOLOGIE",
     "title": "Apple Inc.: Investment‑Analyse (Dezember 2025)",

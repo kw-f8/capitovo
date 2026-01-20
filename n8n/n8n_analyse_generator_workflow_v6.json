@@ -201,13 +201,25 @@
     },
     {
       "parameters": {
-        "jsCode": "// Alle Module sammeln\nconst input = $('2. Input Validator').item.json;\nconst m1 = $('4a. Modul 1: API Call').item.json;\nconst m2 = $('4b. Modul 2: API Call').item.json;\nconst m3 = $('4c. Modul 3: API Call').item.json;\nconst m4 = $('4d. Modul 4: API Call').item.json;\nconst m5 = $('4e. Modul 5: API Call').item.json;\n\nfunction extractContent(response) {\n  if (response.error) return { content: '', citations: [], error: response.error };\n  let content = response.choices?.[0]?.message?.content || '';\n  content = content.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '');\n  return { content, citations: response.citations || [], error: null };\n}\n\nconst modules = {\n  facts: extractContent(m1),\n  business: extractContent(m2),\n  valuation: extractContent(m3),\n  thesis: extractContent(m4),\n  scenarios: extractContent(m5)\n};\n\n// Wortzahlen pro Modul\nconst countWords = (text) => text.split(/\\s+/).filter(w => w.length > 1).length;\n\nconst wordCounts = {\n  facts: countWords(modules.facts.content),\n  business: countWords(modules.business.content),\n  valuation: countWords(modules.valuation.content),\n  thesis: countWords(modules.thesis.content),\n  scenarios: countWords(modules.scenarios.content)\n};\n\nconst totalWordCount = Object.values(wordCounts).reduce((a, b) => a + b, 0);\n\n// Alle Citations sammeln\nconst allCitations = [\n  ...modules.facts.citations,\n  ...modules.business.citations,\n  ...modules.valuation.citations,\n  ...modules.thesis.citations,\n  ...modules.scenarios.citations\n];\n\n// Deduplizieren\nconst uniqueCitations = [...new Set(allCitations)];\n\nreturn {\n  json: {\n    ...input,\n    modules,\n    wordCounts,\n    totalWordCount,\n    allCitations: uniqueCitations,\n    moduleErrors: Object.entries(modules).filter(([k, v]) => v.error).map(([k]) => k)\n  }\n};"
+        "mode": "combine",
+        "combinationMode": "waitForAll",
+        "options": {}
+      },
+      "id": "merge-modules",
+      "name": "4f. Merge All Modules",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [1200, 800]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Alle Module aus den Merge-Inputs sammeln\nconst items = $input.all();\nconst input = $('2. Input Validator').item.json;\n\nfunction extractContent(response) {\n  if (!response || response.error) return { content: '', citations: [], error: response?.error || 'No response' };\n  let content = response.choices?.[0]?.message?.content || '';\n  content = content.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '');\n  return { content, citations: response.citations || [], error: null };\n}\n\n// Die Items kommen in der Reihenfolge der Merge-Inputs\n// Index 0 = Modul 1, Index 1 = Modul 2, etc.\nconst m1 = items[0]?.json || {};\nconst m2 = items[1]?.json || {};\nconst m3 = items[2]?.json || {};\nconst m4 = items[3]?.json || {};\nconst m5 = items[4]?.json || {};\n\nconst modules = {\n  facts: extractContent(m1),\n  business: extractContent(m2),\n  valuation: extractContent(m3),\n  thesis: extractContent(m4),\n  scenarios: extractContent(m5)\n};\n\n// Wortzahlen pro Modul\nconst countWords = (text) => text.split(/\\s+/).filter(w => w.length > 1).length;\n\nconst wordCounts = {\n  facts: countWords(modules.facts.content),\n  business: countWords(modules.business.content),\n  valuation: countWords(modules.valuation.content),\n  thesis: countWords(modules.thesis.content),\n  scenarios: countWords(modules.scenarios.content)\n};\n\nconst totalWordCount = Object.values(wordCounts).reduce((a, b) => a + b, 0);\n\n// Alle Citations sammeln\nconst allCitations = [\n  ...modules.facts.citations,\n  ...modules.business.citations,\n  ...modules.valuation.citations,\n  ...modules.thesis.citations,\n  ...modules.scenarios.citations\n];\n\n// Deduplizieren\nconst uniqueCitations = [...new Set(allCitations)];\n\nreturn {\n  json: {\n    ...input,\n    modules,\n    wordCounts,\n    totalWordCount,\n    allCitations: uniqueCitations,\n    moduleErrors: Object.entries(modules).filter(([k, v]) => v.error).map(([k]) => k)\n  }\n};"
       },
       "id": "module-collector",
       "name": "5. Module Collector",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1300, 800]
+      "position": [1400, 800]
     },
     {
       "parameters": {
@@ -217,7 +229,7 @@
       "name": "6. Source Validation",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1500, 800]
+      "position": [1600, 800]
     },
     {
       "parameters": {
@@ -227,7 +239,7 @@
       "name": "7. Anti-Bias Check",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1700, 800]
+      "position": [1800, 800]
     },
     {
       "parameters": {
@@ -237,7 +249,7 @@
       "name": "8. Depth Validation",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1900, 800]
+      "position": [2000, 800]
     },
     {
       "parameters": {
@@ -247,7 +259,7 @@
       "name": "9. Publication Gate",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2100, 800]
+      "position": [2200, 800]
     },
     {
       "parameters": {
@@ -257,7 +269,7 @@
       "name": "10. Editorial Assembly",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2300, 800]
+      "position": [2400, 800]
     },
     {
       "parameters": {
@@ -267,7 +279,7 @@
       "name": "11. HTML Renderer",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2500, 800]
+      "position": [2600, 800]
     },
     {
       "parameters": {
@@ -277,7 +289,7 @@
       "name": "12. Output Generator",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2700, 800]
+      "position": [2800, 800]
     },
     {
       "parameters": {},
@@ -285,7 +297,7 @@
       "name": "Output",
       "type": "n8n-nodes-base.noOp",
       "typeVersion": 1,
-      "position": [2900, 800]
+      "position": [3000, 800]
     }
   ],
   "connections": {
@@ -322,18 +334,21 @@
       "main": [[{ "node": "4e. Modul 5: API Call", "type": "main", "index": 0 }]]
     },
     "4a. Modul 1: API Call": {
-      "main": [[{ "node": "5. Module Collector", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "4f. Merge All Modules", "type": "main", "index": 0 }]]
     },
     "4b. Modul 2: API Call": {
-      "main": [[{ "node": "5. Module Collector", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "4f. Merge All Modules", "type": "main", "index": 1 }]]
     },
     "4c. Modul 3: API Call": {
-      "main": [[{ "node": "5. Module Collector", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "4f. Merge All Modules", "type": "main", "index": 2 }]]
     },
     "4d. Modul 4: API Call": {
-      "main": [[{ "node": "5. Module Collector", "type": "main", "index": 0 }]]
+      "main": [[{ "node": "4f. Merge All Modules", "type": "main", "index": 3 }]]
     },
     "4e. Modul 5: API Call": {
+      "main": [[{ "node": "4f. Merge All Modules", "type": "main", "index": 4 }]]
+    },
+    "4f. Merge All Modules": {
       "main": [[{ "node": "5. Module Collector", "type": "main", "index": 0 }]]
     },
     "5. Module Collector": {

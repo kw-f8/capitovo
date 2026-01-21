@@ -32,7 +32,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.alphavantage.co/query?function=OVERVIEW&symbol={{ $json.ticker }}&apikey={{ $env.ALPHA_VANTAGE_KEY }}",
+        "url": "=https://www.alphavantage.co/query?function=OVERVIEW&symbol={{ $json.ticker }}&apikey=YO8C9ZRNBDVLAZ83",
         "options": { "timeout": 30000 }
       },
       "id": "api-alpha-overview",
@@ -45,7 +45,7 @@
     {
       "parameters": {
         "method": "GET",
-        "url": "=https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={{ $json.ticker }}&apikey={{ $env.ALPHA_VANTAGE_KEY }}",
+        "url": "=https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={{ $json.ticker }}&apikey=YO8C9ZRNBDVLAZ83",
         "options": { "timeout": 30000 }
       },
       "id": "api-alpha-income",

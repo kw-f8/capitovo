@@ -1,0 +1,240 @@
+{
+  "name": "Capitovo Analyse Generator v8 - 4-Phasen-Architektur",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [100, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// PHASE 0: INPUT - NUR Identifikation\n// =====================================================\nreturn {\n  json: {\n    company: 'Apple',\n    ticker: 'AAPL',\n    exchange: 'NASDAQ',\n    sector: 'Technologie',\n    currency: 'USD',\n    slug: 'apple',\n    fiscalYearEnd: 'September',\n    pipelineVersion: 'v8.0-4-phasen',\n    date: new Date().toISOString().split('T')[0]\n  }\n};"
+      },
+      "id": "input-data",
+      "name": "0. Input Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [300, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.alphavantage.co/query?function=OVERVIEW&symbol={{ $json.ticker }}&apikey=YO8C9ZRNBDVLAZ83",
+        "options": { "timeout": 30000 }
+      },
+      "id": "api-overview",
+      "name": "P1.1 API Overview",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Zwischenspeichern der Overview-Daten\nvar prev = $('0. Input Data').item.json;\nvar resp = $input.item.json;\nreturn { json: { ...prev, overviewResponse: resp } };"
+      },
+      "id": "store-overview",
+      "name": "P1.2 Store Overview",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={{ $json.ticker }}&apikey=YO8C9ZRNBDVLAZ83",
+        "options": { "timeout": 30000 }
+      },
+      "id": "api-income",
+      "name": "P1.3 API Income",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// PHASE 1: DATENAGGREGATION - STUMM, OHNE INTERPRETATION\n// Rolle: Data Collector\n// VERBOTEN: Jede Bewertung, These, sprachliche Einordnung\n// =====================================================\n\nvar prev = $('P1.2 Store Overview').item.json;\nvar incomeResp = $input.item.json;\nvar overviewResp = prev.overviewResponse;\nvar input = prev;\n\nfunction safeNum(val, fallback) {\n  if (fallback === undefined) fallback = null;\n  if (val === undefined || val === null || val === 'None' || val === '-' || val === '') return fallback;\n  var n = parseFloat(String(val).replace(/,/g, ''));\n  return isFinite(n) ? n : fallback;\n}\n\nfunction safePercent(val) {\n  var n = safeNum(val);\n  if (n === null) return null;\n  if (Math.abs(n) <= 1) return Math.round(n * 1000) / 10;\n  return Math.round(n * 10) / 10;\n}\n\nvar hasOverview = overviewResp && overviewResp.Symbol && !overviewResp.Note && !overviewResp['Error Message'];\nvar hasIncome = incomeResp && incomeResp.annualReports && !incomeResp.Note;\nvar retrievedAt = new Date().toISOString();\n\n// ROHDATEN-OBJEKT - keine Interpretation, nur Struktur\nvar rawData = {\n  meta: {\n    dataSource: hasOverview ? 'Alpha Vantage API' : 'none',\n    retrievedAt: retrievedAt,\n    apiEndpoints: ['OVERVIEW', 'INCOME_STATEMENT'],\n    dataQuality: hasOverview && hasIncome ? 'complete' : (hasOverview ? 'partial' : 'missing'),\n    disclaimer: 'Alle Zahlen stammen aus Alpha Vantage API. Keine Gewaehr fuer Richtigkeit.'\n  },\n  company: {\n    name: input.company,\n    ticker: input.ticker,\n    sector: input.sector,\n    currency: input.currency,\n    exchange: input.exchange,\n    description: hasOverview ? (overviewResp.Description || null) : null,\n    industry: hasOverview ? (overviewResp.Industry || null) : null,\n    fiscalYearEnd: hasOverview ? (overviewResp.FiscalYearEnd || input.fiscalYearEnd) : input.fiscalYearEnd\n  },\n  fundamentals: {},\n  valuation: {},\n  margins: {},\n  growth: {},\n  incomeHistory: []\n};\n\nif (hasOverview) {\n  var o = overviewResp;\n  \n  rawData.fundamentals = {\n    marketCap: safeNum(o.MarketCapitalization),\n    sharesOutstanding: safeNum(o.SharesOutstanding),\n    bookValue: safeNum(o.BookValue),\n    dividendPerShare: safeNum(o.DividendPerShare),\n    dividendYield: safePercent(o.DividendYield),\n    eps: safeNum(o.EPS),\n    revenuePerShare: safeNum(o.RevenuePerShareTTM),\n    revenueTTM: safeNum(o.RevenueTTM),\n    ebitda: safeNum(o.EBITDA),\n    grossProfit: safeNum(o.GrossProfitTTM)\n  };\n  \n  rawData.valuation = {\n    peRatio: safeNum(o.PERatio),\n    forwardPE: safeNum(o.ForwardPE),\n    pegRatio: safeNum(o.PEGRatio),\n    priceToBook: safeNum(o.PriceToBookRatio),\n    priceToSales: safeNum(o.PriceToSalesRatioTTM),\n    evToRevenue: safeNum(o.EVToRevenue),\n    evToEbitda: safeNum(o.EVToEBITDA),\n    analystTargetPrice: safeNum(o.AnalystTargetPrice),\n    beta: safeNum(o.Beta),\n    fiftyTwoWeekHigh: safeNum(o['52WeekHigh']),\n    fiftyTwoWeekLow: safeNum(o['52WeekLow'])\n  };\n  \n  rawData.margins = {\n    grossMargin: safePercent(o.GrossProfitMargin),\n    operatingMargin: safePercent(o.OperatingMarginTTM),\n    profitMargin: safePercent(o.ProfitMargin),\n    returnOnAssets: safePercent(o.ReturnOnAssetsTTM),\n    returnOnEquity: safePercent(o.ReturnOnEquityTTM)\n  };\n  \n  rawData.growth = {\n    quarterlyEarningsGrowthYoY: safePercent(o.QuarterlyEarningsGrowthYOY),\n    quarterlyRevenueGrowthYoY: safePercent(o.QuarterlyRevenueGrowthYOY)\n  };\n}\n\nif (hasIncome && incomeResp.annualReports) {\n  rawData.incomeHistory = incomeResp.annualReports.slice(0, 5).map(function(r) {\n    return {\n      fiscalYear: r.fiscalDateEnding ? r.fiscalDateEnding.substring(0, 4) : null,\n      totalRevenue: safeNum(r.totalRevenue),\n      grossProfit: safeNum(r.grossProfit),\n      operatingIncome: safeNum(r.operatingIncome),\n      netIncome: safeNum(r.netIncome),\n      ebitda: safeNum(r.ebitda)\n    };\n  });\n}\n\n// Datenvalidierung: Markiere verdaechtige Werte\nvar dataFlags = [];\nif (rawData.growth.quarterlyEarningsGrowthYoY && Math.abs(rawData.growth.quarterlyEarningsGrowthYoY) > 50) {\n  dataFlags.push('WARNUNG: Extremes Gewinnwachstum (' + rawData.growth.quarterlyEarningsGrowthYoY + '%) - Basiseffekt pruefen');\n}\nif (rawData.margins.returnOnEquity && (rawData.margins.returnOnEquity < 5 || rawData.margins.returnOnEquity > 100)) {\n  dataFlags.push('WARNUNG: Ungewoehnlicher ROE (' + rawData.margins.returnOnEquity + '%) - Kapitalstruktur pruefen');\n}\nif (rawData.valuation.peRatio && rawData.valuation.peRatio > 100) {\n  dataFlags.push('HINWEIS: Sehr hohes KGV (' + rawData.valuation.peRatio + ') - Wachstumserwartungen eingepreist');\n}\n\nreturn {\n  json: {\n    input: input,\n    rawData: rawData,\n    dataFlags: dataFlags,\n    phase: 'P1_DATA_COMPLETE'\n  }\n};"
+      },
+      "id": "data-aggregator",
+      "name": "P1.4 Data Aggregator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1100, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// PHASE 1 ABSCHLUSS: Formatiere Rohdaten fuer Phase 2\n// Erstellt den \"Facts Block\" - OHNE Interpretation\n// =====================================================\n\nvar input = $input.item.json;\nvar raw = input.rawData;\nvar flags = input.dataFlags;\n\nfunction fmt(v, unit) {\n  if (v === null || v === undefined) return 'n/v';\n  if (typeof v === 'number') {\n    if (Math.abs(v) >= 1e12) return (v/1e12).toFixed(1) + ' Bio ' + (unit || '');\n    if (Math.abs(v) >= 1e9) return (v/1e9).toFixed(1) + ' Mrd ' + (unit || '');\n    if (Math.abs(v) >= 1e6) return (v/1e6).toFixed(1) + ' Mio ' + (unit || '');\n    return v.toLocaleString('de-DE') + (unit ? ' ' + unit : '');\n  }\n  return String(v);\n}\n\nvar factsBlock = [\n  '========================================',\n  'VERIFIZIERTE ROHDATEN - ' + raw.company.name + ' (' + raw.company.ticker + ')',\n  '========================================',\n  'Datenquelle: ' + raw.meta.dataSource,\n  'Abgerufen: ' + raw.meta.retrievedAt,\n  'Qualitaet: ' + raw.meta.dataQuality,\n  '',\n  '--- FUNDAMENTALS ---',\n  'Marktkapitalisierung: ' + fmt(raw.fundamentals.marketCap, raw.company.currency),\n  'Umsatz (TTM): ' + fmt(raw.fundamentals.revenueTTM, raw.company.currency),\n  'EBITDA: ' + fmt(raw.fundamentals.ebitda, raw.company.currency),\n  'EPS: ' + fmt(raw.fundamentals.eps, raw.company.currency),\n  'Dividende/Aktie: ' + fmt(raw.fundamentals.dividendPerShare, raw.company.currency),\n  'Dividendenrendite: ' + (raw.fundamentals.dividendYield !== null ? raw.fundamentals.dividendYield + '%' : 'n/v'),\n  '',\n  '--- BEWERTUNGSKENNZAHLEN ---',\n  'KGV (P/E): ' + fmt(raw.valuation.peRatio),\n  'Forward P/E: ' + fmt(raw.valuation.forwardPE),\n  'PEG Ratio: ' + fmt(raw.valuation.pegRatio),\n  'EV/EBITDA: ' + fmt(raw.valuation.evToEbitda),\n  'Kurs/Buchwert: ' + fmt(raw.valuation.priceToBook),\n  '52W Hoch: ' + fmt(raw.valuation.fiftyTwoWeekHigh, raw.company.currency),\n  '52W Tief: ' + fmt(raw.valuation.fiftyTwoWeekLow, raw.company.currency),\n  'Beta: ' + fmt(raw.valuation.beta),\n  '',\n  '--- MARGEN & RENDITEN ---',\n  'Bruttomarge: ' + (raw.margins.grossMargin !== null ? raw.margins.grossMargin + '%' : 'n/v'),\n  'Operative Marge: ' + (raw.margins.operatingMargin !== null ? raw.margins.operatingMargin + '%' : 'n/v'),\n  'Nettomarge: ' + (raw.margins.profitMargin !== null ? raw.margins.profitMargin + '%' : 'n/v'),\n  'ROE: ' + (raw.margins.returnOnEquity !== null ? raw.margins.returnOnEquity + '%' : 'n/v'),\n  'ROA: ' + (raw.margins.returnOnAssets !== null ? raw.margins.returnOnAssets + '%' : 'n/v'),\n  '',\n  '--- WACHSTUM (QUARTAL YoY) ---',\n  'Umsatzwachstum: ' + (raw.growth.quarterlyRevenueGrowthYoY !== null ? raw.growth.quarterlyRevenueGrowthYoY + '%' : 'n/v'),\n  'Gewinnwachstum: ' + (raw.growth.quarterlyEarningsGrowthYoY !== null ? raw.growth.quarterlyEarningsGrowthYoY + '%' : 'n/v'),\n  ''\n];\n\nif (flags.length > 0) {\n  factsBlock.push('--- DATEN-WARNUNGEN ---');\n  for (var i = 0; i < flags.length; i++) {\n    factsBlock.push(flags[i]);\n  }\n  factsBlock.push('');\n}\n\nif (raw.incomeHistory && raw.incomeHistory.length > 0) {\n  factsBlock.push('--- UMSATZHISTORIE ---');\n  for (var j = 0; j < raw.incomeHistory.length; j++) {\n    var h = raw.incomeHistory[j];\n    factsBlock.push(h.fiscalYear + ': Umsatz ' + fmt(h.totalRevenue, raw.company.currency) + ', Nettogewinn ' + fmt(h.netIncome, raw.company.currency));\n  }\n  factsBlock.push('');\n}\n\nfactsBlock.push('========================================');\nfactsBlock.push('WICHTIG: Alle Zahlen aus ' + raw.meta.dataSource);\nfactsBlock.push('Keine eigenstaendige Verifizierung erfolgt.');\nfactsBlock.push('========================================');\n\nvar dataPointCount = 0;\nfor (var key in raw.fundamentals) { if (raw.fundamentals[key] !== null) dataPointCount++; }\nfor (var key in raw.valuation) { if (raw.valuation[key] !== null) dataPointCount++; }\nfor (var key in raw.margins) { if (raw.margins[key] !== null) dataPointCount++; }\nfor (var key in raw.growth) { if (raw.growth[key] !== null) dataPointCount++; }\n\nreturn {\n  json: {\n    input: input.input,\n    rawData: raw,\n    dataFlags: flags,\n    factsBlock: factsBlock.join('\\n'),\n    dataPointCount: dataPointCount,\n    phase: 'P1_FORMATTED'\n  }\n};"
+      },
+      "id": "facts-formatter",
+      "name": "P1.5 Facts Formatter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.15,\n  \"max_tokens\": 3500,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein DESKRIPTIVER Finanzanalyst. Deine Aufgabe ist AUSSCHLIESSLICH die sachliche Beschreibung und Einordnung von Finanzdaten.\\n\\n=== STRIKTE VERBOTE (bei Verstoss wird Text verworfen) ===\\n1. KEINE Kursziele oder Preisprojektionen\\n2. KEINE Kauf-/Verkaufs-/Halteaussagen\\n3. KEINE Woerter: 'attraktiv', 'guenstig', 'teuer', 'unterbewertet', 'ueberbewertet', 'empfehlenswert', 'lohnend'\\n4. KEINE Zukunftsprognosen mit konkreten Zahlen\\n5. KEINE impliziten Empfehlungen durch Wortwahl\\n6. KEINE Superlative: 'fuehrend', 'dominant', 'einzigartig', 'beste', 'groesste'\\n\\n=== ERLAUBT ===\\n1. Erklaerung was Kennzahlen BEDEUTEN\\n2. Historische Einordnung (z.B. 'typisch fuer Tech-Sektor')\\n3. Vergleich mit allgemein bekannten Branchendurchschnitten\\n4. Beschreibung von Geschaeftsmodell und Wettbewerbsumfeld\\n5. Erklaerung von Auffaelligkeiten in den Daten\\n\\n=== SPRACHE ===\\n- Neutral, sachlich, journalistisch\\n- Konjunktiv bei Unsicherheit\\n- 'Die Daten zeigen...' statt 'Das Unternehmen ist...'\\n- Passive Formulierungen bevorzugen\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('AUFGABE: Erstelle eine DESKRIPTIVE Unternehmensanalyse.\\n\\n' + $json.factsBlock + '\\n\\nStruktur (strikt einhalten):\\n\\n1. GESCHAEFTSMODELL (400+ Woerter)\\n- Wie verdient das Unternehmen Geld?\\n- Bekannte Umsatzsegmente\\n- Kundenstruktur (B2B/B2C)\\n- Wettbewerbsumfeld (Hauptkonkurrenten nennen)\\n- Oekosystem-Effekte\\n\\n2. FUNDAMENTALDATEN-EINORDNUNG (350+ Woerter)\\n- Was sagen die Margen ueber das Geschaeftsmodell?\\n- Historische Einordnung der Profitabilitaet\\n- Erklaerung von Auffaelligkeiten\\n- WICHTIG: Bei extremen Werten (z.B. >50% Wachstum) IMMER Basiseffekte und Einmaleffekte diskutieren\\n\\n3. BEWERTUNGSKENNZAHLEN-ERKLAERUNG (350+ Woerter)\\n- Was BEDEUTEN die aktuellen Multiples?\\n- Welche Erwartungen sind implizit eingepreist?\\n- Vergleich mit typischen Sektor-Multiples\\n- KEINE Aussage ob teuer/guenstig - nur ERKLAEREN\\n\\n4. RISIKOFAKTOREN (250+ Woerter)\\n- Bekannte strukturelle Risiken\\n- Zyklische Faktoren\\n- Wettbewerbsrisiken\\n- Regulatorische Aspekte\\n\\nWICHTIG:\\n- NUR Zahlen aus dem Faktenblock verwenden\\n- Jede Zahl muss als API-Datum erkennbar sein\\n- Bei fehlenden Daten: \"Keine Daten verfuegbar\"\\n- Mindestens 1400 Woerter insgesamt') }}\n    }\n  ],\n  \"return_citations\": true\n}",
+        "options": { "timeout": 180000 }
+      },
+      "id": "phase2-descriptive",
+      "name": "P2. Deskriptive Analyse",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1500, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// PHASE 2 EXTRAKTION\n// =====================================================\n\nvar prev = $('P1.5 Facts Formatter').item.json;\nvar resp = $input.item.json;\n\nvar content = '';\nvar citations = [];\nvar error = null;\n\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  content = resp.choices[0].message.content || '';\n  content = content.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '').trim();\n  citations = resp.citations || [];\n} else if (resp && resp.error) {\n  error = resp.error;\n}\n\nreturn {\n  json: {\n    ...prev,\n    phase2Content: content,\n    phase2Citations: citations,\n    phase2Error: error,\n    phase: 'P2_COMPLETE'\n  }\n};"
+      },
+      "id": "phase2-extract",
+      "name": "P2. Extract",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1700, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.1,\n  \"max_tokens\": 2500,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein COMPLIANCE OFFICER und REDAKTIONELLER PRUEFER fuer Finanzpublikationen.\\n\\nDeine Aufgabe: Pruefe den folgenden Analysetext auf rechtliche und redaktionelle Probleme und KORRIGIERE sie.\\n\\n=== HARTE PRUEFKRITERIEN ===\\n\\n1. KURSZIELE & PREISPROJEKTIONEN\\n- Enthaelt der Text konkrete Kursziele? → STREICHEN\\n- Enthaelt der Text Aussagen wie 'X USD erreichen'? → STREICHEN\\n- Enthaelt der Text zeitliche Zieldefinitionen ('bis Ende 2026')? → STREICHEN\\n\\n2. KAUF-/VERKAUFSSIGNALE\\n- Woerter: kaufen, verkaufen, halten, einsteigen, aufbauen → STREICHEN oder neutralisieren\\n- Implizite Empfehlungen durch Wortwahl → NEUTRALISIEREN\\n\\n3. BEWERTENDE SPRACHE\\n- 'attraktiv', 'guenstig', 'teuer', 'unterbewertet', 'ueberbewertet' → ERSETZEN durch neutrale Beschreibung\\n- 'empfehlenswert', 'lohnend', 'interessant' → STREICHEN\\n- Superlative ('fuehrend', 'dominant', 'einzigartig', 'beste') → ERSETZEN\\n\\n4. DATENPLAUSIBILITAET\\n- Extreme Wachstumszahlen (>50%) ohne Erklaerung? → WARNUNG hinzufuegen\\n- Unplausible Kennzahlen? → WARNUNG hinzufuegen\\n- Zahlen ohne erkennbare Quelle? → MARKIEREN\\n\\n5. SPRACHLICHE NEUTRALITAET\\n- Aktive Empfehlungssprache → Passive Beschreibung\\n- 'Apple wird profitieren' → 'Die Datenlage zeigt...'\\n\\n=== OUTPUT-FORMAT ===\\nGib den BEREINIGTEN Text zurueck. Wenn du Aenderungen vornimmst, fuege am Ende eine kurze Liste der Korrekturen an.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('PRUEFE UND BEREINIGE DIESEN TEXT:\\n\\n' + $json.phase2Content + '\\n\\n---\\nGib den bereinigten Text zurueck. Liste am Ende alle Korrekturen auf.') }}\n    }\n  ]\n}",
+        "options": { "timeout": 120000 }
+      },
+      "id": "phase3-compliance",
+      "name": "P3. Compliance-Pruefung",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1900, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// PHASE 3 EXTRAKTION + COMPLIANCE-VALIDIERUNG\n// =====================================================\n\nvar prev = $('P2. Extract').item.json;\nvar resp = $input.item.json;\n\nvar cleanedContent = '';\nvar corrections = [];\nvar complianceError = null;\n\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  var fullResponse = resp.choices[0].message.content || '';\n  \n  // Trenne bereinigten Text von Korrekturen\n  var correctionMarker = fullResponse.indexOf('Korrekturen:');\n  if (correctionMarker === -1) correctionMarker = fullResponse.indexOf('KORREKTUREN:');\n  if (correctionMarker === -1) correctionMarker = fullResponse.indexOf('Aenderungen:');\n  \n  if (correctionMarker !== -1) {\n    cleanedContent = fullResponse.substring(0, correctionMarker).trim();\n    var correctionText = fullResponse.substring(correctionMarker);\n    corrections = correctionText.split('\\n').filter(function(line) {\n      return line.trim().length > 0 && line.indexOf('-') === 0;\n    });\n  } else {\n    cleanedContent = fullResponse.trim();\n  }\n  \n  // Entferne Markdown\n  cleanedContent = cleanedContent.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '').trim();\n  \n} else if (resp && resp.error) {\n  complianceError = resp.error;\n  cleanedContent = prev.phase2Content; // Fallback auf Original\n}\n\n// Zusaetzliche technische Compliance-Checks\nvar technicalFlags = [];\nvar lowerContent = cleanedContent.toLowerCase();\n\nvar forbiddenTerms = [\n  { term: 'kaufen', type: 'empfehlung' },\n  { term: 'verkaufen', type: 'empfehlung' },\n  { term: 'attraktiv', type: 'bewertend' },\n  { term: 'unterbewertet', type: 'bewertend' },\n  { term: 'ueberbewertet', type: 'bewertend' },\n  { term: 'guenstig', type: 'bewertend' },\n  { term: 'kursziel', type: 'prognose' },\n  { term: 'erreichen', type: 'prognose' },\n  { term: 'fuehrend', type: 'superlativ' },\n  { term: 'dominant', type: 'superlativ' },\n  { term: 'einzigartig', type: 'superlativ' }\n];\n\nfor (var i = 0; i < forbiddenTerms.length; i++) {\n  if (lowerContent.indexOf(forbiddenTerms[i].term) !== -1) {\n    technicalFlags.push('WARNUNG: \"' + forbiddenTerms[i].term + '\" gefunden (' + forbiddenTerms[i].type + ')');\n  }\n}\n\nvar compliancePassed = technicalFlags.length === 0;\n\nreturn {\n  json: {\n    ...prev,\n    phase3Content: cleanedContent,\n    phase3Corrections: corrections,\n    phase3TechnicalFlags: technicalFlags,\n    phase3CompliancePassed: compliancePassed,\n    phase3Error: complianceError,\n    phase: 'P3_COMPLETE'\n  }\n};"
+      },
+      "id": "phase3-extract",
+      "name": "P3. Extract + Validate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2100, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.2,\n  \"max_tokens\": 3000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein REDAKTEUR fuer einen professionellen Finanz-Newsletter.\\n\\nDeine Aufgabe: Verbessere die LESBARKEIT und STRINGENZ des Textes.\\n\\n=== ERLAUBT ===\\n- Grammatik und Rechtschreibung korrigieren\\n- Satzstruktur verbessern\\n- Absaetze besser gliedern\\n- Ueberschriften praegnanter formulieren\\n- Wiederholungen entfernen\\n- Uebergaenge zwischen Abschnitten verbessern\\n\\n=== VERBOTEN ===\\n- KEINE inhaltlichen Aenderungen\\n- KEINE neuen Zahlen oder Fakten\\n- KEINE neuen Bewertungen\\n- KEINE Empfehlungen hinzufuegen\\n- KEINE Kursziele hinzufuegen\\n- Bestehende neutrale Sprache NICHT bewertend machen\\n\\n=== STIL ===\\n- Professionell, sachlich, journalistisch\\n- Gut lesbar fuer informierte Privatanleger\\n- Klare Struktur mit erkennbaren Abschnitten\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('FINALISIERE DIESEN TEXT REDAKTIONELL (nur Lesbarkeit, keine Inhaltaenderungen):\\n\\n' + $json.phase3Content) }}\n    }\n  ]\n}",
+        "options": { "timeout": 120000 }
+      },
+      "id": "phase4-editorial",
+      "name": "P4. Redaktionelle Finalisierung",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2300, 400],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// PHASE 4 EXTRAKTION\n// =====================================================\n\nvar prev = $('P3. Extract + Validate').item.json;\nvar resp = $input.item.json;\n\nvar finalContent = '';\nvar editorialError = null;\n\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  finalContent = resp.choices[0].message.content || '';\n  finalContent = finalContent.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '').trim();\n} else if (resp && resp.error) {\n  editorialError = resp.error;\n  finalContent = prev.phase3Content; // Fallback\n}\n\nreturn {\n  json: {\n    ...prev,\n    finalContent: finalContent,\n    phase4Error: editorialError,\n    phase: 'P4_COMPLETE'\n  }\n};"
+      },
+      "id": "phase4-extract",
+      "name": "P4. Extract",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2500, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// FINALE QUALITAETSPRUEFUNG & PUBLIKATIONS-GATE\n// =====================================================\n\nvar input = $input.item.json;\nvar content = input.finalContent || '';\n\nfunction countWords(text) {\n  return (text || '').split(/\\s+/).filter(function(w) { return w.length > 1; }).length;\n}\n\nvar wordCount = countWords(content);\n\n// Finale Compliance-Pruefung (technisch)\nvar finalFlags = [];\nvar lowerContent = content.toLowerCase();\n\nvar criticalTerms = ['kaufen', 'verkaufen', 'kursziel', 'unterbewertet', 'ueberbewertet', 'attraktiv bewertet', 'guenstig bewertet'];\nvar warningTerms = ['fuehrend', 'dominant', 'einzigartig', 'empfehlenswert', 'lohnend'];\n\nvar criticalCount = 0;\nvar warningCount = 0;\n\nfor (var i = 0; i < criticalTerms.length; i++) {\n  if (lowerContent.indexOf(criticalTerms[i]) !== -1) {\n    finalFlags.push('KRITISCH: \"' + criticalTerms[i] + '\" im finalen Text');\n    criticalCount++;\n  }\n}\n\nfor (var j = 0; j < warningTerms.length; j++) {\n  if (lowerContent.indexOf(warningTerms[j]) !== -1) {\n    finalFlags.push('WARNUNG: \"' + warningTerms[j] + '\" im finalen Text');\n    warningCount++;\n  }\n}\n\n// Kursziel-Pattern\nvar priceTargetPattern = /\\d+[.,]?\\d*\\s*(usd|eur|dollar|euro)\\s*(erreichen|anstreben|ziel)/gi;\nif (priceTargetPattern.test(content)) {\n  finalFlags.push('KRITISCH: Moegliches Kursziel im Text');\n  criticalCount++;\n}\n\n// Qualitaetsscore berechnen\nvar baseScore = 10;\n\n// Abzuege\nif (criticalCount > 0) baseScore -= criticalCount * 3;\nif (warningCount > 0) baseScore -= warningCount * 1;\nif (wordCount < 1200) baseScore -= 2;\nif (!input.phase3CompliancePassed) baseScore -= 2;\nif (input.dataFlags && input.dataFlags.length > 0) baseScore -= 1;\n\n// Bonuspunkte\nif (input.rawData && input.rawData.meta.dataQuality === 'complete') baseScore += 1;\n\nvar qualityScore = Math.max(0, Math.min(10, baseScore));\n\n// Publikationsentscheidung\nvar publicationReady = criticalCount === 0 && qualityScore >= 6 && wordCount >= 1000;\n\nvar allIssues = finalFlags.concat(input.phase3TechnicalFlags || []).concat(input.dataFlags || []);\n\nreturn {\n  json: {\n    input: input.input,\n    rawData: input.rawData,\n    factsBlock: input.factsBlock,\n    finalContent: content,\n    citations: input.phase2Citations || [],\n    metrics: {\n      wordCount: wordCount,\n      dataPointCount: input.dataPointCount,\n      criticalIssues: criticalCount,\n      warningIssues: warningCount,\n      qualityScore: qualityScore,\n      publicationReady: publicationReady\n    },\n    validation: {\n      phase3CompliancePassed: input.phase3CompliancePassed,\n      phase3Corrections: input.phase3Corrections || [],\n      finalFlags: finalFlags,\n      allIssues: allIssues\n    },\n    errors: {\n      phase2: input.phase2Error,\n      phase3: input.phase3Error,\n      phase4: input.phase4Error\n    },\n    phase: 'QUALITY_GATE_COMPLETE'\n  }\n};"
+      },
+      "id": "quality-gate",
+      "name": "Quality Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2700, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// HTML RENDERER\n// =====================================================\n\nvar input = $input.item.json;\nvar meta = input.input;\nvar raw = input.rawData;\nvar content = input.finalContent;\nvar metrics = input.metrics;\nvar validation = input.validation;\n\nfunction textToHtml(text) {\n  var html = text\n    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')\n    .replace(/^(\\d+)\\.\\s+([^\\n]+)$/gm, '</p><h2>$2</h2><p>')\n    .replace(/^([A-Z][A-Z\\s&-]+)$/gm, '</p><h2>$1</h2><p>')\n    .replace(/\\n\\n+/g, '</p><p>')\n    .replace(/\\n/g, ' ');\n  html = '<p>' + html + '</p>';\n  html = html.replace(/<p><\\/p>/g, '').replace(/<p>\\s*<h/g, '<h').replace(/<\\/h2>\\s*<\\/p>/g, '</h2>').replace(/\\s+/g, ' ');\n  return html.trim();\n}\n\nvar htmlContent = textToHtml(content || '');\nvar citations = input.citations || [];\n\nvar formattedDate = new Date(meta.date).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\nvar scoreClass = metrics.qualityScore >= 7 ? 'high' : (metrics.qualityScore >= 5 ? 'medium' : 'low');\nvar statusBadge = metrics.publicationReady \n  ? '<span class=\"badge high\">Publikationsbereit</span>' \n  : '<span class=\"badge low\">Review erforderlich</span>';\n\nvar dataBoxHtml = '<div class=\"data-box\">' +\n  '<h3>Datengrundlage</h3>' +\n  '<ul>' +\n  '<li><strong>Quelle:</strong> ' + raw.meta.dataSource + '</li>' +\n  '<li><strong>Abgerufen:</strong> ' + new Date(raw.meta.retrievedAt).toLocaleString('de-DE') + '</li>' +\n  '<li><strong>Datenpunkte:</strong> ' + metrics.dataPointCount + '</li>' +\n  '<li><strong>Qualitaet:</strong> ' + raw.meta.dataQuality + '</li>' +\n  '</ul>' +\n  '<p class=\"data-disclaimer\">' + raw.meta.disclaimer + '</p>' +\n  '</div>';\n\nvar issuesHtml = '';\nif (validation.allIssues && validation.allIssues.length > 0) {\n  issuesHtml = '<div class=\"issues-box\"><h4>Hinweise zur Datenqualitaet</h4><ul>';\n  for (var i = 0; i < Math.min(validation.allIssues.length, 5); i++) {\n    issuesHtml += '<li>' + validation.allIssues[i] + '</li>';\n  }\n  issuesHtml += '</ul></div>';\n}\n\nvar sourcesHtml = '';\nif (citations.length > 0) {\n  sourcesHtml = '<aside class=\"sources\"><h3>Quellen</h3><ol>';\n  for (var j = 0; j < Math.min(citations.length, 8); j++) {\n    var url = citations[j];\n    var hostname = url;\n    try { hostname = new URL(url).hostname.replace('www.', ''); } catch(e) {}\n    sourcesHtml += '<li><a href=\"' + url + '\" target=\"_blank\" rel=\"noopener\">' + hostname + '</a></li>';\n  }\n  sourcesHtml += '</ol></aside>';\n}\n\nvar html = '<!DOCTYPE html><html lang=\"de\"><head>' +\n  '<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">' +\n  '<title>' + meta.company + ' (' + meta.ticker + ') - Unternehmensanalyse | capitovo</title>' +\n  '<meta name=\"description\" content=\"Sachliche Unternehmensanalyse von ' + meta.company + '\">' +\n  '<meta name=\"robots\" content=\"noindex, nofollow\">' +\n  '<style>' +\n  ':root{--text:#1a1a1a;--text2:#4a5568;--muted:#718096;--border:#e2e8f0;--bg:#f7fafc;--accent:#2563eb}' +\n  '*{box-sizing:border-box;margin:0;padding:0}' +\n  'body{font-family:-apple-system,sans-serif;line-height:1.6;color:var(--text);max-width:48rem;margin:0 auto;padding:2rem 1.5rem}' +\n  '.header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}' +\n  '.meta{font-size:.875rem;color:var(--muted);margin-bottom:.5rem}' +\n  '.title{font-size:1.75rem;font-weight:700;margin-bottom:.5rem}' +\n  '.badge{display:inline-block;padding:.25rem .5rem;border-radius:.25rem;font-size:.75rem;font-weight:500;margin-left:.5rem}' +\n  '.badge.high{background:#dcfce7;color:#166534}.badge.medium{background:#fef3c7;color:#92400e}.badge.low{background:#fee2e2;color:#991b1b}' +\n  '.data-box{background:#f1f5f9;padding:1rem;border-radius:.5rem;margin-bottom:1.5rem;font-size:.875rem}' +\n  '.data-box h3{font-size:.9rem;margin-bottom:.5rem;color:var(--text2)}.data-box ul{list-style:none}.data-box li{margin:.25rem 0}' +\n  '.data-disclaimer{font-size:.8rem;color:var(--muted);margin-top:.75rem;padding-top:.5rem;border-top:1px solid var(--border)}' +\n  '.issues-box{background:#fef3c7;padding:.75rem 1rem;border-radius:.5rem;margin-bottom:1.5rem;font-size:.8rem}' +\n  '.issues-box h4{font-size:.85rem;margin-bottom:.5rem;color:#92400e}.issues-box ul{padding-left:1.25rem;color:#92400e}' +\n  '.body{font-family:Georgia,serif;font-size:1.0625rem;line-height:1.8}' +\n  '.body h2{font-family:-apple-system,sans-serif;font-size:1.25rem;font-weight:600;margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}' +\n  '.body p{margin-bottom:1rem;text-align:justify}' +\n  '.sources{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)}' +\n  '.sources h3{font-size:.9rem;color:var(--text2);margin-bottom:.5rem}' +\n  '.sources ol{list-style:decimal;padding-left:1.25rem;font-size:.875rem}.sources li{margin:.25rem 0}.sources a{color:var(--accent);text-decoration:none}' +\n  '.disclaimer{margin-top:2rem;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:.5rem;font-size:.8rem;color:var(--muted)}' +\n  '.disclaimer strong{color:var(--text2)}' +\n  '.footer{margin-top:1rem;font-size:.75rem;color:var(--muted)}' +\n  '</style></head><body>' +\n  '<header class=\"header\">' +\n  '<div class=\"meta\">' + meta.sector + ' - ' + meta.ticker + ' - ' + meta.exchange + '</div>' +\n  '<h1 class=\"title\">' + meta.company + ' - Unternehmensanalyse ' + statusBadge + '</h1>' +\n  '<p style=\"color:var(--text2)\">Sachliche Einordnung von Geschaeftsmodell, Fundamentaldaten und Bewertungskennzahlen</p>' +\n  '<div class=\"meta\" style=\"margin-top:.5rem\">capitovo Research - ' + formattedDate + '</div>' +\n  '</header>' +\n  dataBoxHtml +\n  issuesHtml +\n  '<article class=\"body\">' + htmlContent + '</article>' +\n  sourcesHtml +\n  '<div class=\"disclaimer\">' +\n  '<strong>Rechtlicher Hinweis:</strong> Diese Analyse dient ausschliesslich Informationszwecken und stellt keine Anlageberatung dar. ' +\n  'Die dargestellten Informationen sind keine Aufforderung zum Kauf oder Verkauf von Wertpapieren. ' +\n  'capitovo uebernimmt keine Gewaehr fuer Richtigkeit, Vollstaendigkeit oder Aktualitaet.<br><br>' +\n  '<strong>Methodik:</strong> Finanzdaten wurden automatisiert ueber ' + raw.meta.dataSource + ' abgerufen. ' +\n  'Die qualitative Einordnung wurde durch eine 4-Phasen-KI-Pipeline erstellt: ' +\n  '(1) Datenaggregation, (2) Deskriptive Analyse, (3) Compliance-Pruefung, (4) Redaktionelle Finalisierung. ' +\n  'Keine Phase enthaelt Anlageempfehlungen.' +\n  '</div>' +\n  '<footer class=\"footer\">' +\n  'ID: ' + meta.ticker.toLowerCase() + '-' + meta.date + ' | ' +\n  'Woerter: ' + metrics.wordCount + ' | ' +\n  'Score: ' + metrics.qualityScore + '/10 | ' +\n  'Pipeline: ' + meta.pipelineVersion +\n  '</footer></body></html>';\n\nreturn { json: { ...input, html: html } };"
+      },
+      "id": "html-renderer",
+      "name": "HTML Renderer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2900, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// OUTPUT GENERATOR\n// =====================================================\n\nvar input = $input.item.json;\nvar meta = input.input;\nvar metrics = input.metrics;\nvar validation = input.validation;\n\nvar svg = '<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">' +\n  '<defs><linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" stop-color=\"#0f172a\"/><stop offset=\"100%\" stop-color=\"#1e293b\"/></linearGradient></defs>' +\n  '<rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"16\"/>' +\n  '<g font-family=\"-apple-system, sans-serif\">' +\n  '<text x=\"48\" y=\"72\" fill=\"#64748b\" font-size=\"13\" letter-spacing=\"0.1em\">' + meta.ticker + ' - ' + meta.sector.toUpperCase() + '</text>' +\n  '<text x=\"48\" y=\"120\" fill=\"#f1f5f9\" font-size=\"32\" font-weight=\"700\">' + meta.company + '</text>' +\n  '<text x=\"48\" y=\"156\" fill=\"#94a3b8\" font-size=\"16\">Unternehmensanalyse</text>' +\n  '<rect x=\"48\" y=\"180\" width=\"80\" height=\"3\" fill=\"#3b82f6\" rx=\"1.5\"/>' +\n  '<text x=\"48\" y=\"224\" fill=\"#64748b\" font-size=\"14\">Geschaeftsmodell - Fundamentaldaten - Bewertung</text>' +\n  '<text x=\"48\" y=\"296\" fill=\"#475569\" font-size=\"12\">capitovo Research - Score ' + metrics.qualityScore + '/10</text>' +\n  '<text x=\"48\" y=\"316\" fill=\"#64748b\" font-size=\"11\">' + meta.date + ' - ' + meta.pipelineVersion + '</text></g></svg>';\n\nvar jsonEntry = {\n  id: meta.ticker.toLowerCase() + '-' + meta.date,\n  category: meta.sector,\n  title: meta.company + ' - Unternehmensanalyse',\n  summary: 'Sachliche Analyse von ' + meta.company + ' (' + meta.ticker + ').',\n  link: 'Abonenten/' + meta.slug + '.html',\n  image: 'data/vorschaubilder_analysen/' + meta.slug + '.svg',\n  date: meta.date,\n  author: 'capitovo Research',\n  tags: [meta.company, meta.ticker, meta.sector],\n  published: metrics.publicationReady,\n  wordCount: metrics.wordCount,\n  qualityScore: metrics.qualityScore,\n  dataSource: input.rawData.meta.dataSource,\n  pipelineVersion: meta.pipelineVersion,\n  methodology: '4-Phasen-Architektur: Datenaggregation, Deskriptive Analyse, Compliance-Pruefung, Redaktion'\n};\n\nvar status = metrics.publicationReady \n  ? 'PUBLIKATIONSBEREIT (Score ' + metrics.qualityScore + '/10)'\n  : 'REVIEW ERFORDERLICH (Score ' + metrics.qualityScore + '/10)';\n\nreturn {\n  json: {\n    success: true,\n    status: status,\n    company: meta.company,\n    ticker: meta.ticker,\n    date: meta.date,\n    pipelineVersion: meta.pipelineVersion,\n    metrics: metrics,\n    validation: validation,\n    outputs: {\n      html: input.html,\n      svg: svg,\n      jsonEntry: jsonEntry\n    },\n    filePaths: {\n      html: 'Abonenten/' + meta.slug + '.html',\n      svg: 'data/vorschaubilder_analysen/' + meta.slug + '.svg'\n    },\n    nextSteps: metrics.publicationReady \n      ? ['HTML speichern unter ' + 'Abonenten/' + meta.slug + '.html', 'analysen.json aktualisieren']\n      : ['Issues pruefen: ' + (validation.allIssues || []).slice(0, 3).join(', ')]\n  }\n};"
+      },
+      "id": "output-generator",
+      "name": "Output Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3100, 400]
+    },
+    {
+      "parameters": {},
+      "id": "output",
+      "name": "Output",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [3300, 400]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[{ "node": "0. Input Data", "type": "main", "index": 0 }]] },
+    "0. Input Data": { "main": [[{ "node": "P1.1 API Overview", "type": "main", "index": 0 }]] },
+    "P1.1 API Overview": { "main": [[{ "node": "P1.2 Store Overview", "type": "main", "index": 0 }]] },
+    "P1.2 Store Overview": { "main": [[{ "node": "P1.3 API Income", "type": "main", "index": 0 }]] },
+    "P1.3 API Income": { "main": [[{ "node": "P1.4 Data Aggregator", "type": "main", "index": 0 }]] },
+    "P1.4 Data Aggregator": { "main": [[{ "node": "P1.5 Facts Formatter", "type": "main", "index": 0 }]] },
+    "P1.5 Facts Formatter": { "main": [[{ "node": "P2. Deskriptive Analyse", "type": "main", "index": 0 }]] },
+    "P2. Deskriptive Analyse": { "main": [[{ "node": "P2. Extract", "type": "main", "index": 0 }]] },
+    "P2. Extract": { "main": [[{ "node": "P3. Compliance-Pruefung", "type": "main", "index": 0 }]] },
+    "P3. Compliance-Pruefung": { "main": [[{ "node": "P3. Extract + Validate", "type": "main", "index": 0 }]] },
+    "P3. Extract + Validate": { "main": [[{ "node": "P4. Redaktionelle Finalisierung", "type": "main", "index": 0 }]] },
+    "P4. Redaktionelle Finalisierung": { "main": [[{ "node": "P4. Extract", "type": "main", "index": 0 }]] },
+    "P4. Extract": { "main": [[{ "node": "Quality Gate", "type": "main", "index": 0 }]] },
+    "Quality Gate": { "main": [[{ "node": "HTML Renderer", "type": "main", "index": 0 }]] },
+    "HTML Renderer": { "main": [[{ "node": "Output Generator", "type": "main", "index": 0 }]] },
+    "Output Generator": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [{ "name": "production" }, { "name": "v8.0-4-phasen" }]
+}

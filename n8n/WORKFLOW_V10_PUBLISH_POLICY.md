@@ -1,4 +1,32 @@
-# Capitovo Analyse Generator v10.0 - PUBLISH POLICY
+# Capitovo Analyse Generator v10.1 - INTERN/EXTERN SEPARATION
+
+## Release v10.1: Strikte Trennung Public/Internal
+
+### Das Problem (v10.0)
+Die Analyse war rechtlich publishfähig, aber interne QA-Daten (Scores, Flags, Warnings, Pipeline-Versionen) wurden im öffentlichen HTML angezeigt. Das untergräbt die professionelle Wirkung.
+
+### Die Lösung (v10.1)
+**Zwei getrennte Output-Ebenen:**
+
+#### 1. Public View (Reader-Fassung)
+- **Datei:** `Abonenten/{slug}.html`
+- **Enthält NUR:** Analyse-Text, Quellen, Disclaimer, Copyright
+- **Enthält NICHT:** Scores, Flags, Warnings, Pipeline-Versionen, Datenqualitäts-Hinweise
+
+#### 2. Internal View (Control View)  
+- **Datei:** `data/internal/{ticker}-{date}_internal.json`
+- **Enthält:** Alle QA-Daten für Redaktions-Dashboard
+
+### Output-Struktur
+```json
+{
+  "public": { "html": "...", "svg": "...", "catalog": {...} },
+  "internal": { "publication": {...}, "qualityMetrics": {...}, "compliance": {...} },
+  "filePaths": { "publicHtml": "...", "internalJson": "..." }
+}
+```
+
+---
 
 ## FINALE SYSTEMANWEISUNG (verbindlich)
 

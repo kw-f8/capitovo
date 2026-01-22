@@ -1,4 +1,45 @@
-# Capitovo Analyse Generator v9.1 - Konservative Bewertungsarchitektur
+# Capitovo Analyse Generator v9.2 - Produktionsarchitektur
+
+## Änderungen v9.1 → v9.2 (Finale Verbesserungen)
+
+### 1. Anomalien-Logik vereinheitlicht
+**Problem v9.1:** Anomalien wurden als "ignoriert" markiert, selbst wenn sie implizit erklärt wurden.
+
+**Lösung v9.2:** Drei klare Status-Kategorien:
+- `adressiert` - Feld wird erwähnt UND Kontext/Erklärung vorhanden
+- `unklar_benannt` - Feld erwähnt, explizit als unklar markiert
+- `erwaehnt_ohne_kontext` - Nur erwähnt, keine Erklärung
+- `ignoriert` - Nicht im Text behandelt
+
+Kontexterkennung prüft 200 Zeichen vor und 300 Zeichen nach dem Feldnamen auf Erklärungswörter (ursache, grund, aufgrund, weil, bedingt durch, etc.).
+
+### 2. Score-System semantisch korrigiert
+**Problem v9.1:** "6/6" bei offenen Punkten war semantisch irreführend.
+
+**Lösung v9.2:** 
+- Einheitliche /10 Skala
+- Score-Begründung mit einzelnen Punktabzügen/Boni
+- `scoreDisplay`: "7/10 (Maximum 6 bei offenen Punkten)"
+- `scoreReasons`: Array mit allen Abzügen/Boni
+
+### 3. Quellen-Mindeststandard definiert
+**Neu:** Explizite Anforderung im Analyseinstanz-Prompt:
+- Mindestens 1 Primärquelle (IR, SEC, 10-K/10-Q, Earnings Call)
+- Mindestens 1 Sekundärquelle (Reuters, Bloomberg, WSJ, FT, Morningstar)
+
+Quality Gate prüft und gibt Abzug bei Nicht-Erfüllung.
+
+### 4. Kurze Einordnung für Nicht-Experten (Optional)
+P4 Redaktion fügt am Ende einen Abschnitt hinzu:
+```
+--- Kurz erklärt ---
+[Max 3-4 Sätze für Leser ohne Finanzvorwissen]
+```
+- Was macht das Unternehmen?
+- Was ist der Kern dieser Analyse?
+- KEINE Vereinfachung des Haupttexts
+
+---
 
 ## Änderungen v9.0 → v9.1
 

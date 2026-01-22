@@ -1,47 +1,152 @@
-# Capitovo Analyse Generator v9.2 - Produktionsarchitektur
+# Capitovo Analyse Generator v10.0 - PUBLISH POLICY
 
-## Änderungen v9.1 → v9.2 (Finale Verbesserungen)
+## FINALE SYSTEMANWEISUNG (verbindlich)
 
-### 1. Anomalien-Logik vereinheitlicht
-**Problem v9.1:** Anomalien wurden als "ignoriert" markiert, selbst wenn sie implizit erklärt wurden.
+### 0. Grundsatz
 
-**Lösung v9.2:** Drei klare Status-Kategorien:
-- `adressiert` - Feld wird erwähnt UND Kontext/Erklärung vorhanden
-- `unklar_benannt` - Feld erwähnt, explizit als unklar markiert
-- `erwaehnt_ohne_kontext` - Nur erwähnt, keine Erklärung
-- `ignoriert` - Nicht im Text behandelt
+Dieses System erstellt **journalistische Unternehmensanalysen**, **keine Anlageempfehlungen**.  
+Unsicherheit, Datenlücken und Risikoabwägungen sind **Qualitätsmerkmale**, keine Fehler.
 
-Kontexterkennung prüft 200 Zeichen vor und 300 Zeichen nach dem Feldnamen auf Erklärungswörter (ursache, grund, aufgrund, weil, bedingt durch, etc.).
-
-### 2. Score-System semantisch korrigiert
-**Problem v9.1:** "6/6" bei offenen Punkten war semantisch irreführend.
-
-**Lösung v9.2:** 
-- Einheitliche /10 Skala
-- Score-Begründung mit einzelnen Punktabzügen/Boni
-- `scoreDisplay`: "7/10 (Maximum 6 bei offenen Punkten)"
-- `scoreReasons`: Array mit allen Abzügen/Boni
-
-### 3. Quellen-Mindeststandard definiert
-**Neu:** Explizite Anforderung im Analyseinstanz-Prompt:
-- Mindestens 1 Primärquelle (IR, SEC, 10-K/10-Q, Earnings Call)
-- Mindestens 1 Sekundärquelle (Reuters, Bloomberg, WSJ, FT, Morningstar)
-
-Quality Gate prüft und gibt Abzug bei Nicht-Erfüllung.
-
-### 4. Kurze Einordnung für Nicht-Experten (Optional)
-P4 Redaktion fügt am Ende einen Abschnitt hinzu:
-```
---- Kurz erklärt ---
-[Max 3-4 Sätze für Leser ohne Finanzvorwissen]
-```
-- Was macht das Unternehmen?
-- Was ist der Kern dieser Analyse?
-- KEINE Vereinfachung des Haupttexts
+**Eine Analyse gilt als publikationsfähig, sobald sie keine rechtlichen oder fachlichen K.O.-Fehler enthält.**
 
 ---
 
-## Änderungen v9.0 → v9.1
+## 1. K.O.-Kriterien (EINZIGE Publish-Blocker)
+
+Eine Analyse wird **NUR** blockiert bei:
+
+### 1.1 Rechtlich
+- Explizite Kauf-/Verkaufsempfehlung (`kaufen`, `verkaufen`, `buy`, `sell`)
+- Implizite Empfehlung (`unterbewertet`, `attraktiv bewertet`, `Chance`, `lohnt sich`)
+- Kursziele
+
+### 1.2 Fachlich  
+- Keine Quellenangaben vorhanden (GAR keine)
+- Technischer Abbruch (`[text folgt]`, `[tbd]`)
+- Extrem kurz (<400 Wörter)
+
+**→ NUR diese Punkte blockieren.**
+
+---
+
+## 2. Explizit ERLAUBT (dürfen NICHT blockieren)
+
+Diese Inhalte **erhöhen die Research-Qualität**:
+
+- Datenqualität: partial/mittel
+- Fehlende Segment-/Bilanzdetails  
+- Anomalien mit plausibler Erklärung
+- Szenarien, Risiken, Unsicherheiten
+- Konservative/neutrale Schlussfolgerungen
+- Kritische Einordnung hoher Multiplikatoren
+- Aussagen wie „setzt voraus", „impliziert", „abhängig von"
+
+---
+
+## 3. Anomalie-Logik (NEU)
+
+Eine Anomalie gilt als **behandelt** wenn:
+- Plausible ökonomische Erklärung, ODER
+- Hinweis auf Basiseffekt/Bilanzstruktur, ODER  
+- Explizite Kennzeichnung als datenbedingt/unsicher
+
+**Vollständige Auflösung ist NICHT erforderlich.**  
+**Erkennen + Einordnen REICHT.**
+
+---
+
+## 4. Score-System (NEU)
+
+- Score misst **Analysentiefe**, NICHT Veröffentlichbarkeit
+- Skala: 1-10
+- Score < Maximalwert blockiert NIEMALS allein
+
+### Veröffentlichungsregel
+```
+Wenn keine K.O.-Kriterien erfüllt:
+→ published = true
+→ status = "PUBLIKATIONSFÄHIG"
+```
+
+---
+
+## 5. Finale Entscheidungslogik
+
+> **Im Zweifel IMMER veröffentlichen**,  
+> solange keine rechtliche oder fachliche Unzulässigkeit vorliegt.
+
+Research lebt von Unsicherheit.  
+Das System darf Unsicherheit **nicht bestrafen**.
+
+---
+
+## 6. Metaregel
+
+Das System darf **sich selbst nicht endlos verschärfen**.  
+Regeln dürfen **nur** verschärft werden bei:
+- Rechtlicher Beanstandung
+- Faktischem Fehler  
+- Begründeter Nutzerbeschwerde
+
+---
+
+## Output-Struktur v10
+
+```json
+{
+  "metrics": {
+    "wordCount": 1050,
+    "depthScore": 7.5,
+    "scoreDisplay": "7.5/10 (Analysentiefe)",
+    "publicationReady": true,
+    "statusText": "PUBLIKATIONSFÄHIG"
+  },
+  "publishPolicy": {
+    "hasKO": false,
+    "koFlags": [],
+    "warnings": ["Superlative vorhanden (1)"],
+    "qualityIndicators": ["Unsicherheiten benannt", "Szenarien thematisiert"],
+    "principle": "Im Zweifel IMMER veröffentlichen"
+  }
+}
+```
+
+---
+
+## Änderungshistorie
+
+### v10.0 (aktuell) - Publish Policy
+- K.O.-Kriterien als einzige Blocker
+- Score misst nur Tiefe, blockiert nicht
+- Anomalie-Logik: Erkennen + Einordnen reicht
+- "Im Zweifel veröffentlichen" als Grundsatz
+- Metaregel gegen Selbstverschärfung
+
+### v9.2 - Produktion (abgelöst)
+- Anomalien-Logik vereinheitlicht
+- Score-System semantisch korrigiert
+- Quellen-Mindeststandard
+
+### v9.1 - Konservativ (abgelöst)
+- Konservative Bewertungslogik (Basis 7)
+- Vollständigkeitsprüfung
+- Pflichtsektion Gesamteinordnung
+
+### v9.0 - Research-Grade (abgelöst)
+- 4-Phasen-Architektur
+- Trennung Fakten/Analyse/Kritik/Redaktion
+
+---
+
+## Zusammenfassung
+
+**Das Produkt ist nicht perfekt, aber:**
+- Es ist ernsthaft
+- Es ist eigenständig  
+- Es ist glaubwürdig
+- Es ist veröffentlichbar
+
+**Die Iterationshölle ist beendet.**
 
 ### 1. Konservative Bewertungslogik
 - **Basis-Score jetzt 7** (nicht mehr 10)

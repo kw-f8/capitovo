@@ -1,4 +1,38 @@
-# Capitovo Analyse Generator v9 - Research-Grade Architecture
+# Capitovo Analyse Generator v9.1 - Konservative Bewertungsarchitektur
+
+## Änderungen v9.0 → v9.1
+
+### 1. Konservative Bewertungslogik
+- **Basis-Score jetzt 7** (nicht mehr 10)
+- **Maximaler Score: 8** wenn keine offenen Punkte
+- **Maximaler Score: 6** wenn offene Punkte existieren
+- Workflow kann sich NICHT mehr selbst 8/10+ geben
+
+### 2. Vollständigkeitsprüfung (NEU)
+Erkennt automatisch:
+- Abgebrochene Sätze (`[Text folgt]`, `...`, `[hier`)
+- Fehlende Pflichtsektion "Sachliche Gesamteinordnung"
+- Zu kurze Analysen (<800 Wörter)
+
+Bei Erkennung: `isIncomplete = true` → Score maximal 3
+
+### 3. Pflichtsektion "Sachliche Gesamteinordnung"
+Jede Analyse MUSS enden mit:
+- Was ist strukturell stark?
+- Was ist strukturell begrenzt?
+- Welche Annahmen tragen die Bewertung?
+- Welche Annahmen sind unsicher?
+
+### 4. Anomalie-Behandlung verschärft
+- Jede erkannte Anomalie MUSS im Text behandelt werden
+- Wenn nicht: Abzug im Score + explizite Issue-Markierung
+
+### 5. Mindestanforderungen
+- **800 Wörter** Minimum (vorher 1000)
+- **Alle 5 Sektionen** müssen vollständig sein
+- **Keine Platzhalter** erlaubt
+
+---
 
 ## Fundamentaler Unterschied zu v8
 

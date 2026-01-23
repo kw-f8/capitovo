@@ -12,6 +12,20 @@
     "published": false
   },
   {
+    "id": "aapl-2026-01-23",
+    "category": "TECHNOLOGIE",
+    "title": "Apple – Unternehmensanalyse (23. Januar 2026)",
+    "summary": "Analytische Einordnung von Apple (AAPL) - Geschaeftsmodell, Fundamentaldaten, Bewertungsimplikationen und strukturelle Risiken des weltweit wertvollsten Technologiekonzerns.",
+    "link": "Abonenten/apple_2026-01-23.html",
+    "image": "data/vorschaubilder_analysen/apple_2026-01-23_preview.svg",
+    "date": "2026-01-23",
+    "author": "capitovo Research",
+    "tags": ["Apple", "AAPL", "Technologie", "NASDAQ"],
+    "published": true,
+    "wordCount": 1064,
+    "sourcesCount": 1
+  },
+  {
     "id": "aapl-2026-01-19",
     "category": "TECHNOLOGIE",
     "title": "Apple – Unternehmensanalyse (Januar 2026)",

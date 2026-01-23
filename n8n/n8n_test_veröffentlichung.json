@@ -1,0 +1,134 @@
+{
+  "name": "n8n_test_veröffentlichung",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simple test payload for publishing\nreturn {\n  json: {\n    company: 'Capitovo Test',\n    ticker: 'TEST',\n    slug: 'test-veroeffentlichung',\n    date: new Date().toISOString().split('T')[0],\n    standardText: 'Dies ist ein Standard-Testtext zur Prüfung der Veröffentlichung auf GitHub Pages. Wenn du diese Seite siehst, funktioniert der Upload.'\n  }\n};"
+      },
+      "id": "input",
+      "name": "Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Minimal HTML for test\nvar d = $input.item.json;\nvar html = `<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n  <title>capitovo – Test Veröffentlichung</title>\n  <style>body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Arial,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;line-height:1.6}h1{margin-bottom:8px}.meta{color:#6b7280;font-size:14px;margin-bottom:20px}a{color:#2563eb}</style>\n</head>\n<body>\n  <h1>Test-Veröffentlichung</h1>\n  <div class=\"meta\">capitovo · ${d.date} · ${d.ticker}</div>\n  <p>${d.standardText}</p>\n  <p>Live-Link: <a href=\"https://kw-f8.github.io/capitovo/Abonenten/${d.slug}.html\" target=\"_blank\" rel=\"noopener\">öffnen</a></p>\n</body>\n</html>`;\nreturn { json: { ...d, html: html } };"
+      },
+      "id": "html-renderer",
+      "name": "HTML Renderer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [640, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simple SVG preview\nvar d = $input.item.json;\nvar svg = `<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">\n  <rect width=\"640\" height=\"360\" fill=\"#0f172a\"/>\n  <text x=\"40\" y=\"90\" fill=\"#e2e8f0\" font-size=\"28\" font-family=\"-apple-system,BlinkMacSystemFont,Segoe UI,Arial\">capitovo Test</text>\n  <text x=\"40\" y=\"140\" fill=\"#94a3b8\" font-size=\"16\" font-family=\"-apple-system,BlinkMacSystemFont,Segoe UI,Arial\">Veröffentlichung funktioniert</text>\n  <text x=\"40\" y=\"310\" fill=\"#64748b\" font-size=\"12\" font-family=\"-apple-system,BlinkMacSystemFont,Segoe UI,Arial\">${d.date}</text>\n</svg>`;\nreturn { json: { ...d, svg: svg } };"
+      },
+      "id": "svg-generator",
+      "name": "SVG Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Base64 encode for GitHub API\nvar d = $input.item.json;\nreturn {\n  json: {\n    ...d,\n    htmlPath: 'Abonenten/' + d.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + d.slug + '_preview.svg',\n    htmlBase64: Buffer.from(d.html, 'utf8').toString('base64'),\n    svgBase64: Buffer.from(d.svg, 'utf8').toString('base64'),\n    htmlCommitMsg: 'Test-Veröffentlichung HTML',\n    svgCommitMsg: 'Test-Veröffentlichung SVG'\n  }\n};"
+      },
+      "id": "base64",
+      "name": "Base64 Encoder",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1080, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.htmlCommitMsg }}\",\n  \"content\": \"{{ $json.htmlBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "upload-html",
+      "name": "GitHub Upload HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 220]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.svgCommitMsg }}\",\n  \"content\": \"{{ $json.svgBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "upload-svg",
+      "name": "GitHub Upload SVG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 380]
+    },
+    {
+      "parameters": {
+        "mode": "wait"
+      },
+      "id": "merge",
+      "name": "Merge Uploads",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1520, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "var d = $('Base64 Encoder').item.json;\nreturn {\n  json: {\n    status: 'DONE',\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath\n  }\n};"
+      },
+      "id": "output",
+      "name": "Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1720, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[{ "node": "Input", "type": "main", "index": 0 }]] },
+    "Input": { "main": [[{ "node": "HTML Renderer", "type": "main", "index": 0 }]] },
+    "HTML Renderer": { "main": [[{ "node": "SVG Generator", "type": "main", "index": 0 }]] },
+    "SVG Generator": { "main": [[{ "node": "Base64 Encoder", "type": "main", "index": 0 }]] },
+    "Base64 Encoder": { "main": [[{ "node": "GitHub Upload HTML", "type": "main", "index": 0 }, { "node": "GitHub Upload SVG", "type": "main", "index": 0 }]] },
+    "GitHub Upload HTML": { "main": [[{ "node": "Merge Uploads", "type": "main", "index": 0 }]] },
+    "GitHub Upload SVG": { "main": [[{ "node": "Merge Uploads", "type": "main", "index": 1 }]] },
+    "Merge Uploads": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [{ "name": "test" }]
+}

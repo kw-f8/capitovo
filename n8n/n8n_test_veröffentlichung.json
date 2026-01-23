@@ -41,7 +41,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Base64 encode for GitHub API\nvar d = $input.item.json;\nreturn {\n  json: {\n    ...d,\n    htmlPath: 'Abonenten/' + d.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + d.slug + '_preview.svg',\n    htmlBase64: Buffer.from(d.html, 'utf8').toString('base64'),\n    svgBase64: Buffer.from(d.svg, 'utf8').toString('base64'),\n    htmlCommitMsg: 'Test-Veröffentlichung HTML',\n    svgCommitMsg: 'Test-Veröffentlichung SVG'\n  }\n};"
+        "jsCode": "// Base64 encode for GitHub API\nvar d = $input.item.json;\nreturn {\n  json: {\n    ...d,\n    htmlPath: 'Abonenten/' + d.slug + '.html',\n    svgPath: 'Abonenten/' + d.slug + '_preview.svg',\n    htmlBase64: Buffer.from(d.html, 'utf8').toString('base64'),\n    svgBase64: Buffer.from(d.svg, 'utf8').toString('base64'),\n    htmlCommitMsg: 'Test-Veröffentlichung HTML',\n    svgCommitMsg: 'Test-Veröffentlichung SVG'\n  }\n};"
       },
       "id": "base64",
       "name": "Base64 Encoder",

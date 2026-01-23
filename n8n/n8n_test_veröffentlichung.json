@@ -64,7 +64,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"{{ $json.htmlCommitMsg }}\",\n  \"content\": \"{{ $json.htmlBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "jsonBody": "={{ $json.htmlSha ? { message: $json.htmlCommitMsg, content: $json.htmlBase64, branch: 'main', sha: $json.htmlSha } : { message: $json.htmlCommitMsg, content: $json.htmlBase64, branch: 'main' } }}",
         "options": { "timeout": 60000 }
       },
       "id": "upload-html",
@@ -88,7 +88,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"{{ $json.svgCommitMsg }}\",\n  \"content\": \"{{ $json.svgBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "jsonBody": "={{ $json.svgSha ? { message: $json.svgCommitMsg, content: $json.svgBase64, branch: 'main', sha: $json.svgSha } : { message: $json.svgCommitMsg, content: $json.svgBase64, branch: 'main' } }}",
         "options": { "timeout": 60000 }
       },
       "id": "upload-svg",
@@ -96,6 +96,90 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [1300, 380]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 60000 }
+      },
+      "id": "get-html-sha",
+      "name": "Get HTML SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 80],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract SHA if file exists\nvar prev = $input.item.json;\nvar sha = null;\nif (prev && prev.sha) sha = prev.sha;\nreturn { json: { htmlSha: sha } };"
+      },
+      "id": "extract-html-sha",
+      "name": "Extract HTML SHA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1500, 80]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 60000 }
+      },
+      "id": "get-svg-sha",
+      "name": "Get SVG SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 520],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract SHA if file exists\nvar prev = $input.item.json;\nvar sha = null;\nif (prev && prev.sha) sha = prev.sha;\nreturn { json: { svgSha: sha } };"
+      },
+      "id": "extract-svg-sha",
+      "name": "Extract SVG SHA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1500, 520]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPosition"
+      },
+      "id": "merge-sha-html",
+      "name": "Merge HTML SHA",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1700, 220]
+    },
+    {
+      "parameters": {
+        "mode": "mergeByPosition"
+      },
+      "id": "merge-sha-svg",
+      "name": "Merge SVG SHA",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [1700, 380]
     },
     {
       "parameters": {
@@ -123,7 +207,18 @@
     "Input": { "main": [[{ "node": "HTML Renderer", "type": "main", "index": 0 }]] },
     "HTML Renderer": { "main": [[{ "node": "SVG Generator", "type": "main", "index": 0 }]] },
     "SVG Generator": { "main": [[{ "node": "Base64 Encoder", "type": "main", "index": 0 }]] },
-    "Base64 Encoder": { "main": [[{ "node": "GitHub Upload HTML", "type": "main", "index": 0 }, { "node": "GitHub Upload SVG", "type": "main", "index": 0 }]] },
+    "Base64 Encoder": { "main": [[
+      { "node": "Get HTML SHA", "type": "main", "index": 0 },
+      { "node": "Get SVG SHA", "type": "main", "index": 0 },
+      { "node": "Merge HTML SHA", "type": "main", "index": 0 },
+      { "node": "Merge SVG SHA", "type": "main", "index": 0 }
+    ]] },
+    "Get HTML SHA": { "main": [[{ "node": "Extract HTML SHA", "type": "main", "index": 0 }]] },
+    "Extract HTML SHA": { "main": [[{ "node": "Merge HTML SHA", "type": "main", "index": 1 }]] },
+    "Get SVG SHA": { "main": [[{ "node": "Extract SVG SHA", "type": "main", "index": 0 }]] },
+    "Extract SVG SHA": { "main": [[{ "node": "Merge SVG SHA", "type": "main", "index": 1 }]] },
+    "Merge HTML SHA": { "main": [[{ "node": "GitHub Upload HTML", "type": "main", "index": 0 }]] },
+    "Merge SVG SHA": { "main": [[{ "node": "GitHub Upload SVG", "type": "main", "index": 0 }]] },
     "GitHub Upload HTML": { "main": [[{ "node": "Merge Uploads", "type": "main", "index": 0 }]] },
     "GitHub Upload SVG": { "main": [[{ "node": "Merge Uploads", "type": "main", "index": 1 }]] },
     "Merge Uploads": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }

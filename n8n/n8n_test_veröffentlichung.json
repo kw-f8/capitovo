@@ -51,6 +51,64 @@
     },
     {
       "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { 
+          "timeout": 30000,
+          "response": { "response": { "neverError": true } }
+        }
+      },
+      "id": "get-html-sha",
+      "name": "Get HTML SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 200]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { 
+          "timeout": 30000,
+          "response": { "response": { "neverError": true } }
+        }
+      },
+      "id": "get-svg-sha",
+      "name": "Get SVG SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "var base64Data = $('Base64 Encoder').item.json;\nvar htmlShaResponse = $('Get HTML SHA').item.json;\nvar svgShaResponse = $('Get SVG SHA').item.json;\n\n// Extrahiere SHA falls Datei existiert (Status 200), sonst null\nvar htmlSha = htmlShaResponse.sha || null;\nvar svgSha = svgShaResponse.sha || null;\n\nreturn {\n  json: {\n    ...base64Data,\n    htmlSha: htmlSha,\n    svgSha: svgSha\n  }\n};"
+      },
+      "id": "merge-sha",
+      "name": "Merge SHA Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1520, 300]
+    },
+    {
+      "parameters": {
         "method": "PUT",
         "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
         "authentication": "genericCredentialType",
@@ -64,14 +122,14 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"{{ $json.htmlCommitMsg }}\",\n  \"content\": \"{{ $json.htmlBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "jsonBody": "={{ $json.htmlSha ? '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"sha\": \"' + $json.htmlSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"branch\": \"main\"}' }}",
         "options": { "timeout": 60000 }
       },
       "id": "upload-html",
       "name": "GitHub Upload HTML",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1300, 300]
+      "position": [1740, 300]
     },
     {
       "parameters": {
@@ -88,24 +146,24 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"{{ $json.svgCommitMsg }}\",\n  \"content\": \"{{ $json.svgBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "jsonBody": "={{ $json.svgSha ? '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"sha\": \"' + $json.svgSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"branch\": \"main\"}' }}",
         "options": { "timeout": 60000 }
       },
       "id": "upload-svg",
       "name": "GitHub Upload SVG",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1520, 300]
+      "position": [1960, 300]
     },
     {
       "parameters": {
-        "jsCode": "var d = $('Base64 Encoder').item.json;\n\nreturn {\n  json: {\n    status: 'PUBLISHED',\n    message: 'Apple-Analyse erfolgreich veroeffentlicht!',\n    company: d.company,\n    ticker: d.ticker,\n    date: d.date,\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath,\n    svgUrl: 'https://kw-f8.github.io/capitovo/' + d.svgPath,\n    files: {\n      html: d.htmlPath,\n      svg: d.svgPath\n    },\n    catalogEntry: {\n      id: d.ticker.toLowerCase() + '-' + d.date.replace(/-/g, ''),\n      category: d.sector,\n      title: d.company + ' - Unternehmensanalyse',\n      summary: 'Analytische Einordnung von ' + d.company + ' (' + d.ticker + ')',\n      link: d.htmlPath,\n      image: d.svgPath,\n      date: d.date,\n      author: 'capitovo Research'\n    }\n  }\n};"
+        "jsCode": "var d = $('Merge SHA Data').item.json;\n\nreturn {\n  json: {\n    status: 'PUBLISHED',\n    message: d.company + '-Analyse erfolgreich veroeffentlicht!',\n    company: d.company,\n    ticker: d.ticker,\n    date: d.date,\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath,\n    svgUrl: 'https://kw-f8.github.io/capitovo/' + d.svgPath,\n    files: {\n      html: d.htmlPath,\n      svg: d.svgPath\n    },\n    catalogEntry: {\n      id: d.ticker.toLowerCase() + '-' + d.date.replace(/-/g, ''),\n      category: d.sector,\n      title: d.company + ' - Unternehmensanalyse',\n      summary: 'Analytische Einordnung von ' + d.company + ' (' + d.ticker + ')',\n      link: d.htmlPath,\n      image: d.svgPath,\n      date: d.date,\n      author: 'capitovo Research'\n    }\n  }\n};"
       },
       "id": "output",
       "name": "Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1740, 300]
+      "position": [2180, 300]
     }
   ],
   "connections": {
@@ -113,7 +171,10 @@
     "Input - Fertige Analyse": { "main": [[{ "node": "HTML Renderer - Capitovo Stil", "type": "main", "index": 0 }]] },
     "HTML Renderer - Capitovo Stil": { "main": [[{ "node": "SVG Generator", "type": "main", "index": 0 }]] },
     "SVG Generator": { "main": [[{ "node": "Base64 Encoder", "type": "main", "index": 0 }]] },
-    "Base64 Encoder": { "main": [[{ "node": "GitHub Upload HTML", "type": "main", "index": 0 }]] },
+    "Base64 Encoder": { "main": [[{ "node": "Get HTML SHA", "type": "main", "index": 0 }, { "node": "Get SVG SHA", "type": "main", "index": 0 }]] },
+    "Get HTML SHA": { "main": [[{ "node": "Merge SHA Data", "type": "main", "index": 0 }]] },
+    "Get SVG SHA": { "main": [[{ "node": "Merge SHA Data", "type": "main", "index": 0 }]] },
+    "Merge SHA Data": { "main": [[{ "node": "GitHub Upload HTML", "type": "main", "index": 0 }]] },
     "GitHub Upload HTML": { "main": [[{ "node": "GitHub Upload SVG", "type": "main", "index": 0 }]] },
     "GitHub Upload SVG": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }
   },

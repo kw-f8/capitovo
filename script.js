@@ -343,7 +343,7 @@ const ScrollReveal = {
 };
 
 /** Resolve a relative prefix to the repo root for pages nested under folders like /Abonenten/...
- * Example: '/capitovo/Abonenten/Aktien-Monitor/aktien-monitor_apple.html' -> '../' repeated 2 -> '../../'
+ * Example: '/capitovo/Abonenten/Aktien-Monitor/apple_aktienmonitor.html' -> '../' repeated 2 -> '../../'
  */
 /** Returns a prefix like '../../' that brings the current page to the repository root.
  * Example: '/capitovo/Abonenten/Aktien-Monitor/seite.html' -> '../../'

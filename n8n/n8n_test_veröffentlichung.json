@@ -62,16 +62,14 @@
             { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
           ]
         },
-        "options": { 
-          "timeout": 30000,
-          "response": { "response": { "neverError": true } }
-        }
+        "options": { "timeout": 30000 }
       },
       "id": "get-html-sha",
       "name": "Get HTML SHA",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1300, 300]
+      "position": [1300, 300],
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -96,16 +94,14 @@
             { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
           ]
         },
-        "options": { 
-          "timeout": 30000,
-          "response": { "response": { "neverError": true } }
-        }
+        "options": { "timeout": 30000 }
       },
       "id": "get-svg-sha",
       "name": "Get SVG SHA",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1740, 300]
+      "position": [1740, 300],
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -177,13 +173,69 @@
     },
     {
       "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/data/analysen.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-analysen-sha",
+      "name": "Get Analysen.json SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2840, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var data = $('Extract SVG SHA').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\n\nvar existing = [];\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\nfunction wordCountFromHtml(html) {\n  var text = String(html || '').replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n  if (!text) return 0;\n  return text.split(' ').length;\n}\n\nfunction formatGermanLong(dateStr) {\n  try {\n    var parts = String(dateStr || '').split('-');\n    var y = parseInt(parts[0], 10);\n    var m = parseInt(parts[1], 10) - 1;\n    var d = parseInt(parts[2], 10);\n    var dt = new Date(Date.UTC(y, m, d));\n    return dt.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n  } catch(e) {\n    return String(dateStr || '');\n  }\n}\n\nvar id = String((data.ticker || '')).toLowerCase() + '-' + String(data.date || '');\nvar titleDate = formatGermanLong(data.date);\nvar link = data.htmlPath;\nvar image = data.svgPath;\n\nvar entry = {\n  id: id,\n  category: String(data.sector || '').toUpperCase(),\n  title: data.company + ' – Unternehmensanalyse (' + titleDate + ')',\n  summary: data.introText || ('Analytische Einordnung von ' + data.company + ' (' + data.ticker + ').'),\n  link: link,\n  image: image,\n  date: data.date,\n  author: 'capitovo Research',\n  tags: [data.company, data.ticker, data.sector, data.exchange].filter(Boolean),\n  published: true,\n  wordCount: wordCountFromHtml(data.analysisContent),\n  sourcesCount: data.source ? 1 : 0\n};\n\nfunction normPath(p) { return String(p || '').replace(/^\\.?\\/?/, ''); }\nvar targetLink = normPath(link);\n\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) {\n  var it = existing[i] || {};\n  if (String(it.id || '') === id) { idx = i; break; }\n  if (normPath(it.link) === targetLink) { idx = i; break; }\n}\n\nif (idx >= 0) {\n  existing[idx] = Object.assign({}, existing[idx], entry);\n} else {\n  var insertAt = 0;\n  if (existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE') insertAt = 1;\n  existing.splice(insertAt, 0, entry);\n}\n\nvar updatedJson = JSON.stringify(existing, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: Object.assign({}, data, {\n    analysenPath: 'data/analysen.json',\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Analysen-Katalog: ' + data.company + ' (' + data.ticker + ') - ' + data.date\n  })\n};"
+      },
+      "id": "build-analysen-json",
+      "name": "Build Analysen.json",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3060, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.analysenCommitMsg }}\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "upload-analysen-json",
+      "name": "GitHub Upload Analysen.json",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3280, 300]
+    },
+    {
+      "parameters": {
         "jsCode": "var d = $('Extract SVG SHA').item.json;\n\nreturn {\n  json: {\n    status: 'PUBLISHED',\n    message: d.company + '-Analyse erfolgreich veroeffentlicht!',\n    company: d.company,\n    ticker: d.ticker,\n    date: d.date,\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath,\n    svgUrl: 'https://kw-f8.github.io/capitovo/' + d.svgPath,\n    files: {\n      html: d.htmlPath,\n      svg: d.svgPath\n    },\n    catalogEntry: {\n      id: d.ticker.toLowerCase() + '-' + d.date.replace(/-/g, ''),\n      category: d.sector,\n      title: d.company + ' - Unternehmensanalyse',\n      summary: 'Analytische Einordnung von ' + d.company + ' (' + d.ticker + ')',\n      link: d.htmlPath,\n      image: d.svgPath,\n      date: d.date,\n      author: 'capitovo Research'\n    }\n  }\n};"
       },
       "id": "output",
       "name": "Output",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [2840, 300]
+      "position": [3500, 300]
     }
   ],
   "connections": {
@@ -198,7 +250,10 @@
     "Extract SVG SHA": { "main": [[{ "node": "GitHub Upload HTML", "type": "main", "index": 0 }]] },
     "GitHub Upload HTML": { "main": [[{ "node": "Pass Data After HTML", "type": "main", "index": 0 }]] },
     "Pass Data After HTML": { "main": [[{ "node": "GitHub Upload SVG", "type": "main", "index": 0 }]] },
-    "GitHub Upload SVG": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }
+    "GitHub Upload SVG": { "main": [[{ "node": "Get Analysen.json SHA", "type": "main", "index": 0 }]] },
+    "Get Analysen.json SHA": { "main": [[{ "node": "Build Analysen.json", "type": "main", "index": 0 }]] },
+    "Build Analysen.json": { "main": [[{ "node": "GitHub Upload Analysen.json", "type": "main", "index": 0 }]] },
+    "GitHub Upload Analysen.json": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1" },
   "staticData": null,

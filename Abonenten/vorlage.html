@@ -146,6 +146,18 @@
     .back-btn-glow:hover, .back-btn-glow:focus-visible {
       box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
     }
+
+    /* Back button arrow: optically center vertically */
+    #back-button .back-arrow {
+      display: inline-block;
+      position: relative;
+      top: -1px;
+    }
+
+    /* Favorite button: ensure clean frame (independent of Tailwind arbitrary classes) */
+    #favorite-button {
+      border-color: var(--color-accent-blue);
+    }
   </style>
 </head>
 <body class="bg-white text-gray-900 abonenten-page">
@@ -169,7 +181,7 @@
           <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Vorlage — Analyse (zum Vorbereiten)</h1>
         </div>
         <div class="flex items-center gap-2">
-          <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-2 border-[color:var(--color-accent-blue)] rounded-md px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow">← Zurück</a>
+          <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-2 border-[color:var(--color-accent-blue)] rounded-md px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow"><span class="back-arrow" aria-hidden="true">←</span><span>Zurück</span></a>
           <div style="position:relative;display:inline-block;">
             <button
               id="favorite-button"
@@ -187,7 +199,6 @@
             </button>
             <div id="fav-tooltip" style="display:none;position:absolute;left:50%;top:-22px;transform:translateX(-50%);background:transparent;color:#475569;font-size:0.75rem;padding:0 4px;border-radius:3px;box-shadow:none;white-space:nowrap;z-index:20;pointer-events:none;font-weight:400;letter-spacing:0.01em;">Zu den Favoriten hinzugefügt</div>
           </div>
-          </button>
         </div>
       </div>
       <div class="text-sm analysis-meta" style="color: #64748b;">

@@ -1,0 +1,243 @@
+{
+  "name": "Test Cleanup - Loesche Test-Analyse Dateien",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Konfiguration: Welche Test-Analyse soll geloescht werden?\n// Passe slug an, falls du eine andere Test-Analyse loeschen willst\n\nvar slug = 'apple_2026-01-24';\n\nreturn {\n  json: {\n    slug: slug,\n    htmlPath: 'Abonenten/' + slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + slug + '_preview.svg',\n    analysenPath: 'data/analysen.json'\n  }\n};"
+      },
+      "id": "config",
+      "name": "Config - Test Analyse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [420, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-html-sha",
+      "name": "Get HTML SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [640, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var config = $('Config - Test Analyse').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...config,\n    htmlSha: resp.sha || null,\n    htmlExists: !!resp.sha\n  }\n};"
+      },
+      "id": "extract-html-sha",
+      "name": "Extract HTML SHA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Loesche Test-Analyse HTML {{ $json.slug }}\",\n  \"sha\": \"{{ $json.htmlSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "delete-html",
+      "name": "Delete HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1080, 300],
+      "executeOnce": false,
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Extract HTML SHA').item.json;\nreturn { json: prev };"
+      },
+      "id": "pass-after-html",
+      "name": "Pass After HTML Delete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1300, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-svg-sha",
+      "name": "Get SVG SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1520, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Pass After HTML Delete').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...prev,\n    svgSha: resp.sha || null,\n    svgExists: !!resp.sha\n  }\n};"
+      },
+      "id": "extract-svg-sha",
+      "name": "Extract SVG SHA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1740, 300]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Loesche Test-Analyse SVG {{ $json.slug }}\",\n  \"sha\": \"{{ $json.svgSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "delete-svg",
+      "name": "Delete SVG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1960, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Extract SVG SHA').item.json;\nreturn { json: prev };"
+      },
+      "id": "pass-after-svg",
+      "name": "Pass After SVG Delete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2180, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-analysen",
+      "name": "Get Analysen.json",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2400, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Pass After SVG Delete').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp.sha || null;\nvar existing = [];\n\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\n// Entferne Eintraege die zum Test-Slug gehoeren\nvar slug = prev.slug;\nvar filtered = existing.filter(function(item) {\n  // Pruefe ob der Eintrag zum Test-Slug gehoert\n  var matchById = String(item.id || '').includes(slug.replace('_', '-'));\n  var matchByLink = String(item.link || '').includes(slug);\n  return !matchById && !matchByLink;\n});\n\nvar removed = existing.length - filtered.length;\n\nvar updatedJson = JSON.stringify(filtered, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: {\n    ...prev,\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    entriesRemoved: removed,\n    shouldUpdateAnalysen: removed > 0\n  }\n};"
+      },
+      "id": "filter-analysen",
+      "name": "Filter Analysen.json",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2620, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Entferne Test-Analyse {{ $json.slug }} aus Katalog\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "update-analysen",
+      "name": "Update Analysen.json",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2840, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Filter Analysen.json').item.json;\n\nreturn {\n  json: {\n    status: 'CLEANUP COMPLETE',\n    slug: prev.slug,\n    deletedFiles: {\n      html: prev.htmlPath + (prev.htmlExists ? ' (geloescht)' : ' (existierte nicht)'),\n      svg: prev.svgPath + (prev.svgExists ? ' (geloescht)' : ' (existierte nicht)')\n    },\n    catalogEntriesRemoved: prev.entriesRemoved,\n    message: 'Test-Analyse ' + prev.slug + ' wurde bereinigt. Du kannst den Test-Veroeffentlichungs-Workflow jetzt erneut ausfuehren.'\n  }\n};"
+      },
+      "id": "output",
+      "name": "Output",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3060, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": { "main": [[{ "node": "Config - Test Analyse", "type": "main", "index": 0 }]] },
+    "Config - Test Analyse": { "main": [[{ "node": "Get HTML SHA", "type": "main", "index": 0 }]] },
+    "Get HTML SHA": { "main": [[{ "node": "Extract HTML SHA", "type": "main", "index": 0 }]] },
+    "Extract HTML SHA": { "main": [[{ "node": "Delete HTML", "type": "main", "index": 0 }]] },
+    "Delete HTML": { "main": [[{ "node": "Pass After HTML Delete", "type": "main", "index": 0 }]] },
+    "Pass After HTML Delete": { "main": [[{ "node": "Get SVG SHA", "type": "main", "index": 0 }]] },
+    "Get SVG SHA": { "main": [[{ "node": "Extract SVG SHA", "type": "main", "index": 0 }]] },
+    "Extract SVG SHA": { "main": [[{ "node": "Delete SVG", "type": "main", "index": 0 }]] },
+    "Delete SVG": { "main": [[{ "node": "Pass After SVG Delete", "type": "main", "index": 0 }]] },
+    "Pass After SVG Delete": { "main": [[{ "node": "Get Analysen.json", "type": "main", "index": 0 }]] },
+    "Get Analysen.json": { "main": [[{ "node": "Filter Analysen.json", "type": "main", "index": 0 }]] },
+    "Filter Analysen.json": { "main": [[{ "node": "Update Analysen.json", "type": "main", "index": 0 }]] },
+    "Update Analysen.json": { "main": [[{ "node": "Output", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": []
+}

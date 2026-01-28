@@ -1,68 +1,233 @@
 {
-  "name": "Test Veröffentlichung_Entfernen",
+  "name": "n8n_test_veröffentlichung_entfernen",
   "nodes": [
     {
       "parameters": {},
-      "id": "7e021467-63bd-4df6-918d-7b716d2c0a54",
+      "id": "4cfa919f-d9bf-4baf-acc5-2f17e99f46f3",
       "name": "Manual Trigger",
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -3088,
-        352
+        448,
+        1856
       ]
     },
     {
       "parameters": {
-        "jsCode": "// =====================================================\n// FERTIGE APPLE-ANALYSE - Direkt aus Pipeline v10.1\n// Keine Perplexity-Credits noetig!\n// =====================================================\n\nvar analysisContent = '<h2>Geschaeftsmodell-Analyse</h2>' +\n'<p>Apples Geschaeftsmodell basiert auf einer Zwei-Saeulen-Struktur, deren oekonomische Dynamik sich fundamental verschiebt. Die erste Saeule - Hardware (iPhone, iPad, Mac, Wearables) - generiert zwar noch die Mehrheit des Umsatzes, zeigt aber strukturelle Erosion: Wearables und Zubehoer verzeichneten Rueckgaenge, waehrend die Geraetebasis insgesamt stagniert. Die zweite Saeule - Services (App Store, iCloud, Apple TV+, iTunes) - wuchs auf 96,1 Milliarden USD und wird zur Gewinnmaschine mit ueberlegenen Margen.</p>' +\n'<p>Der kritische oekonomische Treiber ist die Abhaengigkeit zwischen beiden Saeulen: Services-Wachstum haengt direkt von der Anzahl aktiver Geraete ab. Dies erzeugt eine Flying-Wheel-Dynamik - mehr Geraete generieren mehr Services-Nutzer und hoehere Margen. Sollte die Geraetebasis stagnieren oder schrumpfen, kollabiert dieser Multiplikator-Effekt. Der Grenznutzen neuer Hardware-Generationen sinkt erkennbar: Waehrend neuere iPhone-Modelle Verkaeufe zeigen, wird dies durch externe Faktoren angetrieben, nicht durch fundamentale Produktinnovation.</p>' +\n'<p>Die Abhaengigkeitsstruktur offenbart ein Kernrisiko: Regulierungsbehoerden in USA und Europa visieren die App-Store-Gebuehrenstruktur an. Diese Gewinnquellen sind regulatorischen Eingriffen ausgesetzt. Sollte die regulatorische Belastung zunehmen, wuerde das Services-Margenprofil erheblich leiden. Gleichzeitig ist Apples KI-Strategie noch in der Entwicklung, waehrend Konkurrenten bereits integrierte KI-Oekosysteme anbieten.</p>' +\n'<h2>Fundamentaldaten-Einordnung</h2>' +\n'<p>Die Fundamentals offenbaren ein Unternehmen im Bewertungs-Widerspruch: Ein KGV von 33,24 bei einem Forward-KGV von 29,85 impliziert, dass der Markt signifikantes Gewinnwachstum fuer die naechsten Jahre einpreist. Doch Apples Umsatzwachstum wird auf mittleres bis hohes einstelliges Niveau geschaetzt, was mit der Bewertung nicht vollstaendig konsistent ist.</p>' +\n'<p>Das Gewinnwachstum von 91,2 Prozent (Quartal-ueber-Quartal) ist ein Basiseffekt, nicht strukturell nachhaltig. Im Geschaeftsjahr 2024 verdiente Apple 93,74 Milliarden USD Gewinn; 2025 stieg dies auf 112,01 Milliarden USD - ein Anstieg von 19,5 Prozent Jahr-ueber-Jahr. Dies ist solider, aber nicht aussergewoehnlich. Der Quartalswert wird durch Vergleiche mit schwaecheren Vorjahresquartalen verzerrt.</p>' +\n'<p>Die anomale ROE von 1,7 Prozent erklaert sich durch Apples aggressive Kapitalrueckfuehrungspolitik: Das Unternehmen hat Schulden aufgenommen und Aktien zurueckgekauft, was das Eigenkapital kuenstlich reduziert hat. Ein ROE von 1,7 Prozent bei einer operativen Marge von 31,7 Prozent und Nettomarge von 26,9 Prozent ist ein Zeichen von Finanzstruktur-Optimierung, nicht operativer Schwaeche.</p>' +\n'<h2>Bewertungs-Implikationen</h2>' +\n'<p>Ein KGV von 33,24 impliziert, dass der Markt folgende Annahmen einpreist: (1) Apple wird die Services-Sparte gegen Regulierung verteidigen oder kompensieren; (2) die iPhone-Basis bleibt stabil oder waechst; (3) KI-Features werden eine Upgrade-Welle ausloesen; (4) der China-Markt stabilisiert sich.</p>' +\n'<p>Das Forward-KGV von 29,85 ist nur marginal niedriger, was bedeutet, dass der Markt fuer 2026 keine beschleunigte Wachstumsdynamik erwartet - eher eine Stabilisierung. Bei einem PEG-Ratio von 2,506 zahlt der Markt ein Mehrfaches des Bewertungsmultiplikators, das typischerweise fuer Unternehmen mit hoeherem Wachstum gerechtfertigt ist.</p>' +\n'<p>Was muesste passieren, damit die Bewertung unter Druck geraet? Erstens: Regulatorische Entscheidungen in USA/EU, die die Services-Profitabilitaet beeinflussen. Zweitens: Rueckgang der aktiven Geraetebasis. Drittens: China-Markt stabilisiert sich nicht. Viertens: KI-Upgrade-Zyklus materialisiert sich nicht.</p>' +\n'<h2>Risiko-Hierarchie</h2>' +\n'<p>Das primaere Risiko ist die Regulierung der Services-Sparte. Dies ist nicht zyklisch, sondern strukturell. Sollten USA und EU die App-Store-Gebuehrenstruktur regulieren, verliert Apple eine stabile Gewinnquelle. Dies waere nicht vollstaendig durch Hardware-Verkaeufe kompensierbar.</p>' +\n'<p>Das sekundaere Risiko ist die Stagnation der Geraetebasis. Wearables und Zubehoer zeigen bereits Rueckgaenge; sollten iPhone-Verkaeufe folgen, kollabiert die Flying-Wheel-Dynamik. Kurzfristig (2026) ist dies unwahrscheinlich - aktuelle Daten zeigen Umsatzwachstum. Mittelfristig (2027-2028) ist dies wahrscheinlicher, wenn der KI-Upgrade-Zyklus ausbleibt.</p>' +\n'<p>Zeithorizont: Regulierung ist strukturell (2-3 Jahre). Geraetebasis-Stagnation ist mittelfristig (3-5 Jahre). Geografische Risiken sind kurzfristig volatil (1-2 Jahre).</p>' +\n'<h2>Sachliche Gesamteinordnung</h2>' +\n'<p><strong>Strukturelle Staerken:</strong> Apple verfuegt ueber ein hochprofitables Services-Oekosystem mit Umsaetzen im dreistelligen Milliarden-Bereich und stabilen Wachstumsraten. Die operative Marge von 31,7 Prozent und Nettomarge von 26,9 Prozent sind branchenweit fuehrend. Das Unternehmen generiert massive Cashflows, die Investitionen in R&D und strategische Initiativen ermoeglichen.</p>' +\n'<p><strong>Strukturelle Begrenzungen:</strong> Das Hardware-Geschaeft ist reif und zeigt Erosion in Segmenten wie Wearables. Der iPhone-Zyklus ist verlaengert - Upgrade-Raten fallen. Das KI-Angebot ist verspaetet und noch nicht vollstaendig definiert. Die Abhaengigkeit von geografischen Maerkten ist strukturell.</p>' +\n'<p><strong>Kritische Annahmen der aktuellen Bewertung:</strong> (1) Services-Regulierung wird begrenzt oder kompensiert; (2) iPhone-Basis bleibt stabil; (3) KI-Upgrade-Zyklus materialisiert sich 2026-2027; (4) Geografische Maerkte stabilisieren sich; (5) Operative Margen bleiben stabil. Diese Annahmen sind teilweise unsicher.</p>' +\n'<p>Apple ist ein hochprofitables, cashflow-starkes Unternehmen mit strukturellen Staerken in Services und Markenpositionierung. Jedoch ist die aktuelle Bewertung (KGV 33, PEG 2,5) nicht vollstaendig gerechtfertigt durch das erwartete Wachstum. Der Markt preist Szenarien ein, die unsicher sind. Marktseitig existieren heterogene Erwartungen zur kuenftigen Entwicklung.</p>' +\n'<div style=\"background: #f8fafc; border-radius: 8px; padding: 1.25rem; margin-top: 2rem;\">' +\n'<p style=\"margin: 0; font-size: 0.95rem;\"><strong>Kurz erklaert:</strong> Apple ist ein Technologiekonzern, der Geraete wie iPhones und Tablets herstellt sowie digitale Dienste wie den App Store und Streaming-Angebote betreibt. Diese Analyse untersucht, ob Apples aktuelle Aktienbewertung durch das erwartete Wachstum gerechtfertigt ist - insbesondere angesichts von Risiken wie regulatorischen Eingriffen in die Services-Sparte und einer stagnierenden Hardware-Basis.</p>' +\n'</div>';\n\nreturn {\n  json: {\n    company: 'Apple',\n    ticker: 'AAPL',\n    sector: 'Technologie',\n    exchange: 'NASDAQ',\n    slug: 'apple_2026-01-24',\n    wkn: '865985',\n    isin: 'US0378331005',\n    date: '2026-01-24',\n    analysisContent: analysisContent,\n    introText: 'Apples Geschaeftsmodell basiert auf einer Zwei-Saeulen-Struktur aus Hardware und Services. Diese Analyse untersucht die oekonomischen Treiber, Bewertungsimplikationen und strukturellen Risiken des weltweit wertvollsten Technologiekonzerns.',\n    source: 'https://investor.apple.com/investor-relations/default.aspx'\n  }\n};"
+        "jsCode": "// Konfiguration: Welche Test-Analyse soll geloescht werden?\n// Passe slug an, falls du eine andere Test-Analyse loeschen willst\n\nvar slug = 'apple_2026-01-24';\n\nreturn {\n  json: {\n    slug: slug,\n    htmlPath: 'Abonenten/' + slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + slug + '_preview.svg',\n    analysenPath: 'data/analysen.json'\n  }\n};"
       },
-      "id": "f06d1c2e-d275-4b66-834c-36aeba11dce0",
-      "name": "Input - Fertige Analyse",
+      "id": "b10f1cbb-8048-4d8d-82db-6748dc30b21c",
+      "name": "Config - Test Analyse",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2512,
-        128
+        1072,
+        2096
       ]
     },
     {
       "parameters": {
-        "jsCode": "var d = $input.item.json;\nvar formattedDate = new Date(d.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });\n\n// Extrahiere Sektions-Titel aus dem analysisContent fuer das Inhaltsverzeichnis\nvar sectionMatches = d.analysisContent.match(/<h2>([^<]+)<\\/h2>/g) || [];\nvar sections = sectionMatches.map(function(match, index) {\n  var title = match.replace(/<\\/?h2>/g, '');\n  var id = 'section-' + (index + 1);\n  return { title: title, id: id, number: index + 1 };\n});\n\n// Fuege IDs zu den H2-Tags hinzu\nvar contentWithIds = d.analysisContent;\nvar sectionIndex = 0;\ncontentWithIds = contentWithIds.replace(/<h2>([^<]+)<\\/h2>/g, function(match, title) {\n  var id = 'section-' + (sectionIndex + 1);\n  var num = sectionIndex + 1;\n  sectionIndex++;\n  return '<section class=\"analysis-section\" id=\"' + id + '\"><h2>' + num + ') ' + title + '</h2>';\n});\n// Schliesse sections (vereinfacht: vor jedem neuen section-start und am Ende)\ncontentWithIds = contentWithIds.replace(/<section class=\"analysis-section\"/g, '</section><section class=\"analysis-section\"');\ncontentWithIds = contentWithIds.replace(/^<\\/section>/, ''); // Entferne fuehrenden close-tag\ncontentWithIds += '</section>';\n\n// Generiere TOC HTML\nvar tocHtml = '<nav aria-label=\"Inhaltsverzeichnis\" style=\"flex:1; min-width:260px; margin:0 0 0 12px; align-self:flex-start; display:flex; flex-direction:column; justify-content:flex-start; position:relative; top:-15px;\">' +\n'<h2 style=\"font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0; border-bottom:2px solid #e2e8f0; padding-bottom:2px;\">Inhalt der Analyse</h2>' +\n'<ol class=\"toc-list\" style=\"margin-top:0; list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;\">';\nsections.forEach(function(sec) {\n  tocHtml += '<li><a class=\"toc-link\" href=\"#' + sec.id + '\">' + sec.title + '</a></li>';\n});\ntocHtml += '</ol></nav>';\n\nvar html = '<!DOCTYPE html>' +\n'<html lang=\"de\">' +\n'<head>' +\n'<meta charset=\"utf-8\">' +\n'<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">' +\n'<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"../assets/favicon-32.png?v=2025-12-25b\">' +\n'<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"../assets/favicon-16.png?v=2025-12-25b\">' +\n'<link rel=\"shortcut icon\" href=\"../assets/favicon-32.png?v=2025-12-25b\">' +\n'<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"../assets/apple-touch-icon.png?v=2025-12-25a\">' +\n'<title>capitovo - ' + d.company + ' Unternehmensanalyse</title>' +\n'<meta name=\"description\" content=\"Analytische Einordnung von ' + d.company + ' (' + d.ticker + ') - Geschaeftsmodell, Fundamentaldaten und Bewertung.\">' +\n'<link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">' +\n'<link rel=\"stylesheet\" href=\"../style.css\">' +\n'<style>' +\n'#menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }' +\n'#menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }' +\n'#menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }' +\n'header { position: static !important; }' +\n'main { background: transparent; padding-top: 55px !important; }' +\n'.analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; padding-right: 16px; }' +\n'.analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }' +\n'.analysis-meta { color: #6b7280; margin-bottom: 1rem; }' +\n'.analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }' +\n'.analysis-section { margin-top:1rem; }' +\n'.analysis-section h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem 0; color: #0f172a; }' +\n'.analysis-section p { margin-bottom: 1rem; line-height: 1.7; text-align: justify; }' +\n'.hero-media { width: 100%; height: 360px; object-fit: contain; background: #f3f4f6; display: block; border-radius: 8px; }' +\n'.hero-summary { height: 360px; display: flex; flex-direction: column; }' +\n'.hero-summary-text { margin: 0; line-height: 1.55; text-align: justify; text-align-last: left; hyphens: auto; overflow-wrap: anywhere; word-break: break-word; padding-right: 2px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 14; line-clamp: 14; }' +\n'@media (max-width: 900px) { .hero-media { height: auto; aspect-ratio: 16/9; } .hero-summary { height: auto; } .hero-summary-text { overflow: visible; display: block; -webkit-line-clamp: unset; line-clamp: unset; hyphens: auto; } }' +\n'.toc-link { display: inline-block; font-size: 1.25rem; font-weight: 500; color: #334155; line-height: 1.5; text-decoration: none; position: relative; padding: 0; background: linear-gradient(110deg, var(--color-accent-blue) 0%, var(--color-accent-blue) 15%, #0ea5e9 20%, var(--color-accent-blue) 25%, var(--color-accent-blue) 40%, #334155 45%, #334155 100%); background-size: 300% 100%; background-position: 100% 0; transition: background-position 550ms cubic-bezier(0.65, 0, 0.35, 1), transform 550ms cubic-bezier(0.65, 0, 0.35, 1); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }' +\n'.toc-link:hover { background-position: 0 0; transform: translateX(4px); }' +\n'.toc-link:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); border-radius: 2px; }' +\n'@media (prefers-reduced-motion: reduce) { .toc-link { transition: none; background-position: 100% 0; } .toc-link:hover { transform: none; background-position: 0 0; } }' +\n'.disclaimer-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin: 2rem 0; }' +\n'.back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }' +\n'.back-btn-glow:hover, .back-btn-glow:focus-visible { box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08); }' +\n'.back-arrow { display: inline-block; position: relative; top: -1px; }' +\n'.cap-outline-btn { border: 1px solid #e2e8f0; border-radius: 0.375rem; background: #ffffff; }' +\n'.refs, .refs a, .refs li { overflow-wrap: anywhere; word-break: break-word; }' +\n'.refs a { color: #2563eb; text-decoration: none; }' +\n'.refs a:hover { text-decoration: underline; }' +\n'</style>' +\n'</head>' +\n'<body class=\"bg-white text-gray-900 abonenten-page\">' +\n'<header>' +\n'<div class=\"header-content\">' +\n'<div class=\"logo\">' +\n'<a href=\"./abonenten.html\" class=\"logo-link\">' +\n'<img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">' +\n'</a>' +\n'</div>' +\n'<button class=\"menu-toggle\" id=\"menu-toggle\" aria-controls=\"sidebar\" aria-expanded=\"false\" aria-label=\"Menue oeffnen\">☰</button>' +\n'</div>' +\n'</header>' +\n'<main style=\"padding-top: 55px !important;\">' +\n'<article class=\"analysis-article\" id=\"' + d.slug + '-analysis\" style=\"margin-top: 0 !important;\">' +\n'<div class=\"mb-2\">' +\n'<div class=\"flex items-start justify-between gap-3 flex-wrap\">' +\n'<div>' +\n'<h1 class=\"text-3xl font-extrabold text-gray-900 mb-1\">' + d.company + ' - Unternehmensanalyse</h1>' +\n'</div>' +\n'<div class=\"flex items-center gap-2\">' +\n'<a href=\"alle_analysen.html\" id=\"back-button\" class=\"inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white rounded-md px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow cap-outline-btn\"><span class=\"back-arrow\" aria-hidden=\"true\">←</span><span>Zurueck</span></a>' +\n'<div style=\"position:relative;display:inline-block;\">' +\n'<button id=\"favorite-button\" class=\"inline-flex items-center justify-center w-10 h-10 bg-white rounded-md text-gray-500 hover:text-yellow-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow cap-outline-btn\" style=\"padding:0\" aria-label=\"Zu Favoriten hinzufuegen\" aria-pressed=\"false\" title=\"Zu Favoriten hinzufuegen\" data-title=\"' + d.slug + '\" onclick=\"toggleFavorite(event, this.dataset.title)\">' +\n'<svg class=\"w-5 h-5 text-gray-400\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\" /></svg>' +\n'</button>' +\n'<div id=\"fav-tooltip\" style=\"display:none;position:absolute;left:50%;top:-22px;transform:translateX(-50%);background:transparent;color:#475569;font-size:0.75rem;padding:0 4px;border-radius:3px;box-shadow:none;white-space:nowrap;z-index:20;pointer-events:none;font-weight:400;letter-spacing:0.01em;\">Zu den Favoriten hinzugefuegt</div>' +\n'</div>' +\n'</div>' +\n'</div>' +\n'<div class=\"text-sm analysis-meta\" style=\"color: #64748b;\">' +\n'<span>' + formattedDate + '</span>' +\n'<span class=\"text-gray-400 mx-2\">·</span>' +\n'<span>Ticker: ' + d.ticker + '</span>' +\n'<span class=\"text-gray-400 mx-2\">·</span>' +\n'<span>WKN: ' + d.wkn + '</span>' +\n'<span class=\"text-gray-400 mx-2\">·</span>' +\n'<span>ISIN: ' + d.isin + '</span>' +\n'</div>' +\n'</div>' +\n'<div class=\"hero-intro-wrapper\" style=\"display:flex; gap:24px; margin:24px 0 0 0; align-items:flex-start; flex-wrap:wrap;\">' +\n'<div class=\"analysis-hero\" style=\"flex:1; min-width:300px;\">' +\n'<img src=\"../data/vorschaubilder_analysen/' + d.slug + '_preview.svg\" alt=\"' + d.company + ' Vorschaubild\" class=\"hero-media\">' +\n'</div>' +\ntocHtml +\n'</div>' +\n'<p class=\"analysis-intro\" style=\"margin: 24px 0 32px 0; font-size:1.08rem; line-height:1.7; max-width:100%; text-align:justify;\">' + d.introText + '</p>' +\n'<p style=\"height:1.5em;\"></p>' +\ncontentWithIds +\n'<hr style=\"margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;\">' +\n'<p style=\"font-size: 0.9rem; color: #64748b;\"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewaehr.</p>' +\n'<p class=\"refs\" style=\"font-size: 0.9rem; color: #64748b;\"><strong>Quellen:</strong> <a href=\"' + d.source + '\" target=\"_blank\" rel=\"noopener noreferrer\">' + d.source + '</a></p>' +\n'</article>' +\n'</main>' +\n'<footer class=\"site-footer border-t py-6 mt-12\">' +\n'<div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\">' +\n'<div>&copy; 2026 capitovo - Alle Rechte vorbehalten.</div>' +\n'<div class=\"footer-links\">' +\n'<a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Impressum</a>' +\n'<a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Datenschutz</a>' +\n'<a href=\"../Rechtliches/haftung.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Haftungsausschluss</a>' +\n'<a href=\"../Rechtliches/agb.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">AGB</a>' +\n'</div>' +\n'</div>' +\n'</footer>' +\n'<div class=\"sidebar\" id=\"sidebar\" aria-hidden=\"true\" aria-label=\"Seitenmenue\">' +\n'<button class=\"close-button\" id=\"close-sidebar\" aria-label=\"Sidebar schliessen\">&times;</button>' +\n'<nav class=\"sidebar-nav\" aria-label=\"Hauptnavigation\">' +\n'<ul>' +\n'<li><a href=\"./abonenten.html\" class=\"flex items-center space-x-3\" aria-label=\"Startseite\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5 flex-shrink-0\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 11.5L12 4l9 7.5\" /><path d=\"M5 10.5v7.5a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7.5\" /></svg><span>Startseite</span></a></li>' +\n'<li><a href=\"./konto.html\" class=\"flex items-center space-x-3\" aria-label=\"Mein Konto\"><svg class=\"w-5 h-5 flex-shrink-0\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"3\" stroke=\"currentColor\" stroke-width=\"1.5\" /><path d=\"M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span>Mein Konto</span></a></li>' +\n'<li><a href=\"./alle_analysen.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"3\" y=\"10\" width=\"4\" height=\"11\" rx=\"0.5\" /><rect x=\"10\" y=\"6\" width=\"4\" height=\"15\" rx=\"0.5\" /><rect x=\"17\" y=\"3\" width=\"4\" height=\"18\" rx=\"0.5\" /></svg><span>Analysen</span></a></li>' +\n'<li><a href=\"./Aktien-Monitor/aktien-monitor.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M3 17l6-6 4 4 8-8\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\" /><polyline points=\"3 17 9 11 13 15 21 7\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\" /></svg><span>Aktien-Monitor</span></a></li>' +\n'<li><a href=\"./earnings_kalender.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"></rect><line x1=\"16\" y1=\"2\" x2=\"16\" y2=\"6\"></line><line x1=\"8\" y1=\"2\" x2=\"8\" y2=\"6\"></line><line x1=\"3\" y1=\"10\" x2=\"21\" y2=\"10\"></line></svg><span>Wirtschaftskalender</span></a></li>' +\n'<li class=\"logout-bottom\"><a href=\"#\" id=\"open-contact-modal\" class=\"flex items-center space-x-3\" aria-label=\"Kontakt aufnehmen\"><svg class=\"w-5 h-5 flex-shrink-0\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M22 6l-10 7L2 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span>Kontakt</span></a></li>' +\n'<li class=\"logout-bottom\"><a href=\"#\" id=\"logout-link\" class=\"logout-link\" aria-label=\"Abmelden\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" /><path d=\"M16 17l5-5-5-5\" /><path d=\"M21 12H9\" /></svg><span>Abmelden</span></a></li>' +\n'</ul>' +\n'</nav>' +\n'</div>' +\n'<script src=\"../script.js?v=11\"></script>' +\n'<script>' +\n'(function() {' +\n'  var backBtn = document.getElementById(\"back-button\");' +\n'  if (!backBtn) return;' +\n'  var referrer = document.referrer;' +\n'  if (referrer.includes(\"/Abonenten/abonenten.html\")) { backBtn.href = \"./abonenten.html\"; }' +\n'  else if (referrer.includes(\"/Abonenten/alle_analysen.html\")) { backBtn.href = \"./alle_analysen.html\"; }' +\n'  else if (referrer.includes(\"/Abonenten/\")) { backBtn.href = \"./alle_analysen.html\"; }' +\n'  else { backBtn.href = \"./alle_analysen.html\"; }' +\n'})();' +\n'(async function() {' +\n'  var btn = document.getElementById(\"favorite-button\");' +\n'  var tooltip = document.getElementById(\"fav-tooltip\");' +\n'  if (!btn) return;' +\n'  var favKey = btn.dataset.title || \"' + d.slug + '\";' +\n'  var favorites = [];' +\n'  try { favorites = JSON.parse(localStorage.getItem(\"capitovo_favorites\") || \"[]\"); } catch(e) { favorites = []; }' +\n'  var isFav = favorites.includes(favKey);' +\n'  btn.setAttribute(\"aria-pressed\", isFav ? \"true\" : \"false\");' +\n'  btn.setAttribute(\"aria-label\", isFav ? \"Aus Favoriten entfernen\" : \"Zu Favoriten hinzufuegen\");' +\n'  btn.title = isFav ? \"Aus Favoriten entfernen\" : \"Zu Favoriten hinzufuegen\";' +\n'  var icon = btn.querySelector(\"svg\");' +\n'  if (icon) {' +\n'    icon.setAttribute(\"fill\", isFav ? \"currentColor\" : \"none\");' +\n'    icon.classList.toggle(\"text-yellow-400\", isFav);' +\n'    icon.classList.toggle(\"text-gray-400\", !isFav);' +\n'  }' +\n'  btn.addEventListener(\"click\", function(e) {' +\n'    setTimeout(function() {' +\n'      var favs = [];' +\n'      try { favs = JSON.parse(localStorage.getItem(\"capitovo_favorites\") || \"[]\"); } catch(e) { favs = []; }' +\n'      var nowFav = favs.includes(favKey);' +\n'      if (tooltip && nowFav) {' +\n'        tooltip.style.display = \"block\";' +\n'        setTimeout(function() { tooltip.style.display = \"none\"; }, 1200);' +\n'      }' +\n'    }, 10);' +\n'  });' +\n'})();' +\n'</script>' +\n'</body>' +\n'</html>';\n\nreturn { json: { ...d, html: html } };"
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Loesche Test-Analyse HTML {{ $json.slug }}\",\n  \"sha\": \"{{ $json.htmlSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {
+          "timeout": 60000
+        }
       },
-      "id": "eab270e2-4f38-43da-b68a-dc48de05c31d",
-      "name": "HTML Renderer - Capitovo Stil",
+      "id": "d6bb5727-c69f-4390-8340-d35f21125d0d",
+      "name": "Delete HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1072,
+        2304
+      ],
+      "executeOnce": false,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Extract HTML SHA1').item.json;\nreturn { json: prev };"
+      },
+      "id": "18d88f3c-68fc-46c1-9274-a184d70e1c72",
+      "name": "Pass After HTML Delete",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2304,
-        128
+        1296,
+        2304
       ]
     },
     {
       "parameters": {
-        "jsCode": "var d = $input.item.json;\nvar displayName = d.company.length > 25 ? d.company.substring(0, 22) + '...' : d.company;\n\nvar svg = '<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">' +\n'<defs>' +\n'<linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">' +\n'<stop offset=\"0%\" stop-color=\"#0f172a\"/>' +\n'<stop offset=\"100%\" stop-color=\"#1e293b\"/>' +\n'</linearGradient>' +\n'<linearGradient id=\"accent\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\">' +\n'<stop offset=\"0%\" stop-color=\"#3b82f6\"/>' +\n'<stop offset=\"100%\" stop-color=\"#0ea5e9\"/>' +\n'</linearGradient>' +\n'</defs>' +\n'<rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"16\"/>' +\n'<g font-family=\"-apple-system, BlinkMacSystemFont, sans-serif\">' +\n'<text x=\"48\" y=\"72\" fill=\"#64748b\" font-size=\"12\" letter-spacing=\"0.1em\">' + d.ticker + ' · ' + d.sector.toUpperCase() + '</text>' +\n'<text x=\"48\" y=\"120\" fill=\"#f1f5f9\" font-size=\"36\" font-weight=\"700\">' + displayName + '</text>' +\n'<text x=\"48\" y=\"155\" fill=\"#94a3b8\" font-size=\"15\">Analytische Unternehmenseinordnung</text>' +\n'<rect x=\"48\" y=\"180\" width=\"80\" height=\"4\" fill=\"url(#accent)\" rx=\"2\"/>' +\n'<text x=\"48\" y=\"230\" fill=\"#64748b\" font-size=\"13\">Geschaeftsmodell · Fundamentaldaten · Bewertung</text>' +\n'<text x=\"48\" y=\"300\" fill=\"#475569\" font-size=\"11\">capitovo Research</text>' +\n'<text x=\"48\" y=\"320\" fill=\"#64748b\" font-size=\"10\">' + d.date + '</text>' +\n'</g>' +\n'</svg>';\n\nreturn { json: { ...d, svg: svg } };"
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Loesche Test-Analyse SVG {{ $json.slug }}\",\n  \"sha\": \"{{ $json.svgSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {
+          "timeout": 60000
+        }
       },
-      "id": "73e0248d-ef2d-4c2e-b723-7e59a46a7fe9",
-      "name": "SVG Generator",
+      "id": "e4a32c99-8711-471b-bfd8-5c7c0e2b0e21",
+      "name": "Delete SVG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1072,
+        2544
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Extract SVG SHA1').item.json;\nreturn { json: prev };"
+      },
+      "id": "fe1fca55-a4a0-4fe2-84c8-622489a17b32",
+      "name": "Pass After SVG Delete",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -2080,
-        128
+        1296,
+        2544
       ]
     },
     {
       "parameters": {
-        "jsCode": "var d = $input.item.json;\n\nreturn {\n  json: {\n    ...d,\n    htmlPath: 'Abonenten/' + d.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + d.slug + '_preview.svg',\n    htmlBase64: Buffer.from(d.html, 'utf8').toString('base64'),\n    svgBase64: Buffer.from(d.svg, 'utf8').toString('base64'),\n    htmlCommitMsg: 'Analyse: ' + d.company + ' (' + d.ticker + ') - ' + d.date,\n    svgCommitMsg: 'Vorschaubild: ' + d.company + ' - ' + d.date\n  }\n};"
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
       },
-      "id": "8e0cd518-2189-42c0-aeb2-e936799bd12f",
-      "name": "Base64 Encoder",
+      "id": "efe4d467-cd80-4d68-ae4c-4528791d9f68",
+      "name": "Get Analysen.json",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1520,
+        2544
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Pass After SVG Delete').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp.sha || null;\nvar existing = [];\n\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\n// Entferne Eintraege die zum Test-Slug gehoeren\nvar slug = prev.slug;\n\n// Extrahiere das Datum aus dem Slug (z.B. '2026-01-24' aus 'apple_2026-01-24')\nvar slugParts = slug.split('_');\nvar slugDate = slugParts.length > 1 ? slugParts.slice(1).join('_') : '';\n\nvar filtered = existing.filter(function(item) {\n  // Pruefe mehrere Matching-Kriterien:\n  // 1. Link enthaelt den kompletten Slug\n  var matchByLink = String(item.link || '').includes(slug);\n  \n  // 2. Image-Pfad enthaelt den Slug\n  var matchByImage = String(item.image || '').includes(slug);\n  \n  // 3. ID enthaelt das Datum (z.B. 'aapl-2026-01-24' matched mit Datum '2026-01-24')\n  var matchByDate = slugDate && String(item.id || '').includes(slugDate.replace(/_/g, '-'));\n  \n  // Behalte Eintrag nur wenn KEINES der Kriterien zutrifft\n  return !matchByLink && !matchByImage && !matchByDate;\n});\n\nvar removed = existing.length - filtered.length;\n\nvar updatedJson = JSON.stringify(filtered, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: {\n    ...prev,\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    entriesRemoved: removed,\n    shouldUpdateAnalysen: removed > 0\n  }\n};"
+      },
+      "id": "135cfde1-5af7-4e94-942b-1f747855d944",
+      "name": "Filter Analysen.json",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1856,
-        128
+        1744,
+        2544
       ]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Entferne Test-Analyse {{ $json.slug }} aus Katalog\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "1ea6c541-e1cc-42f6-a7b7-3fc4aabc3eba",
+      "name": "Update Analysen.json",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1952,
+        2544
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
     },
     {
       "parameters": {
@@ -86,27 +251,33 @@
           "timeout": 30000
         }
       },
-      "id": "d43a3bf9-6f77-496c-83aa-484b703d408e",
-      "name": "Get HTML SHA",
+      "id": "84d2efd1-a3be-4adc-b96c-6d2cafd8a4d5",
+      "name": "Get HTML SHA1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1632,
-        128
+        1296,
+        2096
       ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
       "continueOnFail": true
     },
     {
       "parameters": {
-        "jsCode": "var prevData = $('Base64 Encoder').item.json;\nvar htmlResponse = $input.item.json;\n\n// SHA extrahieren falls vorhanden\nvar htmlSha = htmlResponse.sha || null;\n\nreturn {\n  json: {\n    ...prevData,\n    htmlSha: htmlSha\n  }\n};"
+        "jsCode": "var config = $('Config - Test Analyse').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...config,\n    htmlSha: resp.sha || null,\n    htmlExists: !!resp.sha\n  }\n};"
       },
-      "id": "d39e5dba-5de2-4537-aeff-08a3f51e57a9",
-      "name": "Extract HTML SHA",
+      "id": "a1e0f1fd-5c4f-495d-8db1-336289bb739d",
+      "name": "Extract HTML SHA1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -1424,
-        128
+        1520,
+        2096
       ]
     },
     {
@@ -131,27 +302,231 @@
           "timeout": 30000
         }
       },
-      "id": "313d6584-ed37-432b-8d93-01a8e5b59d1e",
-      "name": "Get SVG SHA",
+      "id": "6f74c631-faa4-42a5-9557-26ef12b34567",
+      "name": "Get SVG SHA1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -1200,
-        128
+        1520,
+        2304
       ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
       "continueOnFail": true
     },
     {
       "parameters": {
-        "jsCode": "var prevData = $('Extract HTML SHA').item.json;\nvar svgResponse = $input.item.json;\n\n// SHA extrahieren falls vorhanden\nvar svgSha = svgResponse.sha || null;\n\nreturn {\n  json: {\n    ...prevData,\n    svgSha: svgSha\n  }\n};"
+        "jsCode": "var prev = $('Pass After HTML Delete').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...prev,\n    svgSha: resp.sha || null,\n    svgExists: !!resp.sha\n  }\n};"
       },
-      "id": "cb148161-43a4-4d96-91b3-2bb45b456f2e",
-      "name": "Extract SVG SHA",
+      "id": "8fbf9044-15ba-410b-b93d-6531811c51c5",
+      "name": "Extract SVG SHA1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -976,
-        128
+        1744,
+        2304
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Filter Analysen.json').item.json;\n\nreturn {\n  json: {\n    status: 'CLEANUP COMPLETE',\n    slug: prev.slug,\n    deletedFiles: {\n      html: prev.htmlPath + (prev.htmlExists ? ' (geloescht)' : ' (existierte nicht)'),\n      svg: prev.svgPath + (prev.svgExists ? ' (geloescht)' : ' (existierte nicht)')\n    },\n    catalogEntriesRemoved: prev.entriesRemoved,\n    message: 'Test-Analyse ' + prev.slug + ' wurde bereinigt. Du kannst den Test-Veroeffentlichungs-Workflow jetzt erneut ausfuehren.'\n  }\n};"
+      },
+      "id": "6b70d8fa-ca1a-442b-86e1-086398835ba7",
+      "name": "Output1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2176,
+        2544
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Löschen",
+        "height": 784,
+        "width": 1696,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        960,
+        1968
+      ],
+      "typeVersion": 1,
+      "id": "084d2c27-6450-487b-a0ec-31a1696477c8",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "# Veröffentlichen",
+        "height": 848,
+        "width": 1696
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        960,
+        1024
+      ],
+      "typeVersion": 1,
+      "id": "ea3966ca-1e9c-45b1-ac5f-3f069a21251d",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// FERTIGE APPLE-ANALYSE - Direkt aus Pipeline v10.1\n// Keine Perplexity-Credits noetig!\n// =====================================================\n\nvar analysisContent = '<h2>Geschaeftsmodell-Analyse</h2>' +\n'<p>Apples Geschaeftsmodell basiert auf einer Zwei-Saeulen-Struktur, deren oekonomische Dynamik sich fundamental verschiebt. Die erste Saeule - Hardware (iPhone, iPad, Mac, Wearables) - generiert zwar noch die Mehrheit des Umsatzes, zeigt aber strukturelle Erosion: Wearables und Zubehoer verzeichneten Rueckgaenge, waehrend die Geraetebasis insgesamt stagniert. Die zweite Saeule - Services (App Store, iCloud, Apple TV+, iTunes) - wuchs auf 96,1 Milliarden USD und wird zur Gewinnmaschine mit ueberlegenen Margen.</p>' +\n'<p>Der kritische oekonomische Treiber ist die Abhaengigkeit zwischen beiden Saeulen: Services-Wachstum haengt direkt von der Anzahl aktiver Geraete ab. Dies erzeugt eine Flying-Wheel-Dynamik - mehr Geraete generieren mehr Services-Nutzer und hoehere Margen. Sollte die Geraetebasis stagnieren oder schrumpfen, kollabiert dieser Multiplikator-Effekt. Der Grenznutzen neuer Hardware-Generationen sinkt erkennbar: Waehrend neuere iPhone-Modelle Verkaeufe zeigen, wird dies durch externe Faktoren angetrieben, nicht durch fundamentale Produktinnovation.</p>' +\n'<p>Die Abhaengigkeitsstruktur offenbart ein Kernrisiko: Regulierungsbehoerden in USA und Europa visieren die App-Store-Gebuehrenstruktur an. Diese Gewinnquellen sind regulatorischen Eingriffen ausgesetzt. Sollte die regulatorische Belastung zunehmen, wuerde das Services-Margenprofil erheblich leiden. Gleichzeitig ist Apples KI-Strategie noch in der Entwicklung, waehrend Konkurrenten bereits integrierte KI-Oekosysteme anbieten.</p>' +\n'<h2>Fundamentaldaten-Einordnung</h2>' +\n'<p>Die Fundamentals offenbaren ein Unternehmen im Bewertungs-Widerspruch: Ein KGV von 33,24 bei einem Forward-KGV von 29,85 impliziert, dass der Markt signifikantes Gewinnwachstum fuer die naechsten Jahre einpreist. Doch Apples Umsatzwachstum wird auf mittleres bis hohes einstelliges Niveau geschaetzt, was mit der Bewertung nicht vollstaendig konsistent ist.</p>' +\n'<p>Das Gewinnwachstum von 91,2 Prozent (Quartal-ueber-Quartal) ist ein Basiseffekt, nicht strukturell nachhaltig. Im Geschaeftsjahr 2024 verdiente Apple 93,74 Milliarden USD Gewinn; 2025 stieg dies auf 112,01 Milliarden USD - ein Anstieg von 19,5 Prozent Jahr-ueber-Jahr. Dies ist solider, aber nicht aussergewoehnlich. Der Quartalswert wird durch Vergleiche mit schwaecheren Vorjahresquartalen verzerrt.</p>' +\n'<p>Die anomale ROE von 1,7 Prozent erklaert sich durch Apples aggressive Kapitalrueckfuehrungspolitik: Das Unternehmen hat Schulden aufgenommen und Aktien zurueckgekauft, was das Eigenkapital kuenstlich reduziert hat. Ein ROE von 1,7 Prozent bei einer operativen Marge von 31,7 Prozent und Nettomarge von 26,9 Prozent ist ein Zeichen von Finanzstruktur-Optimierung, nicht operativer Schwaeche.</p>' +\n'<h2>Bewertungs-Implikationen</h2>' +\n'<p>Ein KGV von 33,24 impliziert, dass der Markt folgende Annahmen einpreist: (1) Apple wird die Services-Sparte gegen Regulierung verteidigen oder kompensieren; (2) die iPhone-Basis bleibt stabil oder waechst; (3) KI-Features werden eine Upgrade-Welle ausloesen; (4) der China-Markt stabilisiert sich.</p>' +\n'<p>Das Forward-KGV von 29,85 ist nur marginal niedriger, was bedeutet, dass der Markt fuer 2026 keine beschleunigte Wachstumsdynamik erwartet - eher eine Stabilisierung. Bei einem PEG-Ratio von 2,506 zahlt der Markt ein Mehrfaches des Bewertungsmultiplikators, das typischerweise fuer Unternehmen mit hoeherem Wachstum gerechtfertigt ist.</p>' +\n'<p>Was muesste passieren, damit die Bewertung unter Druck geraet? Erstens: Regulatorische Entscheidungen in USA/EU, die die Services-Profitabilitaet beeinflussen. Zweitens: Rueckgang der aktiven Geraetebasis. Drittens: China-Markt stabilisiert sich nicht. Viertens: KI-Upgrade-Zyklus materialisiert sich nicht.</p>' +\n'<h2>Risiko-Hierarchie</h2>' +\n'<p>Das primaere Risiko ist die Regulierung der Services-Sparte. Dies ist nicht zyklisch, sondern strukturell. Sollten USA und EU die App-Store-Gebuehrenstruktur regulieren, verliert Apple eine stabile Gewinnquelle. Dies waere nicht vollstaendig durch Hardware-Verkaeufe kompensierbar.</p>' +\n'<p>Das sekundaere Risiko ist die Stagnation der Geraetebasis. Wearables und Zubehoer zeigen bereits Rueckgaenge; sollten iPhone-Verkaeufe folgen, kollabiert die Flying-Wheel-Dynamik. Kurzfristig (2026) ist dies unwahrscheinlich - aktuelle Daten zeigen Umsatzwachstum. Mittelfristig (2027-2028) ist dies wahrscheinlicher, wenn der KI-Upgrade-Zyklus ausbleibt.</p>' +\n'<p>Zeithorizont: Regulierung ist strukturell (2-3 Jahre). Geraetebasis-Stagnation ist mittelfristig (3-5 Jahre). Geografische Risiken sind kurzfristig volatil (1-2 Jahre).</p>' +\n'<h2>Sachliche Gesamteinordnung</h2>' +\n'<p><strong>Strukturelle Staerken:</strong> Apple verfuegt ueber ein hochprofitables Services-Oekosystem mit Umsaetzen im dreistelligen Milliarden-Bereich und stabilen Wachstumsraten. Die operative Marge von 31,7 Prozent und Nettomarge von 26,9 Prozent sind branchenweit fuehrend. Das Unternehmen generiert massive Cashflows, die Investitionen in R&D und strategische Initiativen ermoeglichen.</p>' +\n'<p><strong>Strukturelle Begrenzungen:</strong> Das Hardware-Geschaeft ist reif und zeigt Erosion in Segmenten wie Wearables. Der iPhone-Zyklus ist verlaengert - Upgrade-Raten fallen. Das KI-Angebot ist verspaetet und noch nicht vollstaendig definiert. Die Abhaengigkeit von geografischen Maerkten ist strukturell.</p>' +\n'<p><strong>Kritische Annahmen der aktuellen Bewertung:</strong> (1) Services-Regulierung wird begrenzt oder kompensiert; (2) iPhone-Basis bleibt stabil; (3) KI-Upgrade-Zyklus materialisiert sich 2026-2027; (4) Geografische Maerkte stabilisieren sich; (5) Operative Margen bleiben stabil. Diese Annahmen sind teilweise unsicher.</p>' +\n'<p>Apple ist ein hochprofitables, cashflow-starkes Unternehmen mit strukturellen Staerken in Services und Markenpositionierung. Jedoch ist die aktuelle Bewertung (KGV 33, PEG 2,5) nicht vollstaendig gerechtfertigt durch das erwartete Wachstum. Der Markt preist Szenarien ein, die unsicher sind. Marktseitig existieren heterogene Erwartungen zur kuenftigen Entwicklung.</p>' +\n'<div style=\"background: #f8fafc; border-radius: 8px; padding: 1.25rem; margin-top: 2rem;\">' +\n'<p style=\"margin: 0; font-size: 0.95rem;\"><strong>Kurz erklaert:</strong> Apple ist ein Technologiekonzern, der Geraete wie iPhones und Tablets herstellt sowie digitale Dienste wie den App Store und Streaming-Angebote betreibt. Diese Analyse untersucht, ob Apples aktuelle Aktienbewertung durch das erwartete Wachstum gerechtfertigt ist - insbesondere angesichts von Risiken wie regulatorischen Eingriffen in die Services-Sparte und einer stagnierenden Hardware-Basis.</p>' +\n'</div>';\n\nreturn {\n  json: {\n    company: 'Apple',\n    ticker: 'AAPL',\n    sector: 'Technologie',\n    exchange: 'NASDAQ',\n    slug: 'apple_2026-01-24',\n    wkn: '865985',\n    isin: 'US0378331005',\n    date: '2026-01-24',\n    analysisContent: analysisContent,\n    introText: 'Apples Geschaeftsmodell basiert auf einer Zwei-Saeulen-Struktur aus Hardware und Services. Diese Analyse untersucht die oekonomischen Treiber, Bewertungsimplikationen und strukturellen Risiken des weltweit wertvollsten Technologiekonzerns.',\n    source: 'https://investor.apple.com/investor-relations/default.aspx'\n  }\n};"
+      },
+      "id": "27126274-c5cc-4675-9351-8a24d47cda4f",
+      "name": "Input - Fertige Analyse1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "var d = $input.item.json;\nvar formattedDate = new Date(d.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });\n\n// Extrahiere Sektions-Titel aus dem analysisContent fuer das Inhaltsverzeichnis\nvar sectionMatches = d.analysisContent.match(/<h2>([^<]+)<\\/h2>/g) || [];\nvar sections = sectionMatches.map(function(match, index) {\n  var title = match.replace(/<\\/?h2>/g, '');\n  var id = 'section-' + (index + 1);\n  return { title: title, id: id, number: index + 1 };\n});\n\n// Fuege IDs zu den H2-Tags hinzu\nvar contentWithIds = d.analysisContent;\nvar sectionIndex = 0;\ncontentWithIds = contentWithIds.replace(/<h2>([^<]+)<\\/h2>/g, function(match, title) {\n  var id = 'section-' + (sectionIndex + 1);\n  var num = sectionIndex + 1;\n  sectionIndex++;\n  return '<section class=\"analysis-section\" id=\"' + id + '\"><h2>' + num + ') ' + title + '</h2>';\n});\n// Schliesse sections (vereinfacht: vor jedem neuen section-start und am Ende)\ncontentWithIds = contentWithIds.replace(/<section class=\"analysis-section\"/g, '</section><section class=\"analysis-section\"');\ncontentWithIds = contentWithIds.replace(/^<\\/section>/, ''); // Entferne fuehrenden close-tag\ncontentWithIds += '</section>';\n\n// Generiere TOC HTML\nvar tocHtml = '<nav aria-label=\"Inhaltsverzeichnis\" style=\"flex:1; min-width:260px; margin:0 0 0 12px; align-self:flex-start; display:flex; flex-direction:column; justify-content:flex-start; position:relative; top:-15px;\">' +\n'<h2 style=\"font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0; border-bottom:2px solid #e2e8f0; padding-bottom:2px;\">Inhalt der Analyse</h2>' +\n'<ol class=\"toc-list\" style=\"margin-top:0; list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;\">';\nsections.forEach(function(sec) {\n  tocHtml += '<li><a class=\"toc-link\" href=\"#' + sec.id + '\">' + sec.title + '</a></li>';\n});\ntocHtml += '</ol></nav>';\n\nvar html = '<!DOCTYPE html>' +\n'<html lang=\"de\">' +\n'<head>' +\n'<meta charset=\"utf-8\">' +\n'<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">' +\n'<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"../assets/favicon-32.png?v=2025-12-25b\">' +\n'<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"../assets/favicon-16.png?v=2025-12-25b\">' +\n'<link rel=\"shortcut icon\" href=\"../assets/favicon-32.png?v=2025-12-25b\">' +\n'<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"../assets/apple-touch-icon.png?v=2025-12-25a\">' +\n'<title>capitovo - ' + d.company + ' Unternehmensanalyse</title>' +\n'<meta name=\"description\" content=\"Analytische Einordnung von ' + d.company + ' (' + d.ticker + ') - Geschaeftsmodell, Fundamentaldaten und Bewertung.\">' +\n'<link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">' +\n'<link rel=\"stylesheet\" href=\"../style.css\">' +\n'<style>' +\n'#menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }' +\n'#menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }' +\n'#menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }' +\n'header { position: static !important; }' +\n'main { background: transparent; padding-top: 55px !important; }' +\n'.analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; padding-right: 16px; }' +\n'.analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }' +\n'.analysis-meta { color: #6b7280; margin-bottom: 1rem; }' +\n'.analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }' +\n'.analysis-section { margin-top:1rem; }' +\n'.analysis-section h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem 0; color: #0f172a; }' +\n'.analysis-section p { margin-bottom: 1rem; line-height: 1.7; text-align: justify; }' +\n'.hero-media { width: 100%; height: 360px; object-fit: contain; background: #f3f4f6; display: block; border-radius: 8px; }' +\n'.hero-summary { height: 360px; display: flex; flex-direction: column; }' +\n'.hero-summary-text { margin: 0; line-height: 1.55; text-align: justify; text-align-last: left; hyphens: auto; overflow-wrap: anywhere; word-break: break-word; padding-right: 2px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 14; line-clamp: 14; }' +\n'@media (max-width: 900px) { .hero-media { height: auto; aspect-ratio: 16/9; } .hero-summary { height: auto; } .hero-summary-text { overflow: visible; display: block; -webkit-line-clamp: unset; line-clamp: unset; hyphens: auto; } }' +\n'.toc-link { display: inline-block; font-size: 1.25rem; font-weight: 500; color: #334155; line-height: 1.5; text-decoration: none; position: relative; padding: 0; background: linear-gradient(110deg, var(--color-accent-blue) 0%, var(--color-accent-blue) 15%, #0ea5e9 20%, var(--color-accent-blue) 25%, var(--color-accent-blue) 40%, #334155 45%, #334155 100%); background-size: 300% 100%; background-position: 100% 0; transition: background-position 550ms cubic-bezier(0.65, 0, 0.35, 1), transform 550ms cubic-bezier(0.65, 0, 0.35, 1); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }' +\n'.toc-link:hover { background-position: 0 0; transform: translateX(4px); }' +\n'.toc-link:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); border-radius: 2px; }' +\n'@media (prefers-reduced-motion: reduce) { .toc-link { transition: none; background-position: 100% 0; } .toc-link:hover { transform: none; background-position: 0 0; } }' +\n'.disclaimer-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin: 2rem 0; }' +\n'.back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }' +\n'.back-btn-glow:hover, .back-btn-glow:focus-visible { box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08); }' +\n'.back-arrow { display: inline-block; position: relative; top: -1px; }' +\n'.cap-outline-btn { border: 1px solid #e2e8f0; border-radius: 0.375rem; background: #ffffff; }' +\n'.refs, .refs a, .refs li { overflow-wrap: anywhere; word-break: break-word; }' +\n'.refs a { color: #2563eb; text-decoration: none; }' +\n'.refs a:hover { text-decoration: underline; }' +\n'</style>' +\n'</head>' +\n'<body class=\"bg-white text-gray-900 abonenten-page\">' +\n'<header>' +\n'<div class=\"header-content\">' +\n'<div class=\"logo\">' +\n'<a href=\"./abonenten.html\" class=\"logo-link\">' +\n'<img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">' +\n'</a>' +\n'</div>' +\n'<button class=\"menu-toggle\" id=\"menu-toggle\" aria-controls=\"sidebar\" aria-expanded=\"false\" aria-label=\"Menue oeffnen\">☰</button>' +\n'</div>' +\n'</header>' +\n'<main style=\"padding-top: 55px !important;\">' +\n'<article class=\"analysis-article\" id=\"' + d.slug + '-analysis\" style=\"margin-top: 0 !important;\">' +\n'<div class=\"mb-2\">' +\n'<div class=\"flex items-start justify-between gap-3 flex-wrap\">' +\n'<div>' +\n'<h1 class=\"text-3xl font-extrabold text-gray-900 mb-1\">' + d.company + ' - Unternehmensanalyse</h1>' +\n'</div>' +\n'<div class=\"flex items-center gap-2\">' +\n'<a href=\"alle_analysen.html\" id=\"back-button\" class=\"inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white rounded-md px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow cap-outline-btn\"><span class=\"back-arrow\" aria-hidden=\"true\">←</span><span>Zurueck</span></a>' +\n'<div style=\"position:relative;display:inline-block;\">' +\n'<button id=\"favorite-button\" class=\"inline-flex items-center justify-center w-10 h-10 bg-white rounded-md text-gray-500 hover:text-yellow-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow cap-outline-btn\" style=\"padding:0\" aria-label=\"Zu Favoriten hinzufuegen\" aria-pressed=\"false\" title=\"Zu Favoriten hinzufuegen\" data-title=\"' + d.slug + '\" onclick=\"toggleFavorite(event, this.dataset.title)\">' +\n'<svg class=\"w-5 h-5 text-gray-400\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\" /></svg>' +\n'</button>' +\n'<div id=\"fav-tooltip\" style=\"display:none;position:absolute;left:50%;top:-22px;transform:translateX(-50%);background:transparent;color:#475569;font-size:0.75rem;padding:0 4px;border-radius:3px;box-shadow:none;white-space:nowrap;z-index:20;pointer-events:none;font-weight:400;letter-spacing:0.01em;\">Zu den Favoriten hinzugefuegt</div>' +\n'</div>' +\n'</div>' +\n'</div>' +\n'<div class=\"text-sm analysis-meta\" style=\"color: #64748b;\">' +\n'<span>' + formattedDate + '</span>' +\n'<span class=\"text-gray-400 mx-2\">·</span>' +\n'<span>Ticker: ' + d.ticker + '</span>' +\n'<span class=\"text-gray-400 mx-2\">·</span>' +\n'<span>WKN: ' + d.wkn + '</span>' +\n'<span class=\"text-gray-400 mx-2\">·</span>' +\n'<span>ISIN: ' + d.isin + '</span>' +\n'</div>' +\n'</div>' +\n'<div class=\"hero-intro-wrapper\" style=\"display:flex; gap:24px; margin:24px 0 0 0; align-items:flex-start; flex-wrap:wrap;\">' +\n'<div class=\"analysis-hero\" style=\"flex:1; min-width:300px;\">' +\n'<img src=\"../data/vorschaubilder_analysen/' + d.slug + '_preview.svg\" alt=\"' + d.company + ' Vorschaubild\" class=\"hero-media\">' +\n'</div>' +\ntocHtml +\n'</div>' +\n'<p class=\"analysis-intro\" style=\"margin: 24px 0 32px 0; font-size:1.08rem; line-height:1.7; max-width:100%; text-align:justify;\">' + d.introText + '</p>' +\n'<p style=\"height:1.5em;\"></p>' +\ncontentWithIds +\n'<hr style=\"margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;\">' +\n'<p style=\"font-size: 0.9rem; color: #64748b;\"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewaehr.</p>' +\n'<p class=\"refs\" style=\"font-size: 0.9rem; color: #64748b;\"><strong>Quellen:</strong> <a href=\"' + d.source + '\" target=\"_blank\" rel=\"noopener noreferrer\">' + d.source + '</a></p>' +\n'</article>' +\n'</main>' +\n'<footer class=\"site-footer border-t py-6 mt-12\">' +\n'<div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\">' +\n'<div>&copy; 2026 capitovo - Alle Rechte vorbehalten.</div>' +\n'<div class=\"footer-links\">' +\n'<a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Impressum</a>' +\n'<a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Datenschutz</a>' +\n'<a href=\"../Rechtliches/haftung.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Haftungsausschluss</a>' +\n'<a href=\"../Rechtliches/agb.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">AGB</a>' +\n'</div>' +\n'</div>' +\n'</footer>' +\n'<div class=\"sidebar\" id=\"sidebar\" aria-hidden=\"true\" aria-label=\"Seitenmenue\">' +\n'<button class=\"close-button\" id=\"close-sidebar\" aria-label=\"Sidebar schliessen\">&times;</button>' +\n'<nav class=\"sidebar-nav\" aria-label=\"Hauptnavigation\">' +\n'<ul>' +\n'<li><a href=\"./abonenten.html\" class=\"flex items-center space-x-3\" aria-label=\"Startseite\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5 flex-shrink-0\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 11.5L12 4l9 7.5\" /><path d=\"M5 10.5v7.5a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7.5\" /></svg><span>Startseite</span></a></li>' +\n'<li><a href=\"./konto.html\" class=\"flex items-center space-x-3\" aria-label=\"Mein Konto\"><svg class=\"w-5 h-5 flex-shrink-0\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"3\" stroke=\"currentColor\" stroke-width=\"1.5\" /><path d=\"M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span>Mein Konto</span></a></li>' +\n'<li><a href=\"./alle_analysen.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"3\" y=\"10\" width=\"4\" height=\"11\" rx=\"0.5\" /><rect x=\"10\" y=\"6\" width=\"4\" height=\"15\" rx=\"0.5\" /><rect x=\"17\" y=\"3\" width=\"4\" height=\"18\" rx=\"0.5\" /></svg><span>Analysen</span></a></li>' +\n'<li><a href=\"./Aktien-Monitor/aktien-monitor.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M3 17l6-6 4 4 8-8\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\" /><polyline points=\"3 17 9 11 13 15 21 7\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" fill=\"none\" /></svg><span>Aktien-Monitor</span></a></li>' +\n'<li><a href=\"./earnings_kalender.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"></rect><line x1=\"16\" y1=\"2\" x2=\"16\" y2=\"6\"></line><line x1=\"8\" y1=\"2\" x2=\"8\" y2=\"6\"></line><line x1=\"3\" y1=\"10\" x2=\"21\" y2=\"10\"></line></svg><span>Wirtschaftskalender</span></a></li>' +\n'<li class=\"logout-bottom\"><a href=\"#\" id=\"open-contact-modal\" class=\"flex items-center space-x-3\" aria-label=\"Kontakt aufnehmen\"><svg class=\"w-5 h-5 flex-shrink-0\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" aria-hidden=\"true\"><path d=\"M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M22 6l-10 7L2 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span>Kontakt</span></a></li>' +\n'<li class=\"logout-bottom\"><a href=\"#\" id=\"logout-link\" class=\"logout-link\" aria-label=\"Abmelden\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" /><path d=\"M16 17l5-5-5-5\" /><path d=\"M21 12H9\" /></svg><span>Abmelden</span></a></li>' +\n'</ul>' +\n'</nav>' +\n'</div>' +\n'<script src=\"../script.js?v=11\"></script>' +\n'<script>' +\n'(function() {' +\n'  var backBtn = document.getElementById(\"back-button\");' +\n'  if (!backBtn) return;' +\n'  var referrer = document.referrer;' +\n'  if (referrer.includes(\"/Abonenten/abonenten.html\")) { backBtn.href = \"./abonenten.html\"; }' +\n'  else if (referrer.includes(\"/Abonenten/alle_analysen.html\")) { backBtn.href = \"./alle_analysen.html\"; }' +\n'  else if (referrer.includes(\"/Abonenten/\")) { backBtn.href = \"./alle_analysen.html\"; }' +\n'  else { backBtn.href = \"./alle_analysen.html\"; }' +\n'})();' +\n'(async function() {' +\n'  var btn = document.getElementById(\"favorite-button\");' +\n'  var tooltip = document.getElementById(\"fav-tooltip\");' +\n'  if (!btn) return;' +\n'  var favKey = btn.dataset.title || \"' + d.slug + '\";' +\n'  var favorites = [];' +\n'  try { favorites = JSON.parse(localStorage.getItem(\"capitovo_favorites\") || \"[]\"); } catch(e) { favorites = []; }' +\n'  var isFav = favorites.includes(favKey);' +\n'  btn.setAttribute(\"aria-pressed\", isFav ? \"true\" : \"false\");' +\n'  btn.setAttribute(\"aria-label\", isFav ? \"Aus Favoriten entfernen\" : \"Zu Favoriten hinzufuegen\");' +\n'  btn.title = isFav ? \"Aus Favoriten entfernen\" : \"Zu Favoriten hinzufuegen\";' +\n'  var icon = btn.querySelector(\"svg\");' +\n'  if (icon) {' +\n'    icon.setAttribute(\"fill\", isFav ? \"currentColor\" : \"none\");' +\n'    icon.classList.toggle(\"text-yellow-400\", isFav);' +\n'    icon.classList.toggle(\"text-gray-400\", !isFav);' +\n'  }' +\n'  btn.addEventListener(\"click\", function(e) {' +\n'    setTimeout(function() {' +\n'      var favs = [];' +\n'      try { favs = JSON.parse(localStorage.getItem(\"capitovo_favorites\") || \"[]\"); } catch(e) { favs = []; }' +\n'      var nowFav = favs.includes(favKey);' +\n'      if (tooltip && nowFav) {' +\n'        tooltip.style.display = \"block\";' +\n'        setTimeout(function() { tooltip.style.display = \"none\"; }, 1200);' +\n'      }' +\n'    }, 10);' +\n'  });' +\n'})();' +\n'</script>' +\n'</body>' +\n'</html>';\n\nreturn { json: { ...d, html: html } };"
+      },
+      "id": "90eedc7b-a3c0-421f-bae7-0cf7d3b48d94",
+      "name": "HTML Renderer - Capitovo Stil1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "var d = $input.item.json;\nvar displayName = d.company.length > 25 ? d.company.substring(0, 22) + '...' : d.company;\n\nvar svg = '<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">' +\n'<defs>' +\n'<linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">' +\n'<stop offset=\"0%\" stop-color=\"#0f172a\"/>' +\n'<stop offset=\"100%\" stop-color=\"#1e293b\"/>' +\n'</linearGradient>' +\n'<linearGradient id=\"accent\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\">' +\n'<stop offset=\"0%\" stop-color=\"#3b82f6\"/>' +\n'<stop offset=\"100%\" stop-color=\"#0ea5e9\"/>' +\n'</linearGradient>' +\n'</defs>' +\n'<rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"16\"/>' +\n'<g font-family=\"-apple-system, BlinkMacSystemFont, sans-serif\">' +\n'<text x=\"48\" y=\"72\" fill=\"#64748b\" font-size=\"12\" letter-spacing=\"0.1em\">' + d.ticker + ' · ' + d.sector.toUpperCase() + '</text>' +\n'<text x=\"48\" y=\"120\" fill=\"#f1f5f9\" font-size=\"36\" font-weight=\"700\">' + displayName + '</text>' +\n'<text x=\"48\" y=\"155\" fill=\"#94a3b8\" font-size=\"15\">Analytische Unternehmenseinordnung</text>' +\n'<rect x=\"48\" y=\"180\" width=\"80\" height=\"4\" fill=\"url(#accent)\" rx=\"2\"/>' +\n'<text x=\"48\" y=\"230\" fill=\"#64748b\" font-size=\"13\">Geschaeftsmodell · Fundamentaldaten · Bewertung</text>' +\n'<text x=\"48\" y=\"300\" fill=\"#475569\" font-size=\"11\">capitovo Research</text>' +\n'<text x=\"48\" y=\"320\" fill=\"#64748b\" font-size=\"10\">' + d.date + '</text>' +\n'</g>' +\n'</svg>';\n\nreturn { json: { ...d, svg: svg } };"
+      },
+      "id": "c2adf883-d01e-4ae8-bc1a-fc45c5e7487d",
+      "name": "SVG Generator1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1552,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "var d = $input.item.json;\n\nreturn {\n  json: {\n    ...d,\n    htmlPath: 'Abonenten/' + d.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + d.slug + '_preview.svg',\n    htmlBase64: Buffer.from(d.html, 'utf8').toString('base64'),\n    svgBase64: Buffer.from(d.svg, 'utf8').toString('base64'),\n    htmlCommitMsg: 'Analyse: ' + d.company + ' (' + d.ticker + ') - ' + d.date,\n    svgCommitMsg: 'Vorschaubild: ' + d.company + ' - ' + d.date\n  }\n};"
+      },
+      "id": "e41eeb2d-5767-440c-98e0-b120736a3365",
+      "name": "Base64 Encoder1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1776,
+        1152
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "afce6bbc-21ee-42e1-a72a-d3a69a003ebd",
+      "name": "Get HTML SHA2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1120,
+        1408
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prevData = $('Base64 Encoder1').item.json;\nvar htmlResponse = $input.item.json;\n\n// SHA extrahieren falls vorhanden\nvar htmlSha = htmlResponse.sha || null;\n\nreturn {\n  json: {\n    ...prevData,\n    htmlSha: htmlSha\n  }\n};"
+      },
+      "id": "33540fb4-c621-4f3c-ac0a-a73f7208662b",
+      "name": "Extract HTML SHA2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1328,
+        1408
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/vnd.github+json"
+            },
+            {
+              "name": "X-GitHub-Api-Version",
+              "value": "2022-11-28"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "6165ff6a-b9c3-4995-a589-78dadd944276",
+      "name": "Get SVG SHA2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1552,
+        1408
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prevData = $('Extract HTML SHA2').item.json;\nvar svgResponse = $input.item.json;\n\n// SHA extrahieren falls vorhanden\nvar svgSha = svgResponse.sha || null;\n\nreturn {\n  json: {\n    ...prevData,\n    svgSha: svgSha\n  }\n};"
+      },
+      "id": "6d1751e5-68b1-4a11-b476-09862c617a1e",
+      "name": "Extract SVG SHA2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1776,
+        1408
       ]
     },
     {
@@ -180,13 +555,13 @@
           "timeout": 60000
         }
       },
-      "id": "a6113398-705b-486a-82df-1fe10cbd5ac9",
-      "name": "GitHub Upload HTML",
+      "id": "b68316f6-766a-477b-9d7d-dbd588da9b65",
+      "name": "GitHub Upload HTML1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -752,
-        128
+        1120,
+        1648
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -197,15 +572,15 @@
     },
     {
       "parameters": {
-        "jsCode": "var prevData = $('Extract SVG SHA').item.json;\nreturn { json: prevData };"
+        "jsCode": "var prevData = $('Extract SVG SHA2').item.json;\nreturn { json: prevData };"
       },
-      "id": "427a5602-f0bc-43a6-bbf9-1918b370b8a8",
-      "name": "Pass Data After HTML",
+      "id": "26aa4b91-27cd-4f65-8d0e-09dd562453c9",
+      "name": "Pass Data After HTML1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -544,
-        128
+        1328,
+        1648
       ]
     },
     {
@@ -234,13 +609,13 @@
           "timeout": 60000
         }
       },
-      "id": "4b627705-5ac6-48c0-9e69-4cc68128851f",
-      "name": "GitHub Upload SVG",
+      "id": "49aee096-733b-46d4-9437-896c0f67f72c",
+      "name": "GitHub Upload SVG1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -320,
-        128
+        1552,
+        1648
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -271,13 +646,13 @@
           "timeout": 30000
         }
       },
-      "id": "3ffc2256-4fda-4c02-8597-7fed2e76a9b5",
-      "name": "Get Analysen.json SHA",
+      "id": "ab7c3c00-38c1-4fcd-b7de-873faa82f1ef",
+      "name": "Get Analysen.json SHA1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -96,
-        128
+        1776,
+        1648
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -289,15 +664,15 @@
     },
     {
       "parameters": {
-        "jsCode": "var data = $('Extract SVG SHA').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\n\nvar existing = [];\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\nfunction wordCountFromHtml(html) {\n  var text = String(html || '').replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n  if (!text) return 0;\n  return text.split(' ').length;\n}\n\nfunction formatGermanLong(dateStr) {\n  try {\n    var parts = String(dateStr || '').split('-');\n    var y = parseInt(parts[0], 10);\n    var m = parseInt(parts[1], 10) - 1;\n    var d = parseInt(parts[2], 10);\n    var dt = new Date(Date.UTC(y, m, d));\n    return dt.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n  } catch(e) {\n    return String(dateStr || '');\n  }\n}\n\nvar id = String((data.ticker || '')).toLowerCase() + '-' + String(data.date || '');\nvar titleDate = formatGermanLong(data.date);\nvar link = data.htmlPath;\nvar image = data.svgPath;\n\nvar entry = {\n  id: id,\n  category: String(data.sector || '').toUpperCase(),\n  title: data.company + ' – Unternehmensanalyse (' + titleDate + ')',\n  summary: data.introText || ('Analytische Einordnung von ' + data.company + ' (' + data.ticker + ').'),\n  link: link,\n  image: image,\n  date: data.date,\n  author: 'capitovo Research',\n  tags: [data.company, data.ticker, data.sector, data.exchange].filter(Boolean),\n  published: true,\n  wordCount: wordCountFromHtml(data.analysisContent),\n  sourcesCount: data.source ? 1 : 0\n};\n\nfunction normPath(p) { return String(p || '').replace(/^\\.?\\/?/, ''); }\nvar targetLink = normPath(link);\n\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) {\n  var it = existing[i] || {};\n  if (String(it.id || '') === id) { idx = i; break; }\n  if (normPath(it.link) === targetLink) { idx = i; break; }\n}\n\nif (idx >= 0) {\n  existing[idx] = Object.assign({}, existing[idx], entry);\n} else {\n  var insertAt = 0;\n  if (existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE') insertAt = 1;\n  existing.splice(insertAt, 0, entry);\n}\n\nvar updatedJson = JSON.stringify(existing, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: Object.assign({}, data, {\n    analysenPath: 'data/analysen.json',\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Analysen-Katalog: ' + data.company + ' (' + data.ticker + ') - ' + data.date\n  })\n};"
+        "jsCode": "var data = $('Extract SVG SHA2').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\n\nvar existing = [];\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\nfunction wordCountFromHtml(html) {\n  var text = String(html || '').replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n  if (!text) return 0;\n  return text.split(' ').length;\n}\n\nfunction formatGermanLong(dateStr) {\n  try {\n    var parts = String(dateStr || '').split('-');\n    var y = parseInt(parts[0], 10);\n    var m = parseInt(parts[1], 10) - 1;\n    var d = parseInt(parts[2], 10);\n    var dt = new Date(Date.UTC(y, m, d));\n    return dt.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n  } catch(e) {\n    return String(dateStr || '');\n  }\n}\n\nvar id = String((data.ticker || '')).toLowerCase() + '-' + String(data.date || '');\nvar titleDate = formatGermanLong(data.date);\nvar link = data.htmlPath;\nvar image = data.svgPath;\n\nvar entry = {\n  id: id,\n  category: String(data.sector || '').toUpperCase(),\n  title: data.company + ' – Unternehmensanalyse (' + titleDate + ')',\n  summary: data.introText || ('Analytische Einordnung von ' + data.company + ' (' + data.ticker + ').'),\n  link: link,\n  image: image,\n  date: data.date,\n  author: 'capitovo Research',\n  tags: [data.company, data.ticker, data.sector, data.exchange].filter(Boolean),\n  published: true,\n  wordCount: wordCountFromHtml(data.analysisContent),\n  sourcesCount: data.source ? 1 : 0\n};\n\nfunction normPath(p) { return String(p || '').replace(/^\\.?\\/?/, ''); }\nvar targetLink = normPath(link);\n\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) {\n  var it = existing[i] || {};\n  if (String(it.id || '') === id) { idx = i; break; }\n  if (normPath(it.link) === targetLink) { idx = i; break; }\n}\n\nif (idx >= 0) {\n  existing[idx] = Object.assign({}, existing[idx], entry);\n} else {\n  var insertAt = 0;\n  if (existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE') insertAt = 1;\n  existing.splice(insertAt, 0, entry);\n}\n\nvar updatedJson = JSON.stringify(existing, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: Object.assign({}, data, {\n    analysenPath: 'data/analysen.json',\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Analysen-Katalog: ' + data.company + ' (' + data.ticker + ') - ' + data.date\n  })\n};"
       },
-      "id": "82aee2b1-844f-4348-beb7-16a24e241a5a",
-      "name": "Build Analysen.json",
+      "id": "08c7650a-0e3c-4609-bfd8-0d179f8e02c4",
+      "name": "Build Analysen.json1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        128,
-        128
+        2000,
+        1648
       ]
     },
     {
@@ -326,13 +701,13 @@
           "timeout": 60000
         }
       },
-      "id": "96d5b7a3-83e5-4d2e-9b7c-227002314d63",
-      "name": "GitHub Upload Analysen.json",
+      "id": "cf5d5923-6c2c-4e19-b369-d5cfe3818536",
+      "name": "GitHub Upload Analysen.json1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        352,
-        128
+        2224,
+        1648
       ],
       "credentials": {
         "httpHeaderAuth": {
@@ -343,545 +718,23 @@
     },
     {
       "parameters": {
-        "jsCode": "var d = $('Extract SVG SHA').item.json;\n\nreturn {\n  json: {\n    status: 'PUBLISHED',\n    message: d.company + '-Analyse erfolgreich veroeffentlicht!',\n    company: d.company,\n    ticker: d.ticker,\n    date: d.date,\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath,\n    svgUrl: 'https://kw-f8.github.io/capitovo/' + d.svgPath,\n    files: {\n      html: d.htmlPath,\n      svg: d.svgPath\n    },\n    catalogEntry: {\n      id: d.ticker.toLowerCase() + '-' + d.date.replace(/-/g, ''),\n      category: d.sector,\n      title: d.company + ' - Unternehmensanalyse',\n      summary: 'Analytische Einordnung von ' + d.company + ' (' + d.ticker + ')',\n      link: d.htmlPath,\n      image: d.svgPath,\n      date: d.date,\n      author: 'capitovo Research'\n    }\n  }\n};"
+        "jsCode": "var d = $('Extract SVG SHA2').item.json;\n\nreturn {\n  json: {\n    status: 'PUBLISHED',\n    message: d.company + '-Analyse erfolgreich veroeffentlicht!',\n    company: d.company,\n    ticker: d.ticker,\n    date: d.date,\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath,\n    svgUrl: 'https://kw-f8.github.io/capitovo/' + d.svgPath,\n    files: {\n      html: d.htmlPath,\n      svg: d.svgPath\n    },\n    catalogEntry: {\n      id: d.ticker.toLowerCase() + '-' + d.date.replace(/-/g, ''),\n      category: d.sector,\n      title: d.company + ' - Unternehmensanalyse',\n      summary: 'Analytische Einordnung von ' + d.company + ' (' + d.ticker + ')',\n      link: d.htmlPath,\n      image: d.svgPath,\n      date: d.date,\n      author: 'capitovo Research'\n    }\n  }\n};"
       },
-      "id": "34f582cb-9182-492f-89ce-4092468a5461",
-      "name": "Output",
+      "id": "4bf2f7fc-b465-476d-a59a-0b1a63c8511a",
+      "name": "Output2",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        576,
-        128
+        2448,
+        1648
       ]
-    },
-    {
-      "parameters": {
-        "jsCode": "// Konfiguration: Welche Test-Analyse soll geloescht werden?\n// Passe slug an, falls du eine andere Test-Analyse loeschen willst\n\nvar slug = 'apple_2026-01-24';\n\nreturn {\n  json: {\n    slug: slug,\n    htmlPath: 'Abonenten/' + slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + slug + '_preview.svg',\n    analysenPath: 'data/analysen.json'\n  }\n};"
-      },
-      "id": "c728a68e-ffb8-4d06-945e-313d158b2bac",
-      "name": "Config - Test Analyse",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -2512,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "method": "DELETE",
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/vnd.github+json"
-            },
-            {
-              "name": "X-GitHub-Api-Version",
-              "value": "2022-11-28"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"Cleanup: Loesche Test-Analyse HTML {{ $json.slug }}\",\n  \"sha\": \"{{ $json.htmlSha }}\",\n  \"branch\": \"main\"\n}",
-        "options": {
-          "timeout": 60000
-        }
-      },
-      "id": "2d9c9b5d-c57b-4cf8-aa03-e303bd63275c",
-      "name": "Delete HTML",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1856,
-        624
-      ],
-      "executeOnce": false,
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('Extract HTML SHA1').item.json;\nreturn { json: prev };"
-      },
-      "id": "4bc2ef55-48ac-4e7f-b278-9989ef632005",
-      "name": "Pass After HTML Delete",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1632,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "method": "DELETE",
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/vnd.github+json"
-            },
-            {
-              "name": "X-GitHub-Api-Version",
-              "value": "2022-11-28"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"Cleanup: Loesche Test-Analyse SVG {{ $json.slug }}\",\n  \"sha\": \"{{ $json.svgSha }}\",\n  \"branch\": \"main\"\n}",
-        "options": {
-          "timeout": 60000
-        }
-      },
-      "id": "e64f7966-1575-445f-81c8-53fb4e4ff5b2",
-      "name": "Delete SVG",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -976,
-        624
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('Extract SVG SHA1').item.json;\nreturn { json: prev };"
-      },
-      "id": "9d0c3c16-3523-4e65-bc2f-7559615ae08f",
-      "name": "Pass After SVG Delete",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -752,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/vnd.github+json"
-            },
-            {
-              "name": "X-GitHub-Api-Version",
-              "value": "2022-11-28"
-            }
-          ]
-        },
-        "options": {
-          "timeout": 30000
-        }
-      },
-      "id": "339e197b-b715-4ee7-a224-4a67fa26eb80",
-      "name": "Get Analysen.json",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -528,
-        624
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('Pass After SVG Delete').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp.sha || null;\nvar existing = [];\n\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\n// Entferne Eintraege die zum Test-Slug gehoeren\nvar slug = prev.slug;\n\n// Extrahiere das Datum aus dem Slug (z.B. '2026-01-24' aus 'apple_2026-01-24')\nvar slugParts = slug.split('_');\nvar slugDate = slugParts.length > 1 ? slugParts.slice(1).join('_') : '';\n\nvar filtered = existing.filter(function(item) {\n  // Pruefe mehrere Matching-Kriterien:\n  // 1. Link enthaelt den kompletten Slug\n  var matchByLink = String(item.link || '').includes(slug);\n  \n  // 2. Image-Pfad enthaelt den Slug\n  var matchByImage = String(item.image || '').includes(slug);\n  \n  // 3. ID enthaelt das Datum (z.B. 'aapl-2026-01-24' matched mit Datum '2026-01-24')\n  var matchByDate = slugDate && String(item.id || '').includes(slugDate.replace(/_/g, '-'));\n  \n  // Behalte Eintrag nur wenn KEINES der Kriterien zutrifft\n  return !matchByLink && !matchByImage && !matchByDate;\n});\n\nvar removed = existing.length - filtered.length;\n\nvar updatedJson = JSON.stringify(filtered, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: {\n    ...prev,\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    entriesRemoved: removed,\n    shouldUpdateAnalysen: removed > 0\n  }\n};"
-      },
-      "id": "ef074262-af83-4349-8a69-8b0d5bbdbe0e",
-      "name": "Filter Analysen.json",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -304,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "method": "PUT",
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/vnd.github+json"
-            },
-            {
-              "name": "X-GitHub-Api-Version",
-              "value": "2022-11-28"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"Cleanup: Entferne Test-Analyse {{ $json.slug }} aus Katalog\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
-        "options": {
-          "timeout": 60000
-        }
-      },
-      "id": "e34d8065-f0e4-4484-9f36-4609633493c0",
-      "name": "Update Analysen.json",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -96,
-        624
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/vnd.github+json"
-            },
-            {
-              "name": "X-GitHub-Api-Version",
-              "value": "2022-11-28"
-            }
-          ]
-        },
-        "options": {
-          "timeout": 30000
-        }
-      },
-      "id": "892534c2-9a51-45c8-9e2d-9a0381a845a9",
-      "name": "Get HTML SHA1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -2288,
-        624
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var config = $('Config - Test Analyse').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...config,\n    htmlSha: resp.sha || null,\n    htmlExists: !!resp.sha\n  }\n};"
-      },
-      "id": "a5fcaa78-2258-4d5a-9acc-54471ae842c4",
-      "name": "Extract HTML SHA1",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -2064,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Accept",
-              "value": "application/vnd.github+json"
-            },
-            {
-              "name": "X-GitHub-Api-Version",
-              "value": "2022-11-28"
-            }
-          ]
-        },
-        "options": {
-          "timeout": 30000
-        }
-      },
-      "id": "6d372a6c-28cc-4b85-bc05-71d10639f3bc",
-      "name": "Get SVG SHA1",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        -1408,
-        624
-      ],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('Pass After HTML Delete').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...prev,\n    svgSha: resp.sha || null,\n    svgExists: !!resp.sha\n  }\n};"
-      },
-      "id": "d8ad40bb-95f5-431b-a374-3ee71693e388",
-      "name": "Extract SVG SHA1",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        -1184,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('Filter Analysen.json').item.json;\n\nreturn {\n  json: {\n    status: 'CLEANUP COMPLETE',\n    slug: prev.slug,\n    deletedFiles: {\n      html: prev.htmlPath + (prev.htmlExists ? ' (geloescht)' : ' (existierte nicht)'),\n      svg: prev.svgPath + (prev.svgExists ? ' (geloescht)' : ' (existierte nicht)')\n    },\n    catalogEntriesRemoved: prev.entriesRemoved,\n    message: 'Test-Analyse ' + prev.slug + ' wurde bereinigt. Du kannst den Test-Veroeffentlichungs-Workflow jetzt erneut ausfuehren.'\n  }\n};"
-      },
-      "id": "4947a9f8-18eb-49ca-aeae-515f5431d492",
-      "name": "Output1",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        128,
-        624
-      ]
-    },
-    {
-      "parameters": {
-        "content": "# Löschen",
-        "height": 80,
-        "width": 304
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -2624,
-        464
-      ],
-      "typeVersion": 1,
-      "id": "8ee5986d-d4ad-4533-835f-ea7eeeb3b0af",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "content": "# Veröffentlichen",
-        "height": 80,
-        "width": 304
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -2624,
-        -16
-      ],
-      "typeVersion": 1,
-      "id": "afc6136d-3e62-40c5-8f71-d9a030f0a60b",
-      "name": "Sticky Note1"
     }
   ],
   "pinData": {},
   "connections": {
     "Manual Trigger": {
       "main": [
-        [
-          {
-            "node": "Input - Fertige Analyse",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Input - Fertige Analyse": {
-      "main": [
-        [
-          {
-            "node": "HTML Renderer - Capitovo Stil",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTML Renderer - Capitovo Stil": {
-      "main": [
-        [
-          {
-            "node": "SVG Generator",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "SVG Generator": {
-      "main": [
-        [
-          {
-            "node": "Base64 Encoder",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Base64 Encoder": {
-      "main": [
-        [
-          {
-            "node": "Get HTML SHA",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get HTML SHA": {
-      "main": [
-        [
-          {
-            "node": "Extract HTML SHA",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract HTML SHA": {
-      "main": [
-        [
-          {
-            "node": "Get SVG SHA",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get SVG SHA": {
-      "main": [
-        [
-          {
-            "node": "Extract SVG SHA",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract SVG SHA": {
-      "main": [
-        [
-          {
-            "node": "GitHub Upload HTML",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GitHub Upload HTML": {
-      "main": [
-        [
-          {
-            "node": "Pass Data After HTML",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Pass Data After HTML": {
-      "main": [
-        [
-          {
-            "node": "GitHub Upload SVG",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GitHub Upload SVG": {
-      "main": [
-        [
-          {
-            "node": "Get Analysen.json SHA",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Analysen.json SHA": {
-      "main": [
-        [
-          {
-            "node": "Build Analysen.json",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Analysen.json": {
-      "main": [
-        [
-          {
-            "node": "GitHub Upload Analysen.json",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "GitHub Upload Analysen.json": {
-      "main": [
-        [
-          {
-            "node": "Output",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Config - Test Analyse": {
@@ -1015,14 +868,169 @@
           }
         ]
       ]
+    },
+    "Input - Fertige Analyse1": {
+      "main": [
+        [
+          {
+            "node": "HTML Renderer - Capitovo Stil1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTML Renderer - Capitovo Stil1": {
+      "main": [
+        [
+          {
+            "node": "SVG Generator1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SVG Generator1": {
+      "main": [
+        [
+          {
+            "node": "Base64 Encoder1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Base64 Encoder1": {
+      "main": [
+        [
+          {
+            "node": "Get HTML SHA2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get HTML SHA2": {
+      "main": [
+        [
+          {
+            "node": "Extract HTML SHA2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract HTML SHA2": {
+      "main": [
+        [
+          {
+            "node": "Get SVG SHA2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get SVG SHA2": {
+      "main": [
+        [
+          {
+            "node": "Extract SVG SHA2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract SVG SHA2": {
+      "main": [
+        [
+          {
+            "node": "GitHub Upload HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Upload HTML1": {
+      "main": [
+        [
+          {
+            "node": "Pass Data After HTML1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pass Data After HTML1": {
+      "main": [
+        [
+          {
+            "node": "GitHub Upload SVG1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Upload SVG1": {
+      "main": [
+        [
+          {
+            "node": "Get Analysen.json SHA1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Analysen.json SHA1": {
+      "main": [
+        [
+          {
+            "node": "Build Analysen.json1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Analysen.json1": {
+      "main": [
+        [
+          {
+            "node": "GitHub Upload Analysen.json1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GitHub Upload Analysen.json1": {
+      "main": [
+        [
+          {
+            "node": "Output2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d359217e-a9b2-4fba-95ea-6ef9fe92f8e2",
+  "versionId": "99db9fb1-60de-424f-88cf-f3c1c061c315",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "4e6dd7bd1638bd2724994ec7815d8c03087481a498a8122e7ad8e8a16988a92b"
   },
   "id": "MXSYkVkGvEWw37tC",

@@ -1,0 +1,276 @@
+{
+  "name": "Analyse Publisher v2 - Deterministisch",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [100, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// PFLICHT-STRUKTUR DEFINITION (NICHT VERAENDERBAR)\n// =====================================================\n// Diese Abschnitte sind verbindlich. Reihenfolge und Namen\n// duerfen NICHT veraendert werden.\n// =====================================================\n\nconst PFLICHT_ABSCHNITTE = [\n  { id: 'marktperformance', nummer: '1)', titel: 'Marktperformance & Bewertung' },\n  { id: 'finanzielle-grundlagen', nummer: '2)', titel: 'Finanzielle Grundlagen' },\n  { id: 'strategie', nummer: '3)', titel: 'Strategische Ausrichtung' },\n  { id: 'analysten', nummer: '4)', titel: 'Analystenerwartungen & Institutionelles Interesse' },\n  { id: 'votum', nummer: '5)', titel: 'Bewertungskontext & Votum' }\n];\n\n// Fixer Disclaimer (nicht veraenderbar)\nconst DISCLAIMER = 'Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewaehr. Investitionsentscheidungen sollten auf Basis eigener Recherche und ggf. nach Konsultation eines Finanzberaters getroffen werden.';\n\nreturn {\n  json: {\n    PFLICHT_ABSCHNITTE: PFLICHT_ABSCHNITTE,\n    DISCLAIMER: DISCLAIMER,\n    CONFIG: {\n      maxIntroLength: 400,\n      requiredSections: 5,\n      dateFormat: 'de-DE'\n    }\n  }\n};"
+      },
+      "id": "config-struktur",
+      "name": "0. Struktur-Definition",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [300, 200],
+      "notes": "NICHT AENDERN - Definiert die verbindliche Abschnittsstruktur"
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// INPUT: Analyse-Daten vom Generator-Workflow\n// =====================================================\n// WICHTIG: Die sections MUESSEN exakt den 5 Pflicht-IDs entsprechen:\n// - marktperformance\n// - finanzielle-grundlagen\n// - strategie\n// - analysten\n// - votum\n// =====================================================\n\nconst config = $('0. Struktur-Definition').item.json;\n\nreturn {\n  json: {\n    // === METADATEN (PFLICHTFELDER) ===\n    company: 'Apple Inc.',\n    ticker: 'AAPL',\n    slug: 'apple_' + new Date().toISOString().split('T')[0],\n    exchange: 'NASDAQ',\n    sector: 'TECHNOLOGIE',\n    currency: 'USD',\n    wkn: '865985',\n    isin: 'US0378331005',\n    date: new Date().toISOString().split('T')[0],\n    author: 'capitovo Research',\n    \n    // === INTRO (max. 3-4 Saetze, aus vorhandenem Text extrahiert) ===\n    intro: 'In dieser Analyse ordnen wir die aktuelle Bewertung und Kursentwicklung von Apple ein und pruefen, welche Erwartungen der Markt bereits eingepreist hat. Wir betrachten die finanziellen Grundlagen sowie strategische Faktoren und leiten daraus ein klares Votum ab.',\n    \n    // === PFLICHTABSCHNITTE (exakt 5, in fester Reihenfolge) ===\n    sections: {\n      'marktperformance': {\n        content: 'Apple notiert aktuell bei etwa 178 USD, was einer Marktkapitalisierung von rund 2,8 Billionen USD entspricht. Das Forward-KGV liegt bei 28x und damit ueber dem 5-Jahres-Durchschnitt von 24x. Die relative Staerke gegenueber dem S&P 500 ist positiv, mit einer YTD-Performance von +12%. Das Momentum zeigt sich stabil, wenngleich die Bewertungspraemie gegenueber dem Sektor erhoeht ist.',\n        kennzahlen: [\n          { label: 'Aktueller Kurs', wert: '178 USD', kommentar: 'Stand: heute' },\n          { label: 'Forward-KGV', wert: '28x', kommentar: 'vs. 24x historisch' },\n          { label: 'Performance YTD', wert: '+12%', kommentar: 'vs. S&P 500: +8%' }\n        ]\n      },\n      'finanzielle-grundlagen': {\n        content: 'Im Geschaeftsjahr 2024 erzielte Apple einen Umsatz von 383 Mrd. USD bei einer operativen Marge von 30,5%. Der Free Cashflow belief sich auf 99,6 Mrd. USD. Die Bilanz ist solide mit einer Nettoverschuldung nahe Null. Die Kapitalallokation priorisiert Aktienrueckkaeufe (90 Mrd. USD p.a.) und Dividenden (15 Mrd. USD p.a.).',\n        kennzahlen: [\n          { label: 'Umsatz (TTM)', wert: '383 Mrd. USD', kommentar: '-2,8% YoY' },\n          { label: 'Operative Marge', wert: '30,5%', kommentar: 'stabil' },\n          { label: 'Free Cashflow', wert: '99,6 Mrd. USD', kommentar: 'stark' }\n        ]\n      },\n      'strategie': {\n        content: 'Apple fokussiert sich auf drei strategische Saeulen: (1) Services-Wachstum mit Apple Music, iCloud und App Store, (2) Oekosystem-Ausbau durch neue Geraetekategorien wie Vision Pro, und (3) geografische Diversifizierung weg von China. Risiken bestehen bei regulatorischen Eingriffen im App Store sowie der zyklischen Natur des iPhone-Geschaefts.',\n        kennzahlen: null\n      },\n      'analysten': {\n        content: 'Der Analystenkonsens zeigt 32 Buy-Ratings, 12 Hold und 3 Sell. Das durchschnittliche Kursziel liegt bei 195 USD (+10% Upside). Institutionelle Anleger halten 61% der Aktien. Juengste Upgrades kamen von Goldman Sachs und Morgan Stanley nach starken Services-Zahlen.',\n        kennzahlen: [\n          { label: 'Konsens-Kursziel', wert: '195 USD', kommentar: '+10% Upside' },\n          { label: 'Buy/Hold/Sell', wert: '32/12/3', kommentar: 'positiv' }\n        ]\n      },\n      'votum': {\n        content: 'Bei aktueller Bewertung erscheint Apple fair bis leicht ueberbewertet. Das Services-Wachstum stuetzt die These, jedoch ist das Upside limitiert. Fuer langfristig orientierte Anleger mit Qualitaetsfokus bleibt die Aktie haltenswert.',\n        votumText: 'Neutral / Halten',\n        votumBegruendung: 'Die Bewertung reflektiert bereits hohe Erwartungen. Bei Kursen unter 160 USD waere ein Upgrade auf \"Kaufen\" denkbar. Trigger: Beschleunigtes Services-Wachstum oder neuer Produktzyklus.',\n        kennzahlen: null\n      }\n    },\n    \n    // === QUELLEN (dedizierter Block, keine Fliesstext-Integration) ===\n    sources: [\n      'Apple Investor Relations: investor.apple.com',\n      'SEC EDGAR Filings: sec.gov',\n      'Bloomberg Terminal (Marktdaten)'\n    ],\n    \n    // === STRUKTUR-REFERENZ ===\n    PFLICHT_ABSCHNITTE: config.PFLICHT_ABSCHNITTE,\n    DISCLAIMER: config.DISCLAIMER,\n    CONFIG: config.CONFIG\n  }\n};"
+      },
+      "id": "input-data",
+      "name": "1. Input Daten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [520, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// VALIDIERUNGS-GATE (PFLICHT)\n// =====================================================\n// Prueft VOR jeder weiteren Verarbeitung, ob alle\n// Pflichtbedingungen erfuellt sind.\n// Bei Verletzung: Workflow wird abgebrochen.\n// =====================================================\n\nconst data = $input.item.json;\nconst errors = [];\nconst warnings = [];\n\n// 1. Pflicht-Metadaten pruefen\nconst pflichtMeta = ['company', 'ticker', 'slug', 'date', 'sector'];\nfor (const field of pflichtMeta) {\n  if (!data[field] || String(data[field]).trim() === '') {\n    errors.push(`Pflichtfeld fehlt: ${field}`);\n  }\n}\n\n// 2. Alle 5 Pflichtabschnitte vorhanden?\nconst pflichtIds = ['marktperformance', 'finanzielle-grundlagen', 'strategie', 'analysten', 'votum'];\nconst vorhandeneAbschnitte = data.sections ? Object.keys(data.sections) : [];\n\nfor (const id of pflichtIds) {\n  if (!vorhandeneAbschnitte.includes(id)) {\n    errors.push(`Pflichtabschnitt fehlt: ${id}`);\n  } else if (!data.sections[id].content || String(data.sections[id].content).trim() === '') {\n    errors.push(`Pflichtabschnitt ist leer: ${id}`);\n  }\n}\n\n// 3. Keine fremden Abschnitte erlaubt\nfor (const id of vorhandeneAbschnitte) {\n  if (!pflichtIds.includes(id)) {\n    errors.push(`Unerlaubter Abschnitt: ${id} (nur ${pflichtIds.join(', ')} erlaubt)`);\n  }\n}\n\n// 4. Reihenfolge ist durch Pflicht-IDs definiert (wird beim Rendern erzwungen)\n\n// 5. Disclaimer vorhanden?\nif (!data.DISCLAIMER || String(data.DISCLAIMER).trim() === '') {\n  errors.push('Disclaimer fehlt');\n}\n\n// 6. Quellen vorhanden?\nif (!data.sources || !Array.isArray(data.sources) || data.sources.length === 0) {\n  errors.push('Mindestens eine Quelle erforderlich');\n}\n\n// 7. Intro vorhanden und nicht zu lang?\nif (!data.intro || String(data.intro).trim() === '') {\n  warnings.push('Intro fehlt (wird leer bleiben)');\n} else if (data.intro.length > 500) {\n  warnings.push(`Intro zu lang (${data.intro.length} Zeichen, max. 500)`);\n}\n\n// 8. Votum-Box vorhanden?\nif (data.sections && data.sections.votum) {\n  if (!data.sections.votum.votumText) {\n    errors.push('Votum-Text fehlt im Abschnitt \"votum\"');\n  }\n}\n\n// Entscheidung\nconst isValid = errors.length === 0;\n\nif (!isValid) {\n  // Workflow abbrechen mit klarer Fehlermeldung\n  throw new Error(\n    '=== VALIDIERUNG FEHLGESCHLAGEN ===\\n\\n' +\n    'Fehler:\\n' + errors.map(e => '  ❌ ' + e).join('\\n') +\n    (warnings.length > 0 ? '\\n\\nWarnungen:\\n' + warnings.map(w => '  ⚠️ ' + w).join('\\n') : '') +\n    '\\n\\n=== VEROEFFENTLICHUNG ABGEBROCHEN ==='\n  );\n}\n\nreturn {\n  json: {\n    ...data,\n    _validation: {\n      passed: true,\n      timestamp: new Date().toISOString(),\n      warnings: warnings\n    }\n  }\n};"
+      },
+      "id": "validation-gate",
+      "name": "2. Validierungs-Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [740, 400],
+      "notes": "Blockiert Veroeffentlichung bei Strukturverletzung"
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// DETERMINISTISCHER HTML RENDERER\n// =====================================================\n// Dieser Renderer interpretiert NICHT.\n// Er platziert NUR in vordefinierte Slots.\n// Keine neuen Ueberschriften, keine Umstrukturierung.\n// =====================================================\n\nconst data = $input.item.json;\n\n// Datum formatieren\nconst dateObj = new Date(data.date);\nconst formattedDate = dateObj.toLocaleDateString('de-DE', {\n  day: '2-digit',\n  month: '2-digit',\n  year: 'numeric'\n});\nconst longDate = dateObj.toLocaleDateString('de-DE', {\n  day: 'numeric',\n  month: 'long',\n  year: 'numeric'\n});\n\n// Hilfsfunktion: Text bereinigen (keine Interpretation, nur Hygiene)\nfunction cleanText(text) {\n  if (!text) return '';\n  return text\n    .replace(/\\n{3,}/g, '\\n\\n')  // Max 2 Zeilenumbrueche\n    .replace(/[\\u00AD]/g, '')    // Soft hyphens entfernen\n    .trim();\n}\n\n// Hilfsfunktion: Kennzahlen-Tabelle rendern\nfunction renderKennzahlen(kennzahlen) {\n  if (!kennzahlen || kennzahlen.length === 0) return '';\n  \n  let html = '<table class=\"card-table\" style=\"margin-top:1rem;\">';\n  html += '<thead><tr style=\"border-bottom:1px solid rgba(15,23,42,0.06);\">';\n  html += '<th style=\"padding:8px 6px; text-align:left;\">Kennzahl</th>';\n  html += '<th style=\"padding:8px 6px; text-align:left;\">Wert</th>';\n  html += '<th style=\"padding:8px 6px; text-align:left;\">Kommentar</th>';\n  html += '</tr></thead><tbody>';\n  \n  for (const k of kennzahlen) {\n    html += '<tr style=\"border-bottom:1px solid rgba(15,23,42,0.04);\">';\n    html += `<td style=\"padding:8px 6px; color:#64748b;\">${k.label || ''}</td>`;\n    html += `<td style=\"padding:8px 6px; font-weight:500;\">${k.wert || ''}</td>`;\n    html += `<td style=\"padding:8px 6px; color:#64748b; font-size:0.9rem;\">${k.kommentar || ''}</td>`;\n    html += '</tr>';\n  }\n  \n  html += '</tbody></table>';\n  return html;\n}\n\n// Hilfsfunktion: Votum-Box rendern\nfunction renderVotumBox(section) {\n  if (!section || !section.votumText) return '';\n  \n  return `\n    <div class=\"votum-box\">\n      <h3 style=\"margin-top:0; color:#0c4a6e; font-size:1.1rem; font-weight:600;\">Votum</h3>\n      <p style=\"font-weight:600; color:#0369a1; margin-bottom:0.5rem;\">${section.votumText}</p>\n      ${section.votumBegruendung ? `<p style=\"color:#334155; line-height:1.6;\">${cleanText(section.votumBegruendung)}</p>` : ''}\n    </div>\n  `;\n}\n\n// Abschnitte in FESTER REIHENFOLGE rendern\nfunction renderSections() {\n  let html = '';\n  \n  for (const abschnitt of data.PFLICHT_ABSCHNITTE) {\n    const sectionData = data.sections[abschnitt.id] || {};\n    const content = cleanText(sectionData.content);\n    \n    html += `\n      <section class=\"analysis-section\" id=\"${abschnitt.id}\">\n        <h2>${abschnitt.nummer} ${abschnitt.titel}</h2>\n        <p style=\"line-height:1.7; text-align:justify;\">${content || '<em style=\"color:#94a3b8;\">[Inhalt fehlt]</em>'}</p>\n        ${renderKennzahlen(sectionData.kennzahlen)}\n        ${abschnitt.id === 'votum' ? renderVotumBox(sectionData) : ''}\n      </section>\n    `;\n  }\n  \n  return html;\n}\n\n// Inhaltsverzeichnis (fest, nicht dynamisch)\nfunction renderTOC() {\n  let html = '<ol class=\"toc-list\" style=\"margin-top:0; list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;\">';\n  \n  for (const abschnitt of data.PFLICHT_ABSCHNITTE) {\n    html += `<li><a class=\"toc-link\" href=\"#${abschnitt.id}\">${abschnitt.titel}</a></li>`;\n  }\n  \n  html += '</ol>';\n  return html;\n}\n\n// Quellen-Block (dediziert, am Ende)\nfunction renderSources() {\n  if (!data.sources || data.sources.length === 0) return '';\n  \n  let html = '<div class=\"refs\" style=\"margin-top:2rem;\">';\n  html += '<p style=\"font-size:0.9rem; color:#64748b;\"><strong>Quellen:</strong></p>';\n  html += '<ul style=\"font-size:0.9rem; color:#64748b; list-style:disc; margin-left:1.5rem; margin-top:0.5rem;\">';\n  \n  for (const source of data.sources) {\n    html += `<li>${source}</li>`;\n  }\n  \n  html += '</ul></div>';\n  return html;\n}\n\n// Vorschaubild-Pfad\nconst previewImagePath = `../data/vorschaubilder_analysen/${data.slug}_preview.svg`;\n\n// === VOLLSTAENDIGES HTML ===\nconst html = `<!DOCTYPE html>\n<html lang=\"de\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"../assets/favicon-32.png\">\n  <link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"../assets/favicon-16.png\">\n  <link rel=\"shortcut icon\" href=\"../assets/favicon-32.png\">\n  <link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"../assets/apple-touch-icon.png\">\n  <title>capitovo — ${data.company} Unternehmensanalyse</title>\n  <meta name=\"description\" content=\"${data.company} (${data.ticker}) - Unternehmensanalyse vom ${longDate}\">\n  <link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"../style.css\">\n  <style>\n    #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }\n    #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }\n    #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }\n    header { position: static !important; }\n    main { background: transparent; padding-top: 55px !important; }\n    .analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; padding-right: 16px; }\n    .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }\n    .analysis-meta { color: #6b7280; margin-bottom: 1rem; }\n    .analysis-intro { font-size: 1.08rem; color:#0f172a; margin-bottom:1rem; line-height:1.7; }\n    .analysis-section { margin-top:1.5rem; }\n    .analysis-section h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem 0; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }\n    .hero-media { width: 100%; height: 360px; object-fit: contain; background: #f3f4f6; display: block; border-radius: 8px; }\n    .card-table { width:100%; border-collapse:collapse; }\n    .card-table th, .card-table td { padding:8px 6px; text-align:left; }\n    .votum-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 1.5rem; margin: 2rem 0; border-radius: 8px; }\n    .refs, .refs a, .refs li { overflow-wrap: anywhere; word-break: break-word; }\n    .disclaimer-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.25rem; margin: 2rem 0; }\n    .back-btn-glow { box-shadow: none; transition: box-shadow 0.18s; }\n    .back-btn-glow:hover, .back-btn-glow:focus-visible { box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08); }\n    .cap-outline-btn { border: 1px solid #e2e8f0; border-radius: 0.375rem; background: #ffffff; }\n    .toc-link { display: inline-block; font-size: 1.1rem; font-weight: 500; color: #334155; text-decoration: none; transition: color 0.2s; }\n    .toc-link:hover { color: #0ea5e9; }\n    @media (max-width: 900px) { .hero-media { height: auto; aspect-ratio: 16/9; } }\n  </style>\n</head>\n<body class=\"bg-white text-gray-900 abonenten-page\">\n\n<header>\n  <div class=\"header-content\">\n    <div class=\"logo\">\n      <a href=\"./abonenten.html\" class=\"logo-link\">\n        <img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\">\n      </a>\n    </div>\n    <button class=\"menu-toggle\" id=\"menu-toggle\" aria-controls=\"sidebar\" aria-expanded=\"false\" aria-label=\"Menue oeffnen\">☰</button>\n  </div>\n</header>\n\n<main style=\"padding-top: 55px !important;\">\n  <article class=\"analysis-article\" id=\"${data.slug}-analysis\" style=\"margin-top: 0 !important;\">\n    <div class=\"mb-2\">\n      <div class=\"flex items-start justify-between gap-3 flex-wrap\">\n        <div>\n          <h1 class=\"text-3xl font-extrabold text-gray-900 mb-1\">${data.company} - Unternehmensanalyse</h1>\n        </div>\n        <div class=\"flex items-center gap-2\">\n          <a href=\"alle_analysen.html\" class=\"inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white rounded-md px-3 py-2 transition-colors back-btn-glow cap-outline-btn\"><span aria-hidden=\"true\">←</span><span>Zurueck</span></a>\n          <button id=\"favorite-button\" class=\"inline-flex items-center justify-center w-10 h-10 bg-white rounded-md text-gray-500 hover:text-yellow-400 transition-colors back-btn-glow cap-outline-btn\" style=\"padding:0\" aria-label=\"Zu Favoriten hinzufuegen\" data-title=\"${data.slug}\"><svg class=\"w-5 h-5 text-gray-400\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z\" /></svg></button>\n        </div>\n      </div>\n      <div class=\"text-sm analysis-meta\" style=\"color: #64748b;\">\n        <span>${formattedDate}</span>\n        <span class=\"text-gray-400 mx-2\">·</span>\n        <span>Ticker: ${data.ticker}</span>\n        <span class=\"text-gray-400 mx-2\">·</span>\n        <span>WKN: ${data.wkn || 'n/a'}</span>\n        <span class=\"text-gray-400 mx-2\">·</span>\n        <span>ISIN: ${data.isin || 'n/a'}</span>\n      </div>\n    </div>\n\n    <div class=\"hero-intro-wrapper\" style=\"display:flex; gap:24px; margin:24px 0 0 0; align-items:flex-start; flex-wrap:wrap;\">\n      <div class=\"analysis-hero\" style=\"flex:1; min-width:300px;\">\n        <img src=\"${previewImagePath}\" alt=\"${data.company} Vorschaubild\" class=\"hero-media\">\n      </div>\n      <nav aria-label=\"Inhaltsverzeichnis\" style=\"flex:1; min-width:260px; margin:0 0 0 12px; align-self:flex-start; display:flex; flex-direction:column; justify-content:flex-start; position:relative; top:-15px;\">\n        <h2 style=\"font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0; border-bottom:2px solid #e2e8f0; padding-bottom:2px;\">Inhalt der Analyse</h2>\n        ${renderTOC()}\n      </nav>\n    </div>\n\n    <p class=\"analysis-intro\" style=\"margin: 24px 0 16px 0; text-align:justify;\">\n      ${cleanText(data.intro) || ''}\n    </p>\n\n    ${renderSections()}\n\n    <hr style=\"margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;\">\n\n    ${renderSources()}\n\n    <div class=\"disclaimer-box\">\n      <p style=\"font-size: 0.875rem; color: #64748b; margin: 0;\">\n        <strong>Disclaimer:</strong> ${data.DISCLAIMER}\n      </p>\n    </div>\n  </article>\n</main>\n\n<footer class=\"site-footer border-t py-6 mt-12\">\n  <div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\">\n    <div>&copy; ${new Date().getFullYear()} capitovo — Alle Rechte vorbehalten.</div>\n    <div class=\"footer-links\">\n      <a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Impressum</a>\n      <a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Datenschutz</a>\n      <a href=\"../Rechtliches/haftung.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">Haftungsausschluss</a>\n      <a href=\"../Rechtliches/agb.html\" class=\"footer-btn\" target=\"_blank\" rel=\"noopener noreferrer\">AGB</a>\n    </div>\n  </div>\n</footer>\n\n<div class=\"sidebar\" id=\"sidebar\" aria-hidden=\"true\" aria-label=\"Seitenmenue\">\n  <button class=\"close-button\" id=\"close-sidebar\" aria-label=\"Sidebar schliessen\">&times;</button>\n  <nav class=\"sidebar-nav\" aria-label=\"Hauptnavigation\">\n    <ul>\n      <li><a href=\"./abonenten.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M3 11.5L12 4l9 7.5\"/><path d=\"M5 10.5v7.5a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7.5\"/></svg><span>Startseite</span></a></li>\n      <li><a href=\"./konto.html\" class=\"flex items-center space-x-3\"><svg class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\"><circle cx=\"12\" cy=\"8\" r=\"3\" stroke=\"currentColor\" stroke-width=\"1.5\"/><path d=\"M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\"/></svg><span>Mein Konto</span></a></li>\n      <li><a href=\"./alle_analysen.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"3\" y=\"10\" width=\"4\" height=\"11\" rx=\"0.5\"/><rect x=\"10\" y=\"6\" width=\"4\" height=\"15\" rx=\"0.5\"/><rect x=\"17\" y=\"3\" width=\"4\" height=\"18\" rx=\"0.5\"/></svg><span>Analysen</span></a></li>\n      <li><a href=\"./Aktien-Monitor/aktien-monitor.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M3 17l6-6 4 4 8-8\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span>Aktien-Monitor</span></a></li>\n      <li><a href=\"./earnings_kalender.html\" class=\"flex items-center space-x-3\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"w-5 h-5\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><rect x=\"3\" y=\"4\" width=\"18\" height=\"18\" rx=\"2\"></rect><line x1=\"16\" y1=\"2\" x2=\"16\" y2=\"6\"></line><line x1=\"8\" y1=\"2\" x2=\"8\" y2=\"6\"></line><line x1=\"3\" y1=\"10\" x2=\"21\" y2=\"10\"></line></svg><span>Wirtschaftskalender</span></a></li>\n    </ul>\n  </nav>\n</div>\n\n<script src=\"../script.js?v=10\"></script>\n</body>\n</html>`;\n\nreturn {\n  json: {\n    ...data,\n    html: html,\n    htmlPath: 'Abonenten/' + data.slug + '.html'\n  }\n};"
+      },
+      "id": "html-renderer",
+      "name": "3. Deterministischer HTML Renderer",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 400],
+      "notes": "Platziert nur - interpretiert nicht"
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// SVG PREVIEW GENERATOR (Deterministisch)\n// =====================================================\n\nconst data = $input.item.json;\n\n// Firmennamen kuerzen wenn noetig\nconst displayName = data.company.length > 25\n  ? data.company.substring(0, 22) + '...'\n  : data.company;\n\nconst svg = `<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\">\n      <stop offset=\"0%\" stop-color=\"#0f172a\"/>\n      <stop offset=\"100%\" stop-color=\"#1e293b\"/>\n    </linearGradient>\n    <linearGradient id=\"accent\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\">\n      <stop offset=\"0%\" stop-color=\"#3b82f6\"/>\n      <stop offset=\"100%\" stop-color=\"#0ea5e9\"/>\n    </linearGradient>\n  </defs>\n  <rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"16\"/>\n  <g font-family=\"-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif\">\n    <text x=\"48\" y=\"72\" fill=\"#64748b\" font-size=\"12\" letter-spacing=\"0.1em\">${data.ticker} · ${data.sector.toUpperCase()}</text>\n    <text x=\"48\" y=\"120\" fill=\"#f1f5f9\" font-size=\"36\" font-weight=\"700\">${displayName}</text>\n    <text x=\"48\" y=\"155\" fill=\"#94a3b8\" font-size=\"15\">Unternehmensanalyse</text>\n    <rect x=\"48\" y=\"180\" width=\"80\" height=\"4\" fill=\"url(#accent)\" rx=\"2\"/>\n    <text x=\"48\" y=\"230\" fill=\"#64748b\" font-size=\"13\">Marktperformance · Finanzen · Strategie · Votum</text>\n    <text x=\"48\" y=\"300\" fill=\"#475569\" font-size=\"11\">capitovo Research</text>\n    <text x=\"48\" y=\"320\" fill=\"#64748b\" font-size=\"10\">${data.date}</text>\n  </g>\n</svg>`;\n\nreturn {\n  json: {\n    ...data,\n    svg: svg,\n    svgPath: 'data/vorschaubilder_analysen/' + data.slug + '_preview.svg'\n  }\n};"
+      },
+      "id": "svg-generator",
+      "name": "4. SVG Preview Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1180, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// KATALOG-EINTRAG GENERATOR\n// =====================================================\n\nconst data = $input.item.json;\n\n// Kurze Summary aus Intro extrahieren (max 200 Zeichen)\nlet summary = data.intro || '';\nif (summary.length > 200) {\n  summary = summary.substring(0, 197) + '...';\n}\n\nconst catalogEntry = {\n  id: data.ticker.toLowerCase() + '-' + data.date,\n  category: data.sector.toUpperCase(),\n  title: data.company + ' – Unternehmensanalyse (' + new Date(data.date).toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' }) + ')',\n  summary: summary,\n  link: 'Abonenten/' + data.slug + '.html',\n  image: 'data/vorschaubilder_analysen/' + data.slug + '_preview.svg',\n  date: data.date,\n  author: data.author || 'capitovo Research',\n  tags: [data.company, data.ticker, data.sector, data.exchange].filter(Boolean),\n  published: true,\n  wordCount: Math.round(JSON.stringify(data.sections).length / 5), // Grobe Schaetzung\n  sourcesCount: data.sources ? data.sources.length : 0\n};\n\nreturn {\n  json: {\n    ...data,\n    catalogEntry: catalogEntry\n  }\n};"
+      },
+      "id": "catalog-entry",
+      "name": "5. Katalog-Eintrag",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1400, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// BASE64 ENCODING fuer GitHub API\n// =====================================================\n\nconst data = $input.item.json;\n\nreturn {\n  json: {\n    company: data.company,\n    ticker: data.ticker,\n    slug: data.slug,\n    date: data.date,\n    \n    // HTML\n    htmlPath: data.htmlPath,\n    htmlBase64: Buffer.from(data.html, 'utf8').toString('base64'),\n    htmlCommitMsg: 'Analyse: ' + data.company + ' (' + data.ticker + ') - ' + data.date,\n    \n    // SVG\n    svgPath: data.svgPath,\n    svgBase64: Buffer.from(data.svg, 'utf8').toString('base64'),\n    svgCommitMsg: 'Vorschaubild: ' + data.company + ' - ' + data.date,\n    \n    // Katalog\n    catalogEntry: data.catalogEntry,\n    analysenPath: 'data/analysen.json',\n    \n    // Validierung\n    _validation: data._validation\n  }\n};"
+      },
+      "id": "base64-encoder",
+      "name": "6. Base64 Encoding",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1620, 400]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.htmlCommitMsg }}\",\n  \"content\": \"{{ $json.htmlBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "github-html-upload",
+      "name": "7a. Upload HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1860, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.svgCommitMsg }}\",\n  \"content\": \"{{ $json.svgBase64 }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "github-svg-upload",
+      "name": "7b. Upload SVG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1860, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-analysen-json",
+      "name": "8a. Get analysen.json",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2100, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// KATALOG AKTUALISIEREN\n// =====================================================\n// Fuegt neuen Eintrag an Position 2 ein (nach Vorlage)\n// =====================================================\n\nconst uploadResults = $input.all();\nconst analysenResp = uploadResults.find(item => item.json.content && typeof item.json.content === 'string');\n\n// Original-Daten aus vorherigem Schritt\nconst prevData = $('6. Base64 Encoding').item.json;\n\nlet existing = [];\nlet analysenSha = null;\n\nif (analysenResp && analysenResp.json.content) {\n  try {\n    const decoded = Buffer.from(analysenResp.json.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n    analysenSha = analysenResp.json.sha;\n  } catch(e) {\n    existing = [];\n  }\n}\n\n// Pruefe ob Eintrag bereits existiert (by link)\nconst entryLink = prevData.catalogEntry.link;\nconst existingIndex = existing.findIndex(e => e.link === entryLink);\n\nif (existingIndex >= 0) {\n  // Update existierenden Eintrag\n  existing[existingIndex] = prevData.catalogEntry;\n} else {\n  // Neuen Eintrag an Position 2 einfuegen (nach Vorlage)\n  existing.splice(1, 0, prevData.catalogEntry);\n}\n\nconst updatedJson = JSON.stringify(existing, null, 2);\nconst analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: {\n    ...prevData,\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Katalog: ' + prevData.company + ' (' + prevData.ticker + ') hinzugefuegt'\n  }\n};"
+      },
+      "id": "update-catalog",
+      "name": "8b. Katalog aktualisieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2320, 400]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.analysenCommitMsg }}\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "upload-catalog",
+      "name": "9. Upload Katalog",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2540, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// =====================================================\n// ABSCHLUSS-REPORT\n// =====================================================\n\nconst data = $('6. Base64 Encoding').item.json;\nconst catalogResult = $input.item.json;\n\nconst liveUrl = 'https://kw-f8.github.io/capitovo/Abonenten/' + data.slug + '.html';\n\nreturn {\n  json: {\n    status: 'SUCCESS',\n    message: 'Analyse erfolgreich veroeffentlicht',\n    \n    analyse: {\n      company: data.company,\n      ticker: data.ticker,\n      date: data.date\n    },\n    \n    urls: {\n      live: liveUrl,\n      html: 'https://github.com/kw-f8/capitovo/blob/main/' + data.htmlPath,\n      svg: 'https://github.com/kw-f8/capitovo/blob/main/' + data.svgPath\n    },\n    \n    validation: data._validation,\n    \n    hinweis: 'GitHub Pages Deployment dauert 1-2 Minuten. Dann ist die Analyse unter der Live-URL erreichbar.'\n  }\n};"
+      },
+      "id": "final-report",
+      "name": "10. Abschluss-Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2760, 400]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[
+        { "node": "0. Struktur-Definition", "type": "main", "index": 0 },
+        { "node": "1. Input Daten", "type": "main", "index": 0 }
+      ]]
+    },
+    "0. Struktur-Definition": {
+      "main": [[{ "node": "1. Input Daten", "type": "main", "index": 0 }]]
+    },
+    "1. Input Daten": {
+      "main": [[{ "node": "2. Validierungs-Gate", "type": "main", "index": 0 }]]
+    },
+    "2. Validierungs-Gate": {
+      "main": [[{ "node": "3. Deterministischer HTML Renderer", "type": "main", "index": 0 }]]
+    },
+    "3. Deterministischer HTML Renderer": {
+      "main": [[{ "node": "4. SVG Preview Generator", "type": "main", "index": 0 }]]
+    },
+    "4. SVG Preview Generator": {
+      "main": [[{ "node": "5. Katalog-Eintrag", "type": "main", "index": 0 }]]
+    },
+    "5. Katalog-Eintrag": {
+      "main": [[{ "node": "6. Base64 Encoding", "type": "main", "index": 0 }]]
+    },
+    "6. Base64 Encoding": {
+      "main": [[
+        { "node": "7a. Upload HTML", "type": "main", "index": 0 },
+        { "node": "7b. Upload SVG", "type": "main", "index": 0 }
+      ]]
+    },
+    "7a. Upload HTML": {
+      "main": [[{ "node": "8a. Get analysen.json", "type": "main", "index": 0 }]]
+    },
+    "7b. Upload SVG": {
+      "main": [[{ "node": "8a. Get analysen.json", "type": "main", "index": 0 }]]
+    },
+    "8a. Get analysen.json": {
+      "main": [[{ "node": "8b. Katalog aktualisieren", "type": "main", "index": 0 }]]
+    },
+    "8b. Katalog aktualisieren": {
+      "main": [[{ "node": "9. Upload Katalog", "type": "main", "index": 0 }]]
+    },
+    "9. Upload Katalog": {
+      "main": [[{ "node": "10. Abschluss-Report", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": [
+    { "name": "production" },
+    { "name": "publisher" },
+    { "name": "v2-deterministisch" }
+  ]
+}

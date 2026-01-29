@@ -734,7 +734,13 @@
   "connections": {
     "Manual Trigger": {
       "main": [
-        []
+        [
+          {
+            "node": "Input - Fertige Analyse1",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "Config - Test Analyse": {
@@ -1028,7 +1034,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "99db9fb1-60de-424f-88cf-f3c1c061c315",
+  "versionId": "31048027-bf81-46f4-9770-cacd1975baf8",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "4e6dd7bd1638bd2724994ec7815d8c03087481a498a8122e7ad8e8a16988a92b"

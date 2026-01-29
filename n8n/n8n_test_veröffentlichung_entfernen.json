@@ -364,7 +364,7 @@
       "parameters": {
         "content": "# Veröffentlichen",
         "height": 848,
-        "width": 1696
+        "width": 1920
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
@@ -626,6 +626,19 @@
     },
     {
       "parameters": {
+        "jsCode": "var prevData = $('Pass Data After HTML1').item.json;\nreturn { json: prevData };"
+      },
+      "id": "pass-data-svg1",
+      "name": "Pass Data After SVG1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1776,
+        1648
+      ]
+    },
+    {
+      "parameters": {
         "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/data/analysen.json",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
@@ -651,7 +664,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1776,
+        2000,
         1648
       ],
       "credentials": {
@@ -664,14 +677,14 @@
     },
     {
       "parameters": {
-        "jsCode": "var data = $('Extract SVG SHA2').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\n\nvar existing = [];\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\nfunction wordCountFromHtml(html) {\n  var text = String(html || '').replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n  if (!text) return 0;\n  return text.split(' ').length;\n}\n\nfunction formatGermanLong(dateStr) {\n  try {\n    var parts = String(dateStr || '').split('-');\n    var y = parseInt(parts[0], 10);\n    var m = parseInt(parts[1], 10) - 1;\n    var d = parseInt(parts[2], 10);\n    var dt = new Date(Date.UTC(y, m, d));\n    return dt.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n  } catch(e) {\n    return String(dateStr || '');\n  }\n}\n\nvar id = String((data.ticker || '')).toLowerCase() + '-' + String(data.date || '');\nvar titleDate = formatGermanLong(data.date);\nvar link = data.htmlPath;\nvar image = data.svgPath;\n\nvar entry = {\n  id: id,\n  category: String(data.sector || '').toUpperCase(),\n  title: data.company + ' – Unternehmensanalyse (' + titleDate + ')',\n  summary: data.introText || ('Analytische Einordnung von ' + data.company + ' (' + data.ticker + ').'),\n  link: link,\n  image: image,\n  date: data.date,\n  author: 'capitovo Research',\n  tags: [data.company, data.ticker, data.sector, data.exchange].filter(Boolean),\n  published: true,\n  wordCount: wordCountFromHtml(data.analysisContent),\n  sourcesCount: data.source ? 1 : 0\n};\n\nfunction normPath(p) { return String(p || '').replace(/^\\.?\\/?/, ''); }\nvar targetLink = normPath(link);\n\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) {\n  var it = existing[i] || {};\n  if (String(it.id || '') === id) { idx = i; break; }\n  if (normPath(it.link) === targetLink) { idx = i; break; }\n}\n\nif (idx >= 0) {\n  existing[idx] = Object.assign({}, existing[idx], entry);\n} else {\n  var insertAt = 0;\n  if (existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE') insertAt = 1;\n  existing.splice(insertAt, 0, entry);\n}\n\nvar updatedJson = JSON.stringify(existing, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: Object.assign({}, data, {\n    analysenPath: 'data/analysen.json',\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Analysen-Katalog: ' + data.company + ' (' + data.ticker + ') - ' + data.date\n  })\n};"
+        "jsCode": "// Hole Daten aus dem vorherigen Pass-Node\nvar data = $('Pass Data After SVG1').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\n\nvar existing = [];\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\nfunction wordCountFromHtml(html) {\n  var text = String(html || '').replace(/<[^>]*>/g, ' ').replace(/\\s+/g, ' ').trim();\n  if (!text) return 0;\n  return text.split(' ').length;\n}\n\nfunction formatGermanLong(dateStr) {\n  try {\n    var parts = String(dateStr || '').split('-');\n    var y = parseInt(parts[0], 10);\n    var m = parseInt(parts[1], 10) - 1;\n    var d = parseInt(parts[2], 10);\n    var dt = new Date(Date.UTC(y, m, d));\n    return dt.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n  } catch(e) {\n    return String(dateStr || '');\n  }\n}\n\nvar id = String((data.ticker || '')).toLowerCase() + '-' + String(data.date || '');\nvar titleDate = formatGermanLong(data.date);\nvar link = data.htmlPath;\nvar image = data.svgPath;\n\nvar entry = {\n  id: id,\n  category: String(data.sector || '').toUpperCase(),\n  title: data.company + ' – Unternehmensanalyse (' + titleDate + ')',\n  summary: data.introText || ('Analytische Einordnung von ' + data.company + ' (' + data.ticker + ').'),\n  link: link,\n  image: image,\n  date: data.date,\n  author: 'capitovo Research',\n  tags: [data.company, data.ticker, data.sector, data.exchange].filter(Boolean),\n  published: true,\n  wordCount: wordCountFromHtml(data.analysisContent),\n  sourcesCount: data.source ? 1 : 0\n};\n\nfunction normPath(p) { return String(p || '').replace(/^\\.?\\/?/, ''); }\nvar targetLink = normPath(link);\n\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) {\n  var it = existing[i] || {};\n  if (String(it.id || '') === id) { idx = i; break; }\n  if (normPath(it.link) === targetLink) { idx = i; break; }\n}\n\nif (idx >= 0) {\n  existing[idx] = Object.assign({}, existing[idx], entry);\n} else {\n  var insertAt = 0;\n  if (existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE') insertAt = 1;\n  existing.splice(insertAt, 0, entry);\n}\n\nvar updatedJson = JSON.stringify(existing, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: Object.assign({}, data, {\n    analysenPath: 'data/analysen.json',\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Analysen-Katalog: ' + data.company + ' (' + data.ticker + ') - ' + data.date\n  })\n};"
       },
       "id": "08c7650a-0e3c-4609-bfd8-0d179f8e02c4",
       "name": "Build Analysen.json1",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2000,
+        2224,
         1648
       ]
     },
@@ -706,7 +719,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2224,
+        2448,
         1648
       ],
       "credentials": {
@@ -718,14 +731,14 @@
     },
     {
       "parameters": {
-        "jsCode": "var d = $('Extract SVG SHA2').item.json;\n\nreturn {\n  json: {\n    status: 'PUBLISHED',\n    message: d.company + '-Analyse erfolgreich veroeffentlicht!',\n    company: d.company,\n    ticker: d.ticker,\n    date: d.date,\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath,\n    svgUrl: 'https://kw-f8.github.io/capitovo/' + d.svgPath,\n    files: {\n      html: d.htmlPath,\n      svg: d.svgPath\n    },\n    catalogEntry: {\n      id: d.ticker.toLowerCase() + '-' + d.date.replace(/-/g, ''),\n      category: d.sector,\n      title: d.company + ' - Unternehmensanalyse',\n      summary: 'Analytische Einordnung von ' + d.company + ' (' + d.ticker + ')',\n      link: d.htmlPath,\n      image: d.svgPath,\n      date: d.date,\n      author: 'capitovo Research'\n    }\n  }\n};"
+        "jsCode": "var d = $('Build Analysen.json1').item.json;\n\nreturn {\n  json: {\n    status: 'PUBLISHED',\n    message: d.company + '-Analyse erfolgreich veroeffentlicht!',\n    company: d.company,\n    ticker: d.ticker,\n    date: d.date,\n    liveUrl: 'https://kw-f8.github.io/capitovo/' + d.htmlPath,\n    svgUrl: 'https://kw-f8.github.io/capitovo/' + d.svgPath,\n    files: {\n      html: d.htmlPath,\n      svg: d.svgPath\n    },\n    catalogEntry: {\n      id: d.ticker.toLowerCase() + '-' + d.date.replace(/-/g, ''),\n      category: d.sector,\n      title: d.company + ' - Unternehmensanalyse',\n      summary: 'Analytische Einordnung von ' + d.company + ' (' + d.ticker + ')',\n      link: d.htmlPath,\n      image: d.svgPath,\n      date: d.date,\n      author: 'capitovo Research'\n    }\n  }\n};"
       },
       "id": "4bf2f7fc-b465-476d-a59a-0b1a63c8511a",
       "name": "Output2",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        2448,
+        2672,
         1648
       ]
     }
@@ -986,6 +999,17 @@
       ]
     },
     "GitHub Upload SVG1": {
+      "main": [
+        [
+          {
+            "node": "Pass Data After SVG1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pass Data After SVG1": {
       "main": [
         [
           {

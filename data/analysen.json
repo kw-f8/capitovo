@@ -17,6 +17,25 @@
     "published": false
   },
   {
+    "id": "aapl-2026-01-29",
+    "category": "TECHNOLOGIE",
+    "title": "Apple – Unternehmensanalyse (29. Januar 2026)",
+    "summary": "In dieser Analyse ordnen wir Apples aktülle Bewertung und Kursentwicklung ein. Wir prüfen die finanziellen Grundlagen, strategische Ausrichtung und Analystenerwartungen. Ziel ist eine fundierte Entscheidungsgrundlage mit klarem Votum.",
+    "link": "Abonenten/aapl_2026-01-29.html",
+    "image": "data/vorschaubilder_analysen/aapl_2026-01-29_preview.svg",
+    "date": "2026-01-29",
+    "author": "capitovo Research",
+    "tags": [
+      "Apple",
+      "AAPL",
+      "Technologie",
+      "NASDAQ"
+    ],
+    "published": true,
+    "wordCount": 0,
+    "sourcesCount": 0
+  },
+  {
     "id": "apple-investment-analyse-121125",
     "category": "TECHNOLOGIE",
     "title": "Apple Inc.: Investment‑Analyse (Dezember 2025)",

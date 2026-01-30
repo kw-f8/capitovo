@@ -81,7 +81,7 @@
     },
     {
       "parameters": {
-        "jsCode": "var prev = $('Extract HTML SHA1').item.json;\nreturn { json: prev };"
+        "jsCode": "var prev = $('Extract HTML SHA1').item.json;\nreturn {\n  json: {\n    slug: prev.slug,\n    htmlPath: prev.htmlPath,\n    svgPath: prev.svgPath,\n    analysenPath: prev.analysenPath,\n    htmlSha: prev.htmlSha,\n    htmlExists: prev.htmlExists\n  }\n};"
       },
       "id": "18d88f3c-68fc-46c1-9274-a184d70e1c72",
       "name": "Pass After HTML Delete",
@@ -136,7 +136,7 @@
     },
     {
       "parameters": {
-        "jsCode": "var prev = $('Extract SVG SHA1').item.json;\nreturn { json: prev };"
+        "jsCode": "var prev = $('Extract SVG SHA1').item.json;\nreturn {\n  json: {\n    slug: prev.slug,\n    htmlPath: prev.htmlPath,\n    svgPath: prev.svgPath,\n    analysenPath: prev.analysenPath,\n    htmlSha: prev.htmlSha,\n    htmlExists: prev.htmlExists,\n    svgSha: prev.svgSha,\n    svgExists: prev.svgExists\n  }\n};"
       },
       "id": "fe1fca55-a4a0-4fe2-84c8-622489a17b32",
       "name": "Pass After SVG Delete",
@@ -280,7 +280,7 @@
     },
     {
       "parameters": {
-        "jsCode": "var config = $('Config - Test Analyse').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...config,\n    htmlSha: resp.sha || null,\n    htmlExists: !!resp.sha\n  }\n};"
+        "jsCode": "var config = $('Config - Test Analyse').item.json;\nvar resp = $input.item.json;\n\n// Extrahiere SHA falls Datei existiert\nvar htmlSha = (resp && resp.sha) ? resp.sha : null;\n\nreturn {\n  json: {\n    slug: config.slug,\n    htmlPath: config.htmlPath,\n    svgPath: config.svgPath,\n    analysenPath: config.analysenPath,\n    htmlSha: htmlSha,\n    htmlExists: !!htmlSha\n  }\n};"
       },
       "id": "a1e0f1fd-5c4f-495d-8db1-336289bb739d",
       "name": "Extract HTML SHA1",
@@ -331,7 +331,7 @@
     },
     {
       "parameters": {
-        "jsCode": "var prev = $('Pass After HTML Delete').item.json;\nvar resp = $input.item.json;\n\nreturn {\n  json: {\n    ...prev,\n    svgSha: resp.sha || null,\n    svgExists: !!resp.sha\n  }\n};"
+        "jsCode": "var prev = $('Pass After HTML Delete').item.json;\nvar resp = $input.item.json;\n\n// Extrahiere SVG SHA falls Datei existiert\nvar svgSha = (resp && resp.sha) ? resp.sha : null;\n\nreturn {\n  json: {\n    slug: prev.slug,\n    htmlPath: prev.htmlPath,\n    svgPath: prev.svgPath,\n    analysenPath: prev.analysenPath,\n    htmlSha: prev.htmlSha,\n    htmlExists: prev.htmlExists,\n    svgSha: svgSha,\n    svgExists: !!svgSha\n  }\n};"
       },
       "id": "8fbf9044-15ba-410b-b93d-6531811c51c5",
       "name": "Extract SVG SHA1",

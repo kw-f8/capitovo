@@ -7,28 +7,46 @@
   <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png?v=2025-12-25b">
   <link rel="shortcut icon" href="../assets/favicon-32.png?v=2025-12-25b">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2025-12-25a">
-  <title>capitovo — Analyse Vorlage</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>capitovo: Analysevorlage</title>
   <link rel="stylesheet" href="../style.css">
   <style>
-    /* Match header/menu-toggle styling used on other Abonenten pages */
-    #menu-toggle, .menu-toggle { border: none; outline: none; background: transparent; }
-    #menu-toggle:focus, .menu-toggle:focus { outline: none; box-shadow: none; }
-    #menu-toggle:focus-visible, .menu-toggle:focus-visible { box-shadow: 0 0 0 4px rgba(59,130,246,0.12); border-radius: 8px; }
+    /* Analysevorlage: bewusst ohne Navigation/Seitenmenü, nur typografische Struktur.
+       Ziel: maschinenfest (n8n), konsistent, „Single Source of Truth“. */
+    body { background: #ffffff; }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      background: transparent;
+    }
+    .analysis-article { max-width: 100%; margin: 0; }
 
-    /* Ensure header is static, not sticky */
-    header { position: static !important; }
+    .analysis-title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin: 0 0 0.4rem 0;
+      color: #0f172a;
+    }
+    .analysis-meta {
+      color: #64748b;
+      font-size: 0.95rem;
+      margin: 0 0 1.25rem 0;
+    }
+    .analysis-meta .sep { margin: 0 0.5rem; color: #cbd5e1; }
 
-    /* Page specific: keep article unboxed and readable */
-    /* Ensure consistent spacing to header across Abonenten pages (effective ~66px) */
-    /* Adjusted to 55px here because other element margins add to the final distance. */
-    main { background: transparent; padding-top: 55px !important; }
-    /* Align content with the outer edges of logo + sidebar button */
-    .analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0; padding-right: 16px; }
-    .analysis-article h1 { font-size: 1.8rem; margin: 0 0 0.5rem 0; }
-    .analysis-meta { color: #6b7280; margin-bottom: 1rem; }
-    .analysis-intro { font-size: 1.05rem; color:#0f172a; margin-bottom:1rem; }
-    .analysis-section { margin-top:1rem; }
+    .analysis-intro {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: #0f172a;
+      text-align: justify;
+      hyphens: auto;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .analysis-section { margin-top: 2rem; }
     .analysis-top-row {
       display: flex;
       align-items: center;
@@ -37,209 +55,75 @@
       flex-wrap: wrap;
       margin-bottom: 8px;
     }
-    .hero-media {
-      width: 100%;
-      height: 360px;
-      object-fit: contain;
-      background: #f3f4f6;
-      display: block;
-      border-radius: 8px;
-    }
-    .hero-summary {
-      height: 360px;
-      display: flex;
-      flex-direction: column;
-    }
-    .hero-summary-text {
-      margin: 0;
-      line-height: 1.55;
-      text-align: justify;
-      text-align-last: left;
-      hyphens: auto;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      padding-right: 2px;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 14;
-      line-clamp: 14;
-    }
-    @media (max-width: 900px) {
-      .hero-media { height: auto; aspect-ratio: 16/9; }
-      .hero-summary { height: auto; }
-      .hero-summary-text {
-        overflow: visible;
-        display: block;
-        -webkit-line-clamp: unset;
-        line-clamp: unset;
-        hyphens: auto;
-      }
-    }
     .analysis-section h2 {
       font-size: 1.5rem;
       font-weight: 700;
-      /* tighter spacing: reduce gap between heading and first paragraph */
-      margin: 2rem 0 0.5rem 0;
+      /* h2 → erster Text: max. ~0.75–1.0em Abstand */
+      margin: 0 0 0.85em 0;
       color: #0f172a;
     }
-    .toc-title {
-      font-size: 1.5rem;
+    .analysis-section h3 {
+      font-size: 1.1rem;
       font-weight: 700;
+      margin: 0 0 0.65em 0;
       color: #0f172a;
-      margin: 0 0 12px 0;
     }
-    .toc-link {
-      display: inline-block;
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: #334155;
-      line-height: 1.5;
-      text-decoration: none;
-      position: relative;
-      padding: 0;
-      background: linear-gradient(
-        110deg,
-        var(--color-accent-blue) 0%,
-        var(--color-accent-blue) 15%,
-        #0ea5e9 20%,
-        var(--color-accent-blue) 25%,
-        var(--color-accent-blue) 40%,
-        #334155 45%,
-        #334155 100%
-      );
-      background-size: 300% 100%;
-      background-position: 100% 0;
-      /* Fix: Setze explizit die Ausgangsposition, damit die Animation sofort startet */
-      transition: background-position 550ms cubic-bezier(0.65, 0, 0.35, 1), transform 550ms cubic-bezier(0.65, 0, 0.35, 1);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      /* moved up to .toc-link for immediate effect */
-    }
-    .toc-link:hover {
-      background-position: 0 0;
-      transform: translateX(4px);
-    }
-    .toc-link:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-      border-radius: 2px;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .toc-link { transition: none; background-position: 100% 0; }
-      .toc-link:hover { transform: none; background-position: 0 0; }
-    }
-    .toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
-      nav[aria-label="Inhaltsverzeichnis"] {
-        width: fit-content;
-        padding: 6px 0 0 0;
-        border: none;
-    }
-    .card-table { width:100%; border-collapse:collapse; margin-top:10px; }
+    .analysis-section p { margin: 0 0 1rem 0; }
+    .analysis-section p:last-child { margin-bottom: 0; }
+
+    .card-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
     .card-table th, .card-table td { padding:8px 6px; text-align:left; }
-    .votum-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 1.5rem; margin: 2rem 0; border-radius: 8px; }
-    .votum-box h3 { margin-top: 0; color: #0c4a6e; }
+    .card-table thead th { border-bottom: 1px solid rgba(15,23,42,0.10); }
+    .card-table tbody td { border-bottom: 1px solid rgba(15,23,42,0.06); }
+    .card-table tbody tr:last-child td { border-bottom: none; }
+
+    .votum-box {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-left: 4px solid #0284c7;
+      padding: 1.5rem;
+      margin: 1.75rem 0 0 0;
+      border-radius: 8px;
+    }
+    .votum-box h3 { margin: 0 0 0.65em 0; color: #0c4a6e; }
+    .votum-box p { margin: 0 0 0.75rem 0; }
+    .votum-box p:last-child { margin-bottom: 0; }
+
+    .analysis-legal {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e2e8f0;
+      color: #475569;
+      font-size: 0.95rem;
+    }
+    .analysis-legal h3 { margin: 0 0 0.5rem 0; font-size: 1rem; color: #0f172a; }
+    .analysis-legal p { margin: 0 0 1rem 0; }
+    .analysis-legal p:last-child { margin-bottom: 0; }
+
     .refs, .refs a, .refs li { overflow-wrap: anywhere; word-break: break-word; }
-
-    /* Zurück-Button: dezenter Leuchteffekt in capitovo-blau */
-    .back-btn-glow { box-shadow: none; transition: box-shadow 0.18s cubic-bezier(0.65,0,0.35,1), background-color 0.14s; }
-    .back-btn-glow:hover, .back-btn-glow:focus-visible {
-      box-shadow: 0 0 0 2px rgba(0,145,214,0.10), 0 0 4px 1px rgba(0,145,214,0.08);
-    }
-
-    /* Back button arrow: optically center vertically */
-    #back-button .back-arrow {
-      display: inline-block;
-      position: relative;
-      top: -1px;
-    }
-
-    /* Shared outline frame for back & favorite buttons */
-    .cap-outline-btn {
-      border: 1px solid #e2e8f0;
-      border-radius: 0.375rem; /* matches Tailwind rounded-md */
-      background: #ffffff;
-    }
-
   </style>
 </head>
-<body class="bg-white text-gray-900 abonenten-page">
+<body class="analysis-template">
 
-<header>
-  <div class="header-content">
-    <div class="logo">
-      <a href="./abonenten.html" class="logo-link">
-        <img src="../assets/capitovo_logo_weiß.png" alt="capitovo Logo" class="header-logo">
-      </a>
-    </div>
-    <button class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false" aria-label="Menü öffnen">☰</button>
-  </div>
-</header>
-
-<main style="padding-top: 55px !important;">
-  <article class="analysis-article" id="vorlage-analysis" style="margin-top: 0 !important;">
-    <div class="mb-2">
-      <div class="flex items-start justify-between gap-3 flex-wrap">
-        <div>
-          <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Vorlage — Analyse (zum Vorbereiten)</h1>
-        </div>
-        <div class="flex items-center gap-2">
-          <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white rounded-md px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow cap-outline-btn"><span class="back-arrow" aria-hidden="true">←</span><span>Zurück</span></a>
-          <div style="position:relative;display:inline-block;">
-            <button
-              id="favorite-button"
-              class="inline-flex items-center justify-center w-10 h-10 bg-white rounded-md text-gray-500 hover:text-yellow-400 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow cap-outline-btn"
-              style="padding:0"
-              aria-label="Zu Favoriten hinzufügen"
-              aria-pressed="false"
-              title="Zu Favoriten hinzufügen"
-              data-title=""
-              onclick="toggleFavorite(event, this.dataset.title)"
-            >
-              <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-            </button>
-            <div id="fav-tooltip" style="display:none;position:absolute;left:50%;top:-22px;transform:translateX(-50%);background:transparent;color:#475569;font-size:0.75rem;padding:0 4px;border-radius:3px;box-shadow:none;white-space:nowrap;z-index:20;pointer-events:none;font-weight:400;letter-spacing:0.01em;">Zu den Favoriten hinzugefügt</div>
-          </div>
-        </div>
+<main>
+  <article class="analysis-article" id="analyse-vorlage" aria-label="Analysevorlage">
+    <header class="analysis-header">
+      <h1 class="analysis-title">Analyse: {{UNTERNEHMEN}} ({{TICKER}})</h1>
+      <div class="analysis-meta" aria-label="Metadaten">
+        <span>{{DATUM}}</span>
+        <span class="sep">·</span>
+        <span>Ticker: {{TICKER}}</span>
+        <span class="sep">·</span>
+        <span>WKN: {{WKN}}</span>
+        <span class="sep">·</span>
+        <span>ISIN: {{ISIN}}</span>
       </div>
-      <div class="text-sm analysis-meta" style="color: #64748b;">
-        <span>24.12.2025</span>
-        <span class="text-gray-400 mx-2">·</span>
-        <span>Ticker: XXXX</span>
-        <span class="text-gray-400 mx-2">·</span>
-        <span>WKN: XXXXXXX</span>
-        <span class="text-gray-400 mx-2">·</span>
-        <span>ISIN: XX0000000000</span>
-      </div>
-    </div>
 
-    <div class="hero-intro-wrapper" style="display:flex; gap:24px; margin:24px 0 0 0; align-items:flex-start; flex-wrap:wrap;">
-      <div class="analysis-hero" style="flex:1; min-width:300px;">
-        <img src="../assets/studiodisplay_mockup.svg" alt="Vorlage Vorschaubild" class="hero-media">
-      </div>
-      <nav aria-label="Inhaltsverzeichnis" style="flex:1; min-width:260px; margin:0 0 0 12px; align-self:flex-start; display:flex; flex-direction:column; justify-content:flex-start; position:relative; top:-15px;">
-        <h2 style="font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0; border-bottom:2px solid #e2e8f0; padding-bottom:2px;">Inhalt der Analyse</h2>
-        <ol class="toc-list" style="margin-top:0;">
-            <li><a class="toc-link" href="#marktperformance">Marktperformance &amp; Bewertung</a></li>
-            <li><a class="toc-link" href="#finanzielle-grundlagen">Finanzielle Grundlagen</a></li>
-            <li><a class="toc-link" href="#strategie">Strategische Ausrichtung</a></li>
-            <li><a class="toc-link" href="#analysten">Analystenerwartungen &amp; Institutionelles Interesse</a></li>
-            <li><a class="toc-link" href="#votum">Bewertungskontext &amp; Votum</a></li>
-          </ol>
-        </nav>
-    </div>
-
-    <p class="analysis-intro" style="margin: 24px 0 32px 0; font-size:1.08rem; line-height:1.7; max-width:100%; text-align:justify;">
-      In dieser Analyse ordnen wir die aktuelle Bewertung und Kursentwicklung ein und prüfen, welche Erwartungen der Markt bereits eingepreist hat. Anschließend betrachten wir die finanziellen Grundlagen (Umsatz, Margen, Cashflow) sowie die Bilanzqualität und mögliche Risikofaktoren. Im strategischen Teil geht es um Wachstumstreiber, Wettbewerb und den Handlungsspielraum des Managements. Abschließend vergleichen wir den Konsens der Analysten mit unserem Szenario und leiten daraus ein klares Votum samt Triggern ab. Ziel ist es, Chancen und Risiken transparent zu machen und eine fundierte Entscheidungsgrundlage zu bieten. Die wichtigsten Aspekte werden dabei kompakt und nachvollziehbar zusammengefasst.
-    </p>
-    <p style="height:1.5em;"></p>
+      <p class="analysis-intro">{{EINLEITUNG}}</p>
+    </header>
 
     <section class="analysis-section" id="marktperformance">
       <h2>1) Marktperformance &amp; Bewertung</h2>
-      <p>Kurzer Überblick über Kursentwicklung, Momentum, relative Stärke und aktuelle Bewertung. (Platzhalterwerte unten dienen nur zur Layout-Prüfung.)</p>
+      <p>{{KAPITEL_1_EINLEITUNG}}</p>
       <table class="card-table">
         <thead>
           <tr style="border-bottom:1px solid rgba(15,23,42,0.06);">
@@ -249,56 +133,58 @@
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid rgba(15,23,42,0.04);"><td>Aktueller Kurs</td><td>123,45 €</td><td>Stand: heute</td></tr>
-          <tr style="border-bottom:1px solid rgba(15,23,42,0.04);"><td>Performance 1M</td><td>+4,2%</td><td>Trendindikator</td></tr>
-          <tr><td>Forward-KGV</td><td>18,7x</td><td>Vergleich Peer/History</td></tr>
+          {{KAPITEL_1_TABELLE_ROWS}}
         </tbody>
       </table>
+      <div>{{KAPITEL_1_TEXT_HTML}}</div>
     </section>
 
     <section class="analysis-section" id="finanzielle-grundlagen">
       <h2>2) Finanzielle Grundlagen</h2>
-      <p>Wichtigste finanzielle Treiber: Umsatz, Margen, Cashflow, Bilanzqualität und Kapitalallokation.</p>
-      <ul style="margin-left: 18px; list-style: disc;">
-        <li>Umsatzwachstum: X% (YoY)</li>
-        <li>Operative Marge: X%</li>
-        <li>Free Cashflow: X Mrd.</li>
-      </ul>
+      <p>{{KAPITEL_2_EINLEITUNG}}</p>
+      <div>{{KAPITEL_2_TEXT_HTML}}</div>
     </section>
 
     <section class="analysis-section" id="strategie">
       <h2>3) Strategische Ausrichtung</h2>
-      <p>Was sind die strategischen Prioritäten? Welche Produkte/Segmente treiben Wachstum? Wo liegen Risiken (Wettbewerb, Regulierung, Zyklik)?</p>
+      <p>{{KAPITEL_3_EINLEITUNG}}</p>
+      <div>{{KAPITEL_3_TEXT_HTML}}</div>
     </section>
 
     <section class="analysis-section" id="analysten">
-      <h2>4) Analystenerwartungen &amp; Institutionelles Interesse</h2>
-      <p>Wie ist der Konsens (Kursziele, Ratings, Gewinnschätzungen)? Gibt es jüngste Up-/Downgrades oder relevante institutionelle Bewegungen?</p>
+      <h2>4) Analystenerwartungen &amp; institutionelles Interesse</h2>
+      <p>{{KAPITEL_4_EINLEITUNG}}</p>
+      <div>{{KAPITEL_4_TEXT_HTML}}</div>
     </section>
 
     <section class="analysis-section" id="votum">
       <h2>5) Bewertungskontext &amp; Votum</h2>
-      <p>Einordnung der Bewertung im Kontext von Wachstum/Qualität/Risiko + klares Votum (mit Bedingungen).</p>
+      <p>{{KAPITEL_5_EINLEITUNG}}</p>
+      <div>{{KAPITEL_5_TEXT_HTML}}</div>
+
       <div class="votum-box">
-        <h3>Votum (Vorlage)</h3>
-        <p><strong>Neutral / Beobachten</strong> — Begründung in 2–4 Sätzen. Optional: Trigger, ab wann Upgrade/Downgrade sinnvoll wäre.</p>
+        <h3>Votum</h3>
+        <p>{{VOTUM_TEXT}}</p>
+        <p><strong>Trigger:</strong> {{VOTUM_TRIGGER}}</p>
       </div>
+    </section>
 
-      <hr style="margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;">
-
-      <p style="font-size: 0.9rem; color: #64748b;">
-        <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr.
-      </p>
-      <p class="refs" style="font-size: 0.9rem; color: #64748b;">
-        <strong>Quellen (Beispiele):</strong> Unternehmensberichte, Investor-Relations, öffentliche Marktdaten, Analystenkommentare.
-      </p>
+    <section class="analysis-legal" aria-label="Disclaimer und Quellen">
+      <div class="analysis-disclaimer">
+        <h3>Disclaimer</h3>
+        <p>{{DISCLAIMER}}</p>
+      </div>
+      <div class="analysis-sources refs">
+        <h3>Quellen</h3>
+        <div>{{QUELLEN_HTML}}</div>
+      </div>
     </section>
   </article>
 </main>
 
 <footer class="site-footer border-t py-6 mt-12">
   <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
-    <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
+    <div>&copy; 2025 capitovo – Alle Rechte vorbehalten.</div>
     <div class="footer-links">
       <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
       <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>
@@ -308,166 +194,7 @@
   </div>
 </footer>
 
-<div class="sidebar" id="sidebar" aria-hidden="true" aria-label="Seitenmenü">
-  <button class="close-button" id="close-sidebar" aria-label="Sidebar schließen">&times;</button>
-  <nav class="sidebar-nav" aria-label="Hauptnavigation">
-    <ul>
-      <li>
-        <a href="./abonenten.html" class="flex items-center space-x-3" aria-label="Startseite">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M3 11.5L12 4l9 7.5" />
-            <path d="M5 10.5v7.5a1 1 0 001 1h3v-5h6v5h3a1 1 0 001-1v-7.5" />
-          </svg>
-          <span>Startseite</span>
-        </a>
-      </li>
-      <li>
-        <!-- upper logout removed to avoid duplicate; keep single logout at bottom -->
-        <div>
-          <a href="./konto.html" class="flex items-center space-x-3" aria-label="Mein Konto">
-            <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.5" />
-              <path d="M6 20c0-3.333 3.333-6 6-6s6 2.667 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            <span>Mein Konto</span>
-          </a>
-          <!-- Kontaktdaten-Link entfernt per Wunsch -->
-        </div>
-      </li>
-      <li>
-        <a href="./alle_analysen.html" class="flex items-center space-x-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="10" width="4" height="11" rx="0.5" /><rect x="10" y="6" width="4" height="15" rx="0.5" /><rect x="17" y="3" width="4" height="18" rx="0.5" /></svg>
-          <span>Analysen</span>
-        </a>
-      </li>
-      <li>
-        <a href="./Aktien-Monitor/aktien-monitor.html" class="flex items-center space-x-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-            <polyline points="3 17 9 11 13 15 21 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-          </svg>
-          <span>Aktien‑Monitor</span>
-        </a>
-      </li>
-      <li>
-        <a href="./earnings_kalender.html" class="flex items-center space-x-3">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-          </svg>
-          <span>Wirtschaftskalender</span>
-        </a>
-      </li>
-
-      <!-- Kontakt button at bottom -->
-      <li class="logout-bottom">
-        <a href="#" id="open-contact-modal" class="flex items-center space-x-3" aria-label="Kontakt aufnehmen">
-          <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <span>Kontakt</span>
-        </a>
-      </li>
-
-      <!-- Logout button moved to bottom via .logout-bottom -->
-      <li class="logout-bottom">
-        <a href="#" id="logout-link" class="logout-link" aria-label="Abmelden">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-            <path d="M16 17l5-5-5-5" />
-            <path d="M21 12H9" />
-          </svg>
-          <span>Abmelden</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-</div>
-
-
-<script src="../script.js?v=9"></script>
-<script>
-  // Dynamischer Zurück-Button basierend auf Referrer
-  (function() {
-    const backBtn = document.getElementById('back-button');
-    if (!backBtn) return;
-    const referrer = document.referrer;
-    if (referrer.includes('/Abonenten/abonenten.html')) {
-      backBtn.href = './abonenten.html';
-    } else if (referrer.includes('/Abonenten/alle_analysen.html')) {
-      backBtn.href = './alle_analysen.html';
-    } else if (referrer.includes('/Abonenten/')) {
-      backBtn.href = './alle_analysen.html';
-    } else {
-      backBtn.href = './alle_analysen.html';
-    }
-  })();
-
-  // Unternehmensname dynamisch setzen
-  (function() {
-    const params = new URLSearchParams(window.location.search);
-    const company = params.get('company');
-    const el = document.getElementById('analysis-company');
-    if (el) {
-      el.textContent = company && company.trim() ? company : 'Unternehmen';
-    }
-  })();
-
-  // Favoriten-Button initialisieren: Key ist die ID aus analysen.json (per Link-Match)
-  (async function() {
-    const btn = document.getElementById('favorite-button');
-    const tooltip = document.getElementById('fav-tooltip');
-    if (!btn) return;
-
-    // Hole die Analysen-Liste
-    let analyses = [];
-    try {
-      const res = await fetch('../data/analysen.json');
-      analyses = await res.json();
-    } catch(e) {}
-
-    // Finde die Analyse, die auf diese Vorlage-Seite verweist
-    const thisPath = 'Abonenten/vorlage.html';
-    const match = analyses.find(a => (a.link||'').replace(/^\.?\/?/, '') === thisPath);
-    const favKey = match ? (match.id || thisPath) : thisPath;
-    btn.dataset.title = favKey;
-
-    let favorites = [];
-    try { favorites = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favorites = []; }
-    const isFav = favorites.includes(favKey);
-
-    btn.setAttribute('aria-pressed', isFav ? 'true' : 'false');
-    btn.setAttribute('aria-label', isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen');
-    btn.title = isFav ? 'Aus Favoriten entfernen' : 'Zu Favoriten hinzufügen';
-
-    const icon = btn.querySelector('svg');
-    if (icon) {
-      icon.setAttribute('fill', isFav ? 'currentColor' : 'none');
-      icon.classList.toggle('text-yellow-400', isFav);
-      icon.classList.toggle('text-gray-400', !isFav);
-    }
-
-    // Tooltip-Logik: Zeige Hinweis kurz an, wenn hinzugefügt
-    btn.addEventListener('click', function(e) {
-      setTimeout(function() {
-        let favs = [];
-        try { favs = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favs = []; }
-        const nowFav = favs.includes(favKey);
-        if (tooltip && nowFav) {
-          tooltip.style.display = 'block';
-          setTimeout(function() { tooltip.style.display = 'none'; }, 1200);
-        }
-      }, 10);
-    });
-  })();
-
-
-  // Keine Manipulation der Animation per JS, damit das CSS wie vorgesehen arbeitet.
-  // Falls ein Delay im CSS vorhanden ist, kann es dort entfernt werden.
-</script>
+<!-- Keine Navigation, keine Sidebar, kein JS: reine Vorlage. -->
 
 </body>
 </html>

@@ -1,0 +1,590 @@
+{
+  "name": "Capitovo - Orchestrator (Zentrale Steuerung)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# 🎛️ CAPITOVO ORCHESTRATOR\n\n**Zentrale Steuerung für alle Capitovo-Workflows**\n\nDieses Dashboard ermöglicht:\n- 📊 Neue Analysen erstellen\n- 📤 Analysen veröffentlichen\n- 🗑️ Analysen löschen\n- 📧 Support-Emails verarbeiten\n- 📈 Content-Strategie ausführen\n- 🔍 Status-Übersicht\n\n**Verwendung:**\n1. Formular über Webhook aufrufen\n2. Aktion wählen\n3. Parameter eingeben\n4. Workflow wird ausgeführt",
+        "height": 400,
+        "width": 600,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [80, 80],
+      "typeVersion": 1,
+      "id": "sticky-main",
+      "name": "Orchestrator Info"
+    },
+    {
+      "parameters": {
+        "content": "# 🆕 NEUE ANALYSE\nErstellt eine vollständige KI-Analyse für ein Unternehmen",
+        "height": 280,
+        "width": 800,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [760, 80],
+      "typeVersion": 1,
+      "id": "sticky-neue-analyse",
+      "name": "Sticky - Neue Analyse"
+    },
+    {
+      "parameters": {
+        "content": "# 🗑️ ANALYSE LÖSCHEN\nEntfernt eine Analyse aus GitHub",
+        "height": 280,
+        "width": 800,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [760, 420],
+      "typeVersion": 1,
+      "id": "sticky-delete",
+      "name": "Sticky - Delete"
+    },
+    {
+      "parameters": {
+        "content": "# 📈 CONTENT STRATEGIE\nAnalysiert Markttrends und empfiehlt nächste Analysen",
+        "height": 280,
+        "width": 800,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [760, 760],
+      "typeVersion": 1,
+      "id": "sticky-strategy",
+      "name": "Sticky - Strategy"
+    },
+    {
+      "parameters": {
+        "content": "# 📊 STATUS\nZeigt Übersicht aller Analysen und System-Status",
+        "height": 280,
+        "width": 800,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [760, 1100],
+      "typeVersion": 1,
+      "id": "sticky-status",
+      "name": "Sticky - Status"
+    },
+    {
+      "parameters": {
+        "formTitle": "🎛️ Capitovo Orchestrator",
+        "formDescription": "Zentrale Steuerung für alle Capitovo-Funktionen.\n\nWähle eine Aktion und gib die erforderlichen Parameter ein.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Aktion",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  { "option": "🆕 Neue Analyse erstellen" },
+                  { "option": "🗑️ Analyse löschen" },
+                  { "option": "📈 Content-Strategie ausführen" },
+                  { "option": "📊 Status-Übersicht anzeigen" },
+                  { "option": "📧 Support-Emails verarbeiten" }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Ticker-Symbol (nur für neue Analyse)",
+              "fieldType": "text",
+              "requiredField": false,
+              "placeholder": "z.B. AAPL, MSFT, TSLA"
+            },
+            {
+              "fieldLabel": "Unternehmensname (optional)",
+              "fieldType": "text",
+              "requiredField": false,
+              "placeholder": "z.B. Apple Inc."
+            },
+            {
+              "fieldLabel": "Slug zum Löschen (nur für Analyse löschen)",
+              "fieldType": "text",
+              "requiredField": false,
+              "placeholder": "z.B. apple_2026-01-29"
+            },
+            {
+              "fieldLabel": "Bestätigung für Löschung",
+              "fieldType": "dropdown",
+              "requiredField": false,
+              "fieldOptions": {
+                "values": [
+                  { "option": "Nein" },
+                  { "option": "Ja, unwiderruflich löschen" }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "✅ Aktion wird ausgeführt...\n\nBitte warten. Dies kann einige Minuten dauern."
+            }
+          }
+        }
+      },
+      "id": "orchestrator-form",
+      "name": "🎛️ Orchestrator Formular",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [140, 560],
+      "webhookId": "capitovo-orchestrator"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "combinator": "or",
+          "conditions": [
+            {
+              "leftValue": "={{ $json['Aktion'] }}",
+              "rightValue": "🆕 Neue Analyse erstellen",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        },
+        "outputs": 5,
+        "options": {
+          "fallbackOutput": {
+            "output": -1
+          }
+        }
+      },
+      "id": "route-action",
+      "name": "Route by Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [420, 560],
+      "routing": {
+        "rules": [
+          {
+            "conditions": {
+              "conditions": [
+                {
+                  "leftValue": "={{ $json['Aktion'] }}",
+                  "rightValue": "🆕 Neue Analyse erstellen",
+                  "operator": { "type": "string", "operation": "contains" }
+                }
+              ]
+            },
+            "output": 0
+          },
+          {
+            "conditions": {
+              "conditions": [
+                {
+                  "leftValue": "={{ $json['Aktion'] }}",
+                  "rightValue": "🗑️ Analyse löschen",
+                  "operator": { "type": "string", "operation": "contains" }
+                }
+              ]
+            },
+            "output": 1
+          },
+          {
+            "conditions": {
+              "conditions": [
+                {
+                  "leftValue": "={{ $json['Aktion'] }}",
+                  "rightValue": "📈 Content-Strategie",
+                  "operator": { "type": "string", "operation": "contains" }
+                }
+              ]
+            },
+            "output": 2
+          },
+          {
+            "conditions": {
+              "conditions": [
+                {
+                  "leftValue": "={{ $json['Aktion'] }}",
+                  "rightValue": "📊 Status-Übersicht",
+                  "operator": { "type": "string", "operation": "contains" }
+                }
+              ]
+            },
+            "output": 3
+          },
+          {
+            "conditions": {
+              "conditions": [
+                {
+                  "leftValue": "={{ $json['Aktion'] }}",
+                  "rightValue": "📧 Support-Emails",
+                  "operator": { "type": "string", "operation": "contains" }
+                }
+              ]
+            },
+            "output": 4
+          }
+        ]
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validiere Input für neue Analyse\nconst form = $input.item.json;\nconst ticker = String(form['Ticker-Symbol (nur für neue Analyse)'] || '').toUpperCase().trim();\nconst company = String(form['Unternehmensname (optional)'] || '').trim();\n\nif (!ticker) {\n  throw new Error('❌ Ticker-Symbol ist erforderlich für neue Analysen!');\n}\n\nreturn {\n  json: {\n    action: 'create_analysis',\n    ticker: ticker,\n    company: company || ticker,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "validate-new-analysis",
+      "name": "Validate New Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 160]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.alphavantage.co/query?function=OVERVIEW&symbol={{ $json.ticker }}&apikey=YO8C9ZRNBDVLAZ83",
+        "options": { "timeout": 30000 }
+      },
+      "id": "fetch-company-data",
+      "name": "Fetch Company Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [920, 160],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Bereite Daten für Analyse-Generator vor\nconst input = $('Validate New Analysis').item.json;\nconst api = $input.item.json;\n\nconst sectorMap = {\n  'TECHNOLOGY': 'Technologie',\n  'CONSUMER DISCRETIONARY': 'Zyklischer Konsum',\n  'CONSUMER CYCLICAL': 'Zyklischer Konsum',\n  'HEALTHCARE': 'Gesundheitswesen',\n  'HEALTH CARE': 'Gesundheitswesen',\n  'FINANCIALS': 'Finanzen',\n  'FINANCIAL SERVICES': 'Finanzen',\n  'INDUSTRIALS': 'Industrie',\n  'ENERGY': 'Energie',\n  'MATERIALS': 'Grundstoffe',\n  'UTILITIES': 'Versorger',\n  'REAL ESTATE': 'Immobilien',\n  'COMMUNICATION SERVICES': 'Kommunikation',\n  'CONSUMER STAPLES': 'Basiskonsumgüter'\n};\n\nconst ticker = input.ticker;\nconst company = input.company || (api && api.Name ? api.Name : ticker);\nconst rawSector = api && api.Sector ? String(api.Sector).toUpperCase() : '';\nconst sector = sectorMap[rawSector] || 'Sonstige';\nconst exchange = api && api.Exchange ? api.Exchange : 'NYSE';\nconst currency = api && api.Currency ? api.Currency : 'USD';\n\nconst knownSecurities = {\n  'AAPL': { wkn: '865985', isin: 'US0378331005' },\n  'MSFT': { wkn: '870747', isin: 'US5949181045' },\n  'GOOGL': { wkn: 'A14Y6F', isin: 'US02079K3059' },\n  'AMZN': { wkn: '906866', isin: 'US0231351067' },\n  'TSLA': { wkn: 'A1CX3T', isin: 'US88160R1014' },\n  'META': { wkn: 'A1JWVX', isin: 'US30303M1027' },\n  'NVDA': { wkn: '918422', isin: 'US67066G1040' },\n  'JPM': { wkn: '850628', isin: 'US46625H1005' },\n  'JNJ': { wkn: '853260', isin: 'US4781601046' },\n  'V': { wkn: 'A0NC7B', isin: 'US92826C8394' },\n  'RACE': { wkn: 'A2ACKK', isin: 'NL0011585146' }\n};\n\nconst secInfo = knownSecurities[ticker] || { wkn: 'n/a', isin: 'n/a' };\nconst today = new Date().toISOString().split('T')[0];\nconst slug = company.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').substring(0, 20) + '_' + today;\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    exchange: exchange,\n    sector: sector,\n    currency: currency,\n    wkn: secInfo.wkn,\n    isin: secInfo.isin,\n    slug: slug,\n    date: today,\n    ready_for_analysis: true,\n    status: '🔄 Analyse wird generiert...'\n  }\n};"
+      },
+      "id": "prepare-analysis-data",
+      "name": "Prepare Analysis Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1140, 160]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "result",
+              "name": "result",
+              "value": "={{ '✅ Analyse-Daten vorbereitet für: ' + $json.company + ' (' + $json.ticker + ')\\n\\n📝 Slug: ' + $json.slug + '\\n📅 Datum: ' + $json.date + '\\n🏢 Sektor: ' + $json.sector + '\\n💱 Währung: ' + $json.currency + '\\n\\n➡️ Analyse-Generator-Workflow muss separat ausgeführt werden mit diesen Daten.' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      },
+      "id": "new-analysis-output",
+      "name": "New Analysis Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1360, 160]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validiere Input für Löschung\nconst form = $input.item.json;\nconst slug = String(form['Slug zum Löschen (nur für Analyse löschen)'] || '').trim();\nconst confirm = String(form['Bestätigung für Löschung'] || '');\n\nif (!slug) {\n  throw new Error('❌ Slug ist erforderlich zum Löschen einer Analyse!');\n}\n\nif (confirm !== 'Ja, unwiderruflich löschen') {\n  throw new Error('❌ Löschung abgebrochen - Keine Bestätigung');\n}\n\nreturn {\n  json: {\n    action: 'delete_analysis',\n    slug: slug,\n    htmlPath: `Abonenten/${slug}.html`,\n    svgPath: `data/vorschaubilder_analysen/${slug}.svg`,\n    catalogPath: 'data/analysen.json',\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "validate-delete",
+      "name": "Validate Delete",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 500]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "get-html-sha",
+      "name": "Get HTML SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [920, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $('Validate Delete').item.json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"🗑️ Orchestrator: Lösche {{ $('Validate Delete').item.json.slug }}.html\",\n  \"sha\": \"{{ $json.sha }}\"\n}",
+        "options": {}
+      },
+      "id": "delete-html",
+      "name": "Delete HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1140, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "result",
+              "name": "result",
+              "value": "={{ '✅ HTML-Datei gelöscht: ' + $('Validate Delete').item.json.slug + '.html\\n\\n⚠️ SVG und Katalog müssen ggf. manuell aktualisiert werden oder verwende den vollständigen Lösch-Workflow.' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      },
+      "id": "delete-output",
+      "name": "Delete Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1360, 500]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/kw-f8/capitovo/contents/data/analysen.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "fetch-catalog",
+      "name": "Fetch Catalog",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [700, 840],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse und analysiere Katalog\nconst content = $input.item.json.content;\nconst decoded = Buffer.from(content, 'base64').toString('utf8');\nconst catalog = JSON.parse(decoded);\n\nconst totalAnalyses = catalog.length;\nconst sectors = {};\nconst recentAnalyses = [];\n\ncatalog.forEach((item, index) => {\n  // Sektor zählen\n  const sector = item.sector || 'Unbekannt';\n  sectors[sector] = (sectors[sector] || 0) + 1;\n  \n  // Letzte 5 Analysen\n  if (index < 5) {\n    recentAnalyses.push(`• ${item.company} (${item.ticker}) - ${item.date}`);\n  }\n});\n\nconst sectorList = Object.entries(sectors)\n  .sort((a, b) => b[1] - a[1])\n  .map(([name, count]) => `• ${name}: ${count}`)\n  .join('\\n');\n\nconst summary = `📊 CAPITOVO STATUS-ÜBERSICHT\\n\\n` +\n  `📈 Gesamt Analysen: ${totalAnalyses}\\n\\n` +\n  `🏢 Nach Sektor:\\n${sectorList}\\n\\n` +\n  `🕐 Neueste Analysen:\\n${recentAnalyses.join('\\n')}\\n\\n` +\n  `✅ System: Online\\n` +\n  `🔗 GitHub: kw-f8/capitovo\\n` +\n  `📅 Abfrage: ${new Date().toISOString()}`;\n\nreturn {\n  json: {\n    action: 'status_overview',\n    result: summary,\n    totalAnalyses: totalAnalyses,\n    sectors: sectors,\n    recentAnalyses: recentAnalyses\n  }\n};"
+      },
+      "id": "analyze-status",
+      "name": "Analyze Status",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [920, 840]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "result",
+              "name": "result",
+              "value": "={{ $json.result }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      },
+      "id": "status-output",
+      "name": "Status Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1140, 840]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Content-Strategie Empfehlungen\nreturn {\n  json: {\n    action: 'content_strategy',\n    result: '📈 CONTENT-STRATEGIE\\n\\n' +\n      '➡️ Der Content Strategy Agent läuft als separater Workflow.\\n\\n' +\n      'Zur manuellen Ausführung:\\n' +\n      '1. Öffne den Workflow \"Content Strategy Agent\"\\n' +\n      '2. Klicke auf \"Execute\"\\n\\n' +\n      'Der Agent analysiert:\\n' +\n      '• Bestehende Analysen\\n' +\n      '• Aktuelle Markttrends\\n' +\n      '• Sektor-Balance\\n' +\n      '• Zeitkritische Events\\n\\n' +\n      '📊 Output: Priorisierte Empfehlungsliste',\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "content-strategy",
+      "name": "Content Strategy Info",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 1180]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Support-Email Info\nreturn {\n  json: {\n    action: 'support_emails',\n    result: '📧 SUPPORT-EMAIL VERARBEITUNG\\n\\n' +\n      '➡️ Der Support Email Agent läuft automatisch alle 15 Minuten.\\n\\n' +\n      'Funktionen:\\n' +\n      '• 🔍 Auto-Classification - Kategorisiert Emails\\n' +\n      '• 🤖 AI-Powered Responses - Generiert Antworten\\n' +\n      '• 📂 Smart Folders - Sortiert nach Priorität\\n' +\n      '• 🚨 Priority Alerts - Slack-Benachrichtigung\\n\\n' +\n      'Zur manuellen Ausführung:\\n' +\n      '1. Öffne den Workflow \"Support Email Agent\"\\n' +\n      '2. Klicke auf \"Execute\"',\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "support-emails",
+      "name": "Support Emails Info",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 1520]
+    },
+    {
+      "parameters": {
+        "content": "# 📧 SUPPORT EMAILS\nVerarbeitet automatisch Outlook-Emails",
+        "height": 280,
+        "width": 800,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [760, 1440],
+      "typeVersion": 1,
+      "id": "sticky-support",
+      "name": "Sticky - Support"
+    }
+  ],
+  "connections": {
+    "🎛️ Orchestrator Formular": {
+      "main": [
+        [
+          {
+            "node": "Route by Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Action": {
+      "main": [
+        [
+          {
+            "node": "Validate New Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Validate Delete",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Content Strategy Info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch Catalog",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Support Emails Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate New Analysis": {
+      "main": [
+        [
+          {
+            "node": "Fetch Company Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Company Data": {
+      "main": [
+        [
+          {
+            "node": "Prepare Analysis Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Analysis Data": {
+      "main": [
+        [
+          {
+            "node": "New Analysis Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Delete": {
+      "main": [
+        [
+          {
+            "node": "Get HTML SHA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get HTML SHA": {
+      "main": [
+        [
+          {
+            "node": "Delete HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete HTML": {
+      "main": [
+        [
+          {
+            "node": "Delete Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Catalog": {
+      "main": [
+        [
+          {
+            "node": "Analyze Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Status": {
+      "main": [
+        [
+          {
+            "node": "Status Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-31T10:00:00.000Z",
+  "versionId": "1"
+}

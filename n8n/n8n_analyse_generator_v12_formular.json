@@ -4,7 +4,7 @@
     {
       "parameters": {
         "formTitle": "Neue Unternehmensanalyse erstellen",
-        "formDescription": "Gib den Ticker des Unternehmens ein, das analysiert werden soll. Die Analyse wird automatisch erstellt und veröffentlicht.",
+        "formDescription": "Gib den Ticker des Unternehmens ein, das analysiert werden soll. Die Analyse wird automatisch erstellt.",
         "formFields": {
           "values": [
             {
@@ -24,7 +24,7 @@
         "options": {
           "respondWithOptions": {
             "values": {
-              "formSubmittedText": "✅ Analyse wird erstellt...\n\nDie Analyse wird jetzt im Hintergrund generiert und automatisch veröffentlicht.\nDies kann 2-3 Minuten dauern.\n\nDu kannst dieses Fenster schließen."
+              "formSubmittedText": "✅ Analyse wird erstellt...\n\nDie Analyse wird jetzt im Hintergrund generiert.\nDies kann 2-3 Minuten dauern.\n\nDu kannst dieses Fenster schließen."
             }
           }
         }
@@ -236,287 +236,89 @@
     },
     {
       "parameters": {
-        "jsCode": "var input = $input.item.json;\nvar meta = input.input;\nvar metrics = input.metrics;\n\nvar htmlBase64 = Buffer.from(input.htmlPublic, 'utf8').toString('base64');\nvar svgBase64 = Buffer.from(input.svgPreview, 'utf8').toString('base64');\n\n// Datum formatieren fuer Titel\nvar dateParts = meta.date.split('-');\nvar dateObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1])-1, parseInt(dateParts[2]));\nvar titleDate = dateObj.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n\n// Intro Text (erste 200 Zeichen des Inhalts)\nvar introText = (input.finalContent || '').substring(0, 250).replace(/\\n/g, ' ').trim();\nif (introText.length >= 247) introText = introText.substring(0, introText.lastIndexOf(' ')) + '...';\n\nvar catalogEntry = {\n  id: meta.ticker.toLowerCase() + '-' + meta.date,\n  category: (meta.sector || 'SONSTIGE').toUpperCase(),\n  title: meta.company + ' – Unternehmensanalyse (' + titleDate + ')',\n  summary: introText || ('Analytische Einordnung von ' + meta.company + ' (' + meta.ticker + ') - Geschaeftsmodell, Fundamentaldaten, Bewertungsimplikationen und strukturelle Risiken.'),\n  link: 'Abonenten/' + meta.slug + '.html',\n  image: 'data/vorschaubilder_analysen/' + meta.slug + '_preview.svg',\n  date: meta.date,\n  author: 'capitovo Research',\n  tags: [meta.company, meta.ticker, meta.sector, meta.exchange].filter(Boolean),\n  published: true,\n  wordCount: metrics.wordCount,\n  sourcesCount: input.sourceValidation ? input.sourceValidation.accepted.length : 0\n};\n\nreturn {\n  json: {\n    company: meta.company,\n    ticker: meta.ticker,\n    sector: meta.sector,\n    slug: meta.slug,\n    date: meta.date,\n    wkn: meta.wkn,\n    isin: meta.isin,\n    publicationReady: metrics.publicationReady,\n    statusText: metrics.statusText,\n    htmlPath: 'Abonenten/' + meta.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + meta.slug + '_preview.svg',\n    htmlBase64: htmlBase64,\n    svgBase64: svgBase64,\n    htmlCommitMsg: 'Analyse: ' + meta.company + ' (' + meta.ticker + ') - ' + meta.date,\n    svgCommitMsg: 'Vorschaubild: ' + meta.company + ' - ' + meta.date,\n    catalogEntry: catalogEntry,\n    metrics: metrics\n  }\n};"
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.4,\n  \"max_tokens\": 800,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein kreativer Art Director fuer professionelle Finanzmedien. Du erstellst Bildprompts fuer Titelbilder von Unternehmensanalysen. Die Bilder sollen elegant, professionell und hochwertig wirken - wie aus einem renommierten Wirtschaftsmagazin (z.B. The Economist, Bloomberg Businessweek). WICHTIG: Die Bilder duerfen NICHT kuenstlich oder KI-generiert aussehen. Sie sollen wirken wie echte Fotografien oder hochwertige Illustrationen. Vermeide: futuristische Elemente, Neonfarben, abstrakte Formen, Grid-Muster, offensichtliche KI-Aesthetik, zu perfekte Symmetrie.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('Erstelle einen detaillierten Bildprompt (auf Englisch) fuer ein Titelbild einer Unternehmensanalyse. Format: 16:9 (Querformat).\\n\\nUnternehmen: ' + $json.input.company + '\\nTicker: ' + $json.input.ticker + '\\nBranche: ' + $json.input.sector + '\\nBeschreibung: ' + ($json.facts.company.description || 'Keine Beschreibung verfuegbar') + '\\n\\nDer Prompt soll ein Bild beschreiben das:\\n- Das Unternehmen oder seine Branche subtil repraesentiert (z.B. Produkte, Hauptsitz, typische Szene)\\n- Elegant und professionell wirkt, wie ein Editorial-Foto\\n- Realistische Fotografie-Aesthetik hat (kein CGI-Look)\\n- Warme, natuerliche Farbtoene verwendet (keine Neonfarben)\\n- Tiefenschaerfe und natuerliches Licht nutzt\\n- Optional: dezent das Logo oder Produkt des Unternehmens zeigt\\n\\nBeginne den Prompt mit dem Bildstil (z.B. \"Editorial photography style\", \"Professional magazine cover photo\", \"High-end corporate photography\").\\n\\nLiefere NUR den englischen Bildprompt, keine Erklaerungen.') }}\n    }\n  ]\n}",
+        "options": { "timeout": 60000 }
       },
-      "id": "base64-encoder",
-      "name": "16. Base64 kodieren",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [3640, 400]
+      "id": "titelbild-prompt",
+      "name": "16. Titelbild-Prompt erstellen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3640, 400],
+      "continueOnFail": true
     },
     {
       "parameters": {
-        "conditions": {
-          "boolean": [
-            {
-              "value1": "={{ $json.publicationReady }}",
-              "value2": true
-            }
-          ]
-        }
+        "jsCode": "var prev = $('15. SVG Vorschaubild').item.json;\nvar resp = $input.item.json;\nvar meta = prev.input;\nvar metrics = prev.metrics;\n\nvar titelbildPrompt = '';\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  titelbildPrompt = resp.choices[0].message.content || '';\n  titelbildPrompt = titelbildPrompt.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').trim();\n}\n\n// Falls kein Prompt generiert wurde, erstelle einen Default\nif (!titelbildPrompt) {\n  titelbildPrompt = 'Editorial photography style, professional magazine cover photo, 16:9 aspect ratio. Elegant corporate setting representing ' + meta.sector + ' industry. Natural warm lighting, shallow depth of field. Clean, sophisticated composition suitable for a premium financial publication. No text overlay, no AI-generated look, realistic photography aesthetic.';\n}\n\nvar htmlBase64 = Buffer.from(prev.htmlPublic, 'utf8').toString('base64');\nvar svgBase64 = Buffer.from(prev.svgPreview, 'utf8').toString('base64');\n\n// Datum formatieren fuer Titel\nvar dateParts = meta.date.split('-');\nvar dateObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1])-1, parseInt(dateParts[2]));\nvar titleDate = dateObj.toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n\n// Intro Text (erste 200 Zeichen des Inhalts)\nvar introText = (prev.finalContent || '').substring(0, 250).replace(/\\n/g, ' ').trim();\nif (introText.length >= 247) introText = introText.substring(0, introText.lastIndexOf(' ')) + '...';\n\nvar catalogEntry = {\n  id: meta.ticker.toLowerCase() + '-' + meta.date,\n  category: (meta.sector || 'SONSTIGE').toUpperCase(),\n  title: meta.company + ' – Unternehmensanalyse (' + titleDate + ')',\n  summary: introText || ('Analytische Einordnung von ' + meta.company + ' (' + meta.ticker + ') - Geschaeftsmodell, Fundamentaldaten, Bewertungsimplikationen und strukturelle Risiken.'),\n  link: 'Abonenten/' + meta.slug + '.html',\n  image: 'data/vorschaubilder_analysen/' + meta.slug + '_preview.svg',\n  date: meta.date,\n  author: 'capitovo Research',\n  tags: [meta.company, meta.ticker, meta.sector, meta.exchange].filter(Boolean),\n  published: true,\n  wordCount: metrics.wordCount,\n  sourcesCount: prev.sourceValidation ? prev.sourceValidation.accepted.length : 0\n};\n\nreturn {\n  json: {\n    company: meta.company,\n    ticker: meta.ticker,\n    sector: meta.sector,\n    slug: meta.slug,\n    date: meta.date,\n    wkn: meta.wkn,\n    isin: meta.isin,\n    publicationReady: metrics.publicationReady,\n    statusText: metrics.statusText,\n    htmlPath: 'Abonenten/' + meta.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + meta.slug + '_preview.svg',\n    htmlBase64: htmlBase64,\n    svgBase64: svgBase64,\n    htmlContent: prev.htmlPublic,\n    svgContent: prev.svgPreview,\n    titelbildPrompt: titelbildPrompt,\n    catalogEntry: catalogEntry,\n    metrics: metrics,\n    finalContent: prev.finalContent\n  }\n};"
       },
-      "id": "publish-gate",
-      "name": "17. Publish Gate",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
+      "id": "output-assembler",
+      "name": "17. Output zusammenstellen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [3860, 400]
     },
     {
       "parameters": {
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "Accept", "value": "application/vnd.github+json" },
-            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
-          ]
-        },
-        "options": { "timeout": 30000 }
-      },
-      "id": "get-html-sha",
-      "name": "18a. Get HTML SHA",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [4080, 300],
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('16. Base64 kodieren').item.json;\nvar resp = $input.item.json;\nvar htmlSha = resp && resp.sha ? resp.sha : null;\nreturn { json: { ...prev, htmlSha: htmlSha } };"
-      },
-      "id": "extract-html-sha",
-      "name": "18b. Extract HTML SHA",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [4280, 300]
-    },
-    {
-      "parameters": {
-        "method": "PUT",
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "Accept", "value": "application/vnd.github+json" },
-            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ $json.htmlSha ? '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"sha\": \"' + $json.htmlSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"branch\": \"main\"}' }}",
-        "options": { "timeout": 60000 }
-      },
-      "id": "github-upload-html",
-      "name": "19. GitHub Upload HTML",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [4480, 300],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('18b. Extract HTML SHA').item.json;\nreturn { json: prev };"
-      },
-      "id": "pass-after-html",
-      "name": "20. Pass Data",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [4680, 300]
-    },
-    {
-      "parameters": {
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "Accept", "value": "application/vnd.github+json" },
-            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
-          ]
-        },
-        "options": { "timeout": 30000 }
-      },
-      "id": "get-svg-sha",
-      "name": "21a. Get SVG SHA",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [4880, 300],
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('20. Pass Data').item.json;\nvar resp = $input.item.json;\nvar svgSha = resp && resp.sha ? resp.sha : null;\nreturn { json: { ...prev, svgSha: svgSha } };"
-      },
-      "id": "extract-svg-sha",
-      "name": "21b. Extract SVG SHA",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [5080, 300]
-    },
-    {
-      "parameters": {
-        "method": "PUT",
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "Accept", "value": "application/vnd.github+json" },
-            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ $json.svgSha ? '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"sha\": \"' + $json.svgSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"branch\": \"main\"}' }}",
-        "options": { "timeout": 60000 }
-      },
-      "id": "github-upload-svg",
-      "name": "22. GitHub Upload SVG",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [5280, 300],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/data/analysen.json",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "Accept", "value": "application/vnd.github+json" },
-            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
-          ]
-        },
-        "options": { "timeout": 30000 }
-      },
-      "id": "get-catalog-sha",
-      "name": "23. Get Analysen.json",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [5480, 300],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      },
-      "continueOnFail": true
-    },
-    {
-      "parameters": {
-        "jsCode": "var prev = $('21b. Extract SVG SHA').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\nvar existing = [];\n\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\n// Neuen Eintrag vorbereiten\nvar entry = prev.catalogEntry;\n\n// Pruefen ob Eintrag bereits existiert (nach ID oder Link)\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) {\n  if (existing[i].id === entry.id || existing[i].link === entry.link) {\n    idx = i;\n    break;\n  }\n}\n\n// Update oder Insert\nif (idx >= 0) {\n  existing[idx] = Object.assign({}, existing[idx], entry);\n} else {\n  // Nach der Vorlage einfuegen (Index 1)\n  var insertAt = 0;\n  if (existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE') insertAt = 1;\n  existing.splice(insertAt, 0, entry);\n}\n\nvar updatedJson = JSON.stringify(existing, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: {\n    ...prev,\n    analysenPath: 'data/analysen.json',\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Katalog: ' + prev.company + ' (' + prev.ticker + ') hinzugefuegt'\n  }\n};"
-      },
-      "id": "build-catalog",
-      "name": "24. Katalog aktualisieren",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [5680, 300]
-    },
-    {
-      "parameters": {
-        "method": "PUT",
-        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            { "name": "Accept", "value": "application/vnd.github+json" },
-            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"message\": \"{{ $json.analysenCommitMsg }}\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
-        "options": { "timeout": 60000 }
-      },
-      "id": "github-upload-catalog",
-      "name": "25. GitHub Upload Katalog",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [5880, 300],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "iCAWAEqg10f57flt",
-          "name": "GitHub Token"
-        }
-      }
-    },
-    {
-      "parameters": {
         "values": {
           "string": [
             {
               "name": "status",
-              "value": "=✅ ERFOLG: {{ $('24. Katalog aktualisieren').item.json.company }} ({{ $('24. Katalog aktualisieren').item.json.ticker }}) veröffentlicht"
+              "value": "={{ $json.publicationReady ? '✅ ANALYSE ERSTELLT' : '⚠️ BLOCKIERT' }}"
             },
             {
-              "name": "liveUrl",
-              "value": "=https://kw-f8.github.io/capitovo/{{ $('24. Katalog aktualisieren').item.json.htmlPath }}"
+              "name": "company",
+              "value": "={{ $json.company }}"
+            },
+            {
+              "name": "ticker",
+              "value": "={{ $json.ticker }}"
+            },
+            {
+              "name": "htmlPath",
+              "value": "={{ $json.htmlPath }}"
+            },
+            {
+              "name": "svgPath",
+              "value": "={{ $json.svgPath }}"
+            },
+            {
+              "name": "titelbildPrompt",
+              "value": "={{ $json.titelbildPrompt }}"
+            },
+            {
+              "name": "problems",
+              "value": "={{ $json.metrics.koFlags ? $json.metrics.koFlags.join(', ') : 'Keine' }}"
             }
           ],
           "number": [
             {
-              "name": "qualityScore",
-              "value": "={{ $('24. Katalog aktualisieren').item.json.metrics.depthScore }}"
-            },
-            {
               "name": "wordCount",
-              "value": "={{ $('24. Katalog aktualisieren').item.json.metrics.wordCount }}"
+              "value": "={{ $json.metrics.wordCount }}"
+            },
+            {
+              "name": "qualityScore",
+              "value": "={{ $json.metrics.depthScore }}"
             }
           ]
         },
         "options": {}
       },
-      "id": "set-success",
-      "name": "26. Erfolg (Log)",
+      "id": "final-output",
+      "name": "18. Finaler Output",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [6100, 300]
-    },
-    {
-      "parameters": {
-        "values": {
-          "string": [
-            {
-              "name": "status",
-              "value": "=❌ BLOCKIERT: {{ $json.company }} ({{ $json.ticker }})"
-            },
-            {
-              "name": "reason",
-              "value": "={{ $json.statusText }}"
-            },
-            {
-              "name": "problems",
-              "value": "={{ $json.metrics.koFlags ? $json.metrics.koFlags.join(', ') : 'Unbekannter Fehler' }}"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "id": "set-blocked",
-      "name": "Blockiert (Log)",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3.4,
-      "position": [4080, 500]
+      "position": [4080, 400]
     }
   ],
   "connections": {
@@ -535,24 +337,9 @@
     "12. Finalen Text extrahieren": { "main": [[{ "node": "13. Quality Gate", "type": "main", "index": 0 }]] },
     "13. Quality Gate": { "main": [[{ "node": "14. HTML generieren", "type": "main", "index": 0 }]] },
     "14. HTML generieren": { "main": [[{ "node": "15. SVG Vorschaubild", "type": "main", "index": 0 }]] },
-    "15. SVG Vorschaubild": { "main": [[{ "node": "16. Base64 kodieren", "type": "main", "index": 0 }]] },
-    "16. Base64 kodieren": { "main": [[{ "node": "17. Publish Gate", "type": "main", "index": 0 }]] },
-    "17. Publish Gate": {
-      "main": [
-        [{ "node": "18a. Get HTML SHA", "type": "main", "index": 0 }],
-        [{ "node": "Blockiert (Log)", "type": "main", "index": 0 }]
-      ]
-    },
-    "18a. Get HTML SHA": { "main": [[{ "node": "18b. Extract HTML SHA", "type": "main", "index": 0 }]] },
-    "18b. Extract HTML SHA": { "main": [[{ "node": "19. GitHub Upload HTML", "type": "main", "index": 0 }]] },
-    "19. GitHub Upload HTML": { "main": [[{ "node": "20. Pass Data", "type": "main", "index": 0 }]] },
-    "20. Pass Data": { "main": [[{ "node": "21a. Get SVG SHA", "type": "main", "index": 0 }]] },
-    "21a. Get SVG SHA": { "main": [[{ "node": "21b. Extract SVG SHA", "type": "main", "index": 0 }]] },
-    "21b. Extract SVG SHA": { "main": [[{ "node": "22. GitHub Upload SVG", "type": "main", "index": 0 }]] },
-    "22. GitHub Upload SVG": { "main": [[{ "node": "23. Get Analysen.json", "type": "main", "index": 0 }]] },
-    "23. Get Analysen.json": { "main": [[{ "node": "24. Katalog aktualisieren", "type": "main", "index": 0 }]] },
-    "24. Katalog aktualisieren": { "main": [[{ "node": "25. GitHub Upload Katalog", "type": "main", "index": 0 }]] },
-    "25. GitHub Upload Katalog": { "main": [[{ "node": "26. Erfolg (Log)", "type": "main", "index": 0 }]] }
+    "15. SVG Vorschaubild": { "main": [[{ "node": "16. Titelbild-Prompt erstellen", "type": "main", "index": 0 }]] },
+    "16. Titelbild-Prompt erstellen": { "main": [[{ "node": "17. Output zusammenstellen", "type": "main", "index": 0 }]] },
+    "17. Output zusammenstellen": { "main": [[{ "node": "18. Finaler Output", "type": "main", "index": 0 }]] }
   },
   "settings": { "executionOrder": "v1" },
   "staticData": null,

@@ -1,0 +1,1022 @@
+{
+  "name": "Capitovo - Generator, Veröffentlichen & Löschen",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "# 🆕 NEUE ANALYSE ERSTELLEN\nFormular ausfüllen → KI-Analyse generieren → Titelbild-Prompt erstellen → Veröffentlichen",
+        "height": 1200,
+        "width": 4200,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [80, 100],
+      "typeVersion": 1,
+      "id": "sticky-neue-analyse",
+      "name": "Sticky - Neue Analyse"
+    },
+    {
+      "parameters": {
+        "content": "# 📤 TEST-ANALYSE VERÖFFENTLICHEN\nApple-Testanalyse direkt veröffentlichen (ohne KI-Generierung)",
+        "height": 800,
+        "width": 2000,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [80, 1400],
+      "typeVersion": 1,
+      "id": "sticky-test-publish",
+      "name": "Sticky - Test Publish"
+    },
+    {
+      "parameters": {
+        "content": "# 🗑️ ANALYSE LÖSCHEN\nAnalyse aus GitHub entfernen (HTML, SVG, Katalog-Eintrag)",
+        "height": 800,
+        "width": 1800,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [80, 2300],
+      "typeVersion": 1,
+      "id": "sticky-delete",
+      "name": "Sticky - Delete"
+    },
+    {
+      "parameters": {
+        "formTitle": "Neue Unternehmensanalyse erstellen",
+        "formDescription": "Gib den Ticker des Unternehmens ein. Die Analyse wird automatisch mit KI erstellt, ein Titelbild-Prompt generiert und veröffentlicht.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Ticker-Symbol",
+              "fieldType": "text",
+              "requiredField": true,
+              "placeholder": "z.B. AAPL, MSFT, TSLA"
+            },
+            {
+              "fieldLabel": "Unternehmensname (optional)",
+              "fieldType": "text",
+              "requiredField": false,
+              "placeholder": "z.B. Apple Inc."
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "✅ Analyse wird erstellt und veröffentlicht...\n\nDies kann 3-5 Minuten dauern.\nDu kannst dieses Fenster schließen."
+            }
+          }
+        }
+      },
+      "id": "form-trigger-new",
+      "name": "🆕 Formular - Neue Analyse",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [140, 300],
+      "webhookId": "capitovo-analyse-generator"
+    },
+    {
+      "parameters": {},
+      "id": "test-publish-trigger",
+      "name": "📤 Test-Analyse veröffentlichen",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [140, 1600]
+    },
+    {
+      "parameters": {},
+      "id": "delete-trigger",
+      "name": "🗑️ Analyse löschen",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [140, 2500]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.alphavantage.co/query?function=OVERVIEW&symbol={{ $json['Ticker-Symbol'].toUpperCase().trim() }}&apikey=YO8C9ZRNBDVLAZ83",
+        "options": { "timeout": 30000 }
+      },
+      "id": "api-lookup",
+      "name": "1. Unternehmensdaten laden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [380, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var form = $('🆕 Formular - Neue Analyse').item.json;\nvar api = $input.item.json;\n\nvar ticker = String(form['Ticker-Symbol'] || '').toUpperCase().trim();\nvar customName = String(form['Unternehmensname (optional)'] || '').trim();\nvar company = customName || (api && api.Name ? api.Name : ticker);\n\nvar sectorMap = {\n  'TECHNOLOGY': 'Technologie',\n  'CONSUMER DISCRETIONARY': 'Zyklischer Konsum',\n  'CONSUMER CYCLICAL': 'Zyklischer Konsum',\n  'HEALTHCARE': 'Gesundheitswesen',\n  'HEALTH CARE': 'Gesundheitswesen',\n  'FINANCIALS': 'Finanzen',\n  'FINANCIAL SERVICES': 'Finanzen',\n  'INDUSTRIALS': 'Industrie',\n  'ENERGY': 'Energie',\n  'MATERIALS': 'Grundstoffe',\n  'UTILITIES': 'Versorger',\n  'REAL ESTATE': 'Immobilien',\n  'COMMUNICATION SERVICES': 'Kommunikation',\n  'CONSUMER STAPLES': 'Basiskonsumgüter'\n};\n\nvar rawSector = api && api.Sector ? String(api.Sector).toUpperCase() : '';\nvar sector = sectorMap[rawSector] || 'Sonstige';\nvar exchange = api && api.Exchange ? api.Exchange : 'NYSE';\nvar currency = api && api.Currency ? api.Currency : 'USD';\n\nvar knownSecurities = {\n  'AAPL': { wkn: '865985', isin: 'US0378331005' },\n  'MSFT': { wkn: '870747', isin: 'US5949181045' },\n  'GOOGL': { wkn: 'A14Y6F', isin: 'US02079K3059' },\n  'AMZN': { wkn: '906866', isin: 'US0231351067' },\n  'TSLA': { wkn: 'A1CX3T', isin: 'US88160R1014' },\n  'META': { wkn: 'A1JWVX', isin: 'US30303M1027' },\n  'NVDA': { wkn: '918422', isin: 'US67066G1040' },\n  'JPM': { wkn: '850628', isin: 'US46625H1005' },\n  'JNJ': { wkn: '853260', isin: 'US4781601046' },\n  'V': { wkn: 'A0NC7B', isin: 'US92826C8394' },\n  'RACE': { wkn: 'A2ACKK', isin: 'NL0011585146' }\n};\n\nvar secInfo = knownSecurities[ticker] || { wkn: 'n/a', isin: 'n/a' };\nvar today = new Date().toISOString().split('T')[0];\nvar slug = company.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '').substring(0, 20) + '_' + today;\n\nreturn {\n  json: {\n    company: company,\n    ticker: ticker,\n    exchange: exchange,\n    sector: sector,\n    currency: currency,\n    wkn: secInfo.wkn,\n    isin: secInfo.isin,\n    slug: slug,\n    date: today,\n    apiResponse: api\n  }\n};"
+      },
+      "id": "prepare-input",
+      "name": "2. Input vorbereiten",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://www.alphavantage.co/query?function=INCOME_STATEMENT&symbol={{ $json.ticker }}&apikey=YO8C9ZRNBDVLAZ83",
+        "options": { "timeout": 30000 }
+      },
+      "id": "api-income",
+      "name": "3. Finanzdaten laden",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [820, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('2. Input vorbereiten').item.json;\nvar incomeResp = $input.item.json;\nvar overviewResp = prev.apiResponse;\nvar input = prev;\n\nfunction safeNum(val) {\n  if (val === undefined || val === null || val === 'None' || val === '-' || val === '') return null;\n  var n = parseFloat(String(val).replace(/,/g, ''));\n  return isFinite(n) ? n : null;\n}\n\nfunction pct(val) {\n  var n = safeNum(val);\n  if (n === null) return null;\n  return Math.abs(n) <= 1 ? Math.round(n * 1000) / 10 : Math.round(n * 10) / 10;\n}\n\nvar hasOverview = overviewResp && overviewResp.Symbol && !overviewResp.Note;\nvar hasIncome = incomeResp && incomeResp.annualReports && !incomeResp.Note;\nvar ts = new Date().toISOString();\n\nvar facts = {\n  meta: { source: 'Alpha Vantage API', timestamp: ts, quality: hasOverview && hasIncome ? 'complete' : 'partial' },\n  company: { name: input.company, ticker: input.ticker, sector: input.sector, currency: input.currency },\n  fundamentals: {},\n  valuation: {},\n  margins: {},\n  growth: {},\n  history: []\n};\n\nif (hasOverview) {\n  var o = overviewResp;\n  facts.company.industry = o.Industry || null;\n  facts.company.description = o.Description || null;\n  facts.fundamentals = {\n    marketCap: safeNum(o.MarketCapitalization),\n    revenue: safeNum(o.RevenueTTM),\n    ebitda: safeNum(o.EBITDA),\n    eps: safeNum(o.EPS),\n    dividendYield: pct(o.DividendYield)\n  };\n  facts.valuation = {\n    pe: safeNum(o.PERatio),\n    forwardPE: safeNum(o.ForwardPE),\n    peg: safeNum(o.PEGRatio),\n    pb: safeNum(o.PriceToBookRatio),\n    ps: safeNum(o.PriceToSalesRatioTTM),\n    evEbitda: safeNum(o.EVToEBITDA),\n    beta: safeNum(o.Beta),\n    high52w: safeNum(o['52WeekHigh']),\n    low52w: safeNum(o['52WeekLow'])\n  };\n  facts.margins = {\n    gross: pct(o.GrossProfitMargin),\n    operating: pct(o.OperatingMarginTTM),\n    net: pct(o.ProfitMargin),\n    roe: pct(o.ReturnOnEquityTTM),\n    roa: pct(o.ReturnOnAssetsTTM)\n  };\n  facts.growth = {\n    revenueQoQ: pct(o.QuarterlyRevenueGrowthYOY),\n    earningsQoQ: pct(o.QuarterlyEarningsGrowthYOY)\n  };\n}\n\nif (hasIncome) {\n  facts.history = incomeResp.annualReports.slice(0, 5).map(function(r) {\n    return {\n      year: r.fiscalDateEnding ? r.fiscalDateEnding.substring(0, 4) : null,\n      revenue: safeNum(r.totalRevenue),\n      netIncome: safeNum(r.netIncome)\n    };\n  });\n}\n\nreturn { json: { input: input, facts: facts, phase: 'P1_FACTS_COMPLETE' } };"
+      },
+      "id": "facts-engine",
+      "name": "4. Fakteninstanz",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1040, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "var input = $input.item.json;\nvar f = input.facts;\n\nfunction fmt(v) {\n  if (v === null) return 'n/v';\n  if (typeof v === 'number') {\n    if (Math.abs(v) >= 1e12) return (v/1e12).toFixed(1) + ' Bio';\n    if (Math.abs(v) >= 1e9) return (v/1e9).toFixed(1) + ' Mrd';\n    if (Math.abs(v) >= 1e6) return (v/1e6).toFixed(1) + ' Mio';\n    return v.toLocaleString('de-DE');\n  }\n  return String(v);\n}\n\nvar factsBlock = [\n  '=== FAKTENBLATT: ' + f.company.name + ' (' + f.company.ticker + ') ===',\n  'Quelle: ' + f.meta.source + ' | Stand: ' + f.meta.timestamp.split('T')[0],\n  '',\n  '--- UNTERNEHMENSBESCHREIBUNG ---',\n  f.company.description || 'Keine Beschreibung verfuegbar.',\n  '',\n  '--- FUNDAMENTALS ---',\n  'Marktkapitalisierung: ' + fmt(f.fundamentals.marketCap) + ' ' + f.company.currency,\n  'Umsatz (TTM): ' + fmt(f.fundamentals.revenue) + ' ' + f.company.currency,\n  'EBITDA: ' + fmt(f.fundamentals.ebitda) + ' ' + f.company.currency,\n  'EPS: ' + fmt(f.fundamentals.eps) + ' ' + f.company.currency,\n  '',\n  '--- BEWERTUNG ---',\n  'KGV: ' + fmt(f.valuation.pe),\n  'Forward KGV: ' + fmt(f.valuation.forwardPE),\n  'PEG: ' + fmt(f.valuation.peg),\n  'P/B: ' + fmt(f.valuation.pb),\n  'EV/EBITDA: ' + fmt(f.valuation.evEbitda),\n  '52W Hoch: ' + fmt(f.valuation.high52w),\n  '52W Tief: ' + fmt(f.valuation.low52w),\n  '',\n  '--- MARGEN & RENDITEN ---',\n  'Bruttomarge: ' + (f.margins.gross !== null ? f.margins.gross + '%' : 'n/v'),\n  'Operative Marge: ' + (f.margins.operating !== null ? f.margins.operating + '%' : 'n/v'),\n  'Nettomarge: ' + (f.margins.net !== null ? f.margins.net + '%' : 'n/v'),\n  'ROE: ' + (f.margins.roe !== null ? f.margins.roe + '%' : 'n/v'),\n  '',\n  '--- WACHSTUM ---',\n  'Umsatzwachstum: ' + (f.growth.revenueQoQ !== null ? f.growth.revenueQoQ + '%' : 'n/v'),\n  'Gewinnwachstum: ' + (f.growth.earningsQoQ !== null ? f.growth.earningsQoQ + '%' : 'n/v'),\n  '',\n  '=== ENDE FAKTENBLATT ==='\n];\n\nreturn { json: { ...input, factsBlock: factsBlock.join('\\n') } };"
+      },
+      "id": "facts-formatter",
+      "name": "5. Facts formatieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1260, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.2,\n  \"max_tokens\": 6000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein SENIOR EQUITY ANALYST. Erstelle analytische Unternehmenseinordnungen auf hoechstem Niveau. WICHTIG: KEINE Kaufempfehlungen, KEINE Kursziele, KEINE Anlageberatung. Nur sachliche, faktenbasierte Analyse. Schreibe auf Deutsch.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('Erstelle eine professionelle Unternehmenseinordnung basierend auf diesen Fakten:\\n\\n' + $json.factsBlock + '\\n\\nDie Analyse MUSS exakt diese 5 Abschnitte enthalten:\\n\\n1) Geschaeftsmodell-Analyse (min. 200 Woerter)\\n2) Fundamentaldaten-Einordnung (min. 200 Woerter)\\n3) Bewertungs-Implikationen (min. 150 Woerter)\\n4) Risiko-Hierarchie (min. 150 Woerter)\\n5) Sachliche Gesamteinordnung (min. 150 Woerter)\\n\\nGesamtlaenge: Mindestens 900 Woerter.') }}\n    }\n  ],\n  \"return_citations\": true\n}",
+        "options": { "timeout": 180000 }
+      },
+      "id": "phase2-analyst",
+      "name": "6. KI-Analyse erstellen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1480, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('5. Facts formatieren').item.json;\nvar resp = $input.item.json;\n\nvar content = '';\nvar citations = [];\n\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  content = resp.choices[0].message.content || '';\n  content = content.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '').trim();\n  citations = resp.citations || [];\n}\n\nreturn { json: { ...prev, analysisV1: content, citations: citations, phase: 'P2_ANALYSIS_COMPLETE' } };"
+      },
+      "id": "phase2-extract",
+      "name": "7. Analyse extrahieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1700, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.15,\n  \"max_tokens\": 5000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein kritischer Reviewer. Pruefe auf Vollstaendigkeit, entferne Kursziele/Empfehlungen, verbessere Lesbarkeit ohne zu kuerzen.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('Ueberarbeite diese Analyse (900-1200 Woerter). Nur den finalen Text liefern:\\n\\n' + $json.analysisV1) }}\n    }\n  ]\n}",
+        "options": { "timeout": 180000 }
+      },
+      "id": "phase3-critic",
+      "name": "8. Kritische Pruefung",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1920, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('7. Analyse extrahieren').item.json;\nvar resp = $input.item.json;\n\nvar revisedAnalysis = '';\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  revisedAnalysis = resp.choices[0].message.content || '';\n  revisedAnalysis = revisedAnalysis.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '').trim();\n} else {\n  revisedAnalysis = prev.analysisV1;\n}\n\nreturn { json: { ...prev, analysisV2: revisedAnalysis, phase: 'P3_CRITIQUE_COMPLETE' } };"
+      },
+      "id": "phase3-extract",
+      "name": "9. Ueberarbeitung extrahieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2140, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.1,\n  \"max_tokens\": 4000,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Redakteur. Verbessere Lesbarkeit ohne zu kuerzen. Fuege am Ende 'Kurz erklaert:' hinzu (3-4 Saetze fuer Einsteiger).\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('Finalisiere redaktionell:\\n\\n' + $json.analysisV2 + '\\n\\nFuege am Ende hinzu: Kurz erklaert: [3-4 Saetze]') }}\n    }\n  ]\n}",
+        "options": { "timeout": 120000 }
+      },
+      "id": "phase4-editorial",
+      "name": "10. Redaktionelle Finalisierung",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2360, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('9. Ueberarbeitung extrahieren').item.json;\nvar resp = $input.item.json;\n\nvar finalContent = '';\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  finalContent = resp.choices[0].message.content || '';\n  finalContent = finalContent.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').replace(/\\[\\d+\\]/g, '').trim();\n} else {\n  finalContent = prev.analysisV2;\n}\n\nreturn { json: { ...prev, finalContent: finalContent, phase: 'P4_EDITORIAL_COMPLETE' } };"
+      },
+      "id": "phase4-extract",
+      "name": "11. Finalen Text extrahieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2580, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.perplexity.ai/chat/completions",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "Authorization", "value": "Bearer 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" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"sonar-pro\",\n  \"temperature\": 0.4,\n  \"max_tokens\": 800,\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Du bist ein Art Director fuer Finanzmedien. Du erstellst Bildprompts fuer Titelbilder. Die Bilder sollen elegant und professionell wirken - wie aus The Economist oder Bloomberg Businessweek. WICHTIG: Kein KI-Look, keine futuristischen Elemente, keine Neonfarben, keine abstrakten Grid-Muster. Realistische Fotografie-Aesthetik.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": {{ JSON.stringify('Erstelle einen englischen Bildprompt fuer ein Titelbild (16:9 Format).\\n\\nUnternehmen: ' + $json.input.company + '\\nBranche: ' + $json.input.sector + '\\nBeschreibung: ' + ($json.facts.company.description || 'Keine Beschreibung') + '\\n\\nDas Bild soll:\\n- Das Unternehmen subtil repraesentieren\\n- Editorial-Foto-Aesthetik haben\\n- Warme, natuerliche Farben\\n- Tiefenschaerfe und natuerliches Licht\\n\\nNUR den englischen Prompt liefern, keine Erklaerungen.') }}\n    }\n  ]\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "titelbild-prompt",
+      "name": "12. Titelbild-Prompt erstellen",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2800, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('11. Finalen Text extrahieren').item.json;\nvar resp = $input.item.json;\nvar meta = prev.input;\n\nvar titelbildPrompt = '';\nif (resp && resp.choices && resp.choices[0] && resp.choices[0].message) {\n  titelbildPrompt = resp.choices[0].message.content || '';\n  titelbildPrompt = titelbildPrompt.replace(/\\*\\*([^*]+)\\*\\*/g, '$1').replace(/\\*([^*]+)\\*/g, '$1').trim();\n}\n\nif (!titelbildPrompt) {\n  titelbildPrompt = 'Editorial photography style, professional magazine cover photo, 16:9 aspect ratio. Elegant corporate setting representing ' + meta.sector + ' industry. Natural warm lighting, shallow depth of field. Realistic photography aesthetic.';\n}\n\nreturn { json: { ...prev, titelbildPrompt: titelbildPrompt } };"
+      },
+      "id": "extract-titelbild",
+      "name": "13. Titelbild-Prompt extrahieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3020, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "var input = $input.item.json;\nvar meta = input.input;\nvar content = input.finalContent || '';\n\nfunction textToHtml(text) {\n  if (!text) return '';\n  var cleaned = text.replace(/^#{1,6}\\s*/gm, '').trim();\n  var paragraphs = cleaned.split(/\\n\\n+/);\n  var html = '';\n  var sectionNum = 0;\n  \n  for (var i = 0; i < paragraphs.length; i++) {\n    var p = paragraphs[i].trim();\n    if (!p) continue;\n    \n    var headlineMatch = p.match(/^(\\d+\\)|\\d+\\.)\\s*(.+)$/m);\n    if (headlineMatch || /^[A-Z][A-Za-z\\s-]{5,}$/m.test(p.split('\\n')[0])) {\n      sectionNum++;\n      var lines = p.split('\\n');\n      var headline = headlineMatch ? headlineMatch[2] : lines[0].replace(/^\\d+[\\)\\.]\\s*/, '').trim();\n      html += '<h2>' + sectionNum + ') ' + headline + '</h2>';\n      if (lines.length > 1) {\n        html += '<p>' + lines.slice(1).join(' ').replace(/\\n/g, ' ').trim() + '</p>';\n      }\n    } else if (p.toLowerCase().indexOf('kurz erkl') !== -1) {\n      var boxContent = p.replace(/kurz erkl[aä]rt:?/i, '').trim();\n      html += '<div style=\"background: #f8fafc; border-radius: 8px; padding: 1.25rem; margin-top: 2rem;\"><p style=\"margin: 0; font-size: 0.95rem;\"><strong>Kurz erklaert:</strong> ' + boxContent + '</p></div>';\n    } else {\n      html += '<p>' + p.replace(/\\n/g, ' ') + '</p>';\n    }\n  }\n  return html;\n}\n\nfunction getIntro(text) {\n  if (!text) return '';\n  var sentences = text.split(/(?<=[.!?])\\s+/).slice(0, 3);\n  return sentences.join(' ').substring(0, 400);\n}\n\nvar analysisHtml = textToHtml(content);\nvar introText = getIntro(content);\nvar formattedDateShort = new Date(meta.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });\n\nvar tocHtml = '<nav aria-label=\"Inhaltsverzeichnis\" style=\"flex:1; min-width:260px; margin:0 0 0 12px; align-self:flex-start; display:flex; flex-direction:column; justify-content:flex-start; position:relative; top:-15px;\">' +\n'<h2 style=\"font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0; border-bottom:2px solid #e2e8f0; padding-bottom:2px;\">Inhalt der Analyse</h2>' +\n'<ol class=\"toc-list\" style=\"margin-top:0; list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;\">' +\n'<li><a class=\"toc-link\" href=\"#section-1\">Geschaeftsmodell-Analyse</a></li>' +\n'<li><a class=\"toc-link\" href=\"#section-2\">Fundamentaldaten-Einordnung</a></li>' +\n'<li><a class=\"toc-link\" href=\"#section-3\">Bewertungs-Implikationen</a></li>' +\n'<li><a class=\"toc-link\" href=\"#section-4\">Risiko-Hierarchie</a></li>' +\n'<li><a class=\"toc-link\" href=\"#section-5\">Sachliche Gesamteinordnung</a></li>' +\n'</ol></nav>';\n\nvar html = '<!DOCTYPE html><html lang=\"de\"><head>' +\n'<meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">' +\n'<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"../assets/favicon-32.png\">' +\n'<title>capitovo - ' + meta.company + ' Unternehmensanalyse</title>' +\n'<meta name=\"description\" content=\"Analytische Einordnung von ' + meta.company + ' (' + meta.ticker + ')\">' +\n'<link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\">' +\n'<link rel=\"stylesheet\" href=\"../style.css\">' +\n'<style>' +\n'header { position: static !important; }' +\n'main { background: transparent; padding-top: 55px !important; }' +\n'.analysis-article { max-width: 1100px; width: 100%; margin: 0 auto; padding: 0 16px; }' +\n'.analysis-article h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem 0; color: #0f172a; }' +\n'.analysis-article p { margin-bottom: 1rem; line-height: 1.7; text-align: justify; }' +\n'.hero-media { width: 100%; height: 360px; object-fit: contain; background: #f3f4f6; border-radius: 8px; }' +\n'.toc-link { display: inline-block; font-size: 1.25rem; font-weight: 500; color: #334155; text-decoration: none; background: linear-gradient(110deg, var(--color-accent-blue) 0%, #0ea5e9 20%, #334155 45%, #334155 100%); background-size: 300% 100%; background-position: 100% 0; transition: background-position 550ms; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }' +\n'.toc-link:hover { background-position: 0 0; transform: translateX(4px); }' +\n'.cap-outline-btn { border: 1px solid #e2e8f0; border-radius: 0.375rem; background: #fff; }' +\n'</style></head>' +\n'<body class=\"bg-white text-gray-900 abonenten-page\">' +\n'<header><div class=\"header-content\"><div class=\"logo\"><a href=\"./abonenten.html\" class=\"logo-link\"><img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\"></a></div>' +\n'<button class=\"menu-toggle\" id=\"menu-toggle\" aria-controls=\"sidebar\" aria-expanded=\"false\" aria-label=\"Menue oeffnen\">☰</button></div></header>' +\n'<main style=\"padding-top: 55px !important;\"><article class=\"analysis-article\" id=\"' + meta.slug + '-analysis\">' +\n'<div class=\"mb-2\"><div class=\"flex items-start justify-between gap-3 flex-wrap\"><div><h1 class=\"text-3xl font-extrabold text-gray-900 mb-1\">' + meta.company + ' - Unternehmensanalyse</h1></div>' +\n'<div class=\"flex items-center gap-2\"><a href=\"alle_analysen.html\" class=\"inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white rounded-md px-3 py-2 cap-outline-btn\"><span>←</span><span>Zurueck</span></a></div></div>' +\n'<div class=\"text-sm\" style=\"color: #64748b;\"><span>' + formattedDateShort + '</span><span class=\"mx-2\">·</span><span>Ticker: ' + meta.ticker + '</span><span class=\"mx-2\">·</span><span>WKN: ' + meta.wkn + '</span><span class=\"mx-2\">·</span><span>ISIN: ' + meta.isin + '</span></div></div>' +\n'<div class=\"hero-intro-wrapper\" style=\"display:flex; gap:24px; margin:24px 0; flex-wrap:wrap;\"><div style=\"flex:1; min-width:300px;\"><img src=\"../data/vorschaubilder_analysen/' + meta.slug + '_preview.svg\" alt=\"' + meta.company + ' Vorschaubild\" class=\"hero-media\"></div>' + tocHtml + '</div>' +\n'<p style=\"margin: 24px 0 32px 0; font-size:1.08rem; line-height:1.7; text-align:justify;\">' + introText + '</p>' +\nanalysisHtml +\n'<hr style=\"margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;\">' +\n'<p style=\"font-size: 0.9rem; color: #64748b;\"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar.</p>' +\n'</article></main>' +\n'<footer class=\"site-footer border-t py-6 mt-12\"><div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\"><div>&copy; 2026 capitovo</div>' +\n'<div class=\"footer-links\"><a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\">Impressum</a><a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\">Datenschutz</a></div></div></footer>' +\n'<div class=\"sidebar\" id=\"sidebar\" aria-hidden=\"true\"><button class=\"close-button\" id=\"close-sidebar\" aria-label=\"Sidebar schliessen\">&times;</button>' +\n'<nav class=\"sidebar-nav\"><ul><li><a href=\"./abonenten.html\">Startseite</a></li><li><a href=\"./alle_analysen.html\">Analysen</a></li><li><a href=\"./Aktien-Monitor/aktien-monitor.html\">Aktien-Monitor</a></li></ul></nav></div>' +\n'<script src=\"../script.js?v=13\"></script></body></html>';\n\nreturn { json: { ...input, htmlPublic: html, introText: introText } };"
+      },
+      "id": "html-renderer",
+      "name": "14. HTML generieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "var input = $input.item.json;\nvar meta = input.input;\n\nvar displayName = meta.company.length > 25 ? meta.company.substring(0, 22) + '...' : meta.company;\n\nvar svg = '<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">' +\n'<defs><linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" stop-color=\"#0f172a\"/><stop offset=\"100%\" stop-color=\"#1e293b\"/></linearGradient>' +\n'<linearGradient id=\"accent\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#3b82f6\"/><stop offset=\"100%\" stop-color=\"#0ea5e9\"/></linearGradient></defs>' +\n'<rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"16\"/>' +\n'<g font-family=\"-apple-system, BlinkMacSystemFont, sans-serif\">' +\n'<text x=\"48\" y=\"72\" fill=\"#64748b\" font-size=\"12\" letter-spacing=\"0.1em\">' + meta.ticker + ' · ' + (meta.sector || '').toUpperCase() + '</text>' +\n'<text x=\"48\" y=\"120\" fill=\"#f1f5f9\" font-size=\"36\" font-weight=\"700\">' + displayName + '</text>' +\n'<text x=\"48\" y=\"155\" fill=\"#94a3b8\" font-size=\"15\">Unternehmensanalyse</text>' +\n'<rect x=\"48\" y=\"180\" width=\"80\" height=\"4\" fill=\"url(#accent)\" rx=\"2\"/>' +\n'<text x=\"48\" y=\"230\" fill=\"#64748b\" font-size=\"13\">Geschaeftsmodell · Fundamentaldaten · Bewertung</text>' +\n'<text x=\"48\" y=\"300\" fill=\"#475569\" font-size=\"11\">capitovo Research</text>' +\n'<text x=\"48\" y=\"320\" fill=\"#64748b\" font-size=\"10\">' + meta.date + '</text>' +\n'</g></svg>';\n\nreturn { json: { ...input, svgPreview: svg } };"
+      },
+      "id": "svg-generator",
+      "name": "15. SVG Vorschaubild",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "var input = $input.item.json;\nvar meta = input.input;\n\nvar htmlBase64 = Buffer.from(input.htmlPublic, 'utf8').toString('base64');\nvar svgBase64 = Buffer.from(input.svgPreview, 'utf8').toString('base64');\n\nvar titleDate = new Date(meta.date).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n\nreturn {\n  json: {\n    company: meta.company,\n    ticker: meta.ticker,\n    sector: meta.sector,\n    slug: meta.slug,\n    date: meta.date,\n    wkn: meta.wkn,\n    isin: meta.isin,\n    htmlPath: 'Abonenten/' + meta.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + meta.slug + '_preview.svg',\n    htmlBase64: htmlBase64,\n    svgBase64: svgBase64,\n    htmlCommitMsg: 'Analyse: ' + meta.company + ' (' + meta.ticker + ') - ' + meta.date,\n    svgCommitMsg: 'Vorschaubild: ' + meta.company + ' - ' + meta.date,\n    titelbildPrompt: input.titelbildPrompt,\n    introText: input.introText,\n    titleDate: titleDate\n  }\n};"
+      },
+      "id": "base64-encoder",
+      "name": "16. Base64 kodieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3680, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-html-sha-new",
+      "name": "17. Get HTML SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3900, 300],
+      "continueOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('16. Base64 kodieren').item.json;\nvar resp = $input.item.json;\nvar htmlSha = resp && resp.sha ? resp.sha : null;\nreturn { json: { ...prev, htmlSha: htmlSha } };"
+      },
+      "id": "extract-html-sha-new",
+      "name": "18. Extract HTML SHA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [4120, 300]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.htmlSha ? '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"sha\": \"' + $json.htmlSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"branch\": \"main\"}' }}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "github-upload-html-new",
+      "name": "19. GitHub Upload HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3900, 540],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('18. Extract HTML SHA').item.json;\nreturn { json: prev };"
+      },
+      "id": "pass-after-html-new",
+      "name": "20. Pass Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [4120, 540]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-svg-sha-new",
+      "name": "21. Get SVG SHA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3900, 780],
+      "continueOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('20. Pass Data').item.json;\nvar resp = $input.item.json;\nvar svgSha = resp && resp.sha ? resp.sha : null;\nreturn { json: { ...prev, svgSha: svgSha } };"
+      },
+      "id": "extract-svg-sha-new",
+      "name": "22. Extract SVG SHA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [4120, 780]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.svgSha ? '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"sha\": \"' + $json.svgSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"branch\": \"main\"}' }}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "github-upload-svg-new",
+      "name": "23. GitHub Upload SVG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3900, 1020],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('22. Extract SVG SHA').item.json;\nreturn { json: prev };"
+      },
+      "id": "pass-after-svg-new",
+      "name": "24. Pass After SVG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [4120, 1020]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/data/analysen.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "get-analysen-sha-new",
+      "name": "25. Get Analysen.json",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3680, 1020],
+      "continueOnFail": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('24. Pass After SVG').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\nvar existing = [];\n\ntry {\n  if (resp && resp.content) {\n    var decoded = Buffer.from(resp.content, 'base64').toString('utf8');\n    existing = JSON.parse(decoded);\n  }\n} catch(e) { existing = []; }\n\nvar entry = {\n  id: prev.ticker.toLowerCase() + '-' + prev.date,\n  category: (prev.sector || 'SONSTIGE').toUpperCase(),\n  title: prev.company + ' – Unternehmensanalyse (' + prev.titleDate + ')',\n  summary: prev.introText || ('Analytische Einordnung von ' + prev.company + ' (' + prev.ticker + ')'),\n  link: prev.htmlPath,\n  image: prev.svgPath,\n  date: prev.date,\n  author: 'capitovo Research',\n  tags: [prev.company, prev.ticker, prev.sector].filter(Boolean),\n  published: true\n};\n\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) {\n  if (existing[i].id === entry.id || existing[i].link === entry.link) { idx = i; break; }\n}\n\nif (idx >= 0) {\n  existing[idx] = Object.assign({}, existing[idx], entry);\n} else {\n  var insertAt = 0;\n  if (existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE') insertAt = 1;\n  existing.splice(insertAt, 0, entry);\n}\n\nvar updatedJson = JSON.stringify(existing, null, 2);\nvar analysenBase64 = Buffer.from(updatedJson, 'utf8').toString('base64');\n\nreturn {\n  json: {\n    ...prev,\n    analysenPath: 'data/analysen.json',\n    analysenSha: analysenSha,\n    analysenBase64: analysenBase64,\n    analysenCommitMsg: 'Katalog: ' + prev.company + ' (' + prev.ticker + ') hinzugefuegt'\n  }\n};"
+      },
+      "id": "build-analysen-new",
+      "name": "26. Katalog aktualisieren",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [3460, 1020]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Accept", "value": "application/vnd.github+json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.analysenCommitMsg }}\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "github-upload-analysen-new",
+      "name": "27. GitHub Upload Katalog",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [3240, 1020],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "iCAWAEqg10f57flt",
+          "name": "GitHub Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "status", "value": "=✅ ERFOLG: {{ $('26. Katalog aktualisieren').item.json.company }} veröffentlicht!" },
+            { "name": "liveUrl", "value": "=https://kw-f8.github.io/capitovo/{{ $('26. Katalog aktualisieren').item.json.htmlPath }}" },
+            { "name": "titelbildPrompt", "value": "={{ $('26. Katalog aktualisieren').item.json.titelbildPrompt }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "output-success-new",
+      "name": "28. ✅ Erfolg - Neue Analyse",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3020, 1020]
+    },
+    {
+      "parameters": {
+        "jsCode": "var company = 'Apple';\nvar ticker = 'AAPL';\nvar sector = 'Technologie';\nvar exchange = 'NASDAQ';\nvar wkn = '865985';\nvar isin = 'US0378331005';\nvar date = '2026-01-29';\nvar slug = ticker.toLowerCase() + '_' + date;\n\nvar introText = 'In dieser Analyse ordnen wir Apples aktuelle Bewertung und Kursentwicklung ein. Wir pruefen die finanziellen Grundlagen, strategische Ausrichtung und Analystenerwartungen.';\n\nvar section1 = '<p>Aktueller Kurs bei 178,50 USD mit einer 1-Monats-Performance von +4,2%. Das Forward-KGV liegt bei 29,85x.</p>' +\n'<table class=\"card-table\"><thead><tr><th>Kennzahl</th><th>Wert</th><th>Kommentar</th></tr></thead>' +\n'<tbody><tr><td>Aktueller Kurs</td><td>178,50 USD</td><td>Stand: 29.01.2026</td></tr>' +\n'<tr><td>Performance 1M</td><td>+4,2%</td><td>Positives Momentum</td></tr>' +\n'<tr><td>Forward-KGV</td><td>29,85x</td><td>Ueber historischem Schnitt</td></tr></tbody></table>';\n\nvar section2 = '<p>Apple erzielte im Geschaeftsjahr 2025 einen Umsatz von 391 Mrd. USD (+3% YoY). Die operative Marge liegt bei 31,7%.</p>' +\n'<ul style=\"margin-left: 18px; list-style: disc;\"><li>Umsatzwachstum: +3% (YoY)</li><li>Operative Marge: 31,7%</li><li>Free Cashflow: 112 Mrd. USD</li></ul>';\n\nvar section3 = '<p>Apples strategische Prioritaeten liegen auf dem Ausbau des Services-Geschaefts und der KI-Integration.</p>';\n\nvar section4 = '<p>Konsens-Rating: 38 Buy, 12 Hold, 4 Sell. Durchschnittliches Kursziel: 195 USD (+9% Upside).</p>';\n\nvar section5 = '<p>Die aktuelle Bewertung impliziert hohes Wachstum.</p>' +\n'<div class=\"votum-box\"><h3>Votum</h3><p><strong>Neutral / Beobachten</strong> - Die Bewertung preist optimistische Szenarien ein.</p></div>';\n\nvar kurzErklaert = 'Apple ist ein Technologiekonzern, der Geraete wie iPhones und digitale Dienste betreibt.';\n\nreturn {\n  json: {\n    company: company, ticker: ticker, sector: sector, exchange: exchange, wkn: wkn, isin: isin, date: date, slug: slug, introText: introText,\n    section1_marktperformance: section1, section2_finanzielle_grundlagen: section2, section3_strategie: section3,\n    section4_analysten: section4, section5_votum: section5, kurzErklaert: kurzErklaert, sources: ['https://investor.apple.com']\n  }\n};"
+      },
+      "id": "test-input",
+      "name": "Test-Input: Apple Analyse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [380, 1600]
+    },
+    {
+      "parameters": {
+        "jsCode": "var d = $input.item.json;\nvar formattedDate = new Date(d.date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });\n\nvar tocHtml = '<nav aria-label=\"Inhaltsverzeichnis\" style=\"flex:1; min-width:260px; margin:0 0 0 12px; align-self:flex-start;\"><h2 style=\"font-size:1.25rem; font-weight:700; color:#0f172a; margin:0 0 10px 0; border-bottom:2px solid #e2e8f0; padding-bottom:2px;\">Inhalt der Analyse</h2><ol class=\"toc-list\" style=\"list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;\"><li><a class=\"toc-link\" href=\"#marktperformance\">Marktperformance &amp; Bewertung</a></li><li><a class=\"toc-link\" href=\"#finanzielle-grundlagen\">Finanzielle Grundlagen</a></li><li><a class=\"toc-link\" href=\"#strategie\">Strategische Ausrichtung</a></li><li><a class=\"toc-link\" href=\"#analysten\">Analystenerwartungen</a></li><li><a class=\"toc-link\" href=\"#votum\">Bewertungskontext &amp; Votum</a></li></ol></nav>';\n\nvar html = '<!DOCTYPE html><html lang=\"de\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">' +\n'<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"../assets/favicon-32.png\">' +\n'<title>capitovo - ' + d.company + ' Unternehmensanalyse</title>' +\n'<link href=\"https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"../style.css\">' +\n'<style>header { position: static !important; } main { padding-top: 55px !important; } .analysis-article { max-width: 1100px; margin: 0 auto; padding: 0 16px; } .analysis-article h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem 0; } .analysis-article p { margin-bottom: 1rem; line-height: 1.7; text-align: justify; } .hero-media { width: 100%; height: 360px; object-fit: contain; background: #f3f4f6; border-radius: 8px; } .card-table { width:100%; border-collapse:collapse; margin-top:10px; } .card-table th, .card-table td { padding:8px 6px; text-align:left; } .votum-box { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #0284c7; padding: 1.5rem; margin: 2rem 0; border-radius: 8px; } .votum-box h3 { margin-top: 0; color: #0c4a6e; } .toc-link { font-size: 1.25rem; font-weight: 500; color: #334155; text-decoration: none; } .kurz-erklaert { background: #f8fafc; border-radius: 8px; padding: 1.25rem; margin-top: 2rem; } .cap-outline-btn { border: 1px solid #e2e8f0; border-radius: 0.375rem; background: #fff; }</style></head>' +\n'<body class=\"bg-white text-gray-900 abonenten-page\"><header><div class=\"header-content\"><div class=\"logo\"><a href=\"./abonenten.html\"><img src=\"../assets/capitovo_logo_weiß.png\" alt=\"capitovo Logo\" class=\"header-logo\"></a></div><button class=\"menu-toggle\" id=\"menu-toggle\">☰</button></div></header>' +\n'<main><article class=\"analysis-article\"><div class=\"mb-2\"><div class=\"flex items-start justify-between gap-3 flex-wrap\"><div><h1 class=\"text-3xl font-extrabold text-gray-900 mb-1\">' + d.company + ' - Unternehmensanalyse</h1></div><div class=\"flex items-center gap-2\"><a href=\"alle_analysen.html\" class=\"inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white rounded-md px-3 py-2 cap-outline-btn\"><span>←</span><span>Zurueck</span></a></div></div><div class=\"text-sm\" style=\"color: #64748b;\"><span>' + formattedDate + '</span><span class=\"mx-2\">·</span><span>Ticker: ' + d.ticker + '</span><span class=\"mx-2\">·</span><span>WKN: ' + d.wkn + '</span><span class=\"mx-2\">·</span><span>ISIN: ' + d.isin + '</span></div></div>' +\n'<div style=\"display:flex; gap:24px; margin:24px 0; flex-wrap:wrap;\"><div style=\"flex:1; min-width:300px;\"><img src=\"../data/vorschaubilder_analysen/' + d.slug + '_preview.svg\" alt=\"' + d.company + '\" class=\"hero-media\"></div>' + tocHtml + '</div>' +\n'<p style=\"margin: 24px 0 32px 0; font-size:1.08rem; line-height:1.7; text-align:justify;\">' + d.introText + '</p>' +\n'<section id=\"marktperformance\"><h2>1) Marktperformance &amp; Bewertung</h2>' + d.section1_marktperformance + '</section>' +\n'<section id=\"finanzielle-grundlagen\"><h2>2) Finanzielle Grundlagen</h2>' + d.section2_finanzielle_grundlagen + '</section>' +\n'<section id=\"strategie\"><h2>3) Strategische Ausrichtung</h2>' + d.section3_strategie + '</section>' +\n'<section id=\"analysten\"><h2>4) Analystenerwartungen</h2>' + d.section4_analysten + '</section>' +\n'<section id=\"votum\"><h2>5) Bewertungskontext &amp; Votum</h2>' + d.section5_votum + '</section>' +\n'<div class=\"kurz-erklaert\"><p><strong>Kurz erklaert:</strong> ' + d.kurzErklaert + '</p></div>' +\n'<hr style=\"margin: 3rem 0; border-top: 1px solid #e2e8f0;\">' +\n'<p style=\"font-size: 0.9rem; color: #64748b;\"><strong>Quellen:</strong> <a href=\"' + d.sources[0] + '\" target=\"_blank\">' + d.sources[0] + '</a></p>' +\n'<p style=\"font-size: 0.9rem; color: #64748b;\"><strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar.</p>' +\n'</article></main>' +\n'<footer class=\"site-footer border-t py-6 mt-12\"><div class=\"footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between\"><div>&copy; 2026 capitovo</div><div class=\"footer-links\"><a href=\"../Rechtliches/impressum.html\" class=\"footer-btn\" target=\"_blank\">Impressum</a><a href=\"../Rechtliches/datenschutz.html\" class=\"footer-btn\" target=\"_blank\">Datenschutz</a></div></div></footer>' +\n'<div class=\"sidebar\" id=\"sidebar\" aria-hidden=\"true\"><button class=\"close-button\" id=\"close-sidebar\">&times;</button><nav class=\"sidebar-nav\"><ul><li><a href=\"./abonenten.html\">Startseite</a></li><li><a href=\"./alle_analysen.html\">Analysen</a></li></ul></nav></div>' +\n'<script src=\"../script.js?v=13\"></script></body></html>';\n\nreturn { json: { ...d, html: html } };"
+      },
+      "id": "test-html-renderer",
+      "name": "HTML Renderer (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 1600]
+    },
+    {
+      "parameters": {
+        "jsCode": "var d = $input.item.json;\nvar displayName = d.company.length > 25 ? d.company.substring(0, 22) + '...' : d.company;\n\nvar svg = '<svg width=\"640\" height=\"360\" viewBox=\"0 0 640 360\" xmlns=\"http://www.w3.org/2000/svg\">' +\n'<defs><linearGradient id=\"bg\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"100%\"><stop offset=\"0%\" stop-color=\"#0f172a\"/><stop offset=\"100%\" stop-color=\"#1e293b\"/></linearGradient>' +\n'<linearGradient id=\"accent\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\"><stop offset=\"0%\" stop-color=\"#3b82f6\"/><stop offset=\"100%\" stop-color=\"#0ea5e9\"/></linearGradient></defs>' +\n'<rect width=\"640\" height=\"360\" fill=\"url(#bg)\" rx=\"16\"/>' +\n'<g font-family=\"-apple-system, BlinkMacSystemFont, sans-serif\">' +\n'<text x=\"48\" y=\"72\" fill=\"#64748b\" font-size=\"12\" letter-spacing=\"0.1em\">' + d.ticker + ' · ' + d.sector.toUpperCase() + '</text>' +\n'<text x=\"48\" y=\"120\" fill=\"#f1f5f9\" font-size=\"36\" font-weight=\"700\">' + displayName + '</text>' +\n'<text x=\"48\" y=\"155\" fill=\"#94a3b8\" font-size=\"15\">Unternehmensanalyse</text>' +\n'<rect x=\"48\" y=\"180\" width=\"80\" height=\"4\" fill=\"url(#accent)\" rx=\"2\"/>' +\n'<text x=\"48\" y=\"230\" fill=\"#64748b\" font-size=\"13\">Geschaeftsmodell · Fundamentaldaten · Bewertung</text>' +\n'<text x=\"48\" y=\"300\" fill=\"#475569\" font-size=\"11\">capitovo Research</text>' +\n'<text x=\"48\" y=\"320\" fill=\"#64748b\" font-size=\"10\">' + d.date + '</text>' +\n'</g></svg>';\n\nreturn { json: { ...d, svg: svg } };"
+      },
+      "id": "test-svg-generator",
+      "name": "SVG Generator (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [820, 1600]
+    },
+    {
+      "parameters": {
+        "jsCode": "var d = $input.item.json;\nvar titleDate = new Date(d.date).toLocaleDateString('de-DE', { day: '2-digit', month: 'long', year: 'numeric' });\n\nreturn {\n  json: {\n    ...d,\n    htmlPath: 'Abonenten/' + d.slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + d.slug + '_preview.svg',\n    htmlBase64: Buffer.from(d.html, 'utf8').toString('base64'),\n    svgBase64: Buffer.from(d.svg, 'utf8').toString('base64'),\n    htmlCommitMsg: 'Analyse: ' + d.company + ' (' + d.ticker + ') - ' + d.date,\n    svgCommitMsg: 'Vorschaubild: ' + d.company + ' - ' + d.date,\n    titleDate: titleDate\n  }\n};"
+      },
+      "id": "test-base64",
+      "name": "Base64 Encoder (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1040, 1600]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "options": { "timeout": 30000 }
+      },
+      "id": "test-get-html-sha",
+      "name": "Get HTML SHA (Test)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1260, 1600],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Base64 Encoder (Test)').item.json;\nvar resp = $input.item.json;\nreturn { json: { ...prev, htmlSha: resp && resp.sha ? resp.sha : null } };"
+      },
+      "id": "test-extract-html-sha",
+      "name": "Extract HTML SHA (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1480, 1600]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "options": { "timeout": 30000 }
+      },
+      "id": "test-get-svg-sha",
+      "name": "Get SVG SHA (Test)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1700, 1600],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Extract HTML SHA (Test)').item.json;\nvar resp = $input.item.json;\nreturn { json: { ...prev, svgSha: resp && resp.sha ? resp.sha : null } };"
+      },
+      "id": "test-extract-svg-sha",
+      "name": "Extract SVG SHA (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1920, 1600]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.htmlSha ? '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"sha\": \"' + $json.htmlSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.htmlCommitMsg + '\", \"content\": \"' + $json.htmlBase64 + '\", \"branch\": \"main\"}' }}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "test-upload-html",
+      "name": "GitHub Upload HTML (Test)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1260, 1840],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } }
+    },
+    {
+      "parameters": { "jsCode": "var prev = $('Extract SVG SHA (Test)').item.json;\nreturn { json: prev };" },
+      "id": "test-pass-html",
+      "name": "Pass (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1480, 1840]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.svgSha ? '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"sha\": \"' + $json.svgSha + '\", \"branch\": \"main\"}' : '{\"message\": \"' + $json.svgCommitMsg + '\", \"content\": \"' + $json.svgBase64 + '\", \"branch\": \"main\"}' }}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "test-upload-svg",
+      "name": "GitHub Upload SVG (Test)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1700, 1840],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } }
+    },
+    {
+      "parameters": { "jsCode": "var prev = $('Pass (Test)').item.json;\nreturn { json: prev };" },
+      "id": "test-pass-svg",
+      "name": "Pass After SVG (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1920, 1840]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/data/analysen.json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "options": { "timeout": 30000 }
+      },
+      "id": "test-get-analysen",
+      "name": "Get Analysen.json (Test)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1040, 1840],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Pass After SVG (Test)').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp && resp.sha ? resp.sha : null;\nvar existing = [];\ntry { if (resp && resp.content) { existing = JSON.parse(Buffer.from(resp.content, 'base64').toString('utf8')); } } catch(e) { existing = []; }\n\nvar entry = {\n  id: prev.ticker.toLowerCase() + '-' + prev.date,\n  category: (prev.sector || 'SONSTIGE').toUpperCase(),\n  title: prev.company + ' – Unternehmensanalyse (' + prev.titleDate + ')',\n  summary: prev.introText,\n  link: prev.htmlPath,\n  image: prev.svgPath,\n  date: prev.date,\n  author: 'capitovo Research',\n  tags: [prev.company, prev.ticker, prev.sector].filter(Boolean),\n  published: true\n};\n\nvar idx = -1;\nfor (var i = 0; i < existing.length; i++) { if (existing[i].id === entry.id || existing[i].link === entry.link) { idx = i; break; } }\nif (idx >= 0) { existing[idx] = Object.assign({}, existing[idx], entry); } else { var insertAt = existing[0] && String(existing[0].category || '').toUpperCase() === 'VORLAGE' ? 1 : 0; existing.splice(insertAt, 0, entry); }\n\nreturn { json: { ...prev, analysenPath: 'data/analysen.json', analysenSha: analysenSha, analysenBase64: Buffer.from(JSON.stringify(existing, null, 2), 'utf8').toString('base64'), analysenCommitMsg: 'Katalog: ' + prev.company + ' hinzugefuegt' } };"
+      },
+      "id": "test-build-analysen",
+      "name": "Build Analysen.json (Test)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [820, 1840]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"{{ $json.analysenCommitMsg }}\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "test-upload-analysen",
+      "name": "GitHub Upload Katalog (Test)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 1840],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "status", "value": "=✅ Test-Analyse veröffentlicht!" },
+            { "name": "liveUrl", "value": "=https://kw-f8.github.io/capitovo/{{ $('Build Analysen.json (Test)').item.json.htmlPath }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "test-output",
+      "name": "✅ Test-Erfolg",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [380, 1840]
+    },
+    {
+      "parameters": {
+        "jsCode": "// === KONFIGURATION: Welche Analyse soll gelöscht werden? ===\n// Passe den slug an die zu löschende Analyse an\n\nvar slug = 'aapl_2026-01-29';\n\nreturn {\n  json: {\n    slug: slug,\n    htmlPath: 'Abonenten/' + slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + slug + '_preview.svg',\n    analysenPath: 'data/analysen.json'\n  }\n};"
+      },
+      "id": "delete-config",
+      "name": "Config - Zu löschende Analyse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [380, 2500]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "options": { "timeout": 30000 }
+      },
+      "id": "delete-get-html-sha",
+      "name": "Get HTML SHA (Delete)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 2500],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var config = $('Config - Zu löschende Analyse').item.json;\nvar resp = $input.item.json;\nreturn { json: { ...config, htmlSha: resp && resp.sha ? resp.sha : null, htmlExists: !!(resp && resp.sha) } };"
+      },
+      "id": "delete-extract-html-sha",
+      "name": "Extract HTML SHA (Delete)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [820, 2500]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.htmlPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Lösche {{ $json.slug }} HTML\",\n  \"sha\": \"{{ $json.htmlSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "delete-html",
+      "name": "Delete HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1040, 2500],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": { "jsCode": "var prev = $('Extract HTML SHA (Delete)').item.json;\nreturn { json: prev };" },
+      "id": "delete-pass-html",
+      "name": "Pass After HTML (Delete)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1260, 2500]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "options": { "timeout": 30000 }
+      },
+      "id": "delete-get-svg-sha",
+      "name": "Get SVG SHA (Delete)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1480, 2500],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Pass After HTML (Delete)').item.json;\nvar resp = $input.item.json;\nreturn { json: { ...prev, svgSha: resp && resp.sha ? resp.sha : null, svgExists: !!(resp && resp.sha) } };"
+      },
+      "id": "delete-extract-svg-sha",
+      "name": "Extract SVG SHA (Delete)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1700, 2500]
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.svgPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Lösche {{ $json.slug }} SVG\",\n  \"sha\": \"{{ $json.svgSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "delete-svg",
+      "name": "Delete SVG",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1040, 2740],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": { "jsCode": "var prev = $('Extract SVG SHA (Delete)').item.json;\nreturn { json: prev };" },
+      "id": "delete-pass-svg",
+      "name": "Pass After SVG (Delete)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1260, 2740]
+    },
+    {
+      "parameters": {
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "options": { "timeout": 30000 }
+      },
+      "id": "delete-get-analysen",
+      "name": "Get Analysen.json (Delete)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1480, 2740],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "var prev = $('Pass After SVG (Delete)').item.json;\nvar resp = $input.item.json;\n\nvar analysenSha = resp.sha || null;\nvar existing = [];\ntry { if (resp && resp.content) { existing = JSON.parse(Buffer.from(resp.content, 'base64').toString('utf8')); } } catch(e) { existing = []; }\n\nvar slug = prev.slug;\nvar slugDate = slug.split('_').slice(1).join('_');\n\nvar filtered = existing.filter(function(item) {\n  var matchByLink = String(item.link || '').includes(slug);\n  var matchByImage = String(item.image || '').includes(slug);\n  var matchByDate = slugDate && String(item.id || '').includes(slugDate.replace(/_/g, '-'));\n  return !matchByLink && !matchByImage && !matchByDate;\n});\n\nvar removed = existing.length - filtered.length;\nvar updatedJson = JSON.stringify(filtered, null, 2);\n\nreturn { json: { ...prev, analysenSha: analysenSha, analysenBase64: Buffer.from(updatedJson, 'utf8').toString('base64'), entriesRemoved: removed } };"
+      },
+      "id": "delete-filter-analysen",
+      "name": "Filter Analysen.json (Delete)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1700, 2740]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/kw-f8/capitovo/contents/{{ $json.analysenPath }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [{ "name": "Accept", "value": "application/vnd.github+json" }, { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"message\": \"Cleanup: Entferne {{ $json.slug }} aus Katalog\",\n  \"content\": \"{{ $json.analysenBase64 }}\",\n  \"sha\": \"{{ $json.analysenSha }}\",\n  \"branch\": \"main\"\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "delete-update-analysen",
+      "name": "Update Analysen.json (Delete)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [600, 2740],
+      "credentials": { "httpHeaderAuth": { "id": "iCAWAEqg10f57flt", "name": "GitHub Token" } },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "status", "value": "=🗑️ Analyse {{ $('Filter Analysen.json (Delete)').item.json.slug }} gelöscht!" },
+            { "name": "htmlDeleted", "value": "={{ $('Extract HTML SHA (Delete)').item.json.htmlExists ? 'Ja' : 'Existierte nicht' }}" },
+            { "name": "svgDeleted", "value": "={{ $('Extract SVG SHA (Delete)').item.json.svgExists ? 'Ja' : 'Existierte nicht' }}" }
+          ],
+          "number": [
+            { "name": "catalogEntriesRemoved", "value": "={{ $('Filter Analysen.json (Delete)').item.json.entriesRemoved }}" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "delete-output",
+      "name": "🗑️ Lösch-Erfolg",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [380, 2740]
+    }
+  ],
+  "connections": {
+    "🆕 Formular - Neue Analyse": { "main": [[{ "node": "1. Unternehmensdaten laden", "type": "main", "index": 0 }]] },
+    "1. Unternehmensdaten laden": { "main": [[{ "node": "2. Input vorbereiten", "type": "main", "index": 0 }]] },
+    "2. Input vorbereiten": { "main": [[{ "node": "3. Finanzdaten laden", "type": "main", "index": 0 }]] },
+    "3. Finanzdaten laden": { "main": [[{ "node": "4. Fakteninstanz", "type": "main", "index": 0 }]] },
+    "4. Fakteninstanz": { "main": [[{ "node": "5. Facts formatieren", "type": "main", "index": 0 }]] },
+    "5. Facts formatieren": { "main": [[{ "node": "6. KI-Analyse erstellen", "type": "main", "index": 0 }]] },
+    "6. KI-Analyse erstellen": { "main": [[{ "node": "7. Analyse extrahieren", "type": "main", "index": 0 }]] },
+    "7. Analyse extrahieren": { "main": [[{ "node": "8. Kritische Pruefung", "type": "main", "index": 0 }]] },
+    "8. Kritische Pruefung": { "main": [[{ "node": "9. Ueberarbeitung extrahieren", "type": "main", "index": 0 }]] },
+    "9. Ueberarbeitung extrahieren": { "main": [[{ "node": "10. Redaktionelle Finalisierung", "type": "main", "index": 0 }]] },
+    "10. Redaktionelle Finalisierung": { "main": [[{ "node": "11. Finalen Text extrahieren", "type": "main", "index": 0 }]] },
+    "11. Finalen Text extrahieren": { "main": [[{ "node": "12. Titelbild-Prompt erstellen", "type": "main", "index": 0 }]] },
+    "12. Titelbild-Prompt erstellen": { "main": [[{ "node": "13. Titelbild-Prompt extrahieren", "type": "main", "index": 0 }]] },
+    "13. Titelbild-Prompt extrahieren": { "main": [[{ "node": "14. HTML generieren", "type": "main", "index": 0 }]] },
+    "14. HTML generieren": { "main": [[{ "node": "15. SVG Vorschaubild", "type": "main", "index": 0 }]] },
+    "15. SVG Vorschaubild": { "main": [[{ "node": "16. Base64 kodieren", "type": "main", "index": 0 }]] },
+    "16. Base64 kodieren": { "main": [[{ "node": "17. Get HTML SHA", "type": "main", "index": 0 }]] },
+    "17. Get HTML SHA": { "main": [[{ "node": "18. Extract HTML SHA", "type": "main", "index": 0 }]] },
+    "18. Extract HTML SHA": { "main": [[{ "node": "19. GitHub Upload HTML", "type": "main", "index": 0 }]] },
+    "19. GitHub Upload HTML": { "main": [[{ "node": "20. Pass Data", "type": "main", "index": 0 }]] },
+    "20. Pass Data": { "main": [[{ "node": "21. Get SVG SHA", "type": "main", "index": 0 }]] },
+    "21. Get SVG SHA": { "main": [[{ "node": "22. Extract SVG SHA", "type": "main", "index": 0 }]] },
+    "22. Extract SVG SHA": { "main": [[{ "node": "23. GitHub Upload SVG", "type": "main", "index": 0 }]] },
+    "23. GitHub Upload SVG": { "main": [[{ "node": "24. Pass After SVG", "type": "main", "index": 0 }]] },
+    "24. Pass After SVG": { "main": [[{ "node": "25. Get Analysen.json", "type": "main", "index": 0 }]] },
+    "25. Get Analysen.json": { "main": [[{ "node": "26. Katalog aktualisieren", "type": "main", "index": 0 }]] },
+    "26. Katalog aktualisieren": { "main": [[{ "node": "27. GitHub Upload Katalog", "type": "main", "index": 0 }]] },
+    "27. GitHub Upload Katalog": { "main": [[{ "node": "28. ✅ Erfolg - Neue Analyse", "type": "main", "index": 0 }]] },
+
+    "📤 Test-Analyse veröffentlichen": { "main": [[{ "node": "Test-Input: Apple Analyse", "type": "main", "index": 0 }]] },
+    "Test-Input: Apple Analyse": { "main": [[{ "node": "HTML Renderer (Test)", "type": "main", "index": 0 }]] },
+    "HTML Renderer (Test)": { "main": [[{ "node": "SVG Generator (Test)", "type": "main", "index": 0 }]] },
+    "SVG Generator (Test)": { "main": [[{ "node": "Base64 Encoder (Test)", "type": "main", "index": 0 }]] },
+    "Base64 Encoder (Test)": { "main": [[{ "node": "Get HTML SHA (Test)", "type": "main", "index": 0 }]] },
+    "Get HTML SHA (Test)": { "main": [[{ "node": "Extract HTML SHA (Test)", "type": "main", "index": 0 }]] },
+    "Extract HTML SHA (Test)": { "main": [[{ "node": "Get SVG SHA (Test)", "type": "main", "index": 0 }]] },
+    "Get SVG SHA (Test)": { "main": [[{ "node": "Extract SVG SHA (Test)", "type": "main", "index": 0 }]] },
+    "Extract SVG SHA (Test)": { "main": [[{ "node": "GitHub Upload HTML (Test)", "type": "main", "index": 0 }]] },
+    "GitHub Upload HTML (Test)": { "main": [[{ "node": "Pass (Test)", "type": "main", "index": 0 }]] },
+    "Pass (Test)": { "main": [[{ "node": "GitHub Upload SVG (Test)", "type": "main", "index": 0 }]] },
+    "GitHub Upload SVG (Test)": { "main": [[{ "node": "Pass After SVG (Test)", "type": "main", "index": 0 }]] },
+    "Pass After SVG (Test)": { "main": [[{ "node": "Get Analysen.json (Test)", "type": "main", "index": 0 }]] },
+    "Get Analysen.json (Test)": { "main": [[{ "node": "Build Analysen.json (Test)", "type": "main", "index": 0 }]] },
+    "Build Analysen.json (Test)": { "main": [[{ "node": "GitHub Upload Katalog (Test)", "type": "main", "index": 0 }]] },
+    "GitHub Upload Katalog (Test)": { "main": [[{ "node": "✅ Test-Erfolg", "type": "main", "index": 0 }]] },
+
+    "🗑️ Analyse löschen": { "main": [[{ "node": "Config - Zu löschende Analyse", "type": "main", "index": 0 }]] },
+    "Config - Zu löschende Analyse": { "main": [[{ "node": "Get HTML SHA (Delete)", "type": "main", "index": 0 }]] },
+    "Get HTML SHA (Delete)": { "main": [[{ "node": "Extract HTML SHA (Delete)", "type": "main", "index": 0 }]] },
+    "Extract HTML SHA (Delete)": { "main": [[{ "node": "Delete HTML", "type": "main", "index": 0 }]] },
+    "Delete HTML": { "main": [[{ "node": "Pass After HTML (Delete)", "type": "main", "index": 0 }]] },
+    "Pass After HTML (Delete)": { "main": [[{ "node": "Get SVG SHA (Delete)", "type": "main", "index": 0 }]] },
+    "Get SVG SHA (Delete)": { "main": [[{ "node": "Extract SVG SHA (Delete)", "type": "main", "index": 0 }]] },
+    "Extract SVG SHA (Delete)": { "main": [[{ "node": "Delete SVG", "type": "main", "index": 0 }]] },
+    "Delete SVG": { "main": [[{ "node": "Pass After SVG (Delete)", "type": "main", "index": 0 }]] },
+    "Pass After SVG (Delete)": { "main": [[{ "node": "Get Analysen.json (Delete)", "type": "main", "index": 0 }]] },
+    "Get Analysen.json (Delete)": { "main": [[{ "node": "Filter Analysen.json (Delete)", "type": "main", "index": 0 }]] },
+    "Filter Analysen.json (Delete)": { "main": [[{ "node": "Update Analysen.json (Delete)", "type": "main", "index": 0 }]] },
+    "Update Analysen.json (Delete)": { "main": [[{ "node": "🗑️ Lösch-Erfolg", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "staticData": null,
+  "tags": []
+}

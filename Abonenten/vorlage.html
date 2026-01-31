@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16.png?v=2025-12-25b">
   <link rel="shortcut icon" href="../assets/favicon-32.png?v=2025-12-25b">
   <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png?v=2025-12-25a">
-  <title>capitovo – Analyse Vorlage</title>
+  <title>capitovo — Analyse Vorlage</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
   <style>
@@ -80,7 +80,7 @@
       font-size: 1.5rem;
       font-weight: 700;
       /* tighter spacing: reduce gap between heading and first paragraph */
-      margin: 1.8rem 0 0.45rem 0;
+      margin: 2rem 0 0.5rem 0;
       color: #0f172a;
     }
     .toc-title {
@@ -182,7 +182,7 @@
     <div class="mb-2">
       <div class="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Vorlage – Analyse (zum Vorbereiten)</h1>
+          <h1 class="text-3xl font-extrabold text-gray-900 mb-1">Vorlage — Analyse (zum Vorbereiten)</h1>
         </div>
         <div class="flex items-center gap-2">
           <a href="alle_analysen.html" id="back-button" class="inline-flex items-center gap-2 text-sm font-medium text-gray-700 bg-white rounded-md px-3 py-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200 back-btn-glow cap-outline-btn"><span class="back-arrow" aria-hidden="true">←</span><span>Zurück</span></a>
@@ -206,13 +206,13 @@
         </div>
       </div>
       <div class="text-sm analysis-meta" style="color: #64748b;">
-        <span>{{DATUM}}</span>
+        <span>24.12.2025</span>
         <span class="text-gray-400 mx-2">·</span>
-        <span>Ticker: {{TICKER}}</span>
+        <span>Ticker: XXXX</span>
         <span class="text-gray-400 mx-2">·</span>
-        <span>WKN: {{WKN}}</span>
+        <span>WKN: XXXXXXX</span>
         <span class="text-gray-400 mx-2">·</span>
-        <span>ISIN: {{ISIN}}</span>
+        <span>ISIN: XX0000000000</span>
       </div>
     </div>
 
@@ -233,13 +233,13 @@
     </div>
 
     <p class="analysis-intro" style="margin: 24px 0 32px 0; font-size:1.08rem; line-height:1.7; max-width:100%; text-align:justify;">
-      {{EINLEITUNG}}
+      In dieser Analyse ordnen wir die aktuelle Bewertung und Kursentwicklung ein und prüfen, welche Erwartungen der Markt bereits eingepreist hat. Anschließend betrachten wir die finanziellen Grundlagen (Umsatz, Margen, Cashflow) sowie die Bilanzqualität und mögliche Risikofaktoren. Im strategischen Teil geht es um Wachstumstreiber, Wettbewerb und den Handlungsspielraum des Managements. Abschließend vergleichen wir den Konsens der Analysten mit unserem Szenario und leiten daraus ein klares Votum samt Triggern ab. Ziel ist es, Chancen und Risiken transparent zu machen und eine fundierte Entscheidungsgrundlage zu bieten. Die wichtigsten Aspekte werden dabei kompakt und nachvollziehbar zusammengefasst.
     </p>
     <p style="height:1.5em;"></p>
 
     <section class="analysis-section" id="marktperformance">
       <h2>1) Marktperformance &amp; Bewertung</h2>
-      <p>{{KAPITEL_1_EINLEITUNG}}</p>
+      <p>Kurzer Überblick über Kursentwicklung, Momentum, relative Stärke und aktuelle Bewertung. (Platzhalterwerte unten dienen nur zur Layout-Prüfung.)</p>
       <table class="card-table">
         <thead>
           <tr style="border-bottom:1px solid rgba(15,23,42,0.06);">
@@ -249,48 +249,48 @@
           </tr>
         </thead>
         <tbody>
-          <tr style="border-bottom:1px solid rgba(15,23,42,0.04);"><td>{{KAPITEL_1_KENNZAHL_1}}</td><td>{{KAPITEL_1_WERT_1}}</td><td>{{KAPITEL_1_KOMMENTAR_1}}</td></tr>
-          <tr style="border-bottom:1px solid rgba(15,23,42,0.04);"><td>{{KAPITEL_1_KENNZAHL_2}}</td><td>{{KAPITEL_1_WERT_2}}</td><td>{{KAPITEL_1_KOMMENTAR_2}}</td></tr>
-          <tr><td>{{KAPITEL_1_KENNZAHL_3}}</td><td>{{KAPITEL_1_WERT_3}}</td><td>{{KAPITEL_1_KOMMENTAR_3}}</td></tr>
+          <tr style="border-bottom:1px solid rgba(15,23,42,0.04);"><td>Aktueller Kurs</td><td>123,45 €</td><td>Stand: heute</td></tr>
+          <tr style="border-bottom:1px solid rgba(15,23,42,0.04);"><td>Performance 1M</td><td>+4,2%</td><td>Trendindikator</td></tr>
+          <tr><td>Forward-KGV</td><td>18,7x</td><td>Vergleich Peer/History</td></tr>
         </tbody>
       </table>
     </section>
 
     <section class="analysis-section" id="finanzielle-grundlagen">
       <h2>2) Finanzielle Grundlagen</h2>
-      <p>{{KAPITEL_2_EINLEITUNG}}</p>
+      <p>Wichtigste finanzielle Treiber: Umsatz, Margen, Cashflow, Bilanzqualität und Kapitalallokation.</p>
       <ul style="margin-left: 18px; list-style: disc;">
-        <li>{{KAPITEL_2_PUNKT_1}}</li>
-        <li>{{KAPITEL_2_PUNKT_2}}</li>
-        <li>{{KAPITEL_2_PUNKT_3}}</li>
+        <li>Umsatzwachstum: X% (YoY)</li>
+        <li>Operative Marge: X%</li>
+        <li>Free Cashflow: X Mrd.</li>
       </ul>
     </section>
 
     <section class="analysis-section" id="strategie">
       <h2>3) Strategische Ausrichtung</h2>
-      <p>{{KAPITEL_3_EINLEITUNG}}</p>
+      <p>Was sind die strategischen Prioritäten? Welche Produkte/Segmente treiben Wachstum? Wo liegen Risiken (Wettbewerb, Regulierung, Zyklik)?</p>
     </section>
 
     <section class="analysis-section" id="analysten">
       <h2>4) Analystenerwartungen &amp; Institutionelles Interesse</h2>
-      <p>{{KAPITEL_4_EINLEITUNG}}</p>
+      <p>Wie ist der Konsens (Kursziele, Ratings, Gewinnschätzungen)? Gibt es jüngste Up-/Downgrades oder relevante institutionelle Bewegungen?</p>
     </section>
 
     <section class="analysis-section" id="votum">
       <h2>5) Bewertungskontext &amp; Votum</h2>
-      <p>{{KAPITEL_5_EINLEITUNG}}</p>
+      <p>Einordnung der Bewertung im Kontext von Wachstum/Qualität/Risiko + klares Votum (mit Bedingungen).</p>
       <div class="votum-box">
         <h3>Votum (Vorlage)</h3>
-        <p><strong>{{VOTUM_LABEL}}</strong> – {{VOTUM_TEXT}}</p>
+        <p><strong>Neutral / Beobachten</strong> — Begründung in 2–4 Sätzen. Optional: Trigger, ab wann Upgrade/Downgrade sinnvoll wäre.</p>
       </div>
 
       <hr style="margin: 3rem 0; border: none; border-top: 1px solid #e2e8f0;">
 
       <p style="font-size: 0.9rem; color: #64748b;">
-        <strong>Disclaimer:</strong> {{DISCLAIMER_TEXT}}
+        <strong>Disclaimer:</strong> Diese Analyse stellt keine Anlageberatung dar. Capitovo erbringt keine regulierten Finanzdienstleistungen. Alle Angaben erfolgen ohne Gewähr.
       </p>
       <p class="refs" style="font-size: 0.9rem; color: #64748b;">
-        <strong>Quellen (Beispiele):</strong> {{QUELLEN_TEXT}}
+        <strong>Quellen (Beispiele):</strong> Unternehmensberichte, Investor-Relations, öffentliche Marktdaten, Analystenkommentare.
       </p>
     </section>
   </article>
@@ -298,7 +298,7 @@
 
 <footer class="site-footer border-t py-6 mt-12">
   <div class="footer-inner max-w-6xl mx-auto px-6 text-sm text-gray-500 flex items-center justify-between">
-    <div>&copy; 2025 capitovo – Alle Rechte vorbehalten.</div>
+    <div>&copy; 2025 capitovo — Alle Rechte vorbehalten.</div>
     <div class="footer-links">
       <a href="../Rechtliches/impressum.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Impressum</a>
       <a href="../Rechtliches/datenschutz.html" class="footer-btn" target="_blank" rel="noopener noreferrer">Datenschutz</a>

@@ -84,12 +84,44 @@
       "position": [140, 1600]
     },
     {
-      "parameters": {},
+      "parameters": {
+        "formTitle": "Analyse löschen",
+        "formDescription": "Wähle die Analyse aus, die gelöscht werden soll. Es werden HTML, SVG und der Katalog-Eintrag entfernt.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Slug der Analyse",
+              "fieldType": "text",
+              "requiredField": true,
+              "placeholder": "z.B. apple_2026-01-29 oder tesla_2026-01-31"
+            },
+            {
+              "fieldLabel": "Bestätigung",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  { "option": "Ja, unwiderruflich löschen" },
+                  { "option": "Nein, abbrechen" }
+                ]
+              }
+            }
+          ]
+        },
+        "options": {
+          "respondWithOptions": {
+            "values": {
+              "formSubmittedText": "Löschvorgang wird ausgeführt..."
+            }
+          }
+        }
+      },
       "id": "delete-trigger",
-      "name": "🗑️ Analyse löschen",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [140, 2500]
+      "name": "🗑️ Analyse löschen (Formular)",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [140, 2500],
+      "webhookId": "capitovo-analyse-loeschen"
     },
     {
       "parameters": {
@@ -766,10 +798,10 @@
     },
     {
       "parameters": {
-        "jsCode": "// === KONFIGURATION: Welche Analyse soll gelöscht werden? ===\n// Passe den slug an die zu löschende Analyse an\n\nvar slug = 'aapl_2026-01-29';\n\nreturn {\n  json: {\n    slug: slug,\n    htmlPath: 'Abonenten/' + slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + slug + '_preview.svg',\n    analysenPath: 'data/analysen.json'\n  }\n};"
+        "jsCode": "var form = $('🗑️ Analyse löschen (Formular)').item.json;\nvar slugInput = String(form['Slug der Analyse'] || '').trim();\nvar confirmed = String(form['Bestätigung'] || '').toLowerCase().includes('ja');\n\nif (!confirmed) {\n  throw new Error('Löschvorgang abgebrochen - keine Bestätigung');\n}\n\nif (!slugInput) {\n  throw new Error('Kein Slug angegeben');\n}\n\n// Slug normalisieren (Leerzeichen entfernen, lowercase)\nvar slug = slugInput.toLowerCase().replace(/\\s+/g, '_');\n\nreturn {\n  json: {\n    slug: slug,\n    originalInput: slugInput,\n    htmlPath: 'Abonenten/' + slug + '.html',\n    svgPath: 'data/vorschaubilder_analysen/' + slug + '_preview.svg',\n    analysenPath: 'data/analysen.json'\n  }\n};"
       },
       "id": "delete-config",
-      "name": "Config - Zu löschende Analyse",
+      "name": "Slug validieren",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [380, 2500]
@@ -793,7 +825,7 @@
     },
     {
       "parameters": {
-        "jsCode": "var config = $('Config - Zu löschende Analyse').item.json;\nvar resp = $input.item.json;\nreturn { json: { ...config, htmlSha: resp && resp.sha ? resp.sha : null, htmlExists: !!(resp && resp.sha) } };"
+        "jsCode": "var config = $('Slug validieren').item.json;\nvar resp = $input.item.json;\nreturn { json: { ...config, htmlSha: resp && resp.sha ? resp.sha : null, htmlExists: !!(resp && resp.sha) } };"
       },
       "id": "delete-extract-html-sha",
       "name": "Extract HTML SHA (Delete)",
@@ -1002,8 +1034,8 @@
     "Build Analysen.json (Test)": { "main": [[{ "node": "GitHub Upload Katalog (Test)", "type": "main", "index": 0 }]] },
     "GitHub Upload Katalog (Test)": { "main": [[{ "node": "✅ Test-Erfolg", "type": "main", "index": 0 }]] },
 
-    "🗑️ Analyse löschen": { "main": [[{ "node": "Config - Zu löschende Analyse", "type": "main", "index": 0 }]] },
-    "Config - Zu löschende Analyse": { "main": [[{ "node": "Get HTML SHA (Delete)", "type": "main", "index": 0 }]] },
+    "🗑️ Analyse löschen (Formular)": { "main": [[{ "node": "Slug validieren", "type": "main", "index": 0 }]] },
+    "Slug validieren": { "main": [[{ "node": "Get HTML SHA (Delete)", "type": "main", "index": 0 }]] },
     "Get HTML SHA (Delete)": { "main": [[{ "node": "Extract HTML SHA (Delete)", "type": "main", "index": 0 }]] },
     "Extract HTML SHA (Delete)": { "main": [[{ "node": "Delete HTML", "type": "main", "index": 0 }]] },
     "Delete HTML": { "main": [[{ "node": "Pass After HTML (Delete)", "type": "main", "index": 0 }]] },

@@ -1,0 +1,179 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0A23D8NA5B",
+          "mode": "list",
+          "cachedResultName": "allgemein-"
+        },
+        "options": {
+          "resolveIds": false
+        }
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1d843d96-2a6c-4c87-9688-938a7872d4a7",
+      "name": "Slack Trigger",
+      "webhookId": "1d3d6370-ff68-4d27-97f8-0119ca028e79",
+      "credentials": {
+        "slackApi": {
+          "id": "Hrx5015igJMvb9iD",
+          "name": "Slack"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.subtype }}",
+              "operation": "notEqual",
+              "value2": "bot_message"
+            }
+          ],
+          "boolean": [],
+          "number": []
+        },
+        "combineOperation": "all"
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9f3a63f8-7d0e-4d10-9f6e-0d8c3e7d2a11",
+      "name": "IF Not Bot Message"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "a9250cbf-44a4-4534-9cf3-9115563e19a0",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        384,
+        272
+      ],
+      "id": "954e3b6a-efa2-427d-80ef-587ee378ce49",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CMri7G19lyUO2NZS",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0A23D8NA5B",
+          "mode": "list",
+          "cachedResultName": "allgemein-"
+        },
+        "text": "={{ $json.output }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        720,
+        0
+      ],
+      "id": "82fa5d1e-3e4a-4e85-8d14-5e7947d22009",
+      "name": "Send a message",
+      "webhookId": "4890fec1-26a9-4a09-b5f1-b4b96e8d8e41",
+      "credentials": {
+        "slackApi": {
+          "id": "Hrx5015igJMvb9iD",
+          "name": "Slack"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF Not Bot Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Not Bot Message": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {
+    "instanceId": "4e6dd7bd1638bd2724994ec7815d8c03087481a498a8122e7ad8e8a16988a92b"
+  },
+  "tags": []
+}

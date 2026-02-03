@@ -182,6 +182,25 @@ main.with-sidebar {
     color: var(--color-accent-blue);
 }
 
+/* Ensure form controls (inputs, selects, textareas) share the same size and padding */
+input[type="text"], input[type="email"], input[type="password"], textarea, select, .peer {
+    box-sizing: border-box;
+    padding: 0.75rem 0.75rem; /* matches px-3 py-3 */
+    font-size: 0.875rem; /* sm:text-sm */
+    line-height: 1.25;
+    min-height: 48px; /* ensure consistent visual height */
+}
+
+/* Some browsers add extra inner padding for selects; normalize appearance */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Keep placeholder/label color behavior unchanged */
+select:invalid { color: #6b7280; }
+
 /* Subscription-based initial rendering: prevent flash by showing the
     correct subtext/badge based on a class set on <html> before paint. */
 .subtext-free, .subtext-premium { display: none; }

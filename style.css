@@ -298,6 +298,52 @@ select.empty + label {
     min-height: 120px !important;
 }
 
+/* Hard override for the sidebar contact modal fields (exactly uniform look) */
+#contact-modal #contact-name,
+#contact-modal #contact-email,
+#contact-modal #contact-category {
+    height: 56px !important;
+    min-height: 56px !important;
+    padding: 0.75rem 2.5rem 0.75rem 1rem !important;
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#contact-modal #contact-message {
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+    padding: 1.25rem 1rem 0.75rem 1rem !important;
+}
+
+/* Make placeholder text identical across input + textarea (covers the global modal too) */
+#contact-modal #contact-name::placeholder,
+#contact-modal #contact-email::placeholder,
+#contact-modal #contact-message::placeholder {
+    color: #a3aab7 !important;
+    opacity: 1 !important;
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+}
+
+/* Select placeholder ("Bitte wählen") should match the same placeholder styling */
+#contact-modal #contact-category:invalid,
+#contact-modal #contact-category.empty {
+    color: #a3aab7 !important;
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+    font-weight: 400 !important;
+}
+
+/* When a real option is selected, use normal text color */
+#contact-modal #contact-category:not(:invalid) {
+    color: #0f172a !important;
+}
+
 /* Subscription-based initial rendering: prevent flash by showing the
     correct subtext/badge based on a class set on <html> before paint. */
 .subtext-free, .subtext-premium { display: none; }

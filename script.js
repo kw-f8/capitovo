@@ -1403,6 +1403,7 @@ function initModalControl() {
             if (contactEl) {
                 contactEl.classList.remove('hidden');
                 document.body.style.overflow = 'hidden';
+                try { normalizeContactModalFields(contactEl); } catch(e) { /* ignore */ }
             }
             return;
         }
@@ -1438,6 +1439,31 @@ function initModalControl() {
         const anyContact = document.getElementById('contact-modal');
         if (anyContact && !anyContact.classList.contains('hidden')) closeContactModal();
     });
+}
+
+/** Ensure contact modal fields look/behave consistently (especially select placeholder rendering). */
+function normalizeContactModalFields(modalEl){
+    if (!modalEl) return;
+
+    // Normalize the category select so its placeholder matches the other fields
+    const categorySelect = modalEl.querySelector('#contact-category');
+    const categoryLabel = modalEl.querySelector('label[for="contact-category"]');
+    if (categoryLabel) {
+        // We want the visible placeholder text to be "Bitte wählen" (per UI requirement)
+        categoryLabel.textContent = 'Bitte wählen';
+    }
+
+    function syncEmptyClass(){
+        if (!categorySelect) return;
+        const isEmpty = !categorySelect.value || String(categorySelect.value) === '';
+        categorySelect.classList.toggle('empty', isEmpty);
+    }
+
+    if (categorySelect) {
+        categorySelect.addEventListener('change', syncEmptyClass);
+        // initial state (important on open)
+        syncEmptyClass();
+    }
 }
 
 /** Initialisiert klickbare Schritte in der Checkout-Stepper-Leiste.

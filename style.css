@@ -285,6 +285,20 @@ select.empty + label {
     min-height: 120px !important;
 }
 
+/* Select placeholder: show label as placeholder text "Bitte wählen" and hide select text when empty */
+#contact-modal select.empty {
+    color: transparent !important; /* hide the empty option text */
+}
+#contact-modal select.empty option {
+    color: #0f172a; /* ensure dropdown options remain readable */
+}
+#contact-modal select.empty option[value=""] {
+    color: #6b7280;
+}
+#contact-modal label[for="contact-category"] {
+    pointer-events: none; /* click goes to select */
+}
+
 /* Subscription-based initial rendering: prevent flash by showing the
     correct subtext/badge based on a class set on <html> before paint. */
 .subtext-free, .subtext-premium { display: none; }

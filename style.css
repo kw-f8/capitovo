@@ -45,6 +45,12 @@ body.abonenten-page { overscroll-behavior-y: none; }
 .text-white { color: #ffffff !important; }
 .text-gray-300 { color: #d1d5db !important; }
 .text-gray-900 { color: #0f172a !important; }
+/* Make select show muted placeholder color when no valid option is selected (required) */
+select:invalid {
+    color: #6b7280; /* muted gray for placeholder */
+}
+select { color: inherit; }
+select option[value=""] { color: #6b7280; }
 .text-xl { font-size: 1.125rem; }
 .text-4xl { font-size: 2.25rem; }
 .mb-4 { margin-bottom: 1rem !important; }

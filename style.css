@@ -198,6 +198,15 @@ select {
     appearance: none;
 }
 
+/* Restore a consistent dropdown arrow for selects (works when appearance:none is set) */
+select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%236b7280'><path d='M6 8l4 4 4-4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem 1rem;
+    padding-right: 2.5rem; /* space for the arrow */
+}
+
 /* Keep placeholder/label color behavior unchanged */
 select:invalid { color: #6b7280; }
 

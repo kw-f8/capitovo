@@ -281,57 +281,33 @@ function createGlobalContactModal() {
 
                 <form id="contact-form" action="#" method="POST" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="relative">
+                        <div>
                             <input type="text" id="contact-name" name="name" required
-                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm"
                                 placeholder="Ihr Name">
-                            <label for="contact-name"
-                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
-                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
-                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                Ihr Name
-                            </label>
                         </div>
-                        <div class="relative">
+                        <div>
                             <input type="email" id="contact-email" name="email" required
-                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm"
                                 placeholder="Ihre E-Mail">
-                            <label for="contact-email"
-                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
-                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
-                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                                Ihre E-Mail
-                            </label>
                         </div>
                     </div>
 
-                    <div class="relative">
+                    <div>
                         <select id="contact-category" name="category" required
-                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                            class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm bg-white">
                             <option value="" disabled selected>Bitte wählen</option>
                             <option value="support">Technischer Support</option>
                             <option value="billing">Rechnung & Abonnement</option>
                             <option value="feedback">Feedback & Vorschläge</option>
                             <option value="other">Sonstiges</option>
                         </select>
-                        <label for="contact-category"
-                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
-                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
-                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                            Bitte wählen
-                        </label>
                     </div>
 
-                    <div class="relative">
+                    <div>
                         <textarea id="contact-message" name="message" rows="4" required
-                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm resize-none"
+                            class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm resize-none"
                             placeholder="Ihre Nachricht"></textarea>
-                        <label for="contact-message"
-                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
-                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
-                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
-                            Ihre Nachricht
-                        </label>
                     </div>
 
                     <div class="mt-2 w-full flex justify-center">

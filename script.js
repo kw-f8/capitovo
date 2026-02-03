@@ -271,47 +271,81 @@ function createGlobalContactModal() {
     modal.style.zIndex = '1001';
 
     modal.innerHTML = `
-        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 relative p-6 max-h-[90vh] overflow-y-auto">
+        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 relative overflow-hidden max-h-[90vh] overflow-y-auto">
             <button id="contact-close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10" aria-label="Schließen">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">Support kontaktieren</h2>
-            <form id="contact-form" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="sr-only" for="contact-name">Ihr Name</label>
-                        <input id="contact-name" name="name" required class="w-full border rounded-md px-3 py-2" placeholder="Ihr Name">
+            <div class="p-8 md:p-10">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Support kontaktieren</h2>
+
+                <form id="contact-form" action="#" method="POST" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="relative">
+                            <input type="text" id="contact-name" name="name" required
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Ihr Name">
+                            <label for="contact-name"
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihr Name
+                            </label>
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="contact-email" name="email" required
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                                placeholder="Ihre E-Mail">
+                            <label for="contact-email"
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihre E-Mail
+                            </label>
+                        </div>
                     </div>
-                    <div>
-                        <label class="sr-only" for="contact-email">Ihre E-Mail</label>
-                        <input id="contact-email" name="email" type="email" required class="w-full border rounded-md px-3 py-2" placeholder="Ihre E-Mail">
+
+                    <div class="relative">
+                        <select id="contact-category" name="category" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
+                            <option value="" disabled selected>Bitte wählen</option>
+                            <option value="support">Technischer Support</option>
+                            <option value="billing">Rechnung & Abonnement</option>
+                            <option value="feedback">Feedback & Vorschläge</option>
+                            <option value="other">Sonstiges</option>
+                        </select>
+                        <label for="contact-category"
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Bitte wählen
+                        </label>
                     </div>
-                </div>
-                <div>
-                    <label class="sr-only" for="contact-category">Kategorie</label>
-                    <select id="contact-category" name="category" required class="w-full border rounded-md px-3 py-2 text-gray-700">
-                        <option value="" disabled selected class="text-gray-400">Bitte wählen</option>
-                        <option value="support">Technischer Support</option>
-                        <option value="billing">Rechnung & Abonnement</option>
-                        <option value="feedback">Feedback & Vorschläge</option>
-                        <option value="other">Sonstiges</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="sr-only" for="contact-message">Ihre Nachricht</label>
-                    <textarea id="contact-message" name="message" rows="4" required class="w-full border rounded-md px-3 py-2" placeholder="Ihre Nachricht"></textarea>
-                </div>
-                <div class="mt-2 w-full flex justify-center">
-                    <div id="turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: none; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
-                        Sicherheitsabfrage (Cloudflare Turnstile)
+
+                    <div class="relative">
+                        <textarea id="contact-message" name="message" rows="4" required
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
+                            placeholder="Ihre Nachricht"></textarea>
+                        <label for="contact-message"
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Ihre Nachricht
+                        </label>
                     </div>
-                </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" id="contact-cancel" class="px-4 py-2 border rounded-md">Abbrechen</button>
-                    <button type="submit" id="contact-submit" class="px-4 py-2 bg-primary-blue text-white rounded-md">Absenden</button>
-                </div>
-            </form>
+
+                    <div class="mt-2 w-full flex justify-center">
+                        <div id="turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: none; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
+                            Sicherheitsabfrage (Cloudflare Turnstile)
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" id="contact-cancel" class="px-4 py-2 border rounded-md">Abbrechen</button>
+                        <button type="submit" id="contact-submit" class="px-4 py-2 bg-primary-blue text-white rounded-md">Absenden</button>
+                    </div>
+                </form>
+            </div>
         </div>
     `;
 

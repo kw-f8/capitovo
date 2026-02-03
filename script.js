@@ -281,33 +281,57 @@ function createGlobalContactModal() {
 
                 <form id="contact-form" action="#" method="POST" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                        <div class="relative">
                             <input type="text" id="contact-name" name="name" required
-                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm"
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
                                 placeholder="Ihr Name">
+                            <label for="contact-name"
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihr Name
+                            </label>
                         </div>
-                        <div>
+                        <div class="relative">
                             <input type="email" id="contact-email" name="email" required
-                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm"
+                                class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm"
                                 placeholder="Ihre E-Mail">
+                            <label for="contact-email"
+                                   class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                          peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                          peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                                Ihre E-Mail
+                            </label>
                         </div>
                     </div>
 
-                    <div>
+                    <div class="relative">
                         <select id="contact-category" name="category" required
-                            class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm bg-white">
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm bg-white">
                             <option value="" disabled selected>Bitte wählen</option>
                             <option value="support">Technischer Support</option>
                             <option value="billing">Rechnung & Abonnement</option>
                             <option value="feedback">Feedback & Vorschläge</option>
                             <option value="other">Sonstiges</option>
                         </select>
+                        <label for="contact-category"
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Bitte wählen
+                        </label>
                     </div>
 
-                    <div>
+                    <div class="relative">
                         <textarea id="contact-message" name="message" rows="4" required
-                            class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm resize-none"
+                            class="peer appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 placeholder-transparent focus:outline-none focus:ring-accent-blue focus:border-accent-blue focus:z-10 sm:text-sm resize-none"
                             placeholder="Ihre Nachricht"></textarea>
+                        <label for="contact-message"
+                               class="absolute left-3 -top-2.5 bg-white px-1 text-xs text-gray-500 transition-all duration-200
+                                      peer-placeholder-shown:top-3 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-placeholder-shown:bg-transparent
+                                      peer-focus:-top-2.5 peer-focus:text-xs peer-focus:text-accent-blue peer-focus:bg-white">
+                            Ihre Nachricht
+                        </label>
                     </div>
 
                     <div class="mt-2 w-full flex justify-center">
@@ -334,27 +358,28 @@ function createGlobalContactModal() {
     const cancelBtn = document.getElementById('contact-cancel');
     if (cancelBtn) cancelBtn.addEventListener('click', (e) => { e.preventDefault(); closeContactModal(); });
 
-    // Basic submit handling with deferred Turnstile rendering on first submit
+    // Two-step submit: first click shows Turnstile, second click sends message
     const form = document.getElementById('contact-form');
     if (form) {
         let turnstileShown = false;
         form.addEventListener('submit', function(e){
             e.preventDefault();
             const placeholder = document.getElementById('turnstile-placeholder');
+            
             if (!turnstileShown) {
+                // First click: show Turnstile only
                 if (placeholder) {
                     placeholder.style.display = 'flex';
                     placeholder.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
                 turnstileShown = true;
-                return; // require user to interact with the shown Turnstile and submit again
+                return;
             }
 
-            // TODO: integrate real Turnstile verification here before finalizing submission.
+            // Second click: send message (TODO: verify Turnstile token)
             alert('Ihre Nachricht wurde erfolgreich versendet. Wir melden uns in Kürze.');
-            closeContactModal();
+            // Reset form but keep modal open
             form.reset();
-            // hide placeholder again for next time
             if (placeholder) placeholder.style.display = 'none';
             turnstileShown = false;
         });

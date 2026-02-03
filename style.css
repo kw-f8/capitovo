@@ -1,3 +1,36 @@
+#contact-modal input[type="text"],
+#contact-modal input[type="email"],
+#contact-modal select {
+    height: 56px !important;
+    min-height: 56px !important;
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+    padding-top: 1.25rem !important;
+    padding-bottom: 0.25rem !important;
+    padding-left: 1rem !important;
+    padding-right: 2.5rem !important;
+    border-radius: 0.625rem !important;
+    border-width: 1px !important;
+}
+#contact-modal textarea {
+    font-size: 1.125rem !important;
+    line-height: 1.5 !important;
+    padding-top: 1.25rem !important;
+    padding-left: 1rem !important;
+    border-radius: 0.625rem !important;
+    border-width: 1px !important;
+}
+#contact-modal .peer-placeholder-shown + label,
+#contact-modal input:placeholder-shown + label,
+#contact-modal textarea:placeholder-shown + label,
+#contact-modal select.empty + label {
+    top: 1.25rem !important;
+    left: 1rem !important;
+    font-size: 1.125rem !important;
+    color: #a3aab7 !important;
+    background: transparent !important;
+    font-weight: 400 !important;
+}
 /* Passwort vergessen Link: wird erst beim Hover capitovo-blau */
 a[href="#"].hover\:text-accent-blue:hover, a.text-accent-blue:hover {
     color: var(--color-accent-blue) !important;

@@ -377,58 +377,60 @@
         // Contact form validation
         if (contactForm) {
             const inputs = contactForm.querySelectorAll('input, select, textarea');
+            const categorySelect = contactForm.querySelector('#contact-category');
+
+            function updateSelectEmpty() {
+                if (!categorySelect) return;
+                if (!categorySelect.value || categorySelect.value === '') {
+                    categorySelect.classList.add('empty');
+                } else {
+                    categorySelect.classList.remove('empty');
+                }
+            }
 
             function validateContactForm() {
                 let isValid = true;
                 inputs.forEach(input => {
-                    if (input.hasAttribute('required') && !input.value.trim()) {
+                    const val = String(input.value || '').trim();
+                    if (input.hasAttribute('required') && !val) {
                         isValid = false;
                     }
                 });
-                if (contactCaptcha && contactCaptcha.value.trim() !== '5') {
-                    isValid = false;
-                }
                 if (contactSubmit) {
                     if (isValid) {
                         contactSubmit.disabled = false;
                         contactSubmit.classList.remove('bg-gray-400', 'cursor-not-allowed');
                         contactSubmit.classList.add('bg-primary-blue', 'hover:bg-blue-700');
-                    if (contactForm) {
-                        const inputs = contactForm.querySelectorAll('input, select, textarea');
-
-                        function validateContactForm() {
-                            let isValid = true;
-                            inputs.forEach(input => {
-                                if (input.hasAttribute('required') && !input.value.trim()) {
-                                    isValid = false;
-                                }
-                            });
-                            if (contactSubmit) {
-                                if (isValid) {
-                                    contactSubmit.disabled = false;
-                                    contactSubmit.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                                    contactSubmit.classList.add('bg-primary-blue', 'hover:bg-blue-700');
-                                } else {
-                                    contactSubmit.disabled = true;
-                                    contactSubmit.classList.add('bg-gray-400', 'cursor-not-allowed');
-                                    contactSubmit.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
-                                }
-                            }
-                        }
-
-                        inputs.forEach(input => {
-                            input.addEventListener('input', validateContactForm);
-                            input.addEventListener('change', validateContactForm);
-                        });
-
-                        validateContactForm();
-
-                        contactForm.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            alert('Ihre Nachricht wurde erfolgreich versendet. Wir werden uns in Kürze bei Ihnen melden.');
-                            contactModal.classList.add('hidden');
-                            document.body.style.overflow = '';
-                            contactForm.reset();
-                            validateContactForm();
-                        });
+                    } else {
+                        contactSubmit.disabled = true;
+                        contactSubmit.classList.add('bg-gray-400', 'cursor-not-allowed');
+                        contactSubmit.classList.remove('bg-primary-blue', 'hover:bg-blue-700');
                     }
+                }
+            }
+
+            inputs.forEach(input => {
+                input.addEventListener('input', function() { updateSelectEmpty(); validateContactForm(); });
+                input.addEventListener('change', function() { updateSelectEmpty(); validateContactForm(); });
+            });
+
+            // Initial state
+            updateSelectEmpty();
+            validateContactForm();
+
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // If category still empty, reveal placeholder label / keep form open
+                if (categorySelect && (!categorySelect.value || categorySelect.value === '')) {
+                    updateSelectEmpty();
+                    return;
+                }
+
+                alert('Ihre Nachricht wurde erfolgreich versendet. Wir werden uns in Kürze bei Ihnen melden.');
+                contactModal.classList.add('hidden');
+                document.body.style.overflow = '';
+                contactForm.reset();
+                updateSelectEmpty();
+                validateContactForm();
+            });
+        }

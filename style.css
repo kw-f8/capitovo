@@ -237,6 +237,34 @@ select.empty + label {
     background: transparent;
 }
 
+/* Ensure all contact modal floating labels (inputs/select/textarea) show identical
+   placeholder styling when in the 'empty' state. Targets modal-specific elements. */
+#contact-modal .peer-placeholder-shown + label,
+#contact-modal input:placeholder-shown + label,
+#contact-modal textarea:placeholder-shown + label,
+#contact-modal select.empty + label {
+    top: 0.75rem !important;
+    font-size: 1rem !important;
+    color: #6b7280 !important;
+    background: transparent !important;
+}
+
+/* Force identical heights for inputs and selects inside the contact modal */
+#contact-modal input[type="text"],
+#contact-modal input[type="email"],
+#contact-modal input[type="password"],
+#contact-modal select {
+    height: 48px !important;
+    min-height: 48px !important;
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+}
+
+/* Keep textarea larger */
+#contact-modal textarea {
+    min-height: 120px !important;
+}
+
 /* Subscription-based initial rendering: prevent flash by showing the
     correct subtext/badge based on a class set on <html> before paint. */
 .subtext-free, .subtext-premium { display: none; }

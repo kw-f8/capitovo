@@ -260,6 +260,26 @@ select.empty + label {
     padding-bottom: 0.75rem !important;
 }
 
+/* Normalize platform-specific decorations (Safari/Chrome) that can make email inputs look different */
+#contact-modal input[type="email"],
+#contact-modal input[type="text"],
+#contact-modal input[type="password"] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    background-color: #ffffff !important;
+    width: 100% !important;
+}
+
+/* Hide Safari contact/credentials autofill buttons inside email fields */
+#contact-modal input[type="email"]::-webkit-contacts-auto-fill-button,
+#contact-modal input[type="email"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+}
+
 /* Keep textarea larger */
 #contact-modal textarea {
     min-height: 120px !important;

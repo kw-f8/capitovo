@@ -290,8 +290,8 @@ function createGlobalContactModal() {
                 </div>
                 <div>
                     <label class="sr-only" for="contact-category">Kategorie</label>
-                    <select id="contact-category" name="category" required class="w-full border rounded-md px-3 py-2">
-                        <option value="" disabled selected>Bitte wählen</option>
+                    <select id="contact-category" name="category" required class="w-full border rounded-md px-3 py-2 text-gray-700">
+                        <option value="" disabled selected class="text-gray-400">Bitte wählen</option>
                         <option value="support">Technischer Support</option>
                         <option value="billing">Rechnung & Abonnement</option>
                         <option value="feedback">Feedback & Vorschläge</option>
@@ -303,7 +303,7 @@ function createGlobalContactModal() {
                     <textarea id="contact-message" name="message" rows="4" required class="w-full border rounded-md px-3 py-2" placeholder="Ihre Nachricht"></textarea>
                 </div>
                 <div class="mt-2 w-full flex justify-center">
-                    <div id="turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
+                    <div id="turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: none; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
                         Sicherheitsabfrage (Cloudflare Turnstile)
                     </div>
                 </div>
@@ -324,14 +324,29 @@ function createGlobalContactModal() {
     const cancelBtn = document.getElementById('contact-cancel');
     if (cancelBtn) cancelBtn.addEventListener('click', (e) => { e.preventDefault(); closeContactModal(); });
 
-    // Basic submit handling
+    // Basic submit handling with deferred Turnstile rendering on first submit
     const form = document.getElementById('contact-form');
     if (form) {
+        let turnstileShown = false;
         form.addEventListener('submit', function(e){
             e.preventDefault();
+            const placeholder = document.getElementById('turnstile-placeholder');
+            if (!turnstileShown) {
+                if (placeholder) {
+                    placeholder.style.display = 'flex';
+                    placeholder.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                turnstileShown = true;
+                return; // require user to interact with the shown Turnstile and submit again
+            }
+
+            // TODO: integrate real Turnstile verification here before finalizing submission.
             alert('Ihre Nachricht wurde erfolgreich versendet. Wir melden uns in Kürze.');
             closeContactModal();
             form.reset();
+            // hide placeholder again for next time
+            if (placeholder) placeholder.style.display = 'none';
+            turnstileShown = false;
         });
     }
 }

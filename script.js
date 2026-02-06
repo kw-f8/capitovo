@@ -736,6 +736,9 @@ async function loadAndRenderMemberAnalyses(){
         }
         data = await res.json();
         
+        // Filter only published analyses
+        data = data.filter(d => d.published === true);
+        
         // Sort by date descending (newest first)
         data.sort((a,b) => {
             const da = a.date ? Date.parse(a.date) : 0;
@@ -860,6 +863,8 @@ async function initAllAnalysesPage(){
         }
         if (!res || !res.ok) throw new Error('fetch failed for candidates: ' + candidates.join(', '));
         data = await res.json();
+        // Filter only published analyses
+        data = data.filter(d => d.published === true);
     }catch(e){ console.error(e); grid.innerHTML = '<p class="text-red-500">Analysen konnten nicht geladen werden.</p>'; return; }
 
     // populate sector select
@@ -1050,7 +1055,10 @@ async function loadAndRenderAnalyses() {
             throw new Error(`HTTP-Fehler! Status: ${response.status} (Pfad: ${apiUrl})`);
         }
         
-        const analyses = await response.json(); 
+        let analyses = await response.json(); 
+        
+        // Filter only published analyses
+        analyses = analyses.filter(d => d.published === true);
         
         // Erzeugt das HTML und fügt es in das Grid ein (lädt max. 6)
         const analysisHTML = analyses.slice(0, 6)

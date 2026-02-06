@@ -70,11 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
         link16.sizes = '16x16';
         link16.href = icon16.toString();
         head.appendChild(link16);
-    const changed = deduped.length !== favoritesRaw.length || deduped.some((v, i) => v !== favoritesRaw[i]);
-    if (changed) {
-        try { localStorage.setItem('capitovo_favorites', JSON.stringify(deduped)); } catch(e) {}
-        document.dispatchEvent(new CustomEvent('favorites-updated'));
-    }
 })();
 
 // === HILFSFUNKTIONEN FÜR MODAL & SIDEBAR STEUERUNG ===

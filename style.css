@@ -280,6 +280,79 @@ select.empty + label {
     right: 0;
 }
 
+/* ======== New unified contact form styles (professional, clean) ======== */
+/* Card */
+.cap-card {
+    border-radius: 0.5rem; /* 8px */
+    border: 1px solid #e2e8f0; /* subtle gray */
+    box-shadow: 0 10px 30px rgba(2,6,23,0.08); /* soft modern shadow */
+    background-color: #ffffff;
+}
+
+/* Form layout */
+.cap-form { padding: 2rem; max-width: 720px; margin: 0 auto; }
+.cap-form .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.cap-form .row { margin-bottom: 1.5rem; }
+
+/* Labels above inputs (consistent) */
+.cap-label { display:block; margin-bottom:0.5rem; font-size:0.875rem; color:#6b7280; }
+
+/* Unified control styles */
+.cap-input, .cap-select, .cap-textarea {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid #e2e8f0;
+    padding: 0.75rem 0.875rem;
+    font-size: 0.95rem;
+    color: #0f172a;
+    background: #ffffff;
+    box-sizing: border-box;
+    transition: box-shadow 150ms ease, border-color 150ms ease, transform 80ms ease;
+}
+.cap-textarea { min-height: 120px; resize: vertical; }
+
+.cap-input:focus, .cap-select:focus, .cap-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent-blue);
+    box-shadow: 0 6px 18px rgba(3,102,214,0.08), 0 0 0 3px rgba(0,145,214,0.08);
+}
+
+/* Select arrow: subtle */
+.cap-select { appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2397a6b2'><path d='M6 8l4 4 4-4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat:no-repeat; background-position:right 12px center; background-size:14px; padding-right:2.5rem; }
+
+/* Primary button */
+.cap-btn-primary {
+    background: var(--color-primary-blue);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(36,53,75,0.12);
+    transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.cap-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(36,53,75,0.14); }
+
+.cap-btn-secondary {
+    background: #ffffff;
+    color: #0f172a;
+    border: 1px solid #e6eef7;
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.5rem;
+}
+
+/* Captcha container polish */
+.cap-captcha {
+    width:100%; max-width:360px; height:80px; background:#fafafa; border:1px solid #e6eef7; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#6b7280; font-size:0.95rem;
+}
+
+/* Responsive adjustments */
+@media (max-width:768px){ .cap-form .two-col { grid-template-columns: 1fr; } .cap-btn-full { width:100%; } }
+
+/* Ensure modal card uses cap-card */
+#contact-modal .w-full.max-w-2xl { padding:0; }
+#contact-modal .w-full.max-w-2xl > .p-8 { padding:0; }
+
 /* Keep textarea larger */
 #contact-modal textarea {
     min-height: 120px !important;

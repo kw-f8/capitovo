@@ -70,75 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
         link16.sizes = '16x16';
         link16.href = icon16.toString();
         head.appendChild(link16);
-
-        const shortcut = document.createElement('link');
-        shortcut.rel = 'shortcut icon';
-        shortcut.href = icon32.toString();
-        head.appendChild(shortcut);
-
-        const apple = document.createElement('link');
-        apple.rel = 'apple-touch-icon';
-        apple.sizes = '180x180';
-        apple.href = appleTouch.toString();
-        head.appendChild(apple);
-    }catch(e){ /* ignore */ }
-})();
-
-// === FAVORITEN: MIGRATION TITEL -> ID (EINMALIG) ===
-// Ältere Versionen speicherten Favoriten als Titel. Ab jetzt nutzen wir die stabile Analyse-ID.
-(async function migrateFavoritesTitleToId(){
-    let favoritesRaw = [];
-    try { favoritesRaw = JSON.parse(localStorage.getItem('capitovo_favorites') || '[]'); } catch(e) { favoritesRaw = []; }
-    if (!Array.isArray(favoritesRaw) || favoritesRaw.length === 0) return;
-
-    // Nur migrieren, wenn überhaupt Nicht-ID Werte drin sind (heuristisch: kein '-' oder sehr kurz).
-    const mightContainTitles = favoritesRaw.some(v => typeof v === 'string' && v && (!v.includes('-') || v.length < 12));
-    if (!mightContainTitles) return;
-
-    const basePath = (location && location.pathname ? location.pathname.toLowerCase() : '');
-    const candidates = [];
-    if (basePath.includes('/abonenten/aktien-monitor/')) {
-        candidates.push('../../data/analysen.json');
-        candidates.push('../data/analysen.json');
-        candidates.push('/capitovo/data/analysen.json');
-    } else if (basePath.includes('/abonenten/')) {
-        candidates.push('../data/analysen.json');
-        candidates.push('../../data/analysen.json');
-        candidates.push('/capitovo/data/analysen.json');
-    } else {
-        candidates.push('data/analysen.json');
-        candidates.push('../data/analysen.json');
-        candidates.push('/capitovo/data/analysen.json');
-    }
-
-    let analyses = null;
-    for (const url of candidates) {
-        try {
-            const res = await fetch(url, { cache: 'no-store' });
-            if (!res.ok) continue;
-            analyses = await res.json();
-            if (Array.isArray(analyses) && analyses.length) break;
-        } catch(e) {}
-    }
-    if (!Array.isArray(analyses) || analyses.length === 0) return;
-
-    const titleToId = new Map();
-    const validIds = new Set();
-    analyses.forEach(a => {
-        if (a && typeof a.id === 'string' && a.id) validIds.add(a.id);
-        if (a && typeof a.title === 'string' && a.title && typeof a.id === 'string' && a.id) titleToId.set(a.title, a.id);
-    });
-
-    const migrated = [];
-    for (const fav of favoritesRaw) {
-        if (typeof fav !== 'string' || !fav) continue;
-        if (validIds.has(fav)) { migrated.push(fav); continue; }
-        const mapped = titleToId.get(fav);
-        migrated.push(mapped || fav);
-    }
-
-    // dedupe
-    const deduped = Array.from(new Set(migrated));
     const changed = deduped.length !== favoritesRaw.length || deduped.some((v, i) => v !== favoritesRaw[i]);
     if (changed) {
         try { localStorage.setItem('capitovo_favorites', JSON.stringify(deduped)); } catch(e) {}
@@ -271,56 +202,55 @@ function createGlobalContactModal() {
     modal.style.zIndex = '1001';
 
     modal.innerHTML = `
-        <div class="w-full max-w-2xl bg-white rounded-xl shadow-2xl border border-gray-200 relative overflow-hidden max-h-[90vh] overflow-y-auto">
-            <button id="contact-close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10" aria-label="Schließen">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+        <div class="w-full max-w-2xl">
+            <div class="cap-card">
+                <button id="contact-close" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none z-10" aria-label="Schließen">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
 
-            <div class="p-8 md:p-10">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Support kontaktieren</h2>
+                <div class="cap-form">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">Support kontaktieren</h2>
 
-                <form id="contact-form" action="#" method="POST" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <input type="text" id="contact-name" name="name" required
-                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm"
-                                placeholder="Ihr Name">
+                    <form id="contact-form" action="#" method="POST" class="cap-form-inner">
+                        <div class="two-col">
+                            <div class="row">
+                                <label class="cap-label" for="contact-name">Ihr Name</label>
+                                <input class="cap-input" type="text" id="contact-name" name="name" placeholder="" required>
+                            </div>
+                            <div class="row">
+                                <label class="cap-label" for="contact-email">Ihre E-Mail</label>
+                                <input class="cap-input" type="email" id="contact-email" name="email" placeholder="" required>
+                            </div>
                         </div>
-                        <div>
-                            <input type="email" id="contact-email" name="email" required
-                                class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm"
-                                placeholder="Ihre E-Mail">
+
+                        <div class="row">
+                            <label class="cap-label" for="contact-category">Kategorie</label>
+                            <select id="contact-category" name="category" class="cap-select" required>
+                                <option value="" disabled selected>Bitte wählen</option>
+                                <option value="support">Technischer Support</option>
+                                <option value="billing">Rechnung & Abonnement</option>
+                                <option value="feedback">Feedback & Vorschläge</option>
+                                <option value="other">Sonstiges</option>
+                            </select>
                         </div>
-                    </div>
 
-                    <div>
-                        <select id="contact-category" name="category" required
-                            class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm bg-white">
-                            <option value="" disabled selected>Bitte wählen</option>
-                            <option value="support">Technischer Support</option>
-                            <option value="billing">Rechnung & Abonnement</option>
-                            <option value="feedback">Feedback & Vorschläge</option>
-                            <option value="other">Sonstiges</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <textarea id="contact-message" name="message" rows="4" required
-                            class="appearance-none rounded-md block w-full px-3 py-3 border border-gray-300 text-gray-900 focus:outline-none focus:ring-accent-blue focus:border-accent-blue sm:text-sm resize-none"
-                            placeholder="Ihre Nachricht"></textarea>
-                    </div>
-
-                    <div class="mt-2 w-full flex justify-center">
-                        <div id="turnstile-placeholder" style="width: 100%; max-width: 340px; height: 80px; background: #f3f4f6; border-radius: 8px; display: none; align-items: center; justify-content: center; color: #6b7280; font-size: 1rem; border: 1px dashed #cbd5e1;">
-                            Sicherheitsabfrage (Cloudflare Turnstile)
+                        <div class="row">
+                            <label class="cap-label" for="contact-message">Ihre Nachricht</label>
+                            <textarea id="contact-message" name="message" class="cap-textarea" rows="4" required></textarea>
                         </div>
-                    </div>
 
-                    <div class="flex justify-end gap-3">
-                        <button type="button" id="contact-cancel" class="px-4 py-2 border rounded-md">Abbrechen</button>
-                        <button type="submit" id="contact-submit" class="px-4 py-2 bg-primary-blue text-white rounded-md">Absenden</button>
-                    </div>
-                </form>
+                        <div class="row" style="display:flex; justify-content:center;">
+                            <div id="turnstile-placeholder" class="cap-captcha" style="display:none;">
+                                Sicherheitsabfrage (Cloudflare Turnstile)
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:12px;">
+                            <button type="button" id="contact-cancel" class="cap-btn-secondary">Abbrechen</button>
+                            <button type="submit" id="contact-submit" class="cap-btn-primary">Absenden</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     `;

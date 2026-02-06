@@ -701,6 +701,7 @@ function computeAnalysisLink(a, idx, baseOverride){
 async function loadAndRenderMemberAnalyses(){
     const container = document.getElementById('member-analyses');
     if (!container) return;
+    try { if (console && console.debug) console.debug('loadAndRenderMemberAnalyses: init', window.location.pathname); } catch(e){}
     const cacheBuster = `?t=${new Date().getTime()}`;
     try{
         // Resolve correct relative path depending on current page location.
@@ -1761,6 +1762,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // 9. Ensure Rechtliches links do NOT open a new tab (same-tab navigation)
     try { initLegalLinksSameTab(); } catch(e) { /* ignore */ }
 });
+
+    // Safety retry: if member-analyses still shows the loading placeholder after initial init,
+    // attempt a retry a short time later (helps recover from timing or transient fetch issues).
+    setTimeout(function(){
+        try{
+            const c = document.getElementById('member-analyses');
+            if (c && /Lade Analysen/.test(c.innerText || '')){
+                console.info('Retrying loadAndRenderMemberAnalyses due to placeholder still present');
+                try{ loadAndRenderMemberAnalyses(); } catch(e){ console.warn('Retry failed', e); }
+            }
+        }catch(e){}
+    }, 700);
 
 /** Ensure internal Rechtliches links (Impressum/Datenschutz/Haftung/AGB) open in the same tab.
  * Some pages historically used `target="_blank"` for these links.

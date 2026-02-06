@@ -70,7 +70,14 @@ document.addEventListener('DOMContentLoaded', function() {
         link16.sizes = '16x16';
         link16.href = icon16.toString();
         head.appendChild(link16);
-})();
+
+        const linkApple = document.createElement('link');
+        linkApple.rel = 'apple-touch-icon';
+        linkApple.sizes = '180x180';
+        linkApple.href = appleTouch.toString();
+        head.appendChild(linkApple);
+        }catch(e){ /* ignore */ }
+    })();
 
 // === HILFSFUNKTIONEN FÜR MODAL & SIDEBAR STEUERUNG ===
 
